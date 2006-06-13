@@ -10,7 +10,7 @@ statement {
 
 ppValuePart := string
 [ 
-    termintor("\n")[ escape('\') ] 
+    terminator("\n")[ escape('\') ] 
 ]
 <
     subst(/\s+|\n+/," ") 
