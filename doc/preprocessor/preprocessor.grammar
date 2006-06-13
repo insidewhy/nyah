@@ -1,0 +1,65 @@
+grammar "preprocessor"
+
+global {
+    contents := (functionDefinition | varDefinition | include)+;
+}
+
+statement {
+    begin := ^'#';
+}
+
+ppValuePart := string
+[ 
+    termintor("\n")[ escape('\') ] 
+]
+<
+    subst(/\s+|\n+/," ") 
+>;
+
+// ensure ## token remains seperated by a space in resulting string and "##"
+// become token
+ppValue := ppValuePart ("##" ppValuePart)*;
+
+definitionBase : statement {
+    string definitionName;
+
+    begin := "define" definitionName;
+}
+
+// not a function
+varDefinition : definitionBase {
+    ppValue varName;
+    begin := varName?;
+}
+
+varUndefinition : statement {
+    string varName;
+    begin := "undef" varName;
+}
+
+parameterList {
+	vector<cIdentifier> parameters;
+	begin := ^'(' (parameters (',' parameters)* ')';
+}
+
+// an include statement
+include : statement {
+    string includeFile;
+    bool   systemHeaderInclude< default(false) >;
+
+    includeStr := includeFile[ quote('<', '>') ]< store(systemHeaderInclude, true)> |
+                  includeFile[ quote('"') ];
+
+
+    begin := 'include' (includeStr |
+                        includeStr [ cppEvaluate( errMsg => 
+                            'preprocessor rule $rule does not expand to valid include string'
+                        ) ]);
+}
+
+// a function
+functionDefinition : definitionBase {
+	parameterList parameters;
+
+    begin := parametersList(parameters) ppValueParT;
+}

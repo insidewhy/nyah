@@ -1,0 +1,121 @@
+use configuration variables:
+    escape_character:  default character used for escape [default: /]
+
+escape system modifiers:
+ *  escape(
+        chr[s]    => escape character(s)|regexp(s)|strings
+        strip     => strip escape character from token? [default: true]
+    )
+    a single escape character, escapes itself (an escaped escape character isn't
+    stripped from the token even when strip is set to true)
+
+
+general modifiers:
+ *  quote( 
+        quoteChr[s] |  begin_quote_chr => The begining and end quotation marks
+        endQuoteChr[s]                 => override end quotation mark with
+                                          this/these characters
+        strip                          => Strip quotes from token [default: true]
+    )
+     note: can also apply to an ebnf object (use escape)
+
+ *  terminator(
+        chr[s]  =>   terminate current token at this/these character(s)
+    )       
+    note: can also apply to an ebnf object
+
+c-preprocessor modifiers:
+ *  cppEvaluate(
+        value    => token value to evalue. usually passed from enclosing rule
+        warnMsg  => warn event to raise if evaluation of token fails
+                    [the token itself will still be returned in failed
+                    evaluation]
+        errMsg   => error event to raise if evaluation of token fails.
+                    [default: null which implies no error will be generated and
+                    the token itself is returned in failed evaluation]
+    )
+
+database interaction:
+ *  store(
+        value    => value to store. generally passed direct from calling object.
+        variable => reference to variable/field to store data to
+        prepend  => string to prefix to value stored
+        append   => string to suffix to value stored
+    )
+
+    When variable is a container then the value is pushed into the container. If
+    the variable is a rule which maps to a database type then a reference to
+    it's ID is pushed into the container.
+
+    note that built in types correspond to database types so:
+        string fieldName [ = string;]        // this is implied by the compiler
+        string fieldName = string[quote(')]  // user modifies match
+
+    Then within an object if:
+        rule := '"' fieldName '"';
+    is seen then this is equivalent to string< store(fieldName) >
+                                    or string< store(fieldName) >[ quote(') ]
+                                    depending on which is used
+
+    Equally
+        vector<string> parameters;
+        rule := parameters+;
+
+    is seen as
+        rule := string<store(parameters)> +;
+        # hence each parameter is pushed into the container
+
+    Basically: store is called automatically when a rule which has the same name
+               as an attribute is matched
+
+ *  default(
+        value  => default value to store in field if one is not supplied
+    )
+
+ *  strip(
+        variable          => reference to variable to strip. usually passed in from
+                             parent rule.
+        char[s] |         
+        str[s]  |         => [list of] thing[s] to strip out of the token
+        regexp[s]
+    )
+
+ * subst(
+        variable          => reference to variable to strip. usually passed in from
+                             parent rule.
+        match_char[s]   |         
+        match_str[s]    | => [list of] thing[s] to strip out of the token
+        match_regexp[s]
+
+        subst_char[s]   |         
+        subst_str[s]    | => [list of] thing[s] to replace in token
+        subst_regexp[s]
+    )
+    List sizes of match and subst should counter balance. $\n can be used for
+    backreferences as perl. 
+    would like to have (?:) make a non-capturing sub-expression as perl.
+
+
+
+Built in matching rules
+-----------------------
+string (matches string)
+    * default modifiers : quote(");  # use termintor("\n") in most cases
+
+integer: [0-9]+
+    matches c-style integer. Adds to token table.
+
+float:   integer.integer
+    matches c-style float. Adds to token table.
+
+number:
+    matches c-style float or integer. Adds to token table.
+
+string cIdentifier: matches c identifiers
+
+Context variables
+-----------------
+$rule: name of token currently being matched
+$line: line number
+$col:  column
+$<number>: backreferences.. see subst command
