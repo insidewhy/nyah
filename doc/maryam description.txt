@@ -6,11 +6,13 @@ language, and at least a basic knowledge of EBNF. Regular expressions would
 also help.
 
 * Beginning a grammar
+
 grammar "Preprocessor";
 
 This specifies that we are now begining a grammar called "Preprocessor"
 
 * A rule
+
 rule := '<' string '>';
 
 Here we introduce a few things. In this case rule is in the global namespace
@@ -29,7 +31,8 @@ global {
 This is the same as putting a rule in the main part of a grammar but it might
 be preferrable to improve formatting and code readability.
 
-* Preprocessor classes
+* Classes and constructors
+
 statement {
     statement := ^'#';
 }
@@ -42,17 +45,22 @@ character ^ means this rule only matches at the begining of the document (i.e.
 there is no whitespace before it). It acts as an anchor as in regular
 expressions the same as the anchor $ which matches after the last character.
 
-ppValuePart := . - ("\n" | '\') { subst(/\s+|\n+/," ") };
+# Operations, the - operator, and more EBNF ideas.
 
-ppValuePart is a rule which matches "." (any character as for regular
-expressions) except (the minus operator), "\n" a newline or (the | operator) a 
-backslash (grouped into a tuple with brackets).
+ppValuePart { subst(/\s+|\n+/," ") } := . - ("\n" | '\') ;
 
 As this is matched the rule has the operation "subst(<regular expression>,
 <string>)" applied to it. As you will see later rules can be used as variable
 types to store data and if this rule is used as a variable type the variable's
 value will not be that of the string that matched but the string after the
-subst operation has been applied.
+subst operation has been applied. Curly brackets are used to delimit operators
+and can appear on the RHS of a rule definition (they apply to the whole rule
+when it is matched), or to an element in the LHS (they will be applied to the
+elements within the rule matched after the whole rule is matched).
+
+ppValuePart is a rule which matches "." (any character as for regular
+expressions) except (the minus operator), "\n" a newline or (the | operator) a 
+backslash (grouped into a tuple with brackets).
 
 ** Built in functions introduction
 
@@ -99,5 +107,87 @@ class. This class also introduces an attribute `definitionName' of type
 string. The constructor uses the attribute definitionName as one EBNF
 statement in the constructor. In this case if the *type* of the attribute
 matches then the string which matched this type is stored in the attribute.
+
+* Inheriting attributes and using rules as variable types.
+
+varDefinition : definitionBase {
+    ppValue varName;
+    varDefinition := varName?;
+}
+
+The rule ppValue is used as the type of the variable `varName'. In this case
+when it is used in varDefinition the variable only matches what the rule would
+match. The string which matched the value is stored in the variable, unless
+the underlying data type is numerical or can be made numerical by an operation
+it has attached to it. A rule is very similar to a class, it is basically
+shorthand for a class which only has a constructor and no attributes.
+
+varDefinition inherits from definitionBase, and therefore the attributes of
+definitionBase are also part of the new type varDefinition, and will be set
+when the constructor of definitionBase is matched (recall it has to for a
+child class to match).
+
+* Completing some more of the c-preprocessor
+
+For sake of completeness here are the classes for undef 
+
+varUndefinition : statement {
+    string varName;
+    varUndefinition := "undef" varName;
+}
+
+* Containers
+
+parameterList {
+    # cIdentifier is a built-in type, it's easy to guess what it matches
+	vector<cIdentifier> parameters;
+	parameterList := ^'(' (parameters (',' parameters)* ')';
+}
+
+The class parameterList has an attribute vector<cIdentifier> parameters. This
+makes the type parameters a container of many values. Whenever the rule
+parameters matches the value it matches becomes another element in the
+container. In this case `(apple, monkey)' would become the container 
+`{ apple , monkey }', a container of two c-identifiers.
+
+In this case a vector is used, list and set (as per stl list and set), and
+hash (as per the TR1 boost Hash) can also be used.
+
+* Default values and operators modifying attributes.
+
+include : statement {
+    string includeFile;
+    bool   systemHeaderInclude = false;
+
+    sysHeaderIncludeStr { systemHeaderInclude = true } := '<' includeFile '>';
+    generalIncludeStr := '"' includeFile '"';
+
+
+    include := 'include' (sysHeaderIncludeStr | generalIncludeStr);
+}
+
+In the include class systemHeaderInclude is by default set to false with the
+`=' operator (`:= is the rule assignment operator'). However if the attribute
+sysHeaderIncludeStr is matched then the operation will change this value to
+true.
+
+* Object composition 
+
+functionDefinition : definitionBase {
+	parameterList parameters;
+
+    functionDefinition := parameters ppValuePart;
+}
+
+The attribute `parameters' has the type parameterList which
+was a class we defined earlier. In this case the parameterList object becomes
+a node under the functionDefinition in the tree (and are related via foreign
+keys in the database). For the object of type parameterList to match the
+constructor of parameters must match, and all the variables (and possible
+subnodes via further nesting) will be assigned and accessable through the
+parameters attribute. This is very different from the case of class
+inheritence, where we create a new bigger table from the conjunction with parent
+tables, and both are useful techniques for creating parsers.
+
 
 Suggested Music: Mogwai - Ten Rapid
