@@ -1,0 +1,103 @@
+This document serves as an introduction to the object oriented AST generating
+parser generator `Maryam'.
+
+It is assumed the reader has at least some familiarity with an object oriented
+language, and at least a basic knowledge of EBNF. Regular expressions would
+also help.
+
+* Beginning a grammar
+grammar "Preprocessor";
+
+This specifies that we are now begining a grammar called "Preprocessor"
+
+* A rule
+rule := '<' string '>';
+
+Here we introduce a few things. In this case rule is in the global namespace
+and can be used from anywhere. The '<' and the '>' are string literals. They
+refer to tokens passed from the tokenizer/lexer (this is automatically
+constructed from a table of all use literals and builtins). Here `string' is a
+built-in rule. A pre-existing rule which matches any string of characters. `;'
+terminates the rule.
+
+* Namespaces and classes.
+
+global {
+    rule := '<' string '>';
+}
+
+This is the same as putting a rule in the main part of a grammar but it might
+be preferrable to improve formatting and code readability.
+
+* Preprocessor classes
+statement {
+    statement := ^'#';
+}
+
+This creates the class called "statement". It consists of a `constructor' rule
+`statement'.  This is similar to a constructor method in C++. A classes
+constructor must match the string being parsed in order for the class to be
+matched (classes can be used like rules as you will see later). The bare
+character ^ means this rule only matches at the begining of the document (i.e.
+there is no whitespace before it). It acts as an anchor as in regular
+expressions the same as the anchor $ which matches after the last character.
+
+ppValuePart := . - ("\n" | '\') { subst(/\s+|\n+/," ") };
+
+ppValuePart is a rule which matches "." (any character as for regular
+expressions) except (the minus operator), "\n" a newline or (the | operator) a 
+backslash (grouped into a tuple with brackets).
+
+As this is matched the rule has the operation "subst(<regular expression>,
+<string>)" applied to it. As you will see later rules can be used as variable
+types to store data and if this rule is used as a variable type the variable's
+value will not be that of the string that matched but the string after the
+subst operation has been applied.
+
+** Built in functions introduction
+
+subst is a built-in function which operates on a string of matched text and
+modifies it in some way. The function's first argument is a string and Maryam
+knows to automatically pass in the string of the matched rule to this value.
+The remaining two values are passed in of type regular expression and string.
+subst is overloaded to be able to take many useful arguments. In this case the
+first match of the regular expression \s+|\n+ will be replaced by the string "
+". (substall can be used to substitute all such arguments and would be more
+accurate for a c-preprocessor).
+
+* Comments
+
+# ensure ## token remains seperated by a space in resulting string and "##"
+# become token
+
+`#' is used as a comment character. / was not considered for comment use
+because of it's importance in being used as a regular expression type
+delimeter in Maryam.
+
+* EBNF iterative quantifiers and conjunction
+
+ppValue := ppValuePart ("##" ppValuePart)*;
+
+Parantheses are used for grouping as described earlier, and the * after the 
+group acts as a quantifier as it does in EBNF or regular expressions. This
+means that ppValuePart can be matched over and over again and will constitute
+to the value of the rule "ppValue". "##" is followed by a space then
+ppValuePart meaning both "##" and the rule ppValuePart must match in sequence
+for the rule to be matched.
+
+* Class attributes and inheritence
+
+definitionBase : statement {
+    string definitionName;
+
+    definitionBase := "define" definitionName;
+}
+
+definitionBase uses the class described earlier "statement" as it's parent.
+The constructor of a statement must match before the constructor of the child
+class. This class also introduces an attribute `definitionName' of type
+string. The constructor uses the attribute definitionName as one EBNF
+statement in the constructor. In this case if the *type* of the attribute
+matches then the string which matched this type is stored in the attribute.
+
+Suggested Music: Mogwai - Ten Rapid
