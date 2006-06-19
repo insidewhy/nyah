@@ -62,6 +62,12 @@ ppValuePart is a rule which matches "." (any character as for regular
 expressions) except (the minus operator), "\n" a newline or (the | operator) a 
 backslash (grouped into a tuple with brackets).
 
+* The ! operator
+
+`! rule' is a shorthand for `. - rule'. The RHS of ppValue part could be written:
+
+! ("\n" | '\');
+
 ** Built in functions introduction
 
 subst is a built-in function which operates on a string of matched text and
@@ -139,7 +145,8 @@ varUndefinition : statement {
 * Containers
 
 parameterList {
-    # cIdentifier is a built-in type, it's easy to guess what it matches
+    # cIdentifier is sourced from some maryam library files, it's easy to 
+    # guess what it matches
 	vector<cIdentifier> parameters;
 	parameterList := ^'(' (parameters (',' parameters)* ')';
 }
@@ -188,6 +195,65 @@ subnodes via further nesting) will be assigned and accessable through the
 parameters attribute. This is very different from the case of class
 inheritence, where we create a new bigger table from the conjunction with parent
 tables, and both are useful techniques for creating parsers.
+
+* Modifiers
+
+A modifier can be used to make fine tuned adjustments to the way a rule
+matches.
+
+string s [ quote('"') ];
+
+Is a shorthand for 
+
+s := '"' string '"';
+
+* The join modifier
+
+string joinRule[ join(" ") ];
+directories := '/' ? (joinRule '/')* '/'?
+
+In this case join matches multiple times but joinRule will contain the result
+of all the matches joined with the string supplied.
+
+* Directives, The parse directive.
+
+Directives are special instructions which can be sent to maryam during the
+parse stage. New directives can be implemented with plugins.
+
+The following directive instructs maryam to parse to start parsing a given
+file.
+
+importMatch := 'import' string< parse() >;
+
+The parse directive takes on argument, a string matching the file to parse.
+Maryam will by default fill it in from the rule the directive applies to,
+which in this case is the string after `import'. The directive is executed
+when the enclosing rule is matched and considered valid. environment variables
+and configuration files are used to determine the directory search path.
+
+* Using the parse directive
+
+The gnu cpp file includes directives that wrap parse and make the maryam follow
+include files using directives from the c-preprocessor (passed through the -I
+argument to maryam).
+
+Revisiting the case of include we can enhance it to make maryam open and parse
+another file using these two directives.
+
+include : statement {
+    string includeFile;
+    bool   systemHeaderInclude = false;
+
+    sysHeaderIncludeStr { systemHeaderInclude = true } 
+                      := ('<' includeFile '>')
+                         < gccSysParse( includeFile ) >;
+
+    generalIncludeStr := ('"' includeFile '"' )
+                         < gccParse( includeFile ) >;
+
+
+    include := 'include' (  sysHeaderIncludeStr  | generalIncludeStr );
+}
 
 
 Suggested Music: Mogwai - Ten Rapid
