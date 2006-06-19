@@ -33,7 +33,7 @@ be used to assist IDEs in real time as the code updates.
 Implementation
 
 Codebase will be programmed in C++/STL/Boost. Coding style is likely to make
-heavy use of template meta-programming. Since C++ isn?t a great match for
+heavy use of template meta-programming. Since C++ isn't a great match for
 parser development, and given Boost/Spirit produces as far as we're concerned
 unattractive & messy code, we've decided to implement an EBNF-compliant parser
 generator (converting EBNF to C++ which can subsequently be compiled with the
