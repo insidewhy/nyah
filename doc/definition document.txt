@@ -1,0 +1,91 @@
+Codebase Definition Document
+James Pike, Lorenzo Stoakes & Collaborators
+Last Updated: 19/06/2006
+
+Summary
+
+The purpose of this document is to define the aim of the Codebase project,
+specify its intended functionality, and stipulate the framework within which
+developers will work on the project.
+
+Description
+
+Codebase is a programming tool composed of two equally important vital
+elements:
+
+1. A parser generator with an object oriented language. Maryam
+
+This language is a cross between EBNF and C++. Attributes become AST node
+information and methods become ebnf rules which can access and write to nodes
+that have already been constructed and attributes. The parsing and AST
+creation rules are combined in a neat way to allow an entire AST generator to
+be constructed from an object oriented grammar.
+
+2. A system which uses these parser generators to collate abstract syntax
+trees into an SQL database. Constructed AST's will be serialised to 
+database tables which are human understandable (field names are derived from
+attribute names in the grammar). A daemon will run at all times which will be
+sent AST updates from an IDE or text editor (plugins will be provided). This
+daemon will update the database tables in real time as users edit. This
+database can then be used as a vital code datamining tool. The data can also
+be used to assist IDEs in real time as the code updates.
+
+Implementation
+
+Codebase will be programmed in C++/STL/Boost. Coding style is likely to make
+heavy use of template meta-programming. Since C++ isn?t a great match for
+parser development, and given Boost/Spirit produces as far as we're concerned
+unattractive & messy code, we've decided to implement an EBNF-compliant parser
+generator (converting EBNF to C++ which can subsequently be compiled with the
+rest of the project). This will enable us to develop a customised
+EBNF-compliant to code the parser aspects of the project, while enabling us to
+keep the project strictly in C++ (both generated and hand-coded).
+
+The compiler we'll use is GCC. 
+
+We suggest potential developers buy 'Modern C++ Design' by Andrei
+Alexandrescu. 
+
+Developer Hierarchy
+
+The project is intended to be commercial, hence code quality is absolutely
+paramount. Since relatively few developers will be working on the project we
+seek to establish a developer hierarchy in order to ensure that those
+contributing to the project don't introduce messy/buggy code into the
+repository.
+
+Directors
+Principal project leads, final decision on all development.
+
+James Pike      
+Lorenzo Stoakes
+
+Senior Developers
+
+Full read-write access to code. May commit at will. Directors may overrule
+work. Work considered as important to project as Directors.
+
+Staff Developers
+
+Contributors with read & commit rights to the portions of the code relevant to
+their work. Work will be vetted by the Directors and Senior Developers.
+
+Interns
+
+New developers will be assigned work with no or very limited access to the
+Subversion repository. Work will be vetted by those above them to determine
+whether they warrant promotion. Code provided to these people must be
+restricted in order to prevent the code from being distributed beyond trusted
+individuals. Trust will increase incrementally as Interns continue to impress,
+conversely unimpressive work could eventually lead to being dropped from the
+project.
+
+This hierarchy provides a framework of contributors with global access to code
+(Directors & Senior Developers), those with limited but extensive access to
+their portions of work (Staff Developers), and freshers with very limited
+access to the code (Interns). This forms a stable and manageable
+organisational framework within which to develop the software, help in
+selection of coders of the required quality, and later provides a basis upon
+which to form the structure of a business, as and when this is required.
+
+Suggested Music: Mogwai - EP+6
