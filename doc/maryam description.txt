@@ -179,6 +179,16 @@ sysHeaderIncludeStr is matched then the operation will change this value to
 true.
 
 * Object composition 
+definitionBase : statement {
+    string definitionName;
+
+    definitionBase := "define" definitionName;
+}
+
+varDefinition : definitionBase {
+    ppValue varName;
+    varDefinition := varName?;
+}
 
 functionDefinition : definitionBase {
 	parameterList parameters;
@@ -255,5 +265,97 @@ include : statement {
     include := 'include' (  sysHeaderIncludeStr  | generalIncludeStr );
 }
 
+* Searching the AST with the search directive
+
+In the c-preprocessor when we include the result of the include may be a
+preprocessor directive e.g.
+
+#define NICEFILE  "<nicefile.hpp>"
+#include NICEFILE
+
+When we include NICEFILE we want to use the most recent value of NICEFILE from
+the c-preprocessor AST built up so far. In order to do that we need to look up
+the value of the symbol `NICEFILE' which should be stored in a rule or string
+somewhere backwards through the scope. There are a number of ways to access
+values that already lie in the tree. It is possible to correct the previous
+definition of #include.
+
+# recall these
+definitionBase : statement {
+    string definitionName;
+
+    definitionBase := "define" definitionName;
+}
+
+functionDefinition : definitionBase {
+	parameterList parameters;
+
+    functionDefinition := parameters ppValuePart;
+}
+
+varDefinition : definitionBase {
+    ppValue value;
+    varDefinition := value?;
+}
+
+varUndefinition : statement {
+    string varName;
+    varUndefinition := "undef" varName;
+}
+
+# the improved implementation starts
+include : statement {
+    string includeFile;
+
+    bool   systemHeaderInclude = false;
+
+    sysHeaderInclude { systemHeaderInclude = true } 
+                      := ('<' includeFile '>')
+                         < gccSysParse( includeFile ) >;
+
+    generalInclude    := ('"' includeFile '"' )
+                         < gccParse( includeFile ) >;
+
+    
+    # : begins the search statement
+    evalStm := cIdentifier : reverseTreeScope(
+        error(varUndefinition.definitionName == cIdentifier, 
+              "including undefined identifier $cIdentifier");
+        return(varDefinition.definitionName == cIdentifier,
+               varDefinition.value);
+    );
+
+    treeSearchInclude := generalInclude(evalStm) | sysHeaderInclude(evalStm);
+
+    include := 'include' (  sysHeaderInclude  | generalInclude |
+                            treeSearchInclude);
+}
+
+I mentioned before that a rule is like a class with only a constructor. In
+this case the rule `treeSearchInclude', constructs the attributes generalInclude
+and sysHeaderInclude with the result of the rule evalStm.
+
+evalStm matches a cIdentifier and then applies the search treeScope to fill in
+the value of rule with the result of the search.
+
+The first argument is a search type, in this case `backwardsTreeScope'
+
+`reverseTreeScope' searches backwards through the scope to match the various
+predicates attached to it. In this case there are two predicates.
+
+The first is an error predicate. If the predicate: 
+`varUndefinition.definitionName == cIdentifier' is true, then the
+error condition argument is raised and the search has failed.
+
+The second case is a return statement, which returns a given values if the
+first argument is true. In this case the resulting varDefinition's value will
+be substituted with the contents of rule that called the scope.
+
+By default if no match is found an error signal is raised. This behaviour can
+be altered with the "noMatch()" predicate.
+
+* Affecting the parser at parse at parse time.
+
+TODO
 
 Suggested Music: Mogwai - Ten Rapid
