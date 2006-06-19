@@ -102,15 +102,15 @@ for the rule to be matched.
 * Class attributes and inheritence
 
 definitionBase : statement {
-    string definitionName;
+    string name;
 
-    definitionBase := "define" definitionName;
+    definitionBase := "define" name;
 }
 
 definitionBase uses the class described earlier "statement" as it's parent.
 The constructor of a statement must match before the constructor of the child
-class. This class also introduces an attribute `definitionName' of type
-string. The constructor uses the attribute definitionName as one EBNF
+class. This class also introduces an attribute `name' of type
+string. The constructor uses the attribute name as one EBNF
 statement in the constructor. In this case if the *type* of the attribute
 matches then the string which matched this type is stored in the attribute.
 
@@ -180,9 +180,9 @@ true.
 
 * Object composition 
 definitionBase : statement {
-    string definitionName;
+    string name;
 
-    definitionBase := "define" definitionName;
+    definitionBase := "define" name;
 }
 
 varDefinition : definitionBase {
@@ -282,9 +282,9 @@ definition of #include.
 
 # recall these
 definitionBase : statement {
-    string definitionName;
+    string name;
 
-    definitionBase := "define" definitionName;
+    definitionBase := "define" name;
 }
 
 functionDefinition : definitionBase {
@@ -319,16 +319,17 @@ include : statement {
     
     # : begins the search statement
     evalStm := cIdentifier : reverseTreeScope(
-        error(varUndefinition.definitionName == cIdentifier, 
+        error(varUndefinition.name == cIdentifier, 
               "including undefined identifier $cIdentifier");
-        return(varDefinition.definitionName == cIdentifier,
+        return(varDefinition.name == cIdentifier,
                varDefinition.value);
+        noMatchError("#include of non-existent preprocessor token $cIdentifer");
     );
 
     treeSearchInclude := generalInclude(evalStm) | sysHeaderInclude(evalStm);
 
     include := 'include' (  sysHeaderInclude  | generalInclude |
-                            treeSearchInclude);
+                            treeSearchInclude );
 }
 
 I mentioned before that a rule is like a class with only a constructor. In
@@ -344,18 +345,46 @@ The first argument is a search type, in this case `backwardsTreeScope'
 predicates attached to it. In this case there are two predicates.
 
 The first is an error predicate. If the predicate: 
-`varUndefinition.definitionName == cIdentifier' is true, then the
+`varUndefinition.name == cIdentifier' is true, then the
 error condition argument is raised and the search has failed.
 
 The second case is a return statement, which returns a given values if the
 first argument is true. In this case the resulting varDefinition's value will
 be substituted with the contents of rule that called the scope.
 
-By default if no match is found an error signal is raised. This behaviour can
-be altered with the "noMatch()" predicate.
+If no match is found we want to signal an error condition so noMatchError is
+used to raise an error if no match is found.
 
-* Affecting the parser at parse at parse time.
+* Advanced search statements
 
-TODO
+It is possible to modify attributes of the entire enclosing class with search
+statements. Take the following rule which matches any c-preprocessor token.
+
+class cppTokenMatch {
+    
+    definitionBase token;
+    cppTokenMatch := cIdentifier : reverseTreeScope(
+                                        success(definitionBase.name == cIdentifier,
+                                                token = definitionBase)
+                                   );
+}
+
+definitionBase is an abstract type, so can be used to point to any of the
+subclasses (class composition is always performed using references in memory
+and the database). This would imply that all of the children parse objects of this 
+class must become virtual (in terms of the generated c++ parser) so the penalty 
+should be considered when doing something like this. 
+
+NOTE: This could be implemented optimally with clever coding and extra
+      index containers.
+
+The success statement in the reverse tree scope simply indicates a succesful
+match if the predicate is true. The second argument is an optional statement
+to execute if the predicate matches. In this case it is used to assign the
+reference to token.
+
+* Affecting the parser at parse time.
+
+
 
 Suggested Music: Mogwai - Ten Rapid
