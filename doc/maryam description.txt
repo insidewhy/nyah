@@ -33,17 +33,20 @@ be preferrable to improve formatting and code readability.
 
 * Classes and constructors
 
-statement {
+abstract class statement {
     statement := ^'#';
 }
 
-This creates the class called "statement". It consists of a `constructor' rule
+This creates the abstract class `statement'. It consists of a `constructor' rule
 `statement'.  This is similar to a constructor method in C++. A classes
 constructor must match the string being parsed in order for the class to be
 matched (classes can be used like rules as you will see later). The bare
 character ^ means this rule only matches at the begining of the document (i.e.
 there is no whitespace before it). It acts as an anchor as in regular
 expressions the same as the anchor $ which matches after the last character.
+
+abstract classes are helper classes that can not be used to create a parse
+match, and must be used via proper classes and inheritance.
 
 # Operations, the - operator, and more EBNF ideas.
 
@@ -101,7 +104,7 @@ for the rule to be matched.
 
 * Class attributes and inheritence
 
-definitionBase : statement {
+abstract class definitionBase : statement {
     string name;
 
     definitionBase := "define" name;
@@ -116,7 +119,7 @@ matches then the string which matched this type is stored in the attribute.
 
 * Inheriting attributes and using rules as variable types.
 
-varDefinition : definitionBase {
+class varDefinition : definitionBase {
     ppValue varName;
     varDefinition := varName?;
 }
@@ -137,14 +140,14 @@ child class to match).
 
 For sake of completeness here are the classes for undef 
 
-varUndefinition : statement {
+class varUndefinition : statement {
     string name;
     varUndefinition := "undef" name;
 }
 
 * Containers
 
-parameterList {
+abstract class parameterList {
     # cIdentifier is sourced from some maryam library files, it's easy to 
     # guess what it matches
 	vector<cIdentifier> parameters;
@@ -160,37 +163,25 @@ container. In this case `(apple, monkey)' would become the container
 In this case a vector is used, list and set (as per stl list and set), and
 hash (as per the TR1 boost Hash) can also be used.
 
-* Default values and operators modifying attributes.
-
-include : statement {
-    string includeFile;
-    bool   systemHeaderInclude = false;
-
-    sysHeaderIncludeStr { systemHeaderInclude = true } := '<' includeFile '>';
-    generalIncludeStr := '"' includeFile '"';
-
-
-    include := 'include' (sysHeaderIncludeStr | generalIncludeStr);
-}
-
-In the include class systemHeaderInclude is by default set to false with the
-`=' operator (`:= is the rule assignment operator'). However if the attribute
-sysHeaderIncludeStr is matched then the operation will change this value to
-true.
+Note here that "^" is used but can't possibly match at the begining of the
+line as the parent class rule must match first. In this case ^ means that
+there must be no whitespace between the last token of the parent class and the
+first token of this class.
 
 * Object composition 
-definitionBase : statement {
+
+abstract class definitionBase : statement {
     string name;
 
     definitionBase := "define" name;
 }
 
-varDefinition : definitionBase {
+class varDefinition : definitionBase {
     ppValue varName;
     varDefinition := varName?;
 }
 
-functionDefinition : definitionBase {
+class functionDefinition : definitionBase {
 	parameterList parameters;
 
     functionDefinition := parameters ppValuePart;
@@ -225,10 +216,29 @@ directories := '/' ? (joinRule '/')* '/'?
 In this case join matches multiple times but joinRule will contain the result
 of all the matches joined with the string supplied.
 
-* Directives, The parse directive.
+* Directives
 
 Directives are special instructions which can be sent to maryam during the
 parse stage. New directives can be implemented with plugins.
+
+* Default values and directives modifying attributes.
+
+class include : statement {
+    string includeFile;
+    bool   systemHeaderInclude = false;
+
+    sysHeaderIncludeStr< systemHeaderInclude = true > := '<' includeFile '>';
+    generalIncludeStr := '"' includeFile '"';
+
+    include := 'include' (sysHeaderIncludeStr | generalIncludeStr);
+}
+
+In the include class systemHeaderInclude is by default set to false with the
+`=' operator (`:= is the rule assignment operator'). However if the attribute
+sysHeaderIncludeStr is matched then the directive will be invoked and 
+will make this value true.
+
+* The parse directive
 
 The following directive instructs maryam to parse to start parsing a given
 file.
@@ -250,22 +260,20 @@ argument to maryam).
 Revisiting the case of include we can enhance it to make maryam open and parse
 another file using these two directives.
 
-include : statement {
+class include : statement {
     string includeFile;
     bool   systemHeaderInclude = false;
 
-    sysHeaderIncludeStr { systemHeaderInclude = true } 
-                      := ('<' includeFile '>')
-                         < gccSysParse( includeFile ) >;
+    sysHeaderIncludeStr < systemHeaderInclude = true; gccSysParse(includeFile) > 
+                      := '<' includeFile '>';
 
-    generalIncludeStr := ('"' includeFile '"' )
-                         < gccParse( includeFile ) >;
-
+    # includeFile is auto-passed as first argument to gccParse
+    generalIncludeStr := '"' includeFile< gccParse() > '"';
 
     include := 'include' (  sysHeaderIncludeStr  | generalIncludeStr );
 }
 
-* Searching the AST with the search directive
+* Searching the AST with the search modifier
 
 In the c-preprocessor when we include the result of the include may be a
 preprocessor directive e.g.
@@ -281,30 +289,30 @@ values that already lie in the tree. It is possible to correct the previous
 definition of #include.
 
 # recall these
-definitionBase : statement {
+abstract class definitionBase : statement {
     string name;
 
     definitionBase := "define" name;
 }
 
-functionDefinition : definitionBase {
+class functionDefinition : definitionBase {
 	parameterList parameters;
 
     functionDefinition := parameters ppValuePart;
 }
 
-varDefinition : definitionBase {
+class varDefinition : definitionBase {
     ppValue value;
     varDefinition := value?;
 }
 
-varUndefinition : statement {
+class varUndefinition : statement {
     string name;
     varUndefinition := "undef" name;
 }
 
 # the improved implementation starts
-include : statement {
+class include : statement {
     string includeFile;
 
     bool   systemHeaderInclude = false;
@@ -373,17 +381,17 @@ class cppTokenMatch {
 
 definitionBase is an abstract type, so can be used to point to any of the
 subclasses (class composition is always performed using references in memory
-and the database). This would imply that all of the children parse objects of this 
-class must become virtual (in terms of the generated c++ parser) so the penalty 
-should be considered when doing something like this. 
-
-NOTE: This could be implemented optimally with clever coding and extra
-      index containers.
+and the database).
 
 The success statement in the reverse tree scope simply indicates a succesful
 match if the predicate is true. The second argument is an optional statement
 to execute if the predicate matches. In this case it is used to assign the
 reference to token.
+
+NOTE: abstract class references can be implemented with virtual functions and
+pointers or multi-indexing methods, both have their drawbacks and advantages 
+but are slower than general reference indexes so the imposition of this should 
+be considered when using references to abstract classes.
 
 * Improving the include object yet again
 
@@ -392,7 +400,7 @@ handle to c-preprocessor definition that the include statement received the
 file value from. This can be done through the attribute includeToken as shown
 below.
 
-include : statement {
+class include : statement {
     string includeFile;
     varDefinition includeToken;  # reference to rule which built this
     bool   systemHeaderInclude = false;
@@ -424,8 +432,100 @@ A third optional argument to return is a statement to execute on success
 before returning, in this case the matching varDefinition is assigned to the
 includeToken reference attribute.
 
-* Affecting the parser at parse time.
+* Rule parameters and multiple inheritence
+
+It would be nice to factor out the evalStm functionality into a base class as
+it is useful generic functionality. In its current form it is not suitable
+for this purpose as the error messages are specific. By factoring out these
+elements into parameters the rule can be used in subclasses. 
+
+class tokenStore {
+    varDefinition includeToken;  # reference to token rule
+
+    evalStm := cIdentifier : reverseTreeScope :
+                    return(varDefinition.name == cIdentifier,
+                           varDefinition.value,
+                           includeToken = varDefinition);
+
+    # overload and append err messages, +reverseTreeScope is used to append 
+    # additional rules to the matcher
+    evalStm(undefMsg, notfoundMsg) := evalStm : +reverseTreeScope :
+        error(varUndefinition.name == cIdentifier, 
+              undefMsg);
+        noMatchError(notfoundMsg);
+}
 
 
+class include : statement, tokenStore {
+    string includeFile;
+    bool   systemHeaderInclude = false;
+
+    sysHeaderInclude { systemHeaderInclude = true } 
+                      := ('<' includeFile '>')
+                         < gccSysParse( includeFile ) >;
+
+    generalInclude    := ('"' includeFile< gccParse() > '"' )
+                         < gccParse( includeFile ) >;
+
+    evalStm := evalStm(undefMsg = "including undefined identifier $cIdentifier",
+                       notfoundMsg = "#include of non-existent preprocessor token $cIdentifer");
+    
+    treeSearchInclude := generalInclude(evalStm) | sysHeaderInclude(evalStm);
+
+    include := 'include' (  sysHeaderInclude  | generalInclude |
+                            treeSearchInclude );
+}
+
+Now evalStm inherits from both statement and tokenStore (in the generated code
+multiple inheritance is used for this purpose). evalStm overloads the
+tokenStore parent version by calling it with the relevant error message
+strings. notfoundMsg relies on matching the parent rule's $cIdentifier token,
+but maryam can detect this through the constructor call. evalStm can be called
+using two different syntaxes:
+
+`evalStm(arg1, arg2)', or `evalStm(undefMsg = arg1, notfoundMsg = arg2)'.
+
+* Inline classes and scope issues
+
+It would be useful if #ifdef statements that evaluated falsely would keep
+tokens withen the statement from affecting the scope of rules found after the
+ifdef statement concludes.
+
+For example
+
+#ifdef 0
+#define MUNCH
+#endif
+
+#ifdef MUNCH
+#define THIS_SHOULD_NOT_AFFECT_THE_SCOPE
+#endif
+
+Then a simple understanding of the c-preprocessor shows that
+THIS_SHOULD_NOT_AFFECT the scope should follow it's name. To ensure this
+happens #ifdef statements can raise the scope when they do not evaluate to
+ensure they are not found in tree searches, and flatten to the enclosing tree
+otherwise. For this purpose an inline class can be used. An inline class does
+not create a new node in the tree by default, as most classes do, but using
+the direct "raiseScope", it can acheive this purpose artificially when the
+symbol is undefined. 
+
+inline class ifdefStm : statement, tokenStore {
+    bool undefined = false;
+
+    evalStm ifdefResult := evalStm : +reverseTreeScope :
+        noMatchError(undefined = true)
+        success(varUndefinition.name == cIdentifier, 
+                undefined = true);
+
+    ifdefStm := ^ "ifdef" ifdefResult< if (undefined, raiseScope())>;
+}
+
+ifdefStm overrides evalStm to modify a status variable if the definition is
+not found.
+
+This makes sure the scope is raised when the symbol is not defined. The first
+argument to `raiseScope' is a reference to a class to push onto the scope. By
+default it passes this, a reference to the class tiself.
 
 Suggested Music: Mogwai - Ten Rapid
