@@ -227,7 +227,7 @@ class include : statement {
     string includeFile;
     bool   systemHeaderInclude = false;
 
-    sysHeaderIncludeStr< systemHeaderInclude = true > := '<' includeFile '>';
+    sysHeaderIncludeStr{ systemHeaderInclude = true } := '<' includeFile '>';
     generalIncludeStr := '"' includeFile '"';
 
     include := 'include' (sysHeaderIncludeStr | generalIncludeStr);
@@ -243,7 +243,7 @@ will make this value true.
 The following directive instructs maryam to parse to start parsing a given
 file.
 
-importMatch := 'import' string< parse() >;
+importMatch := 'import' string{ parse() };
 
 The parse directive takes on argument, a string matching the file to parse.
 Maryam will by default fill it in from the rule the directive applies to,
@@ -264,11 +264,11 @@ class include : statement {
     string includeFile;
     bool   systemHeaderInclude = false;
 
-    sysHeaderIncludeStr < systemHeaderInclude = true; gccSysParse(includeFile) > 
+    sysHeaderIncludeStr { systemHeaderInclude = true; gccSysParse(includeFile) } 
                       := '<' includeFile '>';
 
     # includeFile is auto-passed as first argument to gccParse
-    generalIncludeStr := '"' includeFile< gccParse() > '"';
+    generalIncludeStr := '"' includeFile{ gccParse() } '"';
 
     include := 'include' (  sysHeaderIncludeStr  | generalIncludeStr );
 }
@@ -319,10 +319,10 @@ class include : statement {
 
     sysHeaderInclude { systemHeaderInclude = true } 
                       := ('<' includeFile '>')
-                         < gccSysParse( includeFile ) >;
+                         { gccSysParse( includeFile ) };
 
     generalInclude    := ('"' includeFile '"' )
-                         < gccParse( includeFile ) >;
+                         { gccParse( includeFile ) };
 
     
     # : begins the search statement
@@ -407,10 +407,10 @@ class include : statement {
 
     sysHeaderInclude { systemHeaderInclude = true } 
                       := ('<' includeFile '>')
-                         < gccSysParse( includeFile ) >;
+                         { gccSysParse( includeFile ) };
 
     generalInclude    := ('"' includeFile '"' )
-                         < gccParse( includeFile ) >;
+                         { gccParse( includeFile ) };
 
     
     # : begins the search statement
@@ -462,10 +462,10 @@ class include : statement, tokenStore {
 
     sysHeaderInclude { systemHeaderInclude = true } 
                       := ('<' includeFile '>')
-                         < gccSysParse( includeFile ) >;
+                         { gccSysParse( includeFile ) };
 
-    generalInclude    := ('"' includeFile< gccParse() > '"' )
-                         < gccParse( includeFile ) >;
+    generalInclude    := ('"' includeFile{ } '"' )
+                         { gccParse( includeFile ) };
 
     evalStm := evalStm(undefMsg = "including undefined identifier $cIdentifier",
                        notfoundMsg = "#include of non-existent preprocessor token $cIdentifer");
@@ -518,7 +518,7 @@ inline class ifdefStm : statement, tokenStore {
         success(varUndefinition.name == cIdentifier, 
                 undefined = true);
 
-    ifdefStm := ^ "ifdef" ifdefResult< if (undefined, raiseScope())>;
+    ifdefStm := ^ "ifdef" ifdefResult{ if (undefined, raiseScope())};
 }
 
 ifdefStm overrides evalStm to modify a status variable if the definition is
@@ -526,6 +526,6 @@ not found.
 
 This makes sure the scope is raised when the symbol is not defined. The first
 argument to `raiseScope' is a reference to a class to push onto the scope. By
-default it passes this, a reference to the class tiself.
+default it passes `this', a reference to the class itself.
 
 Suggested Music: Mogwai - Ten Rapid
