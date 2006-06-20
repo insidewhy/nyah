@@ -48,7 +48,7 @@ expressions the same as the anchor $ which matches after the last character.
 abstract classes are helper classes that can not be used to create a parse
 match, and must be used via proper classes and inheritance.
 
-# Operations, the - operator, and more EBNF ideas.
+# Operations, the - and ! operators, and more EBNF ideas.
 
 ppValuePart { subst(/\s+|\n+/," ") } := . - ("\n" | '\') ;
 
@@ -70,6 +70,18 @@ backslash (grouped into a tuple with brackets).
 `! rule' is a shorthand for `. - rule'. The RHS of ppValue part could be written:
 
 ! ("\n" | '\');
+
+
+# Representing strings in maryam
+
+cppString     = ('"' (! ("\n" | '"')) '"') [ strip('"') ];
+cppSysInclude = ('<' (! ("\n" | '>')) '>') [ strip('<'), strip('>') ];
+
+c-preprocessor strings may include any character except the terminating
+character and may not include the newline character. The string delimited are
+removed with the strip modifier (which removes characters which match the
+argument at the end and beginining of the string reference first argument
+which is implicitly passed in this case).
 
 ** Built in functions introduction
 
@@ -184,7 +196,6 @@ class varDefinition : definitionBase {
 class functionDefinition : definitionBase {
 	parameterList parameters;
 
-    /* ppValuePart to be defined later */
     functionDefinition := parameters ppValuePart;
 }
 
@@ -229,11 +240,14 @@ class include : statement {
     string includeFile;
     bool   isSystemHeader = false;
 
-    sysHeaderIncludeStr{ isSystemHeader = true } := '<' includeFile '>';
-    generalIncludeStr := '"' includeFile '"';
-
-    include := 'include' (sysHeaderIncludeStr | generalIncludeStr);
+    include := 'include' (includeFile(cppSysInclude{isSystemHeader = true}) | includeFile(cppString));
 }
+
+I mentioned before that a rule is like a class with only a constructor. In
+this case the rule `cppSysInclude', constructs the attribute includeFile with
+the result of the cppSysInclude or cppString temporary rules (maryam will
+optimise the copy construction out in this case and apply the rule directly to
+the string).
 
 In the include class the attribute isSystemHeader is set to false by default
 with the `=' operator (`:= is the rule assignment operator'). However if the 
@@ -266,11 +280,8 @@ class include : statement {
     string includeFile;
     bool   isSystemHeader = false;
 
-    sysHeaderInclude { isSystemHeader = true; gccSysParse(includeFile) } 
-                      := '<' includeFile '>';
-
-    # includeFile is auto-passed as first argument to gccParse
-    generalIncludeStr := '"' includeFile{ gccParse() } '"';
+    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true, gccSysParse() } );
+    generalInclude   := includeFile( cppString { gccParse() } );
 
     include := 'include' (  sysHeaderInclude | generalIncludeStr );
 }
@@ -300,7 +311,6 @@ abstract class definitionBase : statement {
 class functionDefinition : definitionBase {
 	parameterList parameters;
 
-    /* ppValuePart to be defined later */
     functionDefinition := parameters ppValuePart;
 }
 
@@ -320,13 +330,8 @@ class include : statement {
 
     bool   isSystemHeader = false;
 
-    sysHeaderInclude { isSystemHeader = true } 
-                      := ('<' includeFile '>')
-                         { gccSysParse( includeFile ) };
-
-    generalInclude    := ('"' includeFile '"' )
-                         { gccParse( includeFile ) };
-
+    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true, gccSysParse() } );
+    generalInclude   := includeFile( cppString { gccParse() } );
     
     # : begins the search statement
     evalStm := cIdentifier : reverseTreeScope :
@@ -341,10 +346,6 @@ class include : statement {
     include := 'include' (  sysHeaderInclude  | generalInclude |
                             treeSearchInclude );
 }
-
-I mentioned before that a rule is like a class with only a constructor. In
-this case the rule `treeSearchInclude', constructs the attributes generalInclude
-and sysHeaderInclude with the result of the rule evalStm.
 
 evalStm matches a cIdentifier and then applies the search treeScope to fill in
 the value of rule with the result of the search.
@@ -408,13 +409,8 @@ class include : statement {
     varDefinition includeToken;  # reference to rule which built this
     bool   isSystemHeader = false;
 
-    sysHeaderInclude { isSystemHeader = true } 
-                      := ('<' includeFile '>')
-                         { gccSysParse( includeFile ) };
-
-    generalInclude    := ('"' includeFile '"' )
-                         { gccParse( includeFile ) };
-
+    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true, gccSysParse() } );
+    generalInclude   := includeFile( cppString { gccParse() } );
     
     # : begins the search statement
     evalStm := cIdentifier : reverseTreeScope :
@@ -435,20 +431,20 @@ A third optional argument to return is a statement to execute on success
 before returning, in this case the matching varDefinition is assigned to the
 includeToken reference attribute.
 
-* Rule parameters and multiple inheritence
+* Rule parameters and extending tree searches
 
 It would be nice to factor out the evalStm functionality into a base class as
 it is useful generic functionality. In its current form it is not suitable
 for this purpose as the error messages are specific. By factoring out these
 elements into parameters the rule can be used in subclasses. 
 
-class tokenStore {
-    varDefinition includeToken;  # reference to token rule
+class macroStore {
+    varDefinition macro;  # reference to token rule
 
     evalStm := cIdentifier : reverseTreeScope :
                     return(varDefinition.name == cIdentifier,
                            varDefinition.value,
-                           includeToken = varDefinition);
+                           macro = varDefinition);
 
     # overload and append err messages, +reverseTreeScope is used to append 
     # additional rules to the matcher
@@ -458,17 +454,19 @@ class tokenStore {
         noMatchError(notfoundMsg);
 }
 
+In this implementation of macroStore there is an overloaded version of the
+rule evalStm which takes arguments. It uses these arguments to ammend the tree
+search by using +reverseTreeScope which adds search predicates to an existing
+search of the same type.
 
-class include : statement, tokenStore {
+* Multiple inheritance
+
+class include : statement, macroStore {
     string includeFile;
     bool   isSystemHeader = false;
 
-    sysHeaderInclude { isSystemHeader = true } 
-                      := ('<' includeFile '>')
-                         { gccSysParse( includeFile ) };
-
-    generalInclude    := ('"' includeFile{ } '"' )
-                         { gccParse( includeFile ) };
+    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true, gccSysParse() } );
+    generalInclude   := includeFile( cppString { gccParse() } );
 
     evalStm := evalStm(undefMsg = "including undefined identifier $cIdentifier",
                        notfoundMsg = "#include of non-existent preprocessor token $cIdentifer");
@@ -479,9 +477,9 @@ class include : statement, tokenStore {
                             treeSearchInclude );
 }
 
-Now evalStm inherits from both statement and tokenStore (in the generated code
+Now evalStm inherits from both statement and macroStore (in the generated code
 multiple inheritance is used for this purpose). evalStm overloads the
-tokenStore parent version by calling it with the relevant error message
+macroStore parent version by calling it with the relevant error message
 strings. notfoundMsg relies on matching the parent rule's $cIdentifier token,
 but maryam can detect this through the constructor call. evalStm can be called
 using two different syntaxes:
@@ -513,7 +511,7 @@ not create a new node in the tree by default, as most classes do, but using
 the direct "raiseScope", it can acheive this purpose artificially when the
 symbol is undefined. 
 
-inline class ifdefStm : statement, tokenStore {
+inline class ifdefStm : statement, macroStore {
     bool undefined = false;
 
     evalStm ifdefResult := evalStm : +reverseTreeScope :
@@ -531,7 +529,7 @@ This makes sure the scope is raised when the symbol is not defined. The first
 argument to `raiseScope' is a reference to a class to push onto the scope. By
 default it passes `this', a reference to the class itself.
 
-* Extending tokenstore to support macros
+* Extending tokenstore to support functional macros
 
 It is possible in the c-preprocessor to generate certain code from macros and
 the arguments which are passed. It should be possible to write a generic way
@@ -539,15 +537,25 @@ from the resulting expansion of any macro, with arguments or just a simple
 definition. This can be done by providing a rule with arguments which will
 store the result of evaluating the macro or definition.
 
-The previous definition of a functional macro was missing a rule which is
-completed in the following version:
+The previous definition of a functional macro was using the simplified
+ppValuePart rule, which is correct in the following implementation:
 
 class functionDefinition : definitionBase {
 	parameterList parameters;
+
+    # any token as supplied by the tokeniser
+    vector<token> macroTokens;
+
+    functionDefinition := macroTokens
 
     # TODO: Fill me in
     functionDefinition := parameters ppValuePart;
 }
 
+* About parser tokens
+The parser token symbol is automatically constructed from a list of all
+string and character literals in the code, along with all the types used and
+reachable rule matches. The built-in type token will match any single token as
+supplied by the tokeniser.
 
 Suggested Music: Mogwai - Ten Rapid
