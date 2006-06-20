@@ -38,7 +38,7 @@ abstract class statement {
 }
 
 This creates the abstract class `statement'. It consists of a `constructor' rule
-`statement'.  This is similar to a constructor method in C++. A classes
+`statement'.  This is similar to a constructor method in C++. A class'
 constructor must match the string being parsed in order for the class to be
 matched (classes can be used like rules as you will see later). The bare
 character ^ means this rule only matches at the begining of the document (i.e.
@@ -51,21 +51,24 @@ match, and must be used via proper classes and inheritance.
 * The `!' and `-' operators, representing strings.
 
 C-preprocessor strings have the format "string" or <string>, where string can
-be any character except the string terminator or a newline. These rules match
+be any character except the string terminator or a newline. These formats are
+matched respectively by the rules cppString and cppSysInclude:
 the two string cases respectively:
 
 cppString     := ('"' (. - ("\n" | '"')) '"');
 
 `.' matches any character as it does for regular expressions. By applying the
 - operator the entire grouping will match any character except for the match
-  on the right hand side of the `-' operator. `! rule' is a synonym for 
-  `(. - rule)'. This can be used for the angle bracket strings:
+  on the right hand side of the `-' operator. 
 
-cppSysInclude := ('<' (! ("\n" | '>')) '>');
+cppSysInclude := ('<' (! ("\n" | '>')) '>');`! rule' is a synonym for 
+
+`! rule' is synonymous with `(. - rule)'. This shorthand has been used to
+write the cppSysInclude rule above.
 
 * Directives, the subst directive.
 
-ppValuePart { subst(/\s+|\n+/," ") } := . - ("\n" | '\') ;
+macroBody { subst(/\s+|\n+/," ") } := . - ("\n" | '\');
 
 As this is matched the rule has the operation "subst(<regular expression>,
 <string>)" applied to it. As you will see later rules can be used as variable
@@ -85,7 +88,7 @@ sameRule { <directive> } := <sub elements>;
 modifies it in some way. The function's first argument is a string and Maryam
 knows to automatically pass in the string of the matched rule to this value.
 The remaining two values are passed in of type regular expression and string.
-subst is overloaded to be able to take many useful arguments. For ppValuePart 
+subst is overloaded to be able to take many useful arguments. For macroBody 
 the first match of the regular expression \s+|\n+ will be replaced by the 
 string " ". (substall can be used to substitute all such arguments and would 
 be more accurate for a c-preprocessor).
@@ -106,13 +109,13 @@ delimeter in Maryam.
 
 * EBNF iterative quantifiers and conjunction
 
-ppValue := ppValuePart ("##" ppValuePart)*;
+ppValue := macroBody ("##" macroBody)*;
 
 Parantheses are used for grouping as described earlier, and the * after the 
 group acts as a quantifier as it does in EBNF or regular expressions. This
-means that ppValuePart can be matched over and over again and will constitute
+means that macroBody can be matched over and over again and will constitute
 to the value of the rule "ppValue". "##" is followed by a space then
-ppValuePart meaning both "##" and the rule ppValuePart must match in sequence
+macroBody meaning both "##" and the rule macroBody must match in sequence
 for the rule to be matched.
 
 * Class attributes and inheritence
@@ -125,10 +128,10 @@ abstract class definitionBase : statement {
 
 definitionBase uses the class described earlier "statement" as it's parent.
 The constructor of a statement must match before the constructor of the child
-class. This class also introduces an attribute `name' of type
-string. The constructor uses the attribute name as one EBNF
-statement in the constructor. In this case if the *type* of the attribute
-matches then the string which matched this type is stored in the attribute.
+class. This class also introduces an attribute `name' of type string. The 
+constructor uses the attribute name as one EBNF statement in the constructor. 
+In this case if the *type* of the attribute matches then the string which 
+matched this type is stored in the attribute.
 
 * Inheriting attributes and using rules as variable types.
 
@@ -141,8 +144,8 @@ The rule ppValue is used as the type of the variable `varName'. In this case
 when it is used in varDefinition the variable only matches what the rule would
 match. The string which matched the value is stored in the variable, unless
 the underlying data type is numerical or can be made numerical by an operation
-it has attached to it. A rule is very similar to a class, it is basically
-shorthand for a class which only has a constructor and no attributes.
+it has attached to it. A rule is very similar to a class, it can be considered
+as shorthand for a class that only has a constructor and no attributes.
 
 varDefinition inherits from definitionBase, and therefore the attributes of
 definitionBase are also part of the new type varDefinition, and will be set
@@ -167,17 +170,17 @@ abstract class parameterList {
 	parameterList := ^'(' (parameters (',' parameters)* ')';
 }
 
-The class parameterList has an attribute vector<cIdentifier> parameters. This
-makes the type parameters a container of many values. Whenever the rule
-parameters matches the value it matches becomes another element in the
-container. In this case `(apple, monkey)' would become the container 
-`{ apple , monkey }', a container of two c-identifiers.
+The class parameterList has an attribute `parameters' of type 
+`vector<cIdentifier>'. This makes the type parameters a container of many 
+values. Whenever the rule parameters matches the value it matches becomes 
+another element in the container. In this case `(apple, monkey)' would become 
+the container `{ apple , monkey }', a container of two c-identifiers.
 
 In this case a vector is used, list and set (as per stl list and set), and
 hash (as per the TR1 boost Hash) can also be used.
 
 Note here that "^" is used but can't possibly match at the begining of the
-line as the parent class rule must match first. In this case ^ means that
+line as the parent constructor rule must match first. In this case ^ means that
 there must be no whitespace between the last token of the parent class and the
 first token of this class.
 
@@ -197,7 +200,7 @@ class varDefinition : definitionBase {
 class functionDefinition : definitionBase {
 	parameterList parameters;
 
-    functionDefinition := parameters ppValuePart;
+    functionDefinition := parameters macroBody;
 }
 
 The attribute `parameters' has the type parameterList which
@@ -207,8 +210,8 @@ keys in the database). For the object of type parameterList to match the
 constructor of parameters must match, and all the variables (and possible
 subnodes via further nesting) will be assigned and accessable through the
 parameters attribute. This is very different from the case of class
-inheritence, where we create a new bigger table from the conjunction with parent
-tables, and both are useful techniques for creating parsers.
+inheritence, where we create a new bigger class from the conjunction with 
+parent classes, and both are useful techniques for creating parsers.
 
 * Modifiers
 
@@ -229,19 +232,14 @@ directories := '/' ? (joinRule '/')* '/'?
 In this case join matches multiple times but joinRule will contain the result
 of all the matches joined with the string supplied.
 
-* Directives
-
-Directives are special instructions which can be sent to maryam during the
-parse stage. New directives can be implemented with plugins. They appear after
-rules and apply as soon as this match is valid.
-
-* Default values and directives modifying attributes.
+* Default values and using directives to modify attributes.
 
 class include : statement {
     string includeFile;
     bool   isSystemHeader = false;
 
-    include := 'include' (includeFile(cppSysInclude{isSystemHeader = true}) | includeFile(cppString));
+    include := 'include' (includeFile(cppSysInclude{isSystemHeader = true}) 
+                          | includeFile(cppString));
 }
 
 I mentioned before that a rule is like a class with only a constructor. In
@@ -260,19 +258,20 @@ will make this value true.
 The following directive instructs maryam to parse to start parsing a given
 file.
 
+# this has nothing to do with c-preprocessors
 importMatch := 'import' string{ parse() };
 
 The parse directive takes on argument, a string matching the file to parse.
 Maryam will by default fill it in from the rule the directive applies to,
 which in this case is the string after `import'. The directive is executed
-when the enclosing rule is matched and considered valid. environment variables
+when the enclosing rule is matched and considered valid. Environment variables
 and configuration files are used to determine the directory search path.
 
 * Using the parse directive
 
 The gnu cpp file includes directives that wrap parse and make the maryam follow
 include files using directives from the c-preprocessor (passed through the -I
-argument to maryam).
+argument to maryam, as they would be to cpp).
 
 Revisiting the case of include we can enhance it to make maryam open and parse
 another file using these two directives.
@@ -312,7 +311,7 @@ abstract class definitionBase : statement {
 class functionDefinition : definitionBase {
 	parameterList parameters;
 
-    functionDefinition := parameters ppValuePart;
+    functionDefinition := parameters macroBody;
 }
 
 class varDefinition : definitionBase {
@@ -328,10 +327,9 @@ class varUndefinition : statement {
 # the improved implementation starts
 class include : statement {
     string includeFile;
-
     bool   isSystemHeader = false;
 
-    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true, gccSysParse() } );
+    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true; gccSysParse() } );
     generalInclude   := includeFile( cppString { gccParse() } );
     
     # : begins the search statement
@@ -364,9 +362,9 @@ are expanded to the string which matched the rule $<name>.
 IMPORTANT: Errors are only reported if the parsed string is actually matched, 
 whereas the lookup happens when the variable is first accessed.
 
-The second case is a return statement, which returns a given values if the
+The second case is a return statement, which returns a given value if the
 first argument is true. In this case the resulting varDefinition's value will
-be substituted with the contents of rule that called the scope.
+be substituted with the contents of the string returned.
 
 If no match is found we want to signal an error condition so noMatchError is
 used to raise an error if no match is found.
@@ -380,8 +378,8 @@ class cppTokenMatch {
     
     definitionBase token;
     cppTokenMatch := cIdentifier : reverseTreeScope :
-                                        success(definitionBase.name == cIdentifier,
-                                                token = definitionBase)
+                                    success(definitionBase.name == cIdentifier,
+                                            token = definitionBase)
 }
 
 definitionBase is an abstract type, so can be used to point to any of the
@@ -398,7 +396,7 @@ pointers or multi-indexing methods, both have their drawbacks and advantages
 but are slower than general reference indexes so the imposition of this should 
 be considered when using references to abstract classes.
 
-* Improving the include object yet again
+* Improving the include object to store the macro reference
 
 When including the result of a preprocessor token it would be useful to store a
 handle to c-preprocessor definition that the include statement received the
@@ -410,7 +408,7 @@ class include : statement {
     varDefinition includeToken;  # reference to rule which built this
     bool   isSystemHeader = false;
 
-    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true, gccSysParse() } );
+    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true; gccSysParse() } );
     generalInclude   := includeFile( cppString { gccParse() } );
     
     # : begins the search statement
@@ -466,7 +464,7 @@ class include : statement, macroStore {
     string includeFile;
     bool   isSystemHeader = false;
 
-    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true, gccSysParse() } );
+    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true; gccSysParse() } );
     generalInclude   := includeFile( cppString { gccParse() } );
 
     evalStm := evalStm(undefMsg = "including undefined identifier $cIdentifier",
@@ -520,7 +518,7 @@ inline class ifdefStm : statement, macroStore {
         success(varUndefinition.name == cIdentifier, 
                 undefined = true);
 
-    ifdefStm := ^ "ifdef" ifdefResult{ if (undefined, raiseScope())};
+    ifdefStm := ^ "ifdef" ifdefResult{ if (undefined, raiseScope()) };
 }
 
 ifdefStm overrides evalStm to modify a status variable if the definition is
@@ -539,7 +537,7 @@ definition. This can be done by providing a rule with arguments which will
 store the result of evaluating the macro or definition.
 
 The previous definition of a functional macro was using the simplified
-ppValuePart rule, which is correct in the following implementation:
+macroBody rule, which is corrected in the following implementation:
 
 class functionDefinition : definitionBase {
 	parameterList parameters;
@@ -547,15 +545,15 @@ class functionDefinition : definitionBase {
     # any token as supplied by the tokeniser
     vector<token> macroTokens;
 
-    functionDefinition := macroTokens
+    functionDefinition := macroTokens;
 
     # TODO: Fill me in
-    functionDefinition := parameters ppValuePart;
+    functionDefinition := parameters macroBody;
 }
 
 * About parser tokens
 The parser token symbol is automatically constructed from a list of all
-string and character literals in the code, along with all the types used and
+string and character literals in the code, along with all the types used in
 reachable rule matches. The built-in type token will match any single token as
 supplied by the tokeniser.
 
