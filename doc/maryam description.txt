@@ -138,8 +138,8 @@ child class to match).
 For sake of completeness here are the classes for undef 
 
 varUndefinition : statement {
-    string varName;
-    varUndefinition := "undef" varName;
+    string name;
+    varUndefinition := "undef" name;
 }
 
 * Containers
@@ -299,8 +299,8 @@ varDefinition : definitionBase {
 }
 
 varUndefinition : statement {
-    string varName;
-    varUndefinition := "undef" varName;
+    string name;
+    varUndefinition := "undef" name;
 }
 
 # the improved implementation starts
@@ -318,13 +318,12 @@ include : statement {
 
     
     # : begins the search statement
-    evalStm := cIdentifier : reverseTreeScope(
+    evalStm := cIdentifier : reverseTreeScope :
         error(varUndefinition.name == cIdentifier, 
               "including undefined identifier $cIdentifier");
         return(varDefinition.name == cIdentifier,
                varDefinition.value);
         noMatchError("#include of non-existent preprocessor token $cIdentifer");
-    );
 
     treeSearchInclude := generalInclude(evalStm) | sysHeaderInclude(evalStm);
 
@@ -345,8 +344,12 @@ The first argument is a search type, in this case `backwardsTreeScope'
 predicates attached to it. In this case there are two predicates.
 
 The first is an error predicate. If the predicate: 
-`varUndefinition.name == cIdentifier' is true, then the
-error condition argument is raised and the search has failed.
+`varUndefinition.name == cIdentifier' is true, then the error condition 
+argument is raised and the search has failed. Variables of the form $<name>
+are expanded to the string which matched the rule $<name>.
+
+IMPORTANT: Errors are only reported if the parsed string is actually matched, 
+whereas the lookup happens when the variable is first accessed.
 
 The second case is a return statement, which returns a given values if the
 first argument is true. In this case the resulting varDefinition's value will
@@ -363,10 +366,9 @@ statements. Take the following rule which matches any c-preprocessor token.
 class cppTokenMatch {
     
     definitionBase token;
-    cppTokenMatch := cIdentifier : reverseTreeScope(
+    cppTokenMatch := cIdentifier : reverseTreeScope :
                                         success(definitionBase.name == cIdentifier,
                                                 token = definitionBase)
-                                   );
 }
 
 definitionBase is an abstract type, so can be used to point to any of the
@@ -382,6 +384,45 @@ The success statement in the reverse tree scope simply indicates a succesful
 match if the predicate is true. The second argument is an optional statement
 to execute if the predicate matches. In this case it is used to assign the
 reference to token.
+
+* Improving the include object yet again
+
+When including the result of a preprocessor token it would be useful to store a
+handle to c-preprocessor definition that the include statement received the
+file value from. This can be done through the attribute includeToken as shown
+below.
+
+include : statement {
+    string includeFile;
+    varDefinition includeToken;  # reference to rule which built this
+    bool   systemHeaderInclude = false;
+
+    sysHeaderInclude { systemHeaderInclude = true } 
+                      := ('<' includeFile '>')
+                         < gccSysParse( includeFile ) >;
+
+    generalInclude    := ('"' includeFile '"' )
+                         < gccParse( includeFile ) >;
+
+    
+    # : begins the search statement
+    evalStm := cIdentifier : reverseTreeScope :
+        error(varUndefinition.name == cIdentifier, 
+              "including undefined identifier $cIdentifier");
+        return(varDefinition.name == cIdentifier,
+               varDefinition.value,
+               includeToken = varDefinition); # note new argument
+        noMatchError("#include of non-existent preprocessor token $cIdentifer");
+
+    treeSearchInclude := generalInclude(evalStm) | sysHeaderInclude(evalStm);
+
+    include := 'include' (  sysHeaderInclude  | generalInclude |
+                            treeSearchInclude );
+}
+
+A third optional argument to return is a statement to execute on success
+before returning, in this case the matching varDefinition is assigned to the
+includeToken reference attribute.
 
 * Affecting the parser at parse time.
 
