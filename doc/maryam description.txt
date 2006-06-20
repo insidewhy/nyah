@@ -184,6 +184,7 @@ class varDefinition : definitionBase {
 class functionDefinition : definitionBase {
 	parameterList parameters;
 
+    /* ppValuePart to be defined later */
     functionDefinition := parameters ppValuePart;
 }
 
@@ -299,6 +300,7 @@ abstract class definitionBase : statement {
 class functionDefinition : definitionBase {
 	parameterList parameters;
 
+    /* ppValuePart to be defined later */
     functionDefinition := parameters ppValuePart;
 }
 
@@ -528,5 +530,24 @@ not found.
 This makes sure the scope is raised when the symbol is not defined. The first
 argument to `raiseScope' is a reference to a class to push onto the scope. By
 default it passes `this', a reference to the class itself.
+
+* Extending tokenstore to support macros
+
+It is possible in the c-preprocessor to generate certain code from macros and
+the arguments which are passed. It should be possible to write a generic way
+from the resulting expansion of any macro, with arguments or just a simple
+definition. This can be done by providing a rule with arguments which will
+store the result of evaluating the macro or definition.
+
+The previous definition of a functional macro was missing a rule which is
+completed in the following version:
+
+class functionDefinition : definitionBase {
+	parameterList parameters;
+
+    # TODO: Fill me in
+    functionDefinition := parameters ppValuePart;
+}
+
 
 Suggested Music: Mogwai - Ten Rapid
