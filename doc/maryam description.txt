@@ -18,8 +18,8 @@ rule := '<' string '>';
 Here we introduce a few things. In this case rule is in the global namespace
 and can be used from anywhere. The '<' and the '>' are string literals. They
 refer to tokens passed from the tokenizer/lexer (this is automatically
-constructed from a table of all use literals and builtins). Here `string' is a
-built-in rule. A pre-existing rule which matches any string of characters. `;'
+constructed from a table of all use literals and used built-ins). Here
+`string' is a built-in rule that matches any string of characters. `;'
 terminates the rule.
 
 * Namespaces and classes.
@@ -48,7 +48,22 @@ expressions the same as the anchor $ which matches after the last character.
 abstract classes are helper classes that can not be used to create a parse
 match, and must be used via proper classes and inheritance.
 
-# Operations, the - and ! operators, and more EBNF ideas.
+* The `!' and `-' operators, representing strings.
+
+C-preprocessor strings have the format "string" or <string>, where string can
+be any character except the string terminator or a newline. These rules match
+the two string cases respectively:
+
+cppString     := ('"' (. - ("\n" | '"')) '"');
+
+`.' matches any character as it does for regular expressions. By applying the
+- operator the entire grouping will match any character except for the match
+  on the right hand side of the `-' operator. `! rule' is a synonym for 
+  `(. - rule)'. This can be used for the angle bracket strings:
+
+cppSysInclude := ('<' (! ("\n" | '>')) '>');
+
+* Directives, the subst directive.
 
 ppValuePart { subst(/\s+|\n+/," ") } := . - ("\n" | '\') ;
 
@@ -56,43 +71,29 @@ As this is matched the rule has the operation "subst(<regular expression>,
 <string>)" applied to it. As you will see later rules can be used as variable
 types to store data and if this rule is used as a variable type the variable's
 value will not be that of the string that matched but the string after the
-subst operation has been applied. Curly brackets are used to delimit operators
-and can appear on the RHS of a rule definition (they apply to the whole rule
-when it is matched), or to an element in the LHS (they will be applied to the
-elements within the rule matched after the whole rule is matched).
+subst operation has been applied. Curly brackets are used to enclose
+directives and follow the rule or group which causes the directive to be
+executed on match.
 
-ppValuePart is a rule which matches "." (any character as for regular
-expressions) except (the minus operator), "\n" a newline or (the | operator) a 
-backslash (grouped into a tuple with brackets).
+if a directive appears on the LHS of a rule initilisation is applies to the 
+whole rule, e.g. the following rules are synonymous:
 
-* The ! operator
+rule                     := ( <sub elements> ) { <directive> };
+sameRule { <directive> } := <sub elements>;
 
-`! rule' is a shorthand for `. - rule'. The RHS of ppValue part could be written:
-
-! ("\n" | '\');
-
-
-# Representing strings in maryam
-
-cppString     = ('"' (! ("\n" | '"')) '"') [ strip('"') ];
-cppSysInclude = ('<' (! ("\n" | '>')) '>') [ strip('<'), strip('>') ];
-
-c-preprocessor strings may include any character except the terminating
-character and may not include the newline character. The string delimited are
-removed with the strip modifier (which removes characters which match the
-argument at the end and beginining of the string reference first argument
-which is implicitly passed in this case).
-
-** Built in functions introduction
-
-subst is a built-in function which operates on a string of matched text and
+`subst' is a built-in directive which operates on a string of matched text and
 modifies it in some way. The function's first argument is a string and Maryam
 knows to automatically pass in the string of the matched rule to this value.
 The remaining two values are passed in of type regular expression and string.
-subst is overloaded to be able to take many useful arguments. In this case the
-first match of the regular expression \s+|\n+ will be replaced by the string "
-". (substall can be used to substitute all such arguments and would be more
-accurate for a c-preprocessor).
+subst is overloaded to be able to take many useful arguments. For ppValuePart 
+the first match of the regular expression \s+|\n+ will be replaced by the 
+string " ". (substall can be used to substitute all such arguments and would 
+be more accurate for a c-preprocessor).
+
+* Enhancing the string matches with directives.
+
+cppString     { strip('"') }             := ('"' (. - ("\n" | '"')) '"');
+cppSysInclude { strip('<'), strip('>') } := ('<' (! ("\n" | '>')) '>');
 
 * Comments
 
