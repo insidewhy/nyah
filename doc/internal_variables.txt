@@ -1,15 +1,3 @@
-use configuration variables:
-    escape_character:  default character used for escape [default: /]
-
-escape system modifiers:
- *  escape(
-        chr[s]    => escape character(s)|regexp(s)|strings
-        strip     => strip escape character from token? [default: true]
-    )
-    a single escape character, escapes itself (an escaped escape character isn't
-    stripped from the token even when strip is set to true)
-
-
 general modifiers:
  *  quote( 
         quoteChr[s] |  begin_quote_chr => The begining and end quotation marks
@@ -23,54 +11,6 @@ general modifiers:
         chr[s]  =>   terminate current token at this/these character(s)
     )       
     note: can also apply to an ebnf object
-
-c-preprocessor modifiers:
- *  cppEvaluate(
-        value    => token value to evalue. usually passed from enclosing rule
-        warnMsg  => warn event to raise if evaluation of token fails
-                    [the token itself will still be returned in failed
-                    evaluation]
-        errMsg   => error event to raise if evaluation of token fails.
-                    [default: null which implies no error will be generated and
-                    the token itself is returned in failed evaluation]
-    )
-
-database interaction:
- *  store(
-        value    => value to store. generally passed direct from calling object.
-        variable => reference to variable/field to store data to
-        prepend  => string to prefix to value stored
-        append   => string to suffix to value stored
-    )
-
-    When variable is a container then the value is pushed into the container. If
-    the variable is a rule which maps to a database type then a reference to
-    it's ID is pushed into the container.
-
-    note that built in types correspond to database types so:
-        string fieldName [ = string;]        // this is implied by the compiler
-        string fieldName = string[quote(')]  // user modifies match
-
-    Then within an object if:
-        rule := '"' fieldName '"';
-    is seen then this is equivalent to string< store(fieldName) >
-                                    or string< store(fieldName) >[ quote(') ]
-                                    depending on which is used
-
-    Equally
-        vector<string> parameters;
-        rule := parameters+;
-
-    is seen as
-        rule := string<store(parameters)> +;
-        # hence each parameter is pushed into the container
-
-    Basically: store is called automatically when a rule which has the same name
-               as an attribute is matched
-
- *  default(
-        value  => default value to store in field if one is not supplied
-    )
 
  *  strip(
         variable          => reference to variable to strip. usually passed in from
@@ -111,11 +51,13 @@ float:   integer.integer
 number:
     matches c-style float or integer. Adds to token table.
 
+Available via plugins
+---------------------
 string cIdentifier: matches c identifiers
 
 Context variables
 -----------------
-$rule: name of token currently being matched
+$<rule>: name of rule from most enclosing scope.
 $line: line number
 $col:  column
 $<number>: backreferences.. see subst command
