@@ -219,23 +219,24 @@ of all the matches joined with the string supplied.
 * Directives
 
 Directives are special instructions which can be sent to maryam during the
-parse stage. New directives can be implemented with plugins.
+parse stage. New directives can be implemented with plugins. They appear after
+rules and apply as soon as this match is valid.
 
 * Default values and directives modifying attributes.
 
 class include : statement {
     string includeFile;
-    bool   systemHeaderInclude = false;
+    bool   isSystemHeader = false;
 
-    sysHeaderIncludeStr{ systemHeaderInclude = true } := '<' includeFile '>';
+    sysHeaderIncludeStr{ isSystemHeader = true } := '<' includeFile '>';
     generalIncludeStr := '"' includeFile '"';
 
     include := 'include' (sysHeaderIncludeStr | generalIncludeStr);
 }
 
-In the include class systemHeaderInclude is by default set to false with the
-`=' operator (`:= is the rule assignment operator'). However if the attribute
-sysHeaderIncludeStr is matched then the directive will be invoked and 
+In the include class the attribute isSystemHeader is set to false by default
+with the `=' operator (`:= is the rule assignment operator'). However if the 
+attribute sysHeaderIncludeStr is matched then the directive will be invoked and 
 will make this value true.
 
 * The parse directive
@@ -262,15 +263,15 @@ another file using these two directives.
 
 class include : statement {
     string includeFile;
-    bool   systemHeaderInclude = false;
+    bool   isSystemHeader = false;
 
-    sysHeaderIncludeStr { systemHeaderInclude = true; gccSysParse(includeFile) } 
+    sysHeaderInclude { isSystemHeader = true; gccSysParse(includeFile) } 
                       := '<' includeFile '>';
 
     # includeFile is auto-passed as first argument to gccParse
     generalIncludeStr := '"' includeFile{ gccParse() } '"';
 
-    include := 'include' (  sysHeaderIncludeStr  | generalIncludeStr );
+    include := 'include' (  sysHeaderInclude | generalIncludeStr );
 }
 
 * Searching the AST with the search modifier
@@ -315,9 +316,9 @@ class varUndefinition : statement {
 class include : statement {
     string includeFile;
 
-    bool   systemHeaderInclude = false;
+    bool   isSystemHeader = false;
 
-    sysHeaderInclude { systemHeaderInclude = true } 
+    sysHeaderInclude { isSystemHeader = true } 
                       := ('<' includeFile '>')
                          { gccSysParse( includeFile ) };
 
@@ -403,9 +404,9 @@ below.
 class include : statement {
     string includeFile;
     varDefinition includeToken;  # reference to rule which built this
-    bool   systemHeaderInclude = false;
+    bool   isSystemHeader = false;
 
-    sysHeaderInclude { systemHeaderInclude = true } 
+    sysHeaderInclude { isSystemHeader = true } 
                       := ('<' includeFile '>')
                          { gccSysParse( includeFile ) };
 
@@ -458,9 +459,9 @@ class tokenStore {
 
 class include : statement, tokenStore {
     string includeFile;
-    bool   systemHeaderInclude = false;
+    bool   isSystemHeader = false;
 
-    sysHeaderInclude { systemHeaderInclude = true } 
+    sysHeaderInclude { isSystemHeader = true } 
                       := ('<' includeFile '>')
                          { gccSysParse( includeFile ) };
 
