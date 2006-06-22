@@ -15,14 +15,14 @@ This specifies that we are now begining a grammar called "Preprocessor"
 
 rule := '<' string '>';
 
-Here we introduce a few things. In this case rule is in the global namespace
+Here we introduce a few things. In this case rule is in the global class
 and can be used from anywhere. The '<' and the '>' are string literals. They
 refer to tokens passed from the tokenizer/lexer (this is automatically
 constructed from a table of all use literals and used built-ins). Here
 `string' is a built-in rule that matches any string of characters. `;'
 terminates the rule.
 
-* Namespaces and classes.
+* Classes.
 
 global {
     rule := '<' string '>';
@@ -149,7 +149,8 @@ when it is used in varDefinition the variable only matches what the rule would
 match. The string which matched the value is stored in the variable, unless
 the underlying data type is numerical or can be made numerical by an operation
 it has attached to it. A rule is very similar to a class, it can be considered
-as shorthand for a class that only has a constructor and no attributes.
+as shorthand for a class that only has a constructor and no attributes (and
+also is an inline class, inline classes are described later).
 
 varDefinition inherits from definitionBase, and therefore the attributes of
 definitionBase are also part of the new type varDefinition, and will be set
@@ -514,7 +515,7 @@ inline class ifdefStm : statement, macroStore {
 
     evalStm ifdefResult := evalStm : +reverseTreeScope( 
         noMatch                             : undefined = true,
-        varUndefinition.name == cIdentifier : undefined = true; halt);
+        varUndefinition.name == cIdentifier : halt);
 
     ifdefStm := ^ "ifdef" ifdefResult{ if (undefined, raiseScope()) };
 }
@@ -528,6 +529,72 @@ default it passes `this', a reference to the class itself.
 
 If is a fucntion which tests a boolean condition and executes the second
 argument statement(s) if the condition is true.
+
+* The global rule, completing ifdef
+
+The ifdef statement before is good for matching an ifdef and raising the
+scope, but when the matching #endif is matched the artificial scope should end
+so that statements after the enclosure finishes are not incorrectly ignored.
+This can be done using the global rule and by imbedding all of the text up to
+the ending #endif in the same class. This will also make sure that every
+`#ifdef' has a matching `#endif'.
+
+# first define an #endif class this will be useful for the #if statement
+# later. it could be a rule simple but this way we can re-use statement
+
+inline class endif : statement {
+    endif := ^ "endif";
+}
+
+inline class ifdefStm : statement, macroStore {
+    bool undefined = false;
+
+    evalStm ifdefResult := evalStm : +reverseTreeScope( 
+        noMatch                             : undefined = true,
+        varUndefinition.name == cIdentifier : halt);
+
+    ifdefStm := ^ "ifdef" ifdefResult { if (undefined, raiseScope()) }
+                   global ( endif { if (undefined, endScope()) }
+                            | eof { error("#ifdef without matching #endif") });
+}
+
+Recall from earlier that `global' is can be used as a synonym class for the
+main body of the grammar. The `global' class matches everything maryam matches
+including another imbedded ifdefStm rule recursively. This is because
+*anything* can be used within the #if statement that can be used anywhere
+else. The global class is inline and this cannot be changed.
+
+eof is a maryam keyword and matches the end of the file. If there are no more
+tokens left and and #endif has still not been matched it causes maryam to
+report a decent error.
+
+* Tokens and whitespace
+
+The parser token symbol is automatically constructed from a list of all
+string and character literals in the code, along with all the types used in
+reachable rule matches. The built-in type token will match any single token as
+supplied by the tokeniser. The tokenizer splits every symbol on the input
+stream of characters using the rule whitespace, a built in rule in the global
+namespace which mathces all whitespace characters (tab, newline, space etc.).
+This rule can be redefined by assigning to the whitespace rule:
+
+whitespace := ( "\t" | "\n" | " " );
+
+The tokenizer also performs additional splitting of the character stream into
+tokens based on all the string literals that are used in maryam e.g.
+
+function := cIdentifier "(" cIdentifier ( "," cIdentifier ) * ")";
+
+will add the string literals "(", "," and ")" to the tokenizer so that the
+character string function will not only match both of the following strings:
+
+someFunction ( param1 , param2 )
+someFunction(param1,param2)
+
+The tokenizer in maryam is dyanamic, and will adjust it's set of token symbols
+depending on what it is doing currently. For example, if a token is only 
+applicable within one type of non-inline class the string will only be
+tokenized within the resulting class.
 
 * Extending tokenstore to support functional macros
 
@@ -551,11 +618,5 @@ class functionDefinition : definitionBase {
     # TODO: Fill me in
     functionDefinition := parameters macroBody;
 }
-
-* About parser tokens
-The parser token symbol is automatically constructed from a list of all
-string and character literals in the code, along with all the types used in
-reachable rule matches. The built-in type token will match any single token as
-supplied by the tokeniser.
 
 Suggested Music: Mogwai - Ten Rapid
