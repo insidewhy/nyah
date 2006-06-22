@@ -337,12 +337,11 @@ class include : statement {
     generalInclude   := includeFile( cppString { gccParse() } );
     
     # : begins the search statement
-    evalStm := cIdentifier : reverseTreeScope :
-        error(varUndefinition.name == cIdentifier, 
-              "including undefined identifier $cIdentifier");
-        return(varDefinition.name == cIdentifier,
-               varDefinition.value);
-        noMatchError("#include of non-existent preprocessor token $cIdentifer");
+    evalStm := cIdentifier : reverseTreeScope( 
+        varUndefinition.name == cIdentifier : error("including undefined identifier $cIdentifier");
+        varDefinition.name == cIdentifier   : return(varDefinition.value);
+        noMatch                             : error("#include of non-existent
+                                                    preprocessor token $cIdentifer"));
 
     treeSearchInclude := generalInclude(evalStm) | sysHeaderInclude(evalStm);
 
@@ -353,7 +352,7 @@ class include : statement {
 evalStm matches a cIdentifier and then applies the search treeScope to fill in
 the value of rule with the result of the search.
 
-The first argument is a search type, in this case `backwardsTreeScope'
+The first argument is a search type, in this case `reverseTreeScope'
 
 `reverseTreeScope' searches backwards through the scope to match the various
 predicates attached to it. In this case there are two predicates.
@@ -370,7 +369,7 @@ The second case is a return statement, which returns a given value if the
 first argument is true. In this case the resulting varDefinition's value will
 be substituted with the contents of the string returned.
 
-If no match is found we want to signal an error condition so noMatchError is
+If no match is found we want to signal an error condition so noMatch is
 used to raise an error if no match is found.
 
 * Advanced search statements
@@ -381,19 +380,18 @@ statements. Take the following rule which matches any c-preprocessor token.
 class cppTokenMatch {
     
     definitionBase token;
-    cppTokenMatch := cIdentifier : reverseTreeScope :
-                                    success(definitionBase.name == cIdentifier,
-                                            token = definitionBase)
+    cppTokenMatch := cIdentifier : reverseTreeScope(
+        definitionBase.name == cIdentifier : token = definitionBase , halt);
 }
 
 definitionBase is an abstract type, so can be used to point to any of the
 subclasses (class composition is always performed using references in memory
 and the database).
 
-The success statement in the reverse tree scope simply indicates a succesful
-match if the predicate is true. The second argument is an optional statement
-to execute if the predicate matches. In this case it is used to assign the
-reference to token.
+In this case there are two statements after the query, the first assigns the
+locates AST node to the attribute. A "," is used to seperate statements, the
+next halt statement in the reverse tree scope simply indicates to stop
+the search when it is reached (return automatically halts the search).
 
 NOTE: abstract class references can be implemented with virtual functions and
 pointers or multi-indexing methods, both have their drawbacks and advantages 
@@ -416,13 +414,10 @@ class include : statement {
     generalInclude   := includeFile( cppString { gccParse() } );
     
     # : begins the search statement
-    evalStm := cIdentifier : reverseTreeScope :
-        error(varUndefinition.name == cIdentifier, 
-              "including undefined identifier $cIdentifier");
-        return(varDefinition.name == cIdentifier,
-               varDefinition.value,
-               includeToken = varDefinition); # note new argument
-        noMatchError("#include of non-existent preprocessor token $cIdentifer");
+    evalStm := cIdentifier : reverseTreeScope( 
+        varUndefinition.name == cIdentifier : error("including undefined identifier $cIdentifier");
+        varDefinition.name == cIdentifier   : includeToken = varDefinition, return(varDefinition.value);
+        noMatch                             : error("#include of non-existent preprocessor token $cIdentifer"));
 
     treeSearchInclude := generalInclude(evalStm) | sysHeaderInclude(evalStm);
 
@@ -430,9 +425,8 @@ class include : statement {
                             treeSearchInclude );
 }
 
-A third optional argument to return is a statement to execute on success
-before returning, in this case the matching varDefinition is assigned to the
-includeToken reference attribute.
+In this case the matching varDefinition is assigned to the includeToken 
+reference attribute is we find a matching macro.
 
 * Rule parameters and extending tree searches
 
@@ -444,17 +438,14 @@ elements into parameters the rule can be used in subclasses.
 class macroStore {
     varDefinition macro;  # reference to token rule
 
-    evalStm := cIdentifier : reverseTreeScope :
-                    return(varDefinition.name == cIdentifier,
-                           varDefinition.value,
-                           macro = varDefinition);
+    evalStm := cIdentifier : reverseTreeScope( 
+            varDefinition.name == cIdentifier : macro = varDefinition , return(varDefinition.value));
 
     # overload and append err messages, +reverseTreeScope is used to append 
     # additional rules to the matcher
-    evalStm(undefMsg, notfoundMsg) := evalStm : +reverseTreeScope :
-        error(varUndefinition.name == cIdentifier, 
-              undefMsg);
-        noMatchError(notfoundMsg);
+    evalStm(undefMsg, notfoundMsg) := evalStm : +reverseTreeScope( 
+        varUndefinition.name == cIdentifier : error(undefMsg);
+        noMatch                             : error(notfoundMsg));
 }
 
 In this implementation of macroStore there is an overloaded version of the
@@ -517,10 +508,9 @@ symbol is undefined.
 inline class ifdefStm : statement, macroStore {
     bool undefined = false;
 
-    evalStm ifdefResult := evalStm : +reverseTreeScope :
-        noMatchError(undefined = true)
-        success(varUndefinition.name == cIdentifier, 
-                undefined = true);
+    evalStm ifdefResult := evalStm : +reverseTreeScope( 
+        noMatch                             : undefined = true;
+        varUndefinition.name == cIdentifier : undefined = true; halt;
 
     ifdefStm := ^ "ifdef" ifdefResult{ if (undefined, raiseScope()) };
 }
