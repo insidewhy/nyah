@@ -338,8 +338,8 @@ class include : statement {
     
     # : begins the search statement
     evalStm := cIdentifier : reverseTreeScope( 
-        varUndefinition.name == cIdentifier : error("including undefined identifier $cIdentifier");
-        varDefinition.name == cIdentifier   : return(varDefinition.value);
+        varUndefinition.name == cIdentifier : error("including undefined identifier $cIdentifier"),
+        varDefinition.name == cIdentifier   : return(varDefinition.value),
         noMatch                             : error("#include of non-existent
                                                     preprocessor token $cIdentifer"));
 
@@ -381,7 +381,7 @@ class cppTokenMatch {
     
     definitionBase token;
     cppTokenMatch := cIdentifier : reverseTreeScope(
-        definitionBase.name == cIdentifier : token = definitionBase , halt);
+        definitionBase.name == cIdentifier : token = definitionBase ; halt);
 }
 
 definitionBase is an abstract type, so can be used to point to any of the
@@ -415,8 +415,8 @@ class include : statement {
     
     # : begins the search statement
     evalStm := cIdentifier : reverseTreeScope( 
-        varUndefinition.name == cIdentifier : error("including undefined identifier $cIdentifier");
-        varDefinition.name == cIdentifier   : includeToken = varDefinition, return(varDefinition.value);
+        varUndefinition.name == cIdentifier : error("including undefined identifier $cIdentifier"),
+        varDefinition.name == cIdentifier   : includeToken = varDefinition, return(varDefinition.value),
         noMatch                             : error("#include of non-existent preprocessor token $cIdentifer"));
 
     treeSearchInclude := generalInclude(evalStm) | sysHeaderInclude(evalStm);
@@ -444,7 +444,7 @@ class macroStore {
     # overload and append err messages, +reverseTreeScope is used to append 
     # additional rules to the matcher
     evalStm(undefMsg, notfoundMsg) := evalStm : +reverseTreeScope( 
-        varUndefinition.name == cIdentifier : error(undefMsg);
+        varUndefinition.name == cIdentifier : error(undefMsg),
         noMatch                             : error(notfoundMsg));
 }
 
@@ -480,6 +480,10 @@ using two different syntaxes:
 
 `evalStm(arg1, arg2)', or `evalStm(undefMsg = arg1, notfoundMsg = arg2)'.
 
+Note that if both classes are proper parsing classes (i.e. they have
+constructors so can be used to match text) then the constructor rules must be
+matched in the order they appear in the inheritance list.
+
 * Inline classes and scope issues
 
 It would be useful if #ifdef statements that evaluated falsely would keep
@@ -509,8 +513,8 @@ inline class ifdefStm : statement, macroStore {
     bool undefined = false;
 
     evalStm ifdefResult := evalStm : +reverseTreeScope( 
-        noMatch                             : undefined = true;
-        varUndefinition.name == cIdentifier : undefined = true; halt;
+        noMatch                             : undefined = true,
+        varUndefinition.name == cIdentifier : undefined = true; halt);
 
     ifdefStm := ^ "ifdef" ifdefResult{ if (undefined, raiseScope()) };
 }
@@ -521,6 +525,9 @@ not found.
 This makes sure the scope is raised when the symbol is not defined. The first
 argument to `raiseScope' is a reference to a class to push onto the scope. By
 default it passes `this', a reference to the class itself.
+
+If is a fucntion which tests a boolean condition and executes the second
+argument statement(s) if the condition is true.
 
 * Extending tokenstore to support functional macros
 
