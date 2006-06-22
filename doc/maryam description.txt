@@ -55,20 +55,20 @@ be any character except the string terminator or a newline. These formats are
 matched respectively by the rules cppString and cppSysInclude:
 the two string cases respectively:
 
-cppString     := ('"' (. - ("\n" | '"')) '"');
+cppString     := '"' (. - ("\n" | '"')) '"';
 
 `.' matches any character as it does for regular expressions. By applying the
 - operator the entire grouping will match any character except for the match
   on the right hand side of the `-' operator. 
 
-cppSysInclude := ('<' (! ("\n" | '>')) '>');`! rule' is a synonym for 
+cppSysInclude := '<' (! ("\n" | '>')) '>';`! rule' is a synonym for 
 
 `! rule' is synonymous with `(. - rule)'. This shorthand has been used to
 write the cppSysInclude rule above.
 
-* Directives, the subst directive.
+* Directives, the subst and assign directives.
 
-macroBody { subst(/\s+|\n+/," ") } := . - ("\n" | '\');
+string macroBody { subst(/\s+|\n+/," ") } := ("\\\n" $ { assign("") } | ! "\n")+;
 
 As this is matched the rule has the operation "subst(<regular expression>,
 <string>)" applied to it. As you will see later rules can be used as variable
@@ -90,8 +90,13 @@ knows to automatically pass in the string of the matched rule to this value.
 The remaining two values are passed in of type regular expression and string.
 subst is overloaded to be able to take many useful arguments. For macroBody 
 the first match of the regular expression \s+|\n+ will be replaced by the 
-string " ". (substall can be used to substitute all such arguments and would 
+string " ". (substAll can be used to substitute all such arguments and would 
 be more accurate for a c-preprocessor).
+
+The `assign' directive's first argument is a reference to a string to modify,
+again in this case automatically passed by maryam. It assigns the value of the
+second argument to this reference. In this case it causes "\\n" at the end of
+a line to be replaced with the empty string.
 
 * Enhancing the string matches with directives.
 
@@ -104,8 +109,7 @@ cppSysInclude { strip('<'), strip('>') } := ('<' (! ("\n" | '>')) '>');
 # become token
 
 `#' is used as a comment character. / was not considered for comment use
-because of it's importance in being used as a regular expression type
-delimeter in Maryam.
+because of it's use as a regular expression type delimeter in Maryam.
 
 * EBNF iterative quantifiers and conjunction
 
@@ -280,8 +284,8 @@ class include : statement {
     string includeFile;
     bool   isSystemHeader = false;
 
-    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true, gccSysParse() } );
-    generalInclude   := includeFile( cppString { gccParse() } );
+    sysHeaderInclude := includeFile( cppSysInclude { sSystemHeader = true; gccSysParse() } );
+    generalInclude   := includeFile( cppString     { gccParse() } );
 
     include := 'include' (  sysHeaderInclude | generalIncludeStr );
 }
@@ -545,7 +549,7 @@ class functionDefinition : definitionBase {
     # any token as supplied by the tokeniser
     vector<token> macroTokens;
 
-    functionDefinition := macroTokens;
+    macroBody := macroTokens;
 
     # TODO: Fill me in
     functionDefinition := parameters macroBody;
