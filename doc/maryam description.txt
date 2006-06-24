@@ -546,15 +546,17 @@ inline class endif : statement {
     endif := ^ "endif";
 }
 
-inline class ifdefStm : statement, macroStore {
-    bool undefined = false;
+# now make this global, mark it as purely contextual (i.e. do not store in
+# database)
+context bool undefined;
 
+inline class ifdefStm : statement, macroStore {
     evalStm ifdefResult := evalStm : +reverseTreeScope( 
         noMatch                             : undefined = true,
         varUndefinition.name == cIdentifier : halt);
 
     ifdefStm := ^ "ifdef" ifdefResult { if (undefined, raiseScope()) }
-                   global ( endif { if (undefined, endScope()) }
+                   global ( endif { if (undefined, endScope(); undefined = false) }
                             | eof { error("#ifdef without matching #endif") });
 }
 
@@ -591,10 +593,18 @@ character string function will not only match both of the following strings:
 someFunction ( param1 , param2 )
 someFunction(param1,param2)
 
-The tokenizer in maryam is dyanamic, and will adjust it's set of token symbols
+The tokenizer in maryam is dynamic, and will adjust it's set of token symbols
 depending on what it is doing currently. For example, if a token is only 
 applicable within one type of non-inline class the string will only be
-tokenized within the resulting class.
+tokenized within the resulting class. Sometimes we may not wish to tokenise on
+whitespace and want to make an entire rule form a token to the tokeniser
+(rather than each individual literal and built in type becoming a token). This
+can be performed with the token qualifier.
+
+token stringRule[ whitespace('') ] = '"' !'"' '"';
+
+This will cause all patterns which match stringRule to become tokens according
+to the context.
 
 * Extending tokenstore to support functional macros
 
