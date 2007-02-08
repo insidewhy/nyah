@@ -105,6 +105,15 @@ a line to be replaced with the empty string.
 cppString     { strip('"') }             := ('"' (. - ("\n" | '"')) '"');
 cppSysInclude { strip(('<'), strip('>') } := ('<' (! ("\n" | '>')) '>');
 
+* Using angled brackets to select which part of a match to store
+
+cppString := ('"' < (. - ("\n" | '"')) > '"');
+cppSysInclude := ('<' < (. - ("\n" | '>')) > '>');
+
+< brackes delimit the part of the string from the match that will go into any
+rules of the given type. In this case if a string is "hey" a variable of type
+cppString will only store the hey portion.
+
 * Comments
 
 # ensure ## token remains seperated by a space in resulting string and "##"
@@ -232,7 +241,7 @@ string s [ quote('"') ];
 
 Is a shorthand for 
 
-s := '"' string '"';
+s := '"' < string > '"';
 
 * The join modifier
 
@@ -245,33 +254,16 @@ of all the matches joined with the string supplied.
 * Default values and using directives to modify attributes.
 
 class include : statement {
-    string includeFile;
     bool   isSystemHeader = false;
+    string includeFile := cppSysInclude {isSystemHeader = true} | cppString;
 
-    construct := 'include' (includeFile(cppSysInclude) {isSystemHeader = true}
-                            | includeFile(cppString));
+    construct := 'include' includeFile
 }
-
-I mentioned before that a rule is like a class with only a constructor. In
-this case the rule `cppSysInclude', constructs the attribute includeFile with
-the result of the cppSysInclude or cppString temporary rules (maryam will
-optimise the copy construction out in this case and apply the rule directly to
-the string).
 
 In the include class the attribute isSystemHeader is set to false by default
 with the `=' operator (`:= is the rule assignment operator'). However if the 
-attribute sysHeaderIncludeStr is matched then the directive will be invoked and 
+attribute cppSysInclude is matched then the directive will be invoked and 
 will make this value true.
-
-A better way to write this is
-
-class include : statement {
-    string includeFile;
-    bool   isSystemHeader = false;
-
-    construct := 'include' (includeFile(cppSysInclude {isSystemHeader = true}
-                                        | cppString));
-}
 
 In this case includeFile is constructed from whatever matches.
 
@@ -299,14 +291,12 @@ Revisiting the case of include we can enhance it to make maryam open and parse
 another file using these two directives.
 
 class include : statement {
-    string includeFile;
     bool   isSystemHeader = false;
+    string includeFile = ( cppSysInclude { sSystemHeader = true; gccSysParse() } |
+                           cppString     { gccParse() } 
+                         );
 
-    headerInclude := includeFile( cppSysInclude { sSystemHeader = true; gccSysParse() } |
-                                  cppString     { gccParse() } 
-                                );
-
-    construct := 'include' headerInclude;
+    construct := 'include' includeFile;
 }
 
 * Searching the AST with the search modifier
@@ -349,15 +339,12 @@ class varUndefinition : statement {
 
 # the improved implementation starts
 class include : statement {
-    string includeFile;
     bool   isSystemHeader = false;
-
-    headerInclude := includeFile( cppSysInclude{ sSystemHeader = true; gccSysParse() } |
-                                  cppString { gccParse() } 
-                                );
+    string includeFile := cppSysInclude{ sSystemHeader = true; gccSysParse() } |
+                          cppString { gccParse() } 
     
     # : begins the search statement
-    evalStm := cIdentifier : global( 
+    cIdentifier evalStm  : global( 
         varUndefinition.name = cIdentifier : error("including undefined identifier $cIdentifier"),
         varDefinition.name   = cIdentifier : return(varDefinition.value),
         noMatch                            : error("#include of non-existent
@@ -365,11 +352,13 @@ class include : statement {
 
     treeSearchInclude := headerInclude(evalStm);
 
-    construct := 'include' (  headerInclude | treeSearchInclude );
+    construct := 'include' (  includeFile | treeSearchInclude );
 }
 
-evalStm matches a cIdentifier and then applies the search treeScope to fill in
-the value of rule with the result of the search.
+evalStm matches a cIdentifier and then applies the search : global to fill in
+the value of rule with the result of the search by searching up the built AST
+until it reaches a type of global (in this case it means go all the way to the
+top).
 
 The first argument is the highest most enclosing tree type to search to. In
 this case global is used to send the search all the way to the top. In the
@@ -404,7 +393,7 @@ statements. Take the following rule which matches any c-preprocessor token.
 class cppTokenMatch {
     
     definitionBase token;
-    construct := cIdentifier : global(
+    cIdentifier construct : global(
         definitionBase.name == cIdentifier : token = definitionBase
     );
 }
@@ -440,10 +429,11 @@ class include : statement {
                                 );
     
     # : begins the search statement
-    evalStm := cIdentifier : global( 
+    cIdentifier evalStm : global( 
         varUndefinition.name = cIdentifier : error("including undefined identifier $cIdentifier"),
         varDefinition.name   = cIdentifier : includeToken = varDefinition, return(varDefinition.value),
-        noMatch                             : error("#include of non-existent preprocessor token $cIdentifer"));
+        noMatch                             : error("#include of non-existent preprocessor token $cIdentifer")
+    );
 
     treeSearchInclude := headerInclude(evalStm)
 
@@ -468,14 +458,13 @@ elements into parameters the rule can be used in subclasses.
 class macroStore(undefMsg, notfoundMsg) {
     varDefinition macro;  # reference to token rule
 
-    evalStm := cIdentifier 
-              : global( 
-                    varDefinition.name = cIdentifier : macro = varDefinition ; return(varDefinition.value)
-              );
+    cIdentifier evalStm : global( 
+        varDefinition.name = evalStm   : macro = varDefinition ; return(varDefinition.value)
+        varUndefinition.name = evalStm : error(undefMsg),
+        noMatch                        : error(notfoundMsg));
+    );
 
-    construct := evalStm : +global( 
-        varUndefinition.name = cIdentifier : error(undefMsg),
-        noMatch                            : error(notfoundMsg));
+    construct := evalStm
 }
 
 In this implementation of macroStore the class itself takes parameters.  It 
@@ -545,11 +534,12 @@ symbol is undefined.
 inline class ifdefStm : statement, macroStore {
     bool undefined = false;
 
-    evalStm ifdefResult := evalStm : +global( 
-        noMatch                             : undefined = true,
-        varUndefinition.name == cIdentifier : halt);
+    evalStm ifdefResult : +global( 
+        noMatch                             : undefined = true, raiseScope();
+        varUndefinition.name == cIdentifier : halt
+    );
 
-    construct := ^ "ifdef" ifdefResult{ if (undefined, raiseScope()) };
+    construct := ^ "ifdef" ifdefResult;
 }
 
 ifdefStm overrides evalStm to modify a status variable if the definition is
@@ -591,7 +581,7 @@ inline class ifdefStm : statement {
     # $1 is first argument passed.. in this case from the enclosing rule
     # implicityly, only relevent $n variables are passed to warn function
 
-    garbage[whitespace("")] := .+ { warn("garbage after ifdef: $1"); }
+    garbage[whitespace()] := .+ { warn("garbage after ifdef: $1"); }
     ifdefLine := ifdefResult garbage? "\n"
 
     construct := ^ "ifdef" ifdefLine global ( 
