@@ -7,7 +7,7 @@ also help.
 
 * Beginning a grammar
 
-grammar "Preprocessor";
+grammar Preprocessor;
 
 This specifies that we are now begining a grammar called "Preprocessor"
 
@@ -34,19 +34,21 @@ be preferrable to improve formatting and code readability.
 * Classes and constructors
 
 abstract class statement {
-    statement := ^'#';
+    construct := ^'#';
 }
 
-This creates the abstract class `statement'. It consists of a `constructor' rule
-`statement'.  This is similar to a constructor method in C++. A class'
-constructor must match the string being parsed in order for the class to be
-matched (classes can be used like rules as you will see later). The bare
-character ^ means this rule only matches at the begining of the document (i.e.
-there is no whitespace before it). It acts as an anchor as in regular
-expressions the same as the anchor $ which matches after the last character.
+This creates the abstract class `statement'. It consists of the `constructor' 
+rule This is similar to a constructor method in C++. A classes constructor must 
+match the string being parsed in order for the class to be matched (classes 
+can be used like rules as you will see later). The bare character ^ means this 
+rule only matches at the begining of the document (i.e.  there is no whitespace 
+before it). It acts as an anchor as in regular expressions the same as the 
+anchor $ which matches after the last character.
 
-abstract classes are helper classes that can not be used to create a parse
-match, and must be used via proper classes and inheritance.
+The word abstract is not necessary, it just stops the class being used in a
+rule accidentally. if the abstract statement is ommited and a class is only 
+used through inheritence the class will never become non-abstract anyway.
+
 
 * The `!' and `-' operators, representing strings.
 
@@ -68,7 +70,7 @@ write the cppSysInclude rule above.
 
 * Directives, the subst and assign directives.
 
-string macroBody { subst(/\s+|\n+/," ") } := ("\\\n" $ { assign("") } | ! "\n")+;
+string macroBody { subst(/\s+|\n+/," ") } := ("\\\n" { assign("") }  $ | ! "\n")+;
 
 As this is matched the rule has the operation "subst(<regular expression>,
 <string>)" applied to it. As you will see later rules can be used as variable
@@ -101,7 +103,7 @@ a line to be replaced with the empty string.
 * Enhancing the string matches with directives.
 
 cppString     { strip('"') }             := ('"' (. - ("\n" | '"')) '"');
-cppSysInclude { strip('<'), strip('>') } := ('<' (! ("\n" | '>')) '>');
+cppSysInclude { strip(('<'), strip('>') } := ('<' (! ("\n" | '>')) '>');
 
 * Comments
 
@@ -127,7 +129,7 @@ for the rule to be matched.
 abstract class definitionBase : statement {
     string name;
 
-    definitionBase := "define" name;
+    construct := "define" name;
 }
 
 definitionBase uses the class described earlier "statement" as it's parent.
@@ -141,7 +143,7 @@ matched this type is stored in the attribute.
 
 class varDefinition : definitionBase {
     ppValue varName;
-    varDefinition := varName?;
+    construct := varName?;
 }
 
 The rule ppValue is used as the type of the variable `varName'. In this case
@@ -163,7 +165,7 @@ For sake of completeness here are the classes for undef
 
 class varUndefinition : statement {
     string name;
-    varUndefinition := "undef" name;
+    construct := "undef" name;
 }
 
 * Containers
@@ -171,18 +173,21 @@ class varUndefinition : statement {
 abstract class parameterList {
     # cIdentifier is sourced from some maryam library files, it's easy to 
     # guess what it matches
-	vector<cIdentifier> parameters;
-	parameterList := ^'(' (parameters (',' parameters)* ')';
+	ordered_set<cIdentifier> parameters;
+	construct := ^'(' (parameters (',' parameters)* ')';
 }
 
 The class parameterList has an attribute `parameters' of type 
-`vector<cIdentifier>'. This makes the type parameters a container of many 
-values. Whenever the rule parameters matches the value it matches becomes 
-another element in the container. In this case `(apple, monkey)' would become 
-the container `{ apple , monkey }', a container of two c-identifiers.
+`ordered_set<cIdentifier>'. This makes the type parameters a container of many 
+values but they must all be different. Whenever the rule parameters matches 
+the value it matches becomes another element in the container. In this case 
+`(apple, monkey)' would become the container `{ apple , monkey }', a container 
+of two c-identifiers.
 
-In this case a vector is used, list and set (as per stl list and set), and
-hash (as per the TR1 boost Hash) can also be used.
+In this case an ordered_set is used, vector and set (as per stl list and set), 
+and other stl containers + TR1 should be supported.
+
+* TECHNICAL NOTE: Consider using boost multi-index containers
 
 Note here that "^" is used but can't possibly match at the begining of the
 line as the parent constructor rule must match first. In this case ^ means that
@@ -194,18 +199,18 @@ first token of this class.
 abstract class definitionBase : statement {
     string name;
 
-    definitionBase := "define" name;
+    construct := "define" name;
 }
 
 class varDefinition : definitionBase {
     ppValue varName;
-    varDefinition := varName?;
+    construct := varName?;
 }
 
 class functionDefinition : definitionBase {
 	parameterList parameters;
 
-    functionDefinition := parameters macroBody;
+    construct := parameters macroBody;
 }
 
 The attribute `parameters' has the type parameterList which
@@ -243,8 +248,8 @@ class include : statement {
     string includeFile;
     bool   isSystemHeader = false;
 
-    include := 'include' (includeFile(cppSysInclude{isSystemHeader = true}) 
-                          | includeFile(cppString));
+    construct := 'include' (includeFile(cppSysInclude) {isSystemHeader = true}
+                            | includeFile(cppString));
 }
 
 I mentioned before that a rule is like a class with only a constructor. In
@@ -257,6 +262,18 @@ In the include class the attribute isSystemHeader is set to false by default
 with the `=' operator (`:= is the rule assignment operator'). However if the 
 attribute sysHeaderIncludeStr is matched then the directive will be invoked and 
 will make this value true.
+
+A better way to write this is
+
+class include : statement {
+    string includeFile;
+    bool   isSystemHeader = false;
+
+    construct := 'include' (includeFile(cppSysInclude {isSystemHeader = true}
+                                        | cppString));
+}
+
+In this case includeFile is constructed from whatever matches.
 
 * The parse directive
 
@@ -285,10 +302,11 @@ class include : statement {
     string includeFile;
     bool   isSystemHeader = false;
 
-    sysHeaderInclude := includeFile( cppSysInclude { sSystemHeader = true; gccSysParse() } );
-    generalInclude   := includeFile( cppString     { gccParse() } );
+    headerInclude := includeFile( cppSysInclude { sSystemHeader = true; gccSysParse() } |
+                                  cppString     { gccParse() } 
+                                );
 
-    include := 'include' (  sysHeaderInclude | generalIncludeStr );
+    construct := 'include' headerInclude;
 }
 
 * Searching the AST with the search modifier
@@ -310,23 +328,23 @@ definition of #include.
 abstract class definitionBase : statement {
     string name;
 
-    definitionBase := "define" name;
+    construct := "define" name;
 }
 
 class functionDefinition : definitionBase {
 	parameterList parameters;
 
-    functionDefinition := parameters macroBody;
+    construct := parameters macroBody;
 }
 
 class varDefinition : definitionBase {
     ppValue value;
-    varDefinition := value?;
+    construct := value?;
 }
 
 class varUndefinition : statement {
     string name;
-    varUndefinition := "undef" name;
+    construct := "undef" name;
 }
 
 # the improved implementation starts
@@ -334,32 +352,37 @@ class include : statement {
     string includeFile;
     bool   isSystemHeader = false;
 
-    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true; gccSysParse() } );
-    generalInclude   := includeFile( cppString { gccParse() } );
+    headerInclude := includeFile( cppSysInclude{ sSystemHeader = true; gccSysParse() } |
+                                  cppString { gccParse() } 
+                                );
     
     # : begins the search statement
-    evalStm := cIdentifier : reverseTreeScope( 
-        varUndefinition.name == cIdentifier : error("including undefined identifier $cIdentifier"),
-        varDefinition.name == cIdentifier   : return(varDefinition.value),
-        noMatch                             : error("#include of non-existent
+    evalStm := cIdentifier : global( 
+        varUndefinition.name = cIdentifier : error("including undefined identifier $cIdentifier"),
+        varDefinition.name   = cIdentifier : return(varDefinition.value),
+        noMatch                            : error("#include of non-existent
                                                     preprocessor token $cIdentifer"));
 
-    treeSearchInclude := generalInclude(evalStm) | sysHeaderInclude(evalStm);
+    treeSearchInclude := headerInclude(evalStm);
 
-    include := 'include' (  sysHeaderInclude  | generalInclude |
-                            treeSearchInclude );
+    construct := 'include' (  headerInclude | treeSearchInclude );
 }
 
 evalStm matches a cIdentifier and then applies the search treeScope to fill in
 the value of rule with the result of the search.
 
-The first argument is a search type, in this case `reverseTreeScope'
+The first argument is the highest most enclosing tree type to search to. In
+this case global is used to send the search all the way to the top. In this
+case it accepts two predicates which it applies to relevent nodes in the tree.
+Each predicate match is like this:
 
-`reverseTreeScope' searches backwards through the scope to match the various
-predicates attached to it. In this case there are two predicates.
+type.attribute = something that evaluates to a string
+
+It will search all types that match (or inherit) type in the tree if the value
+matches.
 
 The first is an error predicate. If the predicate: 
-`varUndefinition.name == cIdentifier' is true, then the error condition 
+`varUndefinition.name = cIdentifier' is true, then the error condition 
 argument is raised and the search has failed. Variables of the form $<name>
 are expanded to the string which matched the rule $<name>.
 
@@ -381,8 +404,9 @@ statements. Take the following rule which matches any c-preprocessor token.
 class cppTokenMatch {
     
     definitionBase token;
-    cppTokenMatch := cIdentifier : reverseTreeScope(
-        definitionBase.name == cIdentifier : token = definitionBase ; halt);
+    construct := cIdentifier : global(
+        definitionBase.name == cIdentifier : token = definitionBase
+    );
 }
 
 definitionBase is an abstract type, so can be used to point to any of the
@@ -403,81 +427,89 @@ be considered when using references to abstract classes.
 
 When including the result of a preprocessor token it would be useful to store a
 handle to c-preprocessor definition that the include statement received the
-file value from. This can be done through the attribute includeToken as shown
-below.
+file value from. This can be done through the reference attribute includeToken 
+as shown below.
 
 class include : statement {
     string includeFile;
     varDefinition includeToken;  # reference to rule which built this
     bool   isSystemHeader = false;
 
-    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true; gccSysParse() } );
-    generalInclude   := includeFile( cppString { gccParse() } );
+    headerInclude := includeFile( cppSysInclude{ sSystemHeader = true; gccSysParse() } |
+                                  cppString { gccParse() } 
+                                );
     
     # : begins the search statement
-    evalStm := cIdentifier : reverseTreeScope( 
-        varUndefinition.name == cIdentifier : error("including undefined identifier $cIdentifier"),
-        varDefinition.name == cIdentifier   : includeToken = varDefinition, return(varDefinition.value),
+    evalStm := cIdentifier : global( 
+        varUndefinition.name = cIdentifier : error("including undefined identifier $cIdentifier"),
+        varDefinition.name   = cIdentifier : includeToken = varDefinition, return(varDefinition.value),
         noMatch                             : error("#include of non-existent preprocessor token $cIdentifer"));
 
-    treeSearchInclude := generalInclude(evalStm) | sysHeaderInclude(evalStm);
+    treeSearchInclude := headerInclude(evalStm)
 
-    include := 'include' (  sysHeaderInclude  | generalInclude |
-                            treeSearchInclude );
+    construct := 'include' ( headerInclude | treeSearchInclude );
 }
 
 In this case the matching varDefinition is assigned to the includeToken 
-reference attribute is we find a matching macro.
+reference attribute if we find a matching macro.
 
-* Rule parameters and extending tree searches
+
+TECHNICAL NOTE: If an attribute definition is only used to store the result of
+                a reverse tree search then this type becomes a reference type
+                to the rule and does not store a copy of the data
+
+* Class parameters and extending tree searches
 
 It would be nice to factor out the evalStm functionality into a base class as
 it is useful generic functionality. In its current form it is not suitable
 for this purpose as the error messages are specific. By factoring out these
 elements into parameters the rule can be used in subclasses. 
 
-class macroStore {
+class macroStore(undefMsg, notfoundMsg) {
     varDefinition macro;  # reference to token rule
 
-    evalStm := cIdentifier : reverseTreeScope( 
-            varDefinition.name == cIdentifier : macro = varDefinition , return(varDefinition.value));
+    evalStm := cIdentifier 
+              : global( 
+                    varDefinition.name = cIdentifier : macro = varDefinition ; return(varDefinition.value)
+              );
 
-    # overload and append err messages, +reverseTreeScope is used to append 
-    # additional rules to the matcher
-    evalStm(undefMsg, notfoundMsg) := evalStm : +reverseTreeScope( 
-        varUndefinition.name == cIdentifier : error(undefMsg),
+    construct := evalStm : +global( 
+        varUndefinition.name = cIdentifier : error(undefMsg),
         noMatch                             : error(notfoundMsg));
 }
 
-In this implementation of macroStore there is an overloaded version of the
-rule evalStm which takes arguments. It uses these arguments to ammend the tree
-search by using +reverseTreeScope which adds search predicates to an existing
+In this implementation of macroStore the class itself takes parameters.  It 
+uses these arguments to ammend the tree search by using +global which 
+adds search predicates to an existing
 search of the same type.
+
+TECHNICAL NOTE: This is very similar to C++ templates
 
 * Multiple inheritance
 
-class include : statement, macroStore {
+class include : 
+    statement, 
+    macroStore(undefMsg = "including undefined identifier $cIdentifier",
+               notfoundMsg = "#include of non-existent preprocessor token $cIdentifer");
+{
     string includeFile;
     bool   isSystemHeader = false;
 
-    sysHeaderInclude := includeFile( cppSysInclude{ sSystemHeader = true; gccSysParse() } );
-    generalInclude   := includeFile( cppString { gccParse() } );
+    headerInclude := includeFile( cppSysInclude{ sSystemHeader = true; gccSysParse() } |
+                                  cppString { gccParse() } 
+                                );
 
-    evalStm := evalStm(undefMsg = "including undefined identifier $cIdentifier",
-                       notfoundMsg = "#include of non-existent preprocessor token $cIdentifer");
-    
-    treeSearchInclude := generalInclude(evalStm) | sysHeaderInclude(evalStm);
+    treeSearchInclude := headerInclude(evalStm);
 
-    include := 'include' (  sysHeaderInclude  | generalInclude |
-                            treeSearchInclude );
+    construct := 'include' (  headerInclude | treeSearchInclude );
 }
 
 Now evalStm inherits from both statement and macroStore (in the generated code
-multiple inheritance is used for this purpose). evalStm overloads the
-macroStore parent version by calling it with the relevant error message
-strings. notfoundMsg relies on matching the parent rule's $cIdentifier token,
-but maryam can detect this through the constructor call. evalStm can be called
-using two different syntaxes:
+multiple inheritance is used for this purpose). evalStm uses a parameterised
+form of macroStore so inherits the appropriate evalStm (used in
+treeSearchInclude).  notfoundMsg relies on matching the parent rule's 
+$cIdentifier token, but maryam can detect this through the constructor call. 
+evalStm can be called using two different syntaxes:
 
 `evalStm(arg1, arg2)', or `evalStm(undefMsg = arg1, notfoundMsg = arg2)'.
 
@@ -513,11 +545,11 @@ symbol is undefined.
 inline class ifdefStm : statement, macroStore {
     bool undefined = false;
 
-    evalStm ifdefResult := evalStm : +reverseTreeScope( 
+    evalStm ifdefResult := evalStm : +global( 
         noMatch                             : undefined = true,
         varUndefinition.name == cIdentifier : halt);
 
-    ifdefStm := ^ "ifdef" ifdefResult{ if (undefined, raiseScope()) };
+    construct := ^ "ifdef" ifdefResult{ if (undefined, raiseScope()) };
 }
 
 ifdefStm overrides evalStm to modify a status variable if the definition is
@@ -543,7 +575,7 @@ the ending #endif in the same class. This will also make sure that every
 # later. it could be a rule simple but this way we can re-use statement
 
 inline class endif : statement {
-    endif := ^ "endif";
+    construct := ^ "endif";
 }
 
 # now make this global, mark it as purely contextual (i.e. do not store in
@@ -551,11 +583,11 @@ inline class endif : statement {
 context bool undefined;
 
 inline class ifdefStm : statement, macroStore {
-    evalStm ifdefResult := evalStm : +reverseTreeScope( 
+    evalStm ifdefResult := evalStm : +global( 
         noMatch                             : undefined = true,
-        varUndefinition.name == cIdentifier : halt);
+        varUndefinition.name = cIdentifier  : halt);
 
-    ifdefStm := ^ "ifdef" ifdefResult { if (undefined, raiseScope()) }
+    construct := ^ "ifdef" ifdefResult { if (undefined, raiseScope()) }
                    global ( endif { if (undefined, endScope(); undefined = false) }
                             | eof { error("#ifdef without matching #endif") });
 }
@@ -577,7 +609,7 @@ string and character literals in the code, along with all the types used in
 reachable rule matches. The built-in type token will match any single token as
 supplied by the tokeniser. The tokenizer splits every symbol on the input
 stream of characters using the rule whitespace, a built in rule in the global
-namespace which mathces all whitespace characters (tab, newline, space etc.).
+namespace which matches all whitespace characters (tab, newline, space etc.).
 This rule can be redefined by assigning to the whitespace rule:
 
 whitespace := ( "\t" | "\n" | " " );
@@ -599,20 +631,18 @@ applicable within one type of non-inline class the string will only be
 tokenized within the resulting class. Sometimes we may not wish to tokenise on
 whitespace and want to make an entire rule form a token to the tokeniser
 (rather than each individual literal and built in type becoming a token). This
-can be performed with the token qualifier.
+can be performed by using the whitespace modifier.
 
-token stringRule[ whitespace('') ] = '"' !'"' '"';
+stringRule[ whitespace('') ] = '"' !'"' '"';
 
 This will cause all patterns which match stringRule to become tokens according
 to the context.
 
-* Extending tokenstore to support functional macros
+* Using methods and the token type to evaluate functional macros
 
 It is possible in the c-preprocessor to generate certain code from macros and
 the arguments which are passed. It should be possible to write a generic way
-from the resulting expansion of any macro, with arguments or just a simple
-definition. This can be done by providing a rule with arguments which will
-store the result of evaluating the macro or definition.
+to get the result of expanding any macro based on how it was constructed.
 
 The previous definition of a functional macro was using the simplified
 macroBody rule, which is corrected in the following implementation:
@@ -620,13 +650,16 @@ macroBody rule, which is corrected in the following implementation:
 class functionDefinition : definitionBase {
 	parameterList parameters;
 
-    # any token as supplied by the tokeniser
+    # absolutely any token as supplied by the tokeniser
     vector<token> macroTokens;
 
-    macroBody := macroTokens;
+    # * is minimal matches, a macro is terminated with a newline character
+    macroBody := macroTokens* "\n";
 
-    # TODO: Fill me in
-    functionDefinition := parameters macroBody;
+    construct := parameters macroBody;
 }
+
+* Using the equality operator to search through the tree
+
 
 Suggested Music: Mogwai - Ten Rapid
