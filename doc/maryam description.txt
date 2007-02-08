@@ -372,9 +372,9 @@ evalStm matches a cIdentifier and then applies the search treeScope to fill in
 the value of rule with the result of the search.
 
 The first argument is the highest most enclosing tree type to search to. In
-this case global is used to send the search all the way to the top. In this
-case it accepts two predicates which it applies to relevent nodes in the tree.
-Each predicate match is like this:
+this case global is used to send the search all the way to the top. In the
+example it accepts two predicates which it applies to relevent nodes in the 
+tree.  Each predicate is searched like this:
 
 type.attribute = something that evaluates to a string
 
@@ -475,7 +475,7 @@ class macroStore(undefMsg, notfoundMsg) {
 
     construct := evalStm : +global( 
         varUndefinition.name = cIdentifier : error(undefMsg),
-        noMatch                             : error(notfoundMsg));
+        noMatch                            : error(notfoundMsg));
 }
 
 In this implementation of macroStore the class itself takes parameters.  It 
@@ -562,7 +562,7 @@ default it passes `this', a reference to the class itself.
 If is a fucntion which tests a boolean condition and executes the second
 argument statement(s) if the condition is true.
 
-* The global rule, completing ifdef
+* The global rule, implementing ifdef. 
 
 The ifdef statement before is good for matching an ifdef and raising the
 scope, but when the matching #endif is matched the artificial scope should end
@@ -578,18 +578,26 @@ inline class endif : statement {
     construct := ^ "endif";
 }
 
-# now make this global, mark it as purely contextual (i.e. do not store in
-# database)
-context bool undefined;
+inline class ifdefStm : statement {
+    # is this ifdef statement defined?
+    bool defined = false;
 
-inline class ifdefStm : statement, macroStore {
-    evalStm ifdefResult := evalStm : +global( 
-        noMatch                             : undefined = true,
-        varUndefinition.name = cIdentifier  : halt);
+    cIdentifier ifdefResult : global( 
+        noMatch                             : raiseScope();
+        varUndefinition.name = ifdefResult  : raiseScope();
+        varDefinition.name =   ifdefResult  : defined = true;
+    );
 
-    construct := ^ "ifdef" ifdefResult { if (undefined, raiseScope()) }
-                   global ( endif { if (undefined, endScope(); undefined = false) }
-                            | eof { error("#ifdef without matching #endif") });
+    # $1 is first argument passed.. in this case from the enclosing rule
+    # implicityly, only relevent $n variables are passed to warn function
+
+    garbage[whitespace("")] := .+ { warn("garbage after ifdef: $1"); }
+    ifdefLine := ifdefResult garbage? "\n"
+
+    construct := ^ "ifdef" ifdefLine global ( 
+                                            endif { if (! defined, endScope()) } |
+                                            eof { error("#ifdef without matching #endif") }
+                                        );
 }
 
 Recall from earlier that `global' is can be used as a synonym class for the
@@ -633,7 +641,7 @@ whitespace and want to make an entire rule form a token to the tokeniser
 (rather than each individual literal and built in type becoming a token). This
 can be performed by using the whitespace modifier.
 
-stringRule[ whitespace('') ] = '"' !'"' '"';
+stringRule[ whitespace() ] = '"' !'"' '"';
 
 This will cause all patterns which match stringRule to become tokens according
 to the context.
