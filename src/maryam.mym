@@ -44,36 +44,46 @@ inline class RuleExpression {
 
     alernate := BinOp('|', repeater) | repeater;
 
-    list< expressionGroup > expressions := alternate+;
+    list( expressionGroup ) expressions := alternate+;
 
     begin := expressions;
 }
 
 # this class represents a simple (possibly inline) rule with no storage
 class SimpleRule : Rule {
-    # just a set of bits, we give each bit a name and a corresponding string
-    # to match which will set the bit if it is found
-    BitSet (
-        "private" : private
-    ) typeSpecifier;
+    # a compile time ordered set 
+    set( private ) typeSpecifier;
 
     begin := typeSpecifier name ':=' RuleExpression;
 }
 
-class Attribute : DefinedRule {
-    begin :=  'TODO';
+class Attribute : SimpleRule, DefinedRule {
+    set( unique ) attributeSpecifier;
+
+    begin :=  attributeSpecifier super(0);
 }
 
 # an attribute that also has a rule describing restrictions on the attribute
 class StorageRule : SimpleRule , Attribute {
     StorageType storeType := id : global(
-        TypeDefinition.name = id
+        storeType.name = id
     );
 
     begin := storeType SimpleRule;
 }
 
+inline class ClassContents {
+}
+
+# inheriting from an inline class is like mixing the two class definitions into
+# one
+class Class : ClassContents {
+    list( SimpleRule ) simpleRules;
+
+    begin := 'class' id 
+}
 
 
-# the global begin
-begin := (rule terminate | Class) +
+# the global begin.. everything allowed in a class is allowed in the global
+# namespace and nothing else
+begin := (ClassContents | Class) +

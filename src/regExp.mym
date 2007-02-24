@@ -1,6 +1,7 @@
 # regex utility library
 
 class RegularExpressionMatch {
+    var subst := ('\\' ^ \d)*;
     begin := ('/' < (! '/')+ > '/' ) |
-             ( 'm' . { assign(s); } < (! s)+ > s);
+              ( m,m(.)([^\1]+)\1,\2 ) ^ subst;
 }

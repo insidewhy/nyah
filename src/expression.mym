@@ -19,7 +19,7 @@ class PreFixOp(opString, expr) : expr {
 }
 
 class BracketExpression(expr) {
-    list< expr > expressions := expr+;
+    list( expr ) expressions := expr+;
     
     begin := '(' expressions+ ')'
 }
