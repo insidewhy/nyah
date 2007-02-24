@@ -1,0 +1,11 @@
+# these can be overridden in your code if you don't like them
+
+private idFirst := 'a' .. 'z' | 'A' .. 'Z' | '_' ;
+
+id := idFirst (idFirst | \d) * ;
+character := "'" ! "\n" "'" | '"' ! "\n" '"';
+
+quotedString := "'" (! "\n")* "'" | '"' (! "\n") '"';
+
+
+characterRange := character '..' character;

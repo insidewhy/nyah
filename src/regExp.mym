@@ -1,0 +1,6 @@
+# regex utility library
+
+class RegularExpressionMatch {
+    begin := ('/' < (! '/')+ > '/' ) |
+             ( 'm' . { assign(s); } < (! s)+ > s);
+}

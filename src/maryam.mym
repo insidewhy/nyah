@@ -1,0 +1,79 @@
+# import all of regExp into this namespace
+using regExp;
+
+# import all basic types
+using basic;
+
+# import BinOp and PostFixOp templates from operator and make rest private
+using expression BinOp, PostFixOp;
+
+# any identifier
+terminate := ';';
+
+# any kind of rule that has been defined
+abstract class Rule {
+    id name;
+}
+
+# base class of anything that can be used as a rule in a rule expression
+class DefinedRule {
+    # a defined rule.. stores a reference to it's definition
+    Rule definingRule := global(
+        definingRule.name = id
+    );
+
+    begin := definingRule;
+}
+
+# this is what comes after a := in a rule expression.. it is all inlined into
+# a list of expressions
+inline class RuleExpression {
+    expression :=
+        DefinedRule | quotedString | characterRange | RegularExpressionMatch;
+
+    # can pass undeclared type as a template parameter and it is filled in
+    # when the rule gets defined tainting everything that uses it in the
+    # mean-time
+    BracketExpression(alternate) bracketExpression;
+
+    expressionGroup := bracketExpression | expression;
+
+    notExpression := PreFixOp('!', expressionGroup ) | expressionGroup
+
+    repeater := PostFixOp('+', notExpression) | PostFixOp('*', notExpression) | notExpression;
+
+    alernate := BinOp('|', repeater) | repeater;
+
+    list< expressionGroup > expressions := alternate+;
+
+    begin := expressions;
+}
+
+# this class represents a simple (possibly inline) rule with no storage
+class SimpleRule : Rule {
+    # just a set of bits, we give each bit a name and a corresponding string
+    # to match which will set the bit if it is found
+    BitSet (
+        "private" : private
+    ) typeSpecifier;
+
+    begin := typeSpecifier name ':=' RuleExpression;
+}
+
+class Attribute : DefinedRule {
+    begin :=  'TODO';
+}
+
+# an attribute that also has a rule describing restrictions on the attribute
+class StorageRule : SimpleRule , Attribute {
+    StorageType storeType := id : global(
+        TypeDefinition.name = id
+    );
+
+    begin := storeType SimpleRule;
+}
+
+
+
+# the global begin
+begin := (rule terminate | Class) +
