@@ -7,7 +7,9 @@ also help.
 
 * Beginning a grammar
 
-grammar Preprocessor;
+Just open a file. Everything before the last . becomes the name of this
+grammar in relation to the search directories. :: is used to replace directory
+seperators relative to the search directory.
 
 This specifies that we are now begining a grammar called "Preprocessor"
 
