@@ -4,6 +4,9 @@ using regExp;
 # import all basic types
 using basic;
 
+# for filenames
+using os;
+
 # import BinOp and PostFixOp templates from operator and make rest private
 using expression BinOp, PostFixOp;
 
@@ -15,26 +18,21 @@ abstract class Rule {
     id name;
 }
 
-# base class of anything that can be used as a rule in a rule expression
+# convenience storage expression for looking up a rule from an id and storing 
+# a reference to it in Rule
 class DefinedRule {
-    # a defined rule.. stores a reference to it's definition
-    Rule definingRule := global(
-        definingRule.name = id
-    );
-
-    begin := definingRule;
+    Rule rule := id : global( rule.name = id );
+    
+    begin := rule;
 }
 
 # this is what comes after a := in a rule expression.. it is all inlined into
 # a list of expressions
-inline class RuleExpression {
+class RuleExpression {
     expression :=
-        DefinedRule | quotedString | characterRange | RegularExpressionMatch;
+        DefinedRule | quotedString | CharacterRange | RegularExpressionMatch;
 
-    # can pass undeclared type as a template parameter and it is filled in
-    # when the rule gets defined tainting everything that uses it in the
-    # mean-time
-    BracketExpression(alternate) bracketExpression;
+    bracketExpression := BracketExpression(this);
 
     expressionGroup := bracketExpression | expression;
 
@@ -42,25 +40,35 @@ inline class RuleExpression {
 
     repeater := PostFixOp('+', notExpression) | PostFixOp('*', notExpression) | notExpression;
 
-    alernate := BinOp('|', repeater) | repeater;
+    list( repeater ) joiner := repeater ('^' repeater)*;
 
-    list( expressionGroup ) expressions := alternate+;
+    # joiner is used in expressions so joiner ceases to be a real attribute and
+    # becomes a stored type within the list of joiner for the exressions 
+    # attribute
+    list( joiner ) alternate := joiner ('|' joiner)*;
+
+    list( alternate ) expressions := alternate+;
 
     begin := expressions;
+    end := terminate;
 }
 
-# this class represents a simple (possibly inline) rule with no storage
+# this class represents a simple (possibly private) rule with no storage
 class SimpleRule : Rule {
-    # a compile time ordered set 
-    set( private ) typeSpecifier;
+    # a compile time bitset which has an enum with the same names as the
+    # strings it matches
+    bit_set( private ) typeSpecifier;
 
-    begin := typeSpecifier name ':=' RuleExpression;
+    RuleExpression expression;
+
+    begin := typeSpecifier name ':=' expression;
 }
 
-class Attribute : SimpleRule, DefinedRule {
-    set( unique ) attributeSpecifier;
+class SimpleAttribute : Rule {
+    bit_set( unique, mandatory ) attributeSpecifier;
 
-    begin :=  attributeSpecifier super(0);
+    DefinedRule storageRule;
+    begin := attributeSpecifier storageRule name ( ':=' storageExpression );
 }
 
 # an attribute that also has a rule describing restrictions on the attribute
@@ -69,21 +77,47 @@ class StorageRule : SimpleRule , Attribute {
         storeType.name = id
     );
 
+    DefinedRule storeType;
+
     begin := storeType SimpleRule;
 }
 
-inline class ClassContents {
-}
-
-# inheriting from an inline class is like mixing the two class definitions into
-# one
-class Class : ClassContents {
+class ClassContents {
+    # attributes
     list( SimpleRule ) simpleRules;
 
-    begin := 'class' id 
+    # it is unique, so even though it can be matched multiple times if it is
+    # set twice we are in trouble
+    unique BeginRule beginRule;
+
+    begin := (simpleRules | beginRule)*
+
 }
 
+class Class : ClassContents {
+    Class parentClass := id : global( parentClass.name = id ,
+                                noMatch: error('non-existant parent class') );
+
+    ordered_set( id ) classParameter := '(' id ( ',' id ) * ')';
+    ordered_set( parentClass ) classParent := ':' parentClass (',' parentClass)* ;
+
+    begin := 'class' classParameters? name '{' super(0);
+
+    end := '}';
+} 
+
+class UsingStatement {
+    # importFile() passed implicitly fileName type and can handle it
+    fileName useFilename { importFile() };
+
+    # TODO: take elements out of tree that do not match specifier
+    list( id ) importedElements := id (',' id)*;
+
+    begin := 'using' useFilename (importedElements);
+
+    end := terminate;
+}
 
 # the global begin.. everything allowed in a class is allowed in the global
-# namespace and nothing else
-begin := (ClassContents | Class) +
+# namespace along with using statements
+begin := ( (ClassContents | Class | UsingStatement) ) + 

@@ -18,8 +18,6 @@ class PreFixOp(opString, expr) : expr {
     end := opString;
 }
 
-class BracketExpression(expr) {
-    list( expr ) expressions := expr+;
-    
-    begin := '(' expressions+ ')'
+class BracketExpression(expr) : expr {
+    begin := '(' super ')'
 }

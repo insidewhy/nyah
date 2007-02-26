@@ -1,0 +1,2 @@
+# put in some fancy if unix/windows etc. stuff here
+fileName := (! ' ')+ | quotedString;

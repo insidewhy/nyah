@@ -3,10 +3,13 @@
 private idFirst := 'a' .. 'z' | 'A' .. 'Z' | '_' ;
 
 id := idFirst (idFirst | \d) * ;
-character := "'" ! "\n" "'" | '"' ! "\n" '"';
+character := "'" ^ < ! ("\n" | "'") > ^ "'" | '"' ^ < ! ("\n" | "'") > ^ '"';
 
-quotedString := "'" (! "\n")* "'" | '"' (! "\n") '"';
+quotedString := "'" ^ < (! ("\n" | "'") )* > ^ "'" | '"' ^ < (! ( "\n" | '"')* ) > ^ '"';
 
-
-characterRange := character '..' character;
+class CharacterRange {
+    character start;
+    character end;
+    begin := start '..' end
+}
 
