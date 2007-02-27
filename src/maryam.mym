@@ -14,14 +14,14 @@ using expression BinOp, PostFixOp;
 terminate := ';';
 
 # any kind of rule that has been defined
-abstract class Rule {
-    id name;
+abstract class RuleAbstract {
+    mandatory id name;
 }
 
 # convenience storage expression for looking up a rule from an id and storing 
-# a reference to it in Rule
+# a reference to it in RuleAbstract
 class DefinedRule {
-    Rule rule := id : global( rule.name = id );
+    RuleAbstract rule := id : global( rule.name = id );
     
     begin := rule;
 }
@@ -38,23 +38,25 @@ class RuleExpression {
 
     notExpression := PreFixOp('!', expressionGroup ) | expressionGroup
 
-    repeater := PostFixOp('+', notExpression) | PostFixOp('*', notExpression) | notExpression;
+    repeater := PostFixOp('+', notExpression) | 
+                PostFixOp('*', notExpression) | 
+                PostFixOp('?', notExpression) | 
+                notExpression |
+                BracketExpression(this, '<', '>');
 
-    list( repeater ) joiner := repeater ('^' repeater)*;
+    joiner := repeater ('^' repeater)* | BracketExpression(this, '<', '>');
 
-    # joiner is used in expressions so joiner ceases to be a real attribute and
-    # becomes a stored type within the list of joiner for the exressions 
-    # attribute
-    list( joiner ) alternate := joiner ('|' joiner)*;
+    alternate := joiner ('|' joiner)*;
 
-    list( alternate ) expressions := alternate+;
+    # each alternate has a sublist of joiner, each joiner having a sublist
+    # of type repeater. the results are propogated through the rules
+    list( alternate, joiner, repeater ) expressions := alternate+;
 
     begin := expressions;
-    end := terminate;
 }
 
 # this class represents a simple (possibly private) rule with no storage
-class SimpleRule : Rule {
+class Rule : RuleAbstract {
     # a compile time bitset which has an enum with the same names as the
     # strings it matches
     bit_set( private ) typeSpecifier;
@@ -62,29 +64,26 @@ class SimpleRule : Rule {
     RuleExpression expression;
 
     begin := typeSpecifier name ':=' expression;
+    end := terminate;
 }
 
-class SimpleAttribute : Rule {
-    bit_set( unique, mandatory ) attributeSpecifier;
+class SearchExpression {
+}
+
+class Attribute : RuleAbstract {
+    bit_set( unique, mandatory, parent ) attributeSpecifier;
 
     DefinedRule storageRule;
-    begin := attributeSpecifier storageRule name ( ':=' storageExpression );
+    RuleExpression expression;
+    SearchExpression search;
+
+    begin := attributeSpecifier storageRule name 
+             ( ':=' expression )? (':' search)? ;
 }
 
-# an attribute that also has a rule describing restrictions on the attribute
-class StorageRule : SimpleRule , Attribute {
-    StorageType storeType := id : global(
-        storeType.name = id
-    );
-
-    DefinedRule storeType;
-
-    begin := storeType SimpleRule;
-}
-
-class ClassContents {
+inline class ClassContents {
     # attributes
-    list( SimpleRule ) simpleRules;
+    list( Rule ) simpleRules;
 
     # it is unique, so even though it can be matched multiple times if it is
     # set twice we are in trouble
@@ -94,14 +93,51 @@ class ClassContents {
 
 }
 
-class Class : ClassContents {
-    Class parentClass := id : global( parentClass.name = id ,
-                                noMatch: error('non-existant parent class') );
+class ClassAbstract {
+    id name;
+}
 
-    ordered_set( id ) classParameter := '(' id ( ',' id ) * ')';
-    ordered_set( parentClass ) classParent := ':' parentClass (',' parentClass)* ;
+class DefinedClass {
+    ClassAbstract class := id : global( rule.name = id );
+    
+    begin := class;
+}
 
-    begin := 'class' classParameters? name '{' super(0);
+class Class : ClassAbstract {
+    ClassContents classContents;
+
+    abstract class Parameter {
+        id name;
+    }
+    class CharParameter : Parameter {
+        character default;
+        begin := 'char' name ('=' character)?;
+    }
+    class StringParameter : Parameter {
+        quotedString default;
+        begin := 'string' name ('=' default)?;
+    }
+    class IntParameter : Parameter {
+        integer default;
+        begin := 'int' name ('=' default)?;
+    }
+    class ClassParameter {
+        DefinedClass default;
+        begin := 'class'? name ('=' default)?;
+    }
+
+    ordered_set( Parameter ) classParameters := 
+        '(' Parameter ( ',' Parameter ) * ')';
+
+    # parent makes the elements referenced in this set parents in the scope
+    # TODO: Fix this to handle class parameters as well
+    parent ordered_set( parentClass ) classParent;
+    parentClass := Class | ;
+    parent ordered_set( parentClass ) classParent := ':' parentClass (',' parentClass)* ;
+
+
+
+    begin := 'class' classParameters? name '{' classContents;
 
     end := '}';
 } 

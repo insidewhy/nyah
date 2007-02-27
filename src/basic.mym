@@ -1,15 +1,24 @@
 # these can be overridden in your code if you don't like them
-
-private idFirst := 'a' .. 'z' | 'A' .. 'Z' | '_' ;
-
+################################################################################
+# Strings
+# TODO: More
 id := idFirst (idFirst | \d) * ;
 character := "'" ^ < ! ("\n" | "'") > ^ "'" | '"' ^ < ! ("\n" | "'") > ^ '"';
-
 quotedString := "'" ^ < (! ("\n" | "'") )* > ^ "'" | '"' ^ < (! ( "\n" | '"')* ) > ^ '"';
+private idFirst := 'a' .. 'z' | 'A' .. 'Z' | '_' ;
 
 class CharacterRange {
     character start;
     character end;
-    begin := start '..' end
+    begin := start '..' end;
 }
+
+################################################################################
+# Numeric
+# TODO: More
+################################################################################
+integer := \d+;
+float   := \d+ ^ 'f' | \d+.\d+;
+
+number := integer | float;
 
