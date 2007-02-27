@@ -18,7 +18,7 @@ class CharacterRange {
 # TODO: More
 ################################################################################
 integer := \d+;
-float   := \d+ ^ 'f' | \d+.\d+;
+float   := \d+ ^ 'f' | \d+ ^ '.' ^ \d+;
 
 number := integer | float;
 

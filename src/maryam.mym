@@ -111,7 +111,7 @@ class Class : ClassAbstract {
     }
     class CharParameter : Parameter {
         character default;
-        begin := 'char' name ('=' character)?;
+        begin := 'char' name ('=' default)?;
     }
     class StringParameter : Parameter {
         quotedString default;
@@ -135,8 +135,6 @@ class Class : ClassAbstract {
     parentClass := Class | ;
     parent ordered_set( parentClass ) classParent := ':' parentClass (',' parentClass)* ;
 
-
-
     begin := 'class' classParameters? name '{' classContents;
 
     end := '}';
@@ -155,5 +153,5 @@ class UsingStatement {
 }
 
 # the global begin.. everything allowed in a class is allowed in the global
-# namespace along with using statements
-begin := ( (ClassContents | Class | UsingStatement) ) + 
+# namespace along with using statements (class is allowed in class contents)
+begin := (ClassContents | UsingStatement) + 
