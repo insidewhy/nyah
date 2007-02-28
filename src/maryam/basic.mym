@@ -2,16 +2,17 @@
 ################################################################################
 # Strings
 # TODO: More
-id := idFirst (idFirst | \d) * ;
 character := "'" ^ < ! ("\n" | "'") > ^ "'" | '"' ^ < ! ("\n" | "'") > ^ '"';
 quotedString := "'" ^ < (! ("\n" | "'") )* > ^ "'" | '"' ^ < (! ( "\n" | '"')* ) > ^ '"';
-private idFirst := 'a' .. 'z' | 'A' .. 'Z' | '_' ;
 
 class CharacterRange {
     character start;
     character end;
     begin := start '..' end;
 }
+
+private idFirst := 'a' .. 'z' | 'A' .. 'Z' | '_' ;
+id := idFirst (idFirst | \d) * ;
 
 ################################################################################
 # Numeric

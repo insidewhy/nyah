@@ -68,29 +68,27 @@ class Rule : RuleAbstract {
 }
 
 class SearchExpression {
+    # TODO: Finish this
+    begin := ':';
 }
 
 class Attribute : RuleAbstract {
-    bit_set( unique, mandatory, parent ) attributeSpecifier;
+    bit_set( unique, mandatory, search ) attributeSpecifier;
 
-    DefinedRule storageRule;
+    RuleExpression typeExpression;
     RuleExpression expression;
     SearchExpression search;
 
-    begin := attributeSpecifier storageRule name 
-             ( ':=' expression )? (':' search)? ;
+    begin := attributeSpecifier typeExpression name 
+             ( ':=' expression )? search? ;
 }
 
-inline class ClassContents {
-    # attributes
-    list( Rule ) simpleRules;
+class BeginRule : Rule {
+    name := 'begin';
+}
 
-    # it is unique, so even though it can be matched multiple times if it is
-    # set twice we are in trouble
-    unique BeginRule beginRule;
-
-    begin := (simpleRules | beginRule)*
-
+class EndRule : Rule {
+    name := 'end';
 }
 
 class ClassAbstract {
@@ -98,44 +96,60 @@ class ClassAbstract {
 }
 
 class DefinedClass {
-    ClassAbstract class := id : global( rule.name = id );
-    
+    ClassAbstract class := id : global( class.name = id );
     begin := class;
 }
 
+################################################################################
+# class template parameters
+################################################################################
+abstract class Parameter {
+    id name;
+}
+class CharParameter : Parameter {
+    character default;
+    begin := 'char' name ('=' default)?;
+}
+class StringParameter : DefinedRule {
+    DefinedRule | quotedString default;
+    begin := 'string' name ('=' default)?;
+}
+class IntParameter : Parameter {
+    integer default;
+    begin := 'int' name ('=' default)?;
+}
+class ClassParameter : Parameter {
+    DefinedClass default;
+    begin := 'class'? name ('=' default)?;
+}
+
+parameter := ClassParameter | IntParameter | StringParameter | CharParameter;
+
+################################################################################
+# the class
+################################################################################
+class ParentClass {
+    # when matching search down into the class this parent class references
+    search ClassAbstract class := id : global( class.name = id );
+    ClassParameter classParameter := id : global( classParameter.name = id );
+
+    begin := class | classParameter;
+}
+
 class Class : ClassAbstract {
-    ClassContents classContents;
+    # attributes
+    list( Rule ) rules;
 
-    abstract class Parameter {
-        id name;
-    }
-    class CharParameter : Parameter {
-        character default;
-        begin := 'char' name ('=' default)?;
-    }
-    class StringParameter : Parameter {
-        quotedString default;
-        begin := 'string' name ('=' default)?;
-    }
-    class IntParameter : Parameter {
-        integer default;
-        begin := 'int' name ('=' default)?;
-    }
-    class ClassParameter {
-        DefinedClass default;
-        begin := 'class'? name ('=' default)?;
-    }
+    # unique, they can be matched more than once but the second will error
+    unique BeginRule beginRule;
+    unique EndRule endRule;
 
-    ordered_set( Parameter ) classParameters := 
-        '(' Parameter ( ',' Parameter ) * ')';
+    ordered_set( parameter ) classParameters := 
+        '(' parameter ( ',' parameter ) * ')';
 
-    # parent makes the elements referenced in this set parents in the scope
-    # TODO: Fix this to handle class parameters as well
-    parent ordered_set( parentClass ) classParent;
-    parentClass := Class | ;
-    parent ordered_set( parentClass ) classParent := ':' parentClass (',' parentClass)* ;
+    ordered_set( ParentClass ) classParent := ':' ParentClass (',' ParentClass)* ;
 
-    begin := 'class' classParameters? name '{' classContents;
+    begin := 'class' classParameters? name '{' (rules | beginRule | endRule)*;
 
     end := '}';
 } 
