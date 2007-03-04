@@ -26,11 +26,24 @@ class DefinedRule {
     begin := rule;
 }
 
+# like for defined rule but matches classes
+class ClassAbstract {
+    id name;
+}
+
+# class definition baby
+class DefinedClass {
+    ClassAbstract class := id : global( class.name = id );
+    begin := class;
+}
+
+
 # this is what comes after a := in a rule expression.. it is all inlined into
 # a list of expressions
 class RuleExpression {
     expression :=
-        DefinedRule | quotedString | CharacterRange | RegularExpressionMatch;
+        DefinedRule | DefinedClass | quotedString | 
+        CharacterRange | RegularExpressionMatch;
 
     bracketExpression := BracketExpression(this);
 
@@ -91,39 +104,13 @@ class EndRule : Rule {
     name := 'end';
 }
 
-class ClassAbstract {
-    id name;
-}
-
-class DefinedClass {
-    ClassAbstract class := id : global( class.name = id );
-    begin := class;
-}
-
 ################################################################################
 # class template parameters
 ################################################################################
-abstract class Parameter {
-    id name;
-}
-class CharParameter : Parameter {
-    character default;
-    begin := 'char' name ('=' default)?;
-}
-class StringParameter : DefinedRule {
-    DefinedRule | quotedString default;
-    begin := 'string' name ('=' default)?;
-}
-class IntParameter : Parameter {
-    integer default;
-    begin := 'int' name ('=' default)?;
-}
-class ClassParameter : Parameter {
+class Parameter {
     DefinedClass default;
-    begin := 'class'? name ('=' default)?;
+    begin := name ('=' default)?;
 }
-
-parameter := ClassParameter | IntParameter | StringParameter | CharParameter;
 
 ################################################################################
 # the class
@@ -131,7 +118,7 @@ parameter := ClassParameter | IntParameter | StringParameter | CharParameter;
 class ParentClass {
     # when matching search down into the class this parent class references
     search ClassAbstract class := id : global( class.name = id );
-    ClassParameter classParameter := id : global( classParameter.name = id );
+    Parameter classParameter := id : global( classParameter.name = id );
 
     begin := class | classParameter;
 }
