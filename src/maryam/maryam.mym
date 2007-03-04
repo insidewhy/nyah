@@ -26,17 +26,26 @@ class DefinedRule {
     begin := rule;
 }
 
-# like for defined rule but matches classes
-class ClassAbstract {
-    id name;
-}
-
+################################################################################
+# class template parameters
+################################################################################
 # class definition baby
 class DefinedClass {
     ClassAbstract class := id : global( class.name = id );
     begin := class;
 }
 
+class Parameter {
+    DefinedClass default;
+    begin := name ('=' default)?;
+}
+
+# like for defined rule but matches classes
+class ClassAbstract {
+    id name;
+    ordered_set( Parameter ) classParameters := 
+        '(' Parameter ( ',' Parameter ) * ')';
+}
 
 # this is what comes after a := in a rule expression.. it is all inlined into
 # a list of expressions
@@ -80,36 +89,47 @@ class Rule : RuleAbstract {
     end := terminate;
 }
 
-class SearchExpression {
-    # TODO: Finish this
-    begin := ':';
-}
-
 class Attribute : RuleAbstract {
     bit_set( unique, mandatory, search ) attributeSpecifier;
 
-    RuleExpression typeExpression;
+    # delay lookup modifier makes type expression not look up it's classes
+    # until the end of the file (in case the match is a reference type to a
+    # class that hasn't been defined yet)
+    RuleExpression typeExpression [ delayLookup() ];
     RuleExpression expression;
+
+    class SearchExpression {
+        # TODO: Finish this
+        DefinedClass searchScope;
+        bool isGlobal := 'global';
+        begin := ':' (searchScope | isGlobal) '(';
+
+        class SearchItem {
+        }
+        list(SearchItem) searches;
+
+        contents := searches;
+
+        end := ')';
+    }
     SearchExpression search;
 
-    begin := attributeSpecifier typeExpression name 
-             ( ':=' expression )? search? ;
+    # we can only have a reference type if there is a search, if there isn't 
+    # do the lookup
+    begin { if( ! search, lookup(typeExpression)) } 
+        := attributeSpecifier typeExpression name ( ':=' expression )? search? ;
 }
 
 class BeginRule : Rule {
     name := 'begin';
 }
 
-class EndRule : Rule {
-    name := 'end';
+class ContentsRule : Rule {
+    name := 'contents';
 }
 
-################################################################################
-# class template parameters
-################################################################################
-class Parameter {
-    DefinedClass default;
-    begin := name ('=' default)?;
+class EndRule : Rule {
+    name := 'end';
 }
 
 ################################################################################
@@ -130,29 +150,45 @@ class Class : ClassAbstract {
     # unique, they can be matched more than once but the second will error
     unique BeginRule beginRule;
     unique EndRule endRule;
+    unique ContentsRule contentsRule;
 
-    ordered_set( parameter ) classParameters := 
-        '(' parameter ( ',' parameter ) * ')';
+    ordered_set( ParentClass ) classParents := ':' ParentClass (',' ParentClass)* ;
 
-    ordered_set( ParentClass ) classParent := ':' ParentClass (',' ParentClass)* ;
+    begin := 'class' classParameters? name classParents '{';
 
-    begin := 'class' classParameters? name '{' (rules | beginRule | endRule)*;
+    contents :=  beginRule | endRule | contentsRule | rules;
 
     end := '}';
 } 
 
-class UsingStatement {
-    # importFile() passed implicitly fileName type and can handle it
-    fileName useFilename { importFile() };
+class GlobalClass : Class {
+    begin := 'class' 'global' name classParents '{';
+}
 
-    # TODO: take elements out of tree that do not match specifier
-    list( id ) importedElements := id (',' id)*;
+# make global inherit from class since anything that can be in a class can
+# also be in the global namespace
+class global : Class {
+    class UsingStatement {
+        # importFile() passed implicitly fileName type and can handle it
+        fileName useFilename { parse( extension := 'mym') };
 
-    begin := 'using' useFilename (importedElements);
+        # TODO: take elements out of tree that do not match specifier
+        list( id ) importedElements := id (',' id)*;
 
-    end := terminate;
+        begin := 'using' useFilename (importedElements);
+
+        end := terminate;
+    }
+
+    list( UsingStatement ) usingStatements;
+    unique GlobalClass globalClass;
+    
+    # the contents rule can be matched anywhere after the constructor rule
+    # and may be matched multiple times
+    # NOTE: contents of children classes have higher priorities than the
+    # parent classes so GlobalClass will get matched ahead of Class
+    contents := UsingStatement | globalClass;
 }
 
 # the global begin.. everything allowed in a class is allowed in the global
 # namespace along with using statements (class is allowed in class contents)
-begin := (ClassContents | UsingStatement) + 
