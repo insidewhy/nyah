@@ -36,7 +36,7 @@ be preferrable to improve formatting and code readability.
 * Classes and constructors
 
 abstract class statement {
-    construct := ^'#';
+    begin := ^'#';
 }
 
 This creates the abstract class `statement'. It consists of the `constructor' 
@@ -140,7 +140,7 @@ for the rule to be matched.
 abstract class definitionBase : statement {
     string name;
 
-    construct := "define" name;
+    begin := "define" name;
 }
 
 definitionBase uses the class described earlier "statement" as it's parent.
@@ -154,7 +154,7 @@ matched this type is stored in the attribute.
 
 class varDefinition : definitionBase {
     ppValue varName;
-    construct := varName?;
+    begin := varName?;
 }
 
 The rule ppValue is used as the type of the variable `varName'. In this case
@@ -176,7 +176,7 @@ For sake of completeness here are the classes for undef
 
 class varUndefinition : statement {
     string name;
-    construct := "undef" name;
+    begin := "undef" name;
 }
 
 * Containers
@@ -185,7 +185,7 @@ abstract class parameterList {
     # cIdentifier is sourced from some maryam library files, it's easy to 
     # guess what it matches
 	ordered_set<cIdentifier> parameters;
-	construct := ^'(' (parameters (',' parameters)* ')';
+	begin := ^'(' (parameters (',' parameters)* ')';
 }
 
 The class parameterList has an attribute `parameters' of type 
@@ -210,18 +210,18 @@ first token of this class.
 abstract class definitionBase : statement {
     string name;
 
-    construct := "define" name;
+    begin := "define" name;
 }
 
 class varDefinition : definitionBase {
     ppValue varName;
-    construct := varName?;
+    begin := varName?;
 }
 
 class functionDefinition : definitionBase {
 	parameterList parameters;
 
-    construct := parameters macroBody;
+    begin := parameters macroBody;
 }
 
 The attribute `parameters' has the type parameterList which
@@ -259,7 +259,7 @@ class include : statement {
     bool   isSystemHeader = false;
     string includeFile := cppSysInclude {isSystemHeader = true} | cppString;
 
-    construct := 'include' includeFile
+    begin := 'include' includeFile
 }
 
 In the include class the attribute isSystemHeader is set to false by default
@@ -298,7 +298,7 @@ class include : statement {
                            cppString     { gccParse() } 
                          );
 
-    construct := 'include' includeFile;
+    begin := 'include' includeFile;
 }
 
 * Searching the AST with the search modifier
@@ -320,23 +320,23 @@ definition of #include.
 abstract class definitionBase : statement {
     string name;
 
-    construct := "define" name;
+    begin := "define" name;
 }
 
 class functionDefinition : definitionBase {
 	parameterList parameters;
 
-    construct := parameters macroBody;
+    begin := parameters macroBody;
 }
 
 class varDefinition : definitionBase {
     ppValue value;
-    construct := value?;
+    begin := value?;
 }
 
 class varUndefinition : statement {
     string name;
-    construct := "undef" name;
+    begin := "undef" name;
 }
 
 # the improved implementation starts
@@ -354,7 +354,7 @@ class include : statement {
 
     treeSearchInclude := headerInclude(evalStm);
 
-    construct := 'include' (  includeFile | treeSearchInclude );
+    begin := 'include' (  includeFile | treeSearchInclude );
 }
 
 evalStm matches a cIdentifier and then applies the search : global to fill in
@@ -395,7 +395,7 @@ statements. Take the following rule which matches any c-preprocessor token.
 class cppTokenMatch {
     
     definitionBase token;
-    cIdentifier construct : global(
+    cIdentifier begin : global(
         definitionBase.name == cIdentifier : token = definitionBase
     );
 }
@@ -439,7 +439,7 @@ class include : statement {
 
     treeSearchInclude := headerInclude(evalStm)
 
-    construct := 'include' ( headerInclude | treeSearchInclude );
+    begin := 'include' ( headerInclude | treeSearchInclude );
 }
 
 In this case the matching varDefinition is assigned to the includeToken 
@@ -466,7 +466,7 @@ class macroStore(undefMsg, notfoundMsg) {
         noMatch                        : error(notfoundMsg));
     );
 
-    construct := evalStm
+    begin := evalStm
 }
 
 In this implementation of macroStore the class itself takes parameters.  It 
@@ -492,7 +492,7 @@ class include :
 
     treeSearchInclude := headerInclude(evalStm);
 
-    construct := 'include' (  headerInclude | treeSearchInclude );
+    begin := 'include' (  headerInclude | treeSearchInclude );
 }
 
 Now evalStm inherits from both statement and macroStore (in the generated code
@@ -541,7 +541,7 @@ inline class ifdefStm : statement, macroStore {
         varUndefinition.name == cIdentifier : halt
     );
 
-    construct := ^ "ifdef" ifdefResult;
+    begin := ^ "ifdef" ifdefResult;
 }
 
 ifdefStm overrides evalStm to modify a status variable if the definition is
@@ -567,7 +567,7 @@ the ending #endif in the same class. This will also make sure that every
 # later. it could be a rule simple but this way we can re-use statement
 
 inline class endif : statement {
-    construct := ^ "endif";
+    begin := ^ "endif";
 }
 
 inline class ifdefStm : statement {
@@ -586,7 +586,7 @@ inline class ifdefStm : statement {
     garbage[whitespace()] := .+ { warn("garbage after ifdef: $1"); }
     ifdefLine := ifdefResult garbage? "\n"
 
-    construct := ^ "ifdef" ifdefLine global ( 
+    begin := ^ "ifdef" ifdefLine global ( 
                                             endif { if (! defined, endScope()) } |
                                             eof { error("#ifdef without matching #endif") }
                                         );
@@ -656,10 +656,6 @@ class functionDefinition : definitionBase {
     # * is minimal matches, a macro is terminated with a newline character
     macroBody := macroTokens* "\n";
 
-    construct := parameters macroBody;
+    begin := parameters macroBody;
 }
 
-* Using the equality operator to search through the tree
-
-
-Suggested Music: Mogwai - Ten Rapid

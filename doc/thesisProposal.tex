@@ -1,0 +1,161 @@
+\documentclass{article}
+
+
+\begin{document}
+
+\title{A system for monitoring source code and updating binary code}
+\author{James Pike}
+\date{\today}
+
+\maketitle
+
+The approach taken by currently available compilers is to take a snapshot
+of a subset of files within a given project and re-writing and re-linking all
+modified compilation units entirely. No state information from previous
+executions of the compiler is avialable. We will research an alternative model where the compiler
+is a daemon process which store state information which it can use to 
+both optimise the build process and allow user queries to aid a development
+environment.
+
+\section{LTL Model Checking}
+
+Traditional LTL model checking forms the product of a B\"uchi
+automaton --- representing the negation of the specification --- and a
+formal model of the (finite-state) system being verified.  The
+resulting automaton is then checked for emptiness.  An accepting run
+describes an execution of the model that violates the specification.
+Conversely, emptiness implies correctness.
+
+Many techniques have been developed to improve the performance of this
+approach.  Symbolic techniques have employed BDDs to increase greatly
+the number of manageable states~\cite{BCMDH90} and SAT-based techniques
+have exploited advances in SAT-solving technology to provide an
+alternative symbolic approach~\cite{BCCZ99}.  Other work on simulation
+and partial-order reduction has provided methods of reducing the size
+of both the model and the automaton to expand further the range of
+solvable problems~\cite{P98,EWS01}.
+
+Construction of a B\"uchi automaton from a given LTL formula entails
+an exponential blow-up.  That is, the number of states in the
+automaton may be exponential in the size of the specification.
+However, LTL permits a more succinct automaton representation: Linear
+Weak Alternating Automata~\cite{MSS88}.  These automata are linear in
+the size of the specification, with an exponential translation into
+B\"uchi automata.  A translation of LTL into B\"uchi automata
+that uses LWAA as an intermediate representation permits an extra
+opportunity for minimisation.  Reduction of the intermediate LWAA is
+beneficial for two reasons: firstly, we do not have to construct the
+large B\"uchi automaton before performing optimisation; secondly, the
+removal of states at this early stage will pay off exponentially
+during the final translation.
+
+Recent work by Merz~\textit{et al} provides an emptiness checking
+algorithm for LWAA~\cite{MHK05}.  Because runs of the LWAA are
+analogous to the subset construction used to translate LWAA into
+B\"uchi automata, we can consider such an approach to build the
+B\"uchi automata ``on-the-fly''.  Although emptiness of LWAA is
+necessarily harder than B\"uchi automaton emptiness, efficiency is
+gained by avoiding explicit B\"uchi automaton construction.
+
+The application of these techniques forms the basis of our
+research. This forms two main strands: minimisation of LWAA, and fast
+emptiness checking for LWAA.  
+
+\section*{Minimising Alternating Automata}
+
+Quotienting by simulation relations can  be used to minimise automata.
+Simulation relations between  states  of an automaton   imply language
+containment and  can be  constructed in polynomial  time~\cite{EWS01}.
+These relations give  rise to an equivalence  relation  and a type  of
+quotienting,   where   similar states  are  merged.     This method of
+minimisation has been extended to the case of alternating automata by
+Fritz and Wilke~\cite{FW05}.
+
+There are three types of simulation: direct, delayed and fair.  These
+relations form a hierarchy, where fair simulation is the coarsest.
+Consequently, quotienting by fair simulation relations will give the
+greatest optimisation.  However, for B\"uchi automata, and therefore
+alternating automata, there exists a class of automata that permit no
+reasonable notion of a fair quotient~\cite{EWS01}.  These automata are
+not LWAA, nor are they Weak Alternating Automata.  In recent work we
+have shown that LWAA do indeed permit fair quotients.  This result has
+also been obtained independently by Carsten Fritz in his
+soon-to-be-published doctoral thesis~\cite{F06}.  
+
+\section*{SAT-based Model Checking with LWAA}
+
+We attempt to improve the performance of the emptiness checking
+algorithm for LWAA via a reduction to the reachability problem and an efficient
+SAT-based reachability procedure.  This
+reduction uses the techniques of Biere~\textit{et al}~\cite{BAS02}.
+The reachability check is performed using a SAT-based approached
+introduced by McMillan~\cite{McM03}.  
+
+This technique constructs a bounded model checking problem of length
+$k$.  That is, we encode as a boolean formula whether a final state
+can be reached in $k$ steps of the automaton.  If a final state is not
+found, the proof of unsatisfiability can be used to construct an
+over-approximation of the states reachable in one step.  We can then
+expand our set of initial states to include these states and test
+whether a final state can be reached in $k$ steps from the expanded
+initial set.  This procedure is iterated.  If a fixed point occurs and
+no final state has been reached, then no final state is reachable.
+This is because we over-approximate at each iteration.  If we have
+over-approximated and reach a final state, then it may be a spurious
+run.  By increasing $k$ we can make our analysis more fine-grained.
+Eventually $k$ will be large enough to find a genuine run, or a fixed
+point will be reached.
+
+We hope that this approach will prove fruitful because of the
+complementary strengths of the two algorithms that form the core of
+our own.  Merz~\textit{et al} have attempted a SAT-based bounded model
+checking approach to LWAA emptiness and found that a non-empty
+automaton tends to have a short accepting run, whilst, with large
+values of $k$, SAT-solvers soon struggle with the encoding~\cite{MS03}.
+Conversely, McMillan's approach shows the greatest improvement when
+the automaton is empty, since a fixed point can often be found without
+a large increase in the value of $k$.
+
+This approach is currently being
+implemented in joint work with William Blum.
+
+
+\section*{Further Research Directions}
+
+We propose several theoretical and experimental research directions.
+Firstly, we aim to complete and optimise our implementation of the
+LWAA checking algorithm described in the previous section.  This will
+require an adaption of the LWAA quotienting techniques to the more
+convenient LWAA representation used in the work of Merz~\textit{et
+al}.  Furthermore, we wish to investigate the effectiveness of fair
+quotienting against quotienting by delayed simulation.  Our definition
+of fair quotienting also permits a degree of choice as to which member
+of a quotiented state will represent the quotiented state as a whole.
+This choice is restricted by the structure of the LWAA, but we may
+investigate certain heuristics.  For example, we may choose the state
+with the fewest reachable states, or perhaps the ``most
+deterministic'' state in the spirit of Sebastiano and
+Tonetta~\cite{ST03}.
+
+On the theoretical level we hope to extend our result on the
+quotienting of LWAA to the more general case of Weak Alternating
+Automata.  WAA are equivalent to Linear Time $\mu$-Calculus and hence
+express all regular properties over strings~\cite{L05}.  We may also attempt to
+find a similar ``on-the-fly'' algorithm for WAA that may provide an
+efficient model checking routine for this more expressive logic.
+
+Another avenue of research is to investigate the applicability of
+alternating automata and ``on-the-fly'' techniques to the more
+difficult task of program synthesis.  Traditional synthesis techniques
+require the determinisation of B\"uchi automata.  Recent work has used
+universal automata or parity games to avoid the use of Safra's
+hard-to-implement determinisation procedure~\cite{KV05,HP06}.  These
+techniques use B\"uchi automata as a starting point.  It is possible
+that similar efficiency gains may be seen through the use of
+alternating automata in synthesis as have been seen in model checking.
+
+
+\bibliographystyle{plain}
+\bibliography{thesisProposalBib}
+
+\end{document}
