@@ -3,7 +3,8 @@
 # Strings
 # TODO: More
 character := "'" ^ < ! ("\n" | "'") > ^ "'" | '"' ^ < ! ("\n" | "'") > ^ '"';
-quotedString := "'" ^ < (! ("\n" | "'") )* > ^ "'" | '"' ^ < (! ( "\n" | '"')* ) > ^ '"';
+quotedString := ("'" ^ < (! ("\n" | "'") )* > ^ "'") | 
+                ('"' ^ < (! ( "\n" | '"')* ) > ^ '"');
 
 class CharacterRange {
     character start;
@@ -18,8 +19,10 @@ id := idFirst (idFirst | \d) * ;
 # Numeric
 # TODO: More
 ################################################################################
-integer := \d+;
-float   := \d+ ^ 'f' | \d+ ^ '.' ^ \d+;
+integer := -? ^ \d+;
+float   := integer ^ 'f' | integer ^ '.' ^ \d+;
+octal   := -? '0' ^ \d+;
+binary  := -? '0x' ^ [10]+;
 
-number := integer | float;
+number := integer | float | octal | binary;
 

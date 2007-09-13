@@ -105,6 +105,9 @@ class Attribute : RuleAbstract {
         begin := ':' (searchScope | isGlobal) '(';
 
         class SearchItem {
+            # this will respect the delayed lookup on the type expression
+            # so will not error if the type expression hasn't been set yet
+            
         }
         list(SearchItem) searches;
 
@@ -145,7 +148,8 @@ class ParentClass {
 
 class Class : ClassAbstract {
     # attributes
-    list( Rule ) rules;
+    list( Rule )    rules;
+    list( Class )   subClasses;
 
     # unique, they can be matched more than once but the second will error
     unique BeginRule beginRule;
@@ -154,9 +158,9 @@ class Class : ClassAbstract {
 
     ordered_set( ParentClass ) classParents := ':' ParentClass (',' ParentClass)* ;
 
-    begin := 'class' classParameters? name classParents '{';
+    begin := 'class' classParameters? name classParents? '{';
 
-    contents :=  beginRule | endRule | contentsRule | rules;
+    contents :=  beginRule | endRule | contentsRule | rules | subClasses;
 
     end := '}';
 } 
@@ -175,19 +179,22 @@ class global : Class {
         # TODO: take elements out of tree that do not match specifier
         list( id ) importedElements := id (',' id)*;
 
-        begin := 'using' useFilename (importedElements);
+        begin := 'using' useFilename importedElements?;
 
         end := terminate;
     }
 
     list( UsingStatement ) usingStatements;
     unique GlobalClass globalClass;
+
+    list( Class ) classes;
+    list( Rules ) rules;
     
     # the contents rule can be matched anywhere after the constructor rule
     # and may be matched multiple times
     # NOTE: contents of children classes have higher priorities than the
     # parent classes so GlobalClass will get matched ahead of Class
-    contents := UsingStatement | globalClass;
+    contents := UsingStatement | globalClass | classes | rules;
 }
 
 # the global begin.. everything allowed in a class is allowed in the global

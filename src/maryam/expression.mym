@@ -1,9 +1,11 @@
 # library for constructing operators
 
-class BinOp(opString, expr) : expr, expr {
+class BinOp(opString, expr) {
+    expr lhs;
+    expr rhs;
     # construct first parent as lhs and second parent as rhs, opString
     # retrievable from template parameter
-    begin := super(0) opString super(1);
+    begin := lhs opString rhs;
 }
 
 class PostFixOp(opString, expr) : expr {
