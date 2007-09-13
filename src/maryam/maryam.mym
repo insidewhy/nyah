@@ -90,7 +90,7 @@ class Rule : RuleAbstract {
 }
 
 class Attribute : RuleAbstract {
-    bit_set( unique, mandatory, search ) attributeSpecifier;
+    bit_set( unique, mandatory ) attributeSpecifier;
 
     # delay lookup modifier makes type expression not look up it's classes
     # until the end of the file (in case the match is a reference type to a
@@ -140,7 +140,7 @@ class EndRule : Rule {
 ################################################################################
 class ParentClass {
     # when matching search down into the class this parent class references
-    search ClassAbstract class := id : global( class.name = id );
+    ClassAbstract class := id : global( class.name = id );
     Parameter classParameter := id : global( classParameter.name = id );
 
     begin := class | classParameter;
