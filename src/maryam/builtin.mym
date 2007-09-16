@@ -2,3 +2,7 @@
 class join(str, exp) {
     begin := exp (str exp)*
 }
+
+function alias(string, reference) {
+    # aliases all reference lookups from string to be the given type reference
+}

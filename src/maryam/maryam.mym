@@ -33,13 +33,16 @@ class ClassAbstract : RuleOrClass {
         begin := name ('=' default)?;
 
         # the type below is only used by the reference constructor, the compiler
-        # knows not to instatiate it for non reference types?
-        mandatory parent (ClassAbstract& | default) parameterClass;
+        # knows not to instatiate it for non reference types.
+        # the alias makes class lookups within the class body work, the alias
+        # will only affect the scope if it's through inheritence
+        mandatory (ClassAbstract& | default) parameterClass { alias(name, parameterClass.name) };
         begin& := parameterClass;
     }
 
     # the join will instatiate the class parameters in the correct order for
-    # the reference case
+    # the reference case and ensure all mandatory elements for the reference
+    # versions are set
     ordered_set( Parameter ) classParameters := 
         '(' join(',', Parameter) ')';
 
@@ -50,7 +53,6 @@ class ClassAbstract : RuleOrClass {
 
 class RuleAbstract : RuleOrClass {
     begin := name
-
     # reference constructor used to build reference to this type, if there is
     # no reference constructor just use the normal constructor
 }
@@ -58,9 +60,8 @@ class RuleAbstract : RuleOrClass {
 # this is what comes after a := in a rule expression.. it is all inlined into
 # a list of expressions
 class RuleExpression {
-    expression :=
-        RuleAbstract& | ClassAbstract& | quotedString | 
-        CharacterRange | RegularExpressionMatch;
+    ( RuleAbstract& | ClassAbstract& | quotedString | 
+    CharacterRange | RegularExpressionMatch ) expression;
 
     bracketExpression := BracketExpression(this) | BracketExpression(this, '<', '>');
 
