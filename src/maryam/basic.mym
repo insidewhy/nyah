@@ -13,7 +13,7 @@ class CharacterRange {
 }
 
 private idFirst := 'a' .. 'z' | 'A' .. 'Z' | '_' ;
-id := idFirst (idFirst | \d) * ;
+id := idFirst ^ (idFirst | \d) * ; # the join propogates through the *
 
 ################################################################################
 # Numeric

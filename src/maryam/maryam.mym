@@ -14,47 +14,55 @@ using expression BinOp, PostFixOp;
 terminate := ';';
 
 # any kind of rule that has been defined
-abstract class RuleAbstract {
-    mandatory id name;
-}
-
-# convenience storage expression for looking up a rule from an id and storing 
-# a reference to it in RuleAbstract
-class DefinedRule {
-    RuleAbstract rule := id : global( rule.name = id );
-    
-    begin := rule;
+abstract class RuleOrClass {
+    # key also implies mandatory and is shared by a rule and a class so you
+    # can't have rules and classes with the same name now :)
+    key id name;
 }
 
 ################################################################################
 # class template parameters
 ################################################################################
 # class definition baby
-class DefinedClass {
-    ClassAbstract class := id : global( class.name = id );
-    begin := class;
-}
+# like for defined rule but matches classes, keys are for searching
+class ClassAbstract : RuleOrClass {
+    # inline mixes the scope of this class into the current class
+    inline class Parameter {
+        # search : global(class.name = id) implied by reference and key
+        ClassAbstract& default;
+        begin := name ('=' default)?;
 
-class Parameter {
-    DefinedClass default;
-    begin := name ('=' default)?;
-}
+        # the type below is only used by the reference constructor, the compiler
+        # knows not to instatiate it for non reference types?
+        mandatory parent (ClassAbstract& | default) parameterClass;
+        begin& := parameterClass;
+    }
 
-# like for defined rule but matches classes
-class ClassAbstract {
-    id name;
+    # the join will instatiate the class parameters in the correct order for
+    # the reference case
     ordered_set( Parameter ) classParameters := 
-        '(' Parameter ( ',' Parameter ) * ')';
+        '(' join(',', Parameter) ')';
+
+    begin := 'class' name classParameters?;
+
+    begin& := name classParameters?;
+}
+
+class RuleAbstract : RuleOrClass {
+    begin := name
+
+    # reference constructor used to build reference to this type, if there is
+    # no reference constructor just use the normal constructor
 }
 
 # this is what comes after a := in a rule expression.. it is all inlined into
 # a list of expressions
 class RuleExpression {
     expression :=
-        DefinedRule | DefinedClass | quotedString | 
+        RuleAbstract& | ClassAbstract& | quotedString | 
         CharacterRange | RegularExpressionMatch;
 
-    bracketExpression := BracketExpression(this);
+    bracketExpression := BracketExpression(this) | BracketExpression(this, '<', '>');
 
     expressionGroup := bracketExpression | expression;
 
@@ -63,12 +71,11 @@ class RuleExpression {
     repeater := PostFixOp('+', notExpression) | 
                 PostFixOp('*', notExpression) | 
                 PostFixOp('?', notExpression) | 
-                notExpression |
-                BracketExpression(this, '<', '>');
+                notExpression
 
-    joiner := repeater ('^' repeater)* | BracketExpression(this, '<', '>');
+    joiner := join('^', repeater);
 
-    alternate := joiner ('|' joiner)*;
+    alternate := join('|', joiner);
 
     # each alternate has a sublist of joiner, each joiner having a sublist
     # of type repeater. the results are propogated through the rules
@@ -80,8 +87,8 @@ class RuleExpression {
 # this class represents a simple (possibly private) rule with no storage
 class Rule : RuleAbstract {
     # a compile time bitset which has an enum with the same names as the
-    # strings it matches
-    bit_set( private ) typeSpecifier;
+    # strings it matches, multi because you can specify many options
+    multi_bit_set( private, key, parent ) typeSpecifier;
 
     RuleExpression expression;
 
@@ -100,7 +107,7 @@ class Attribute : RuleAbstract {
 
     class SearchExpression {
         # TODO: Finish this
-        DefinedClass searchScope;
+        AbstractClass searchScope;
         bool isGlobal := 'global';
         begin := ':' (searchScope | isGlobal) '(';
 
@@ -138,14 +145,6 @@ class EndRule : Rule {
 ################################################################################
 # the class
 ################################################################################
-class ParentClass {
-    # when matching search down into the class this parent class references
-    ClassAbstract class := id : global( class.name = id );
-    Parameter classParameter := id : global( classParameter.name = id );
-
-    begin := class | classParameter;
-}
-
 class Class : ClassAbstract {
     # attributes
     list( Rule )    rules;
@@ -156,25 +155,24 @@ class Class : ClassAbstract {
     unique EndRule endRule;
     unique ContentsRule contentsRule;
 
-    ordered_set( ParentClass ) classParents := ':' ParentClass (',' ParentClass)* ;
+    # the parent modifier sets all the types within the reference class as
+    # parents of this
+    parent ordered_set( AbstractClass& ) classParents := ':' join(',', AbstractClass&);
 
-    begin := 'class' classParameters? name classParents? '{';
+    # this goes after the parent class shit
+    begin := super classParents? '{';
 
     contents :=  beginRule | endRule | contentsRule | rules | subClasses;
 
     end := '}';
 } 
 
-class GlobalClass : Class {
-    begin := 'class' 'global' name classParents '{';
-}
-
 # make global inherit from class since anything that can be in a class can
 # also be in the global namespace
-class global : Class {
+class Global : Class {
     class UsingStatement {
         # importFile() passed implicitly fileName type and can handle it
-        fileName useFilename { parse( extension := 'mym') };
+        os.fileName useFilename { parse( extension := 'mym') };
 
         # TODO: take elements out of tree that do not match specifier
         list( id ) importedElements := id (',' id)*;
@@ -185,11 +183,7 @@ class global : Class {
     }
 
     list( UsingStatement ) usingStatements;
-    unique GlobalClass globalClass;
 
-    list( Class ) classes;
-    list( Rules ) rules;
-    
     # the contents rule can be matched anywhere after the constructor rule
     # and may be matched multiple times
     # NOTE: contents of children classes have higher priorities than the

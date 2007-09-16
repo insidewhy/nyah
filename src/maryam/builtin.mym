@@ -1,0 +1,4 @@
+# this also has other effects
+class join(str, exp) {
+    begin := exp (str exp)*
+}
