@@ -30,14 +30,17 @@ class ClassAbstract : RuleOrClass {
     inline class Parameter {
         # search : global(class.name = id) implied by reference and key
         ClassAbstract& default;
+        key id name;
         begin := name ('=' default)?;
 
-        # the type below is only used by the reference constructor, the compiler
-        # knows not to instatiate it for non reference types.
-        # the alias makes class lookups within the class body work, the alias
-        # will only affect the scope if it's through inheritence
-        mandatory (ClassAbstract& | default) parameterClass { alias(name, parameterClass.name) };
-        begin& := parameterClass;
+        # the type below is only used by a reference constructor, the compiler
+        # knows not to instatiate it for non-needed types.
+        mandatory (ClassAbstract& | default) parameterClass;
+
+        # when constructing a reference to ClassAbstract use this constructor
+        ClassAbstract.begin& := parameterClass;
+
+        # otherwise use a default which would just be the key on name
     }
 
     # the join will instatiate the class parameters in the correct order for
@@ -60,8 +63,8 @@ class RuleAbstract : RuleOrClass {
 # this is what comes after a := in a rule expression.. it is all inlined into
 # a list of expressions
 class RuleExpression {
-    ( RuleAbstract& | ClassAbstract& | quotedString | 
-    CharacterRange | RegularExpressionMatch ) expression;
+    expression = RuleAbstract& | ClassAbstract& | quotedString | 
+                 CharacterRange | RegularExpressionMatch;
 
     bracketExpression := BracketExpression(this) | BracketExpression(this, '<', '>');
 
@@ -80,9 +83,10 @@ class RuleExpression {
 
     # each alternate has a sublist of joiner, each joiner having a sublist
     # of type repeater. the results are propogated through the rules
-    list( alternate, joiner, repeater ) expressions := alternate+;
+    list( alternate, joiner, repeater, notExpression,
+          expressionGroup, bracketExpression, expression ) expressions;
 
-    begin := expressions;
+    contents := expressions;
 }
 
 # this class represents a simple (possibly private) rule with no storage
@@ -131,39 +135,21 @@ class Attribute : RuleAbstract {
         := attributeSpecifier typeExpression name ( ':=' expression )? search? ;
 }
 
-class BeginRule : Rule {
-    name := 'begin';
-}
-
-class ContentsRule : Rule {
-    name := 'contents';
-}
-
-class EndRule : Rule {
-    name := 'end';
-}
-
 ################################################################################
 # the class
 ################################################################################
 class Class : ClassAbstract {
-    # attributes
     list( Rule )    rules;
-    list( Class )   subClasses;
-
-    # unique, they can be matched more than once but the second will error
-    unique BeginRule beginRule;
-    unique EndRule endRule;
-    unique ContentsRule contentsRule;
+    list( Class )   nestedClasses;
 
     # the parent modifier sets all the types within the reference class as
     # parents of this
-    parent ordered_set( AbstractClass& ) classParents := ':' join(',', AbstractClass&);
+    parent list( Parameter& | AbstractClass& ) classParents := ':' join(',', classParents);
 
     # this goes after the parent class shit
     begin := super classParents? '{';
 
-    contents :=  beginRule | endRule | contentsRule | rules | subClasses;
+    contents :=  rules | nestedClasses;
 
     end := '}';
 } 
@@ -172,8 +158,8 @@ class Class : ClassAbstract {
 # also be in the global namespace
 class Global : Class {
     class UsingStatement {
-        # importFile() passed implicitly fileName type and can handle it
-        os.fileName useFilename { parse( extension := 'mym') };
+        # parse() passed implicitly fileName type and can handle it
+        fileName useFilename { parse( extension := 'mym') };
 
         # TODO: take elements out of tree that do not match specifier
         list( id ) importedElements := id (',' id)*;
@@ -189,7 +175,7 @@ class Global : Class {
     # and may be matched multiple times
     # NOTE: contents of children classes have higher priorities than the
     # parent classes so GlobalClass will get matched ahead of Class
-    contents := UsingStatement | globalClass | classes | rules;
+    contents := UsingStatement | classes | rules;
 }
 
 # the global begin.. everything allowed in a class is allowed in the global
