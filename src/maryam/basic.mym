@@ -19,10 +19,10 @@ id := idFirst ^ (idFirst | \d) * ; # the join propogates through the *
 # Numeric
 # TODO: More
 ################################################################################
-integer := -? ^ \d+;
+integer := '-'? ^ \d+;
 float   := integer ^ 'f' | integer ^ '.' ^ \d+;
-octal   := -? '0' ^ \d+;
-binary  := -? '0x' ^ [10]+;
+octal   := '-'? '0' ^ \d+;
+binary  := '-'? '0x' ^ [10]+;
 
 number := integer | float | octal | binary;
 
