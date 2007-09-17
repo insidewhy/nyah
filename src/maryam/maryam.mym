@@ -37,8 +37,11 @@ class TemplateClassAbstract : ClassAbstract {
         begin := name ('=' default)?;
 
         # the type below is only used by a reference constructor, the compiler
-        # knows not to instatiate it for non-needed types.
-        mandatory (ClassAbstract& | default) parameterClass;
+        # knows not to instatiate it for non-needed types and also that it
+        # must store data with the reference type.
+        mandatory ClassAbstract& parameterClass := ClassAbstract& | {  
+            if (default, parameterClass = default, error('invalid template parameter'));
+        };
 
         # when constructing a reference to ClassAbstract use this constructor
         TemplateClassAbstract.begin& := parameterClass;
@@ -48,7 +51,7 @@ class TemplateClassAbstract : ClassAbstract {
     # the join will instatiate the class parameters in the correct order for
     # the reference case and ensure all mandatory elements for the reference
     # versions are set
-    ordered_set( Parameter ) classParameters := '(' join<',', Parameter> ')';
+    ordered_set< Parameter > classParameters := '(' join<',', Parameter> ')';
 
     # super always called first
     begin := classParameters;
@@ -160,7 +163,7 @@ class Class : ClassAbstract {
 
     # the parent modifier sets all the types within the reference class as
     # parents of this
-    parent list< AbstractClass& | TemplateAbstractClass& > classParents := 
+    parent list< AbstractClass& , TemplateAbstractClass& > classParents := 
                                                     ':' join<',', classParents>;
 
     # this goes after the parent class shit
@@ -177,11 +180,13 @@ class TemplateClass : TemplateClassAbstract {
 
     class Parents {
         Parameter&      parameter;
-        parent AbstractClass& | TemplateAbstractClass&  class_;
+        parent (AbstractClass& | TemplateAbstractClass&)  class_;
 
         begin := parameter | class_;
 
-        Class.begin& := class_ | parameter { class_ = parameter.parameterClass };
+        TemplateClass.begin& := class_ | parameter { 
+            class_ = parameter.parameterClass 
+        };
     }
 
     parent list< Parents > classParents := ':' join<',', classParents>;
