@@ -196,7 +196,7 @@ class TemplateClass : TemplateClassAbstract {
 class Global : Class {
     class UsingStatement {
         # parse() passed implicitly fileName type and can handle it
-        fileName useFilename { parse( extension := 'mym') };
+        fileName useFilename { parse< extension = 'mym'> };
 
         # TODO: take elements out of tree that do not match specifier
         list< id > importedElements := id (',' id)*;
