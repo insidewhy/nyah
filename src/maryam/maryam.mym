@@ -137,7 +137,7 @@ class Attribute : RuleAbstract {
             # so will not error if the type expression hasn't been set yet
             
         }
-        list(SearchItem) searches;
+        list<SearchItem> searches;
 
         contents := searches;
 
@@ -155,12 +155,12 @@ class Attribute : RuleAbstract {
 # the class
 ################################################################################
 class Class : ClassAbstract {
-    list( Rule )    rules;
-    list( Class )   nestedClasses;
+    list< Rule >    rules;
+    list< Class >   nestedClasses;
 
     # the parent modifier sets all the types within the reference class as
     # parents of this
-    parent list( AbstractClass& | TemplateAbstractClass& ) classParents := 
+    parent list< AbstractClass& | TemplateAbstractClass& > classParents := 
                                                     ':' join<',', classParents>;
 
     # this goes after the parent class shit
@@ -172,8 +172,8 @@ class Class : ClassAbstract {
 } 
 
 class TemplateClass : TemplateClassAbstract {
-    list( Rule )    rules;
-    list( Class )   nestedClasses;
+    list< Rule >    rules;
+    list< Class >   nestedClasses;
 
     class Parents {
         Parameter&      parameter;
@@ -184,7 +184,7 @@ class TemplateClass : TemplateClassAbstract {
         Class.begin& := class_ | parameter { class_ = parameter.parameterClass };
     }
 
-    parent list( Parents ) classParents := ':' join<',', classParents>;
+    parent list< Parents > classParents := ':' join<',', classParents>;
 
     contents :=  rules | nestedClasses;
 
@@ -199,14 +199,14 @@ class Global : Class {
         fileName useFilename { parse( extension := 'mym') };
 
         # TODO: take elements out of tree that do not match specifier
-        list( id ) importedElements := id (',' id)*;
+        list< id > importedElements := id (',' id)*;
 
         begin := 'using' useFilename importedElements?;
 
         end := terminate;
     }
 
-    list( UsingStatement ) usingStatements;
+    list< UsingStatement > usingStatements;
 
     # the contents rule can be matched anywhere after the constructor rule
     # and may be matched multiple times
