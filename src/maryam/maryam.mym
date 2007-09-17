@@ -39,7 +39,6 @@ class ClassAbstract : RuleOrClass {
 
         # when constructing a reference to ClassAbstract use this constructor
         ClassAbstract.begin& := parameterClass;
-
         # otherwise use a default which would just be the key on name
     }
 
@@ -104,6 +103,7 @@ class Rule : RuleAbstract {
 class Attribute : RuleAbstract {
     bit_set( unique, mandatory ) attributeSpecifier;
 
+    # TODO: I don't think we need to delay stuff anymore or use searches
     # delay lookup modifier makes type expression not look up it's classes
     # until the end of the file (in case the match is a reference type to a
     # class that hasn't been defined yet)
@@ -144,7 +144,16 @@ class Class : ClassAbstract {
 
     # the parent modifier sets all the types within the reference class as
     # parents of this
-    parent list( Parameter& | AbstractClass& ) classParents := ':' join(',', classParents);
+    class Parents {
+        Parameter&      parameter;
+        parent AbstractClass&  class_;
+
+        begin := parameter | class_;
+
+        Class.begin& := class_ | parameter { class_ = parameter.parameterClass };
+    }
+
+    parent list( Parents ) classParents := ':' join(',', classParents);
 
     # this goes after the parent class shit
     begin := super classParents? '{';
@@ -175,7 +184,7 @@ class Global : Class {
     # and may be matched multiple times
     # NOTE: contents of children classes have higher priorities than the
     # parent classes so GlobalClass will get matched ahead of Class
-    contents := UsingStatement | classes | rules;
+    contents := UsingStatement | nestedClasses | rules;
 }
 
 # the global begin.. everything allowed in a class is allowed in the global
