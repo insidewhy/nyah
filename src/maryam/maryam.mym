@@ -48,7 +48,7 @@ class TemplateClassAbstract : ClassAbstract {
     # the join will instatiate the class parameters in the correct order for
     # the reference case and ensure all mandatory elements for the reference
     # versions are set
-    ordered_set( Parameter ) classParameters := '(' join(',', Parameter) ')';
+    ordered_set( Parameter ) classParameters := '(' join<',', Parameter> ')';
 
     # super always called first
     begin := classParameters;
@@ -81,7 +81,7 @@ class RuleExpression {
                     newLine | nonNewLine | tab );
 
 
-    bracketExpression := BracketExpression(this) | BracketExpression(this, '<', '>');
+    bracketExpression := BracketExpression<this> | BracketExpression<this, '[', ']'>;
 
     expressionGroup := bracketExpression | expression;
 
@@ -92,14 +92,14 @@ class RuleExpression {
                 PostFixOp('?', notExpression) | 
                 notExpression;
 
-    joiner := join('^', repeater);
+    joiner := join<'^', repeater>;
 
-    alternate := join('|', joiner);
+    alternate := join<'|', joiner>;
 
     # each alternate has a sublist of joiner, each joiner having a sublist
     # of type repeater. the results are propogated through the rules
-    list( alternate, joiner, repeater, notExpression,
-          expressionGroup, bracketExpression, expression ) expressions;
+    list< alternate, joiner, repeater, notExpression,
+          expressionGroup, bracketExpression, expression > expressions;
 
     contents := expressions;
 }
@@ -161,7 +161,7 @@ class Class : ClassAbstract {
     # the parent modifier sets all the types within the reference class as
     # parents of this
     parent list( AbstractClass& | TemplateAbstractClass& ) classParents := 
-                                                    ':' join(',', classParents);
+                                                    ':' join<',', classParents>;
 
     # this goes after the parent class shit
     begin := super classParents? '{';
@@ -184,7 +184,7 @@ class TemplateClass : TemplateClassAbstract {
         Class.begin& := class_ | parameter { class_ = parameter.parameterClass };
     }
 
-    parent list( Parents ) classParents := ':' join(',', classParents);
+    parent list( Parents ) classParents := ':' join<',', classParents>;
 
     contents :=  rules | nestedClasses;
 

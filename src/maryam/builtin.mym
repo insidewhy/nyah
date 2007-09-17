@@ -3,10 +3,6 @@ inline class join(str, exp) {
     begin := exp (str exp)*
 }
 
-function alias(string, reference) {
-    # aliases all reference lookups from string to be the given type reference
-}
-
-inline class around(quote, escape) {
+inline class escaped(quote, escape) {
     begin := quote ^ ( ( escape . ) | . )+ ^ quote
 }
