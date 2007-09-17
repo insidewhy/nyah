@@ -6,3 +6,34 @@ inline class join(str, exp) {
 inline class escaped(quote, escape) {
     begin := quote ^ ( ( escape . ) | . )+ ^ quote
 }
+
+# parse file with given extension using current language
+function parse(extension = '') {
+}
+
+# an ordered list that can store any of the given types
+inline class list(types...) {
+
+    # overloads
+    operator parent {
+        # commute to every element of the list
+    }
+
+    operator & {
+        # call begin& on every element of current list ensuring all
+        # mandatory conditions are valid parsing as we go
+    }
+}
+
+# join is specialised over list
+inline class join(str, exp >= list) {
+    # call begin over and over until there are no more joins pushing back each
+    # match to the list
+}
+
+# join is specialised over reference to list list
+inline class join(str, exp& >= list) {
+    # call begin& for each element in the referred to list with as many joined
+    # elements as we have, then continue to instantiate the begin& method with
+    # an empty string
+}
