@@ -1,7 +1,7 @@
 # regex utility library
 
 class RegularExpressionMatch {
-    var subst := ('\\' ^ \d)*;
-    begin := ('/' < (! '/')+ > '/' ) |
-              ( m,m(.)([^\1]+)\1,\2 ) ^ subst;
+    # use = to assign a temporary rule during a match
+    begin := escape('/', '\\') | 
+             'm' ^ sep = . ^ escape(sep, '\\')
 }

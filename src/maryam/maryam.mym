@@ -26,8 +26,11 @@ abstract class RuleOrClass {
 # class definition baby
 # like for defined rule but matches classes, keys are for searching
 class ClassAbstract : RuleOrClass {
-    # inline mixes the scope of this class into the current class
-    inline class Parameter {
+    begin := 'class' name;
+}
+
+class TemplateClassAbstract : ClassAbstract {
+    class Parameter {
         # search : global(class.name = id) implied by reference and key
         ClassAbstract& default;
         key id name;
@@ -38,23 +41,22 @@ class ClassAbstract : RuleOrClass {
         mandatory (ClassAbstract& | default) parameterClass;
 
         # when constructing a reference to ClassAbstract use this constructor
-        ClassAbstract.begin& := parameterClass;
+        TemplateClassAbstract.begin& := parameterClass;
         # otherwise use a default which would just be the key on name
     }
 
     # the join will instatiate the class parameters in the correct order for
     # the reference case and ensure all mandatory elements for the reference
     # versions are set
-    ordered_set( Parameter ) classParameters := 
-        '(' join(',', Parameter) ')';
+    ordered_set( Parameter ) classParameters := '(' join(',', Parameter) ')';
 
-    begin := 'class' name classParameters?;
+    # super always called first
+    begin := classParameters;
 
-    begin& := name classParameters?;
 }
 
 class RuleAbstract : RuleOrClass {
-    begin := name
+    begin := name;
     # reference constructor used to build reference to this type, if there is
     # no reference constructor just use the normal constructor
 }
@@ -62,19 +64,33 @@ class RuleAbstract : RuleOrClass {
 # this is what comes after a := in a rule expression.. it is all inlined into
 # a list of expressions
 class RuleExpression {
-    expression = RuleAbstract& | ClassAbstract& | quotedString | 
-                 CharacterRange | RegularExpressionMatch;
+    # the RuleAbstract&, ClassAbstract& etc. can be non-abstract versions as
+    # long as the reference begin still matches and is not overridden
+    anyDigit     := '\d';
+    nonDigit     := '\D';
+    anyChar      := '.';
+    anyWordChar  := '\w';
+    nonWordChar  := '\W';
+    newLine      := '\n';
+    nonNewLine   := '\N';
+    tab          := '\t';
+
+    expression := ( RuleAbstract& | ClassAbstract& | TemplateClassAbstract& |
+                    quotedString | CharacterRange | RegularExpressionMatch |
+                    anyDigit | nonDigit | anyChar | anyWordChar | nonWordChar | 
+                    newLine | nonNewLine | tab );
+
 
     bracketExpression := BracketExpression(this) | BracketExpression(this, '<', '>');
 
     expressionGroup := bracketExpression | expression;
 
-    notExpression := PreFixOp('!', expressionGroup ) | expressionGroup
+    notExpression := PreFixOp('!', expressionGroup ) | expressionGroup;
 
     repeater := PostFixOp('+', notExpression) | 
                 PostFixOp('*', notExpression) | 
                 PostFixOp('?', notExpression) | 
-                notExpression
+                notExpression;
 
     joiner := join('^', repeater);
 
@@ -144,16 +160,8 @@ class Class : ClassAbstract {
 
     # the parent modifier sets all the types within the reference class as
     # parents of this
-    class Parents {
-        Parameter&      parameter;
-        parent AbstractClass&  class_;
-
-        begin := parameter | class_;
-
-        Class.begin& := class_ | parameter { class_ = parameter.parameterClass };
-    }
-
-    parent list( Parents ) classParents := ':' join(',', classParents);
+    parent list( AbstractClass& | TemplateAbstractClass& ) classParents := 
+                                                    ':' join(',', classParents);
 
     # this goes after the parent class shit
     begin := super classParents? '{';
@@ -162,6 +170,26 @@ class Class : ClassAbstract {
 
     end := '}';
 } 
+
+class TemplateClass : TemplateClassAbstract {
+    list( Rule )    rules;
+    list( Class )   nestedClasses;
+
+    class Parents {
+        Parameter&      parameter;
+        parent AbstractClass& | TemplateAbstractClass&  class_;
+
+        begin := parameter | class_;
+
+        Class.begin& := class_ | parameter { class_ = parameter.parameterClass };
+    }
+
+    parent list( Parents ) classParents := ':' join(',', classParents);
+
+    contents :=  rules | nestedClasses;
+
+    end := '}';
+}
 
 # make global inherit from class since anything that can be in a class can
 # also be in the global namespace
