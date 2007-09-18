@@ -25,6 +25,8 @@ inline class list(types...) {
     }
 }
 
+# hey poopy poop face I miss you. *Honor Me For Eva* 
+
 # join is specialised over list
 inline class join(str, exp >= list) {
     # call begin over and over until there are no more joins pushing back each
