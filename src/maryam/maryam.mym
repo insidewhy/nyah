@@ -26,7 +26,8 @@ abstract class RuleOrClass {
 # class definition baby
 # like for defined rule but matches classes, keys are for searching
 class ClassAbstract : RuleOrClass {
-    begin := 'class' name;
+    begin  := 'class' name;
+    begin& := name;
 }
 
 class TemplateClassAbstract : ClassAbstract {
@@ -51,10 +52,14 @@ class TemplateClassAbstract : ClassAbstract {
     # the join will instatiate the class parameters in the correct order for
     # the reference case and ensure all mandatory elements for the reference
     # versions are set
-    ordered_set< Parameter > classParameters := '(' join<',', Parameter> ')';
+    ordered_set< Parameter > parameters;
 
     # super always called first
-    begin := classParameters;
+    classParameters := '(' join<',', parameters> ')';
+    begin           := classParameters?;
+
+    templateArgs := '<' join<',', parameters> '>';
+    begin&       := templateArgs?;
 
 }
 
