@@ -4,7 +4,7 @@ inline class join(str, exp) {
 }
 
 inline class escaped(quote, escape) {
-    begin := quote ^ ( ( escape . ) | . )+ ^ quote
+    begin := quote ^ ( ( escape ^ . ) | . )+ ^ quote
 }
 
 # parse file with given extension using current language
