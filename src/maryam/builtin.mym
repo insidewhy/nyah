@@ -35,7 +35,7 @@ inline class join(str, exp >= list) {
 
 # join is specialised over reference to list list
 inline class join(str, exp& >= list) {
-    # call begin& for each element in the referred to list with as many joined
-    # elements as we have, then continue to instantiate the begin& method with
+    # match begin& for each element in the referred to list with as many joined
+    # elements as we have, then continue to match begin& with
     # an empty string for remaining parameters in the NON reference case
 }

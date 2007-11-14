@@ -14,6 +14,8 @@ using expression BinOp, PostFixOp;
 terminate := ';';
 
 # any kind of rule that has been defined
+# abstract classes can not be instantiated but a reference to an abstract class
+# can be used to say that the reference can point to any deriving class
 abstract class RuleOrClass {
     # key also implies mandatory and is shared by a rule and a class so you
     # can't have rules and classes with the same name now :)
@@ -25,7 +27,7 @@ abstract class RuleOrClass {
 ################################################################################
 # class definition baby
 # like for defined rule but matches classes, keys are for searching
-class ClassAbstract : RuleOrClass {
+abstract class ClassAbstract : RuleOrClass {
     begin  := 'class' name;
     begin& := name;
 }
