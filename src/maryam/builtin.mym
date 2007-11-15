@@ -34,8 +34,11 @@ inline class join(str, exp >= list) {
 }
 
 # join is specialised over reference to list list
-inline class join(str, exp& >= list) {
+inline class join(str, exp >= list&) {
     # match begin& for each element in the referred to list with as many joined
     # elements as we have, then continue to match begin& with
-    # an empty string for remaining parameters in the NON reference case
+    # special type null for remaining parameters in the NON reference case
 }
+
+# if this is the type of a rule then store true if it is matched, else false
+type bool;

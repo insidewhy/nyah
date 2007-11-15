@@ -37,18 +37,20 @@ class TemplateClassAbstract : ClassAbstract {
         # search : global(class.name = id) implied by reference and key
         ClassAbstract& default;
         key id name;
-        begin := name ('=' default)?;
 
         # the type below is only used by a reference constructor, the compiler
         # knows not to instatiate it for non-needed types and also that it
         # must store data with the reference type.
-        mandatory ClassAbstract& parameterClass := ClassAbstract& | {  
-            if (default, parameterClass = default, error('invalid template parameter'));
+        mandatory ClassAbstract& parameterClass := ClassAbstract& | null { 
+            if (default, parameterClass = default, error('missing template parameter'));
         };
 
-        # when constructing a reference to ClassAbstract use this constructor
-        TemplateClassAbstract.begin& := parameterClass;
-        # otherwise use a default which would just be the key on name
+        # when constructing a reference to TemplateClassAbstract use this constructor
+        # TemplateClassAbstract.begin& := parameterClass;
+        begin& := parameterClass;
+
+        # default constructor
+        begin := name ('=' default)?;
     }
 
     # the join will instatiate the class parameters in the correct order for
@@ -71,6 +73,41 @@ class RuleAbstract : RuleOrClass {
     # no reference constructor just use the normal constructor
 }
 
+class Test {
+    # TODO: more types of test
+    bool invert := '!';
+    RuleOrClass& testRule;
+
+    begin := invert? testRule;
+}
+
+class Action {
+    class If {
+        Test test;
+
+        Action ifClause;
+        Action elseClause;
+        begin := 'if' '(' test ',' ifClause (',' elseClause)? ')';
+    }
+
+    class Assignment {
+        # TODO:
+        RuleOrClass& destRule;
+        RuleExpression srcExpression;
+        RuleOrClass& srcRule;
+        begin := destRule '=' (srcExpression | srcRule);
+    }
+
+    class Error {
+        begin := 'error' '(' quotedString ')';
+    }
+
+    list<If, Error, Assignment> actions;
+
+    begin := '{' join<';', actions>;
+    end   := '}';
+}
+
 # this is what comes after a := in a rule expression.. it is all inlined into
 # a list of expressions
 class RuleExpression {
@@ -84,18 +121,19 @@ class RuleExpression {
     newLine      := '\n';
     nonNewLine   := '\N';
     tab          := '\t';
+    _null        := 'null';
 
     expression := ( RuleAbstract& | ClassAbstract& | TemplateClassAbstract& |
                     quotedString | CharacterRange | RegularExpressionMatch |
                     anyDigit | nonDigit | anyChar | anyWordChar | nonWordChar | 
-                    newLine | nonNewLine | tab );
+                    newLine | nonNewLine | tab | _null ) Action?;
 
 
-    bracketExpression := BracketExpression<this> | BracketExpression<this, '[', ']'>;
+    bracketExpression := ( BracketExpression<this> | BracketExpression<this, '[', ']'> ) Action?;
 
     expressionGroup := bracketExpression | expression;
 
-    notExpression := PreFixOp('!', expressionGroup ) | expressionGroup;
+    notExpression := ( PreFixOp('!', expressionGroup ) Action? ) | ( expressionGroup Action? );
 
     repeater := PostFixOp('+', notExpression) | 
                 PostFixOp('*', notExpression) | 
@@ -108,8 +146,7 @@ class RuleExpression {
 
     # each alternate has a sublist of joiner, each joiner having a sublist
     # of type repeater. the results are propogated through the rules
-    list< alternate, joiner, repeater, notExpression,
-          expressionGroup, bracketExpression, expression > expressions;
+    list< alternate, joiner, repeater, notExpression > expressions;
 
     contents := expressions;
 }
@@ -129,36 +166,10 @@ class Rule : RuleAbstract {
 class Attribute : RuleAbstract {
     bit_set( unique, mandatory ) attributeSpecifier;
 
-    # TODO: I don't think we need to delay stuff anymore or use searches
-    # delay lookup modifier makes type expression not look up it's classes
-    # until the end of the file (in case the match is a reference type to a
-    # class that hasn't been defined yet)
-    RuleExpression typeExpression [ delayLookup() ];
+    RuleExpression typeExpression;
     RuleExpression expression;
 
-    class SearchExpression {
-        # TODO: Finish this
-        AbstractClass searchScope;
-        bool isGlobal := 'global';
-        begin := ':' (searchScope | isGlobal) '(';
-
-        class SearchItem {
-            # this will respect the delayed lookup on the type expression
-            # so will not error if the type expression hasn't been set yet
-            
-        }
-        list<SearchItem> searches;
-
-        contents := searches;
-
-        end := ')';
-    }
-    SearchExpression search;
-
-    # we can only have a reference type if there is a search, if there isn't 
-    # do the lookup
-    begin { if( ! search, lookup(typeExpression)) } 
-        := attributeSpecifier typeExpression name ( ':=' expression )? search? ;
+    begin := attributeSpecifier typeExpression super ( ':=' expression )?;
 }
 
 ################################################################################
@@ -168,13 +179,13 @@ class Class : ClassAbstract {
     list< Rule >    rules;
     list< Class >   nestedClasses;
 
-    # the parent modifier sets all the types within the reference class as
-    # parents of this
+    # the parent modifier sets the scope within all the classes as a parent
+    # of the current scope
     parent list< AbstractClass& , TemplateAbstractClass& > classParents := 
                                                     ':' join<',', classParents>;
 
     # this goes after the parent class shit
-    begin := super classParents? '{';
+    begin := classParents? '{';
 
     contents :=  rules | nestedClasses;
 
@@ -191,7 +202,8 @@ class TemplateClass : TemplateClassAbstract {
 
         begin := parameter | class_;
 
-        TemplateClass.begin& := class_ | parameter { 
+        # TemplateClass.begin& := class_ | parameter { 
+        begin& := class_ | parameter { 
             class_ = parameter.parameterClass 
         };
     }
