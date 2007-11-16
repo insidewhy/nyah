@@ -16,10 +16,12 @@ terminate := ';';
 # any kind of rule that has been defined
 # abstract classes can not be instantiated but a reference to an abstract class
 # can be used to say that the reference can point to any deriving class
-abstract class RuleOrClass {
+abstract class RuleAbstract {
     # key also implies mandatory and is shared by a rule and a class so you
     # can't have rules and classes with the same name now :)
-    key id name;
+    id name;
+
+    begin := name;
 }
 
 ################################################################################
@@ -27,16 +29,24 @@ abstract class RuleOrClass {
 ################################################################################
 # class definition baby
 # like for defined rule but matches classes, keys are for searching
-abstract class ClassAbstract : RuleOrClass {
-    begin  := 'class' name;
-    begin& := name;
+abstract class ClassAbstract : RuleAbstract {
+    begin  := 'class' super;
+ 
+    # use super begin (name) as reference, the superclass has no reference
+    # constructor so use the superclass' normal constructor
+    begin& := super;
 }
 
 class TemplateClassAbstract : ClassAbstract {
     class Parameter {
         # search : global(class.name = id) implied by reference and key
         ClassAbstract& default;
-        key id name;
+
+        # all parameters in the list must have a unique name
+        unique id name;
+
+        # default constructor
+        begin := name ('=' default)?;
 
         # the type below is only used by a reference constructor, the compiler
         # knows not to instatiate it for non-needed types and also that it
@@ -48,15 +58,12 @@ class TemplateClassAbstract : ClassAbstract {
         # when constructing a reference to TemplateClassAbstract use this constructor
         # TemplateClassAbstract.begin& := parameterClass;
         begin& := parameterClass;
-
-        # default constructor
-        begin := name ('=' default)?;
     }
 
     # the join will instatiate the class parameters in the correct order for
     # the reference case and ensure all mandatory elements for the reference
     # versions are set
-    ordered_set< Parameter > parameters;
+    list< Parameter > parameters;
 
     # super always called first
     classParameters := '(' join<',', parameters> ')';
@@ -67,16 +74,10 @@ class TemplateClassAbstract : ClassAbstract {
 
 }
 
-class RuleAbstract : RuleOrClass {
-    begin := name;
-    # reference constructor used to build reference to this type, if there is
-    # no reference constructor just use the normal constructor
-}
-
 class Test {
     # TODO: more types of test
     bool invert := '!';
-    RuleOrClass& testRule;
+    RuleAbstract& testRule;
 
     begin := invert? testRule;
 }
@@ -92,9 +93,9 @@ class Action {
 
     class Assignment {
         # TODO:
-        RuleOrClass& destRule;
+        RuleAbstract& destRule;
         RuleExpression srcExpression;
-        RuleOrClass& srcRule;
+        RuleAbstract& srcRule;
         begin := destRule '=' (srcExpression | srcRule);
     }
 
