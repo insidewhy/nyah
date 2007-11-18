@@ -11,6 +11,10 @@ using os;
 using expression BinOp, PostFixOp;
 
 # any identifier
+# rule := <blah> equivalent to
+# class rule {
+#   begin:= <blah>;
+# }
 terminate := ';';
 
 # any kind of rule that has been defined
@@ -37,27 +41,36 @@ abstract class ClassAbstract : RuleAbstract {
     begin& := super;
 }
 
+class Reference {
+    # this could also point to a TemplateClass etc.
+    ClassAbstract& class_;
+    begin& := class_ '&';
+}
+
 class TemplateClassAbstract : ClassAbstract {
     class Parameter {
         # search : global(class.name = id) implied by reference and key
-        ClassAbstract& default;
+        RuleAbstract& default;
+        RuleAbstract& restriction;
+        (':' | '==') restrictionType;
 
         # all parameters in the list must have a unique name
         unique id name;
 
         # default constructor
-        begin := name ('=' default)?;
+        begin := name ('=' default)? (restrictionType restriction)?;
 
         # the type below is only used by a reference constructor, the compiler
         # knows not to instatiate it for non-needed types and also that it
         # must store data with the reference type.
-        mandatory ClassAbstract& parameterClass := ClassAbstract& | null { 
+        # TODO: check restriction
+        mandatory RuleAbstract& parameter := RuleAbstract& | null { 
             if (default, parameterClass = default, error('missing template parameter'));
         };
 
         # when constructing a reference to TemplateClassAbstract use this constructor
-        # TemplateClassAbstract.begin& := parameterClass;
-        begin& := parameterClass;
+        # TemplateClassAbstract.begin& := parameter;
+        begin& := parameter;
     }
 
     # the join will instatiate the class parameters in the correct order for
@@ -71,7 +84,6 @@ class TemplateClassAbstract : ClassAbstract {
 
     templateArgs := '<' join<',', parameters> '>';
     begin&       := templateArgs?;
-
 }
 
 class Test {
@@ -94,9 +106,8 @@ class Action {
     class Assignment {
         # TODO:
         RuleAbstract& destRule;
-        RuleExpression srcExpression;
         RuleAbstract& srcRule;
-        begin := destRule '=' (srcExpression | srcRule);
+        begin := destRule '=' srcRule;
     }
 
     class Error {
@@ -124,7 +135,7 @@ class RuleExpression {
     tab          := '\t';
     _null        := 'null';
 
-    expression := ( RuleAbstract& | ClassAbstract& | TemplateClassAbstract& |
+    expression := ( RuleAbstract& | # the former implies these: ClassAbstract& | TemplateClassAbstract& |
                     quotedString | CharacterRange | RegularExpressionMatch |
                     anyDigit | nonDigit | anyChar | anyWordChar | nonWordChar | 
                     newLine | nonNewLine | tab | _null ) Action?;
@@ -160,7 +171,9 @@ class Rule : RuleAbstract {
 
     RuleExpression expression;
 
-    begin := typeSpecifier name ':=' expression;
+    bool isReference := '&';
+
+    begin := typeSpecifier name isReference ':=' expression;
     end := terminate;
 }
 
