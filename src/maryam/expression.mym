@@ -1,25 +1,5 @@
 # library for constructing operators
 
-class BinOp(opString, expr) {
-    expr lhs;
-    expr rhs;
-    # construct first parent as lhs and second parent as rhs, opString
-    # retrievable from template parameter
-    begin := lhs opString rhs;
-}
-
-class PostFixOp(opString, expr) : expr {
-    # the first template parameter opString is marked into the type and can be 
-    # used to query it's type, super is automatically called first in inheritance 
-    # trees
-    begin := opString;
-}
-
-class PreFixOp(opString, expr) : expr {
-    # a post fix operator.. it must end with the operator
-    end := opString;
-}
-
 class BracketExpression(expr, leftBracket = '(', rightBracket = ')') : expr {
     begin := leftBracket super rightBracket;
 }

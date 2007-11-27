@@ -7,10 +7,6 @@ inline class escaped(quote, escape) {
     begin := quote ^ ( ( escape ^ . ) | . )+ ^ quote
 }
 
-# parse file with given extension using current language
-function parse(extension = '') {
-}
-
 # an ordered list that can store any of the given types
 inline class list(types...) {
 
@@ -19,7 +15,7 @@ inline class list(types...) {
         # commute to every element of the list
     }
 
-    operator & {
+    begin& = {
         # call begin& on every element of current list ensuring all
         # mandatory conditions are valid parsing as we go
     }
@@ -40,6 +36,9 @@ inline class join(str, exp : collection&) {
     # special type null for remaining parameters in the NON reference case
 }
 
+################################################################################
+# types
+################################################################################
 # if this is the type of a rule then store true if it is matched, else false
 type bool;
 
@@ -51,3 +50,14 @@ type int;
 type long;
 type float;
 type double;
+
+################################################################################
+# functions
+################################################################################
+# parse file with given extension using current language
+function parse(extension = '') {
+}
+
+# test that `parent' is a parent of `child'
+function parent_child(parent, child) {
+}

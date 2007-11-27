@@ -7,9 +7,6 @@ using basic;
 # for filenames
 using os;
 
-# import BinOp and PostFixOp templates from operator and make rest private
-using expression BinOp, PostFixOp;
-
 # any identifier
 # rule := <blah> equivalent to
 # class rule {
@@ -21,8 +18,7 @@ terminate := ';';
 # abstract classes can not be instantiated but a reference to an abstract class
 # can be used to say that the reference can point to any deriving class
 abstract class RuleAbstract {
-    # key also implies mandatory and is shared by a rule and a class so you
-    # can't have rules and classes with the same name now :)
+    # we know id is mandatory because it is included in the constructor
     id name;
 
     begin := name;
@@ -44,38 +40,43 @@ abstract class ClassAbstract : RuleAbstract {
 class Reference {
     # this could also point to a TemplateClass etc.
     ClassAbstract& class_;
-    begin& := class_ '&';
+    begin := class_ '&';
 }
 
 class TemplateClassAbstract : ClassAbstract {
     class Parameter {
-        # search : global(class.name = id) implied by reference and key
         RuleAbstract& default;
         RuleAbstract& restriction;
-        (':' | '==') restrictionType;
 
-        # all parameters in the list must have a unique name
-        unique id name;
+        # we can tell that the parameter name must be unique from the reference constructor
+        id name;
 
         # default constructor
-        begin := name ('=' default)? (restrictionType restriction)?;
+        begin := name ('=' default)? (':' restriction)?;
 
         # the type below is only used by a reference constructor, the compiler
         # knows not to instatiate it for non-needed types and also that it
         # must store data with the reference type.
-        # TODO: check restriction
-        mandatory RuleAbstract& parameter := RuleAbstract& | null { 
-            if (default, parameterClass = default, error('missing template parameter'));
-        };
+        RuleAbstract& parameter := 
+            RuleAbstract& {
+                if(restriction and not parent_child(restriction, parameter),
+                   error('parent/child restriction not satisfied'))
+            }
+            | null { 
+                if (default, parameter = default, error('missing template parameter'));
+            };
 
         # when constructing a reference to TemplateClassAbstract use this constructor
-        # TemplateClassAbstract.begin& := parameter;
+        # TemplateClassAbstract:begin& := parameter;
         begin& := parameter;
+
+        #TODO: documentation about this
+        # see above statement about reference constructor:
+        RuleAbstract& begin& := name { return(parameter) };
     }
 
-    # the join will instatiate the class parameters in the correct order for
-    # the reference case and ensure all mandatory elements for the reference
-    # versions are set
+    # in the reference case the join will call begin& on every parameter with the
+    # value for the parameter if the list has it otherwise null
     list< Parameter > parameters;
 
     # super always called first
@@ -86,12 +87,19 @@ class TemplateClassAbstract : ClassAbstract {
     begin&       := templateArgs?;
 }
 
+# TODO: document node collapsing rules and how we know we need to store a tree
+#       when a class references itself.
 class Test {
-    # TODO: more types of test
-    bool invert := '!';
-    RuleAbstract& testRule;
+    invert := '!' || 'not';
 
-    begin := invert? testRule;
+    notRule := invert? Test;
+    andRule := notRule (('and'|'&&') notRule)?;
+    orRule := andRule (('or'|'||') andRule)?; 
+    bracketRule := ('(' orRule ')') | orRule;
+
+    (bracketRule | orRule | notRule | Test) expression;
+
+    begin := expression;
 }
 
 class Action {
@@ -104,7 +112,7 @@ class Action {
     }
 
     class Assignment {
-        # TODO:
+        # TODO: more actions
         RuleAbstract& destRule;
         RuleAbstract& srcRule;
         begin := destRule '=' srcRule;
@@ -114,10 +122,11 @@ class Action {
         begin := 'error' '(' quotedString ')';
     }
 
+    # a list of one if/error/assignment will be collapsed in the tree
     list<If, Error, Assignment> actions;
 
-    begin := '{' join<';', actions>;
-    end   := '}';
+    begin := join<';', actions>;
+    end   := ;
 }
 
 # this is what comes after a := in a rule expression.. it is all inlined into
@@ -135,21 +144,23 @@ class RuleExpression {
     tab          := '\t';
     _null        := 'null';
 
+    action := '{' Action '}';
+
     expression := ( RuleAbstract& | # the former implies these: ClassAbstract& | TemplateClassAbstract& |
                     quotedString | CharacterRange | RegularExpressionMatch |
                     anyDigit | nonDigit | anyChar | anyWordChar | nonWordChar | 
-                    newLine | nonNewLine | tab | _null ) Action?;
+                    newLine | nonNewLine | tab | _null ) action?;
 
 
-    bracketExpression := ( BracketExpression<this> | BracketExpression<this, '[', ']'> ) Action?;
+    bracketExpression := ( BracketExpression<this> | BracketExpression<this, '[', ']'> ) action?;
 
     expressionGroup := bracketExpression | expression;
 
-    notExpression := ( PreFixOp('!', expressionGroup ) Action? ) | ( expressionGroup Action? );
+    notExpression := '!'? expressionGroup action?;
 
-    repeater := PostFixOp('+', notExpression) | 
-                PostFixOp('*', notExpression) | 
-                PostFixOp('?', notExpression) | 
+    repeater := notExpression '+' | 
+                notExpression '*' | 
+                notExpression '?' | 
                 notExpression;
 
     joiner := join<'^', repeater>;
@@ -167,7 +178,7 @@ class RuleExpression {
 class Rule : RuleAbstract {
     # a compile time bitset which has an enum with the same names as the
     # strings it matches, multi because you can specify many options
-    multi_bit_set( private, key, parent ) typeSpecifier;
+    multi_bit_set( private, parent ) typeSpecifier;
 
     RuleExpression expression;
 
@@ -178,7 +189,8 @@ class Rule : RuleAbstract {
 }
 
 class Attribute : RuleAbstract {
-    bit_set( unique, mandatory ) attributeSpecifier;
+    # bit_set( ... ) attributeSpecifier;
+    # bool isUnique 
 
     RuleExpression typeExpression;
     RuleExpression expression;
