@@ -59,7 +59,7 @@ class TemplateClassAbstract : ClassAbstract {
         # must store data with the reference type.
         RuleAbstract& parameter := 
             RuleAbstract& {
-                if(restriction and not parent_child(restriction, parameter),
+                if(restriction and (not parameter is ClassAbstract or not parent_child(restriction, parameter)),
                    error('parent/child restriction not satisfied'))
             }
             | null { 
@@ -67,12 +67,8 @@ class TemplateClassAbstract : ClassAbstract {
             };
 
         # when constructing a reference to TemplateClassAbstract use this constructor
-        # TemplateClassAbstract:begin& := parameter;
-        begin& := parameter;
-
-        #TODO: documentation about this
-        # see above statement about reference constructor:
-        RuleAbstract& begin& := name { return(parameter) };
+        TemplateClassAbstract:begin& := parameter;
+        begin& := name;
     }
 
     # in the reference case the join will call begin& on every parameter with the
@@ -84,20 +80,21 @@ class TemplateClassAbstract : ClassAbstract {
     begin           := classParameters?;
 
     templateArgs := '<' join<',', parameters> '>';
+
     begin&       := templateArgs?;
 }
 
 # TODO: document node collapsing rules and how we know we need to store a tree
 #       when a class references itself.
 class Test {
-    invert := '!' || 'not';
 
-    notRule := invert? Test;
-    andRule := notRule (('and'|'&&') notRule)?;
-    orRule := andRule (('or'|'||') andRule)?; 
+    test := (Test | RuleAbstract& | ClassAbstract& 'is' ClassAbstract&);
+    notRule := ('!' | 'not')? [ test ];
+    andRule := join<'and' | '&&', notRule>;
+    orRule := join<'or' | '||', andRule>; 
     bracketRule := ('(' orRule ')') | orRule;
 
-    (bracketRule | orRule | notRule | Test) expression;
+    (bracketRule | orRule | andRule | notRule | RuleAbstract& | test) expression;
 
     begin := expression;
 }
@@ -146,15 +143,15 @@ class RuleExpression {
 
     action := '{' Action '}';
 
-    expression := ( RuleAbstract& | # the former implies these: ClassAbstract& | TemplateClassAbstract& |
-                    quotedString | CharacterRange | RegularExpressionMatch |
-                    anyDigit | nonDigit | anyChar | anyWordChar | nonWordChar | 
-                    newLine | nonNewLine | tab | _null ) action?;
+    expr := ( RuleAbstract& | # the former implies these: ClassAbstract& | TemplateClassAbstract& |
+              quotedString | CharacterRange | RegularExpressionMatch |
+              anyDigit | nonDigit | anyChar | anyWordChar | nonWordChar | 
+              newLine | nonNewLine | tab | _null | this ) action?;
 
 
     bracketExpression := ( BracketExpression<this> | BracketExpression<this, '[', ']'> ) action?;
 
-    expressionGroup := bracketExpression | expression;
+    expressionGroup := bracketExpression | expr;
 
     notExpression := '!'? expressionGroup action?;
 
@@ -169,9 +166,10 @@ class RuleExpression {
 
     # each alternate has a sublist of joiner, each joiner having a sublist
     # of type repeater. the results are propogated through the rules
-    list< alternate, joiner, repeater, notExpression > expressions;
+    (alternate | jointer | repeater | notExpression | expressionGroup |
+     bracketExpression | expr ) expression;
 
-    contents := expressions;
+    begin := expression;
 }
 
 # this class represents a simple (possibly private) rule with no storage
@@ -195,7 +193,7 @@ class Attribute : RuleAbstract {
     RuleExpression typeExpression;
     RuleExpression expression;
 
-    begin := attributeSpecifier typeExpression super ( ':=' expression )?;
+    begin := typeExpression super ( ':=' expression )?;
 }
 
 ################################################################################
@@ -228,7 +226,8 @@ class TemplateClass : TemplateClassAbstract {
 
         begin := parameter | class_;
 
-        # TemplateClass.begin& := class_ | parameter { 
+        # if a begin& constructor modifies a class then a copy is created
+        # on the tree after the location of the previous copy
         begin& := class_ | parameter { 
             class_ = parameter.parameterClass 
         };
