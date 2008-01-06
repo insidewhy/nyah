@@ -18,7 +18,6 @@ terminate := ';';
 # abstract classes can not be instantiated but a reference to an abstract class
 # can be used to say that the reference can point to any deriving class
 abstract class RuleAbstract {
-    # we know id is mandatory because it is included in the constructor
     id name;
 
     begin := name;
@@ -54,9 +53,9 @@ class TemplateClassAbstract : ClassAbstract {
         # default constructor
         begin := name ('=' default)? (':' restriction)?;
 
-        # the type below is only used by a reference constructor, the compiler
-        # knows not to instatiate it for non-needed types and also that it
-        # must store data with the reference type.
+        # the type below is only used by a TemplateClassAbstract reference constructor, the compiler
+        # knows not to instatiate it for non-needed types and also that it must store data with the 
+        # reference type.
         RuleAbstract& parameter := 
             RuleAbstract& {
                 if(restriction and (not parameter is ClassAbstract or not parent_child(restriction, parameter)),
