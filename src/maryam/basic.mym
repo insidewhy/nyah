@@ -26,3 +26,11 @@ binary  := '-'? '0x' ^ (1|0)+;
 
 number := integer | float | octal | binary;
 
+# there is a builtin specialisation for join over collections and references to collections
+inline class join(str, exp) {
+    begin := exp (str exp)*
+}
+
+inline class escaped(quote, escape) {
+    begin := quote ^ ( ( escape ^ . ) | . )+ ^ quote
+}

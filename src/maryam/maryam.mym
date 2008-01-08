@@ -86,8 +86,7 @@ class TemplateClassAbstract : ClassAbstract {
 # TODO: document node collapsing rules and how we know we need to store a tree
 #       when a class references itself.
 class Test {
-
-    test := (Test | RuleAbstract& | ClassAbstract& 'is' ClassAbstract&);
+    test := (Test | RuleAbstract& | RuleAbstract& 'is' RuleAbstract&);
     notRule := ('!' | 'not')? [ test ];
     andRule := join<'and' | '&&', notRule>;
     orRule := join<'or' | '||', andRule>; 
