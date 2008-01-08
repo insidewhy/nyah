@@ -224,7 +224,7 @@ class TemplateClass : TemplateClassAbstract {
         Parameter&      parameter;
         parent (AbstractClass& | TemplateAbstractClass&)  class_;
 
-        begin := parameter& | class_;
+        begin := parameter | class_;
 
         # TemplateClassAbstract modifies the tree and instantiates parameter with
         # a real type
