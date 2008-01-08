@@ -217,20 +217,23 @@ class TemplateClass : TemplateClassAbstract {
     list< Rule >    rules;
     list< Class >   nestedClasses;
 
-    class Parents {
+    class Parent {
+        # TODO: work out this parameter.. when parsing the class definition this should
+        #       match the name of the parameter, but when the class is used as a
+        #       reference the name is altered to become the instantiated parameter
         Parameter&      parameter;
         parent (AbstractClass& | TemplateAbstractClass&)  class_;
 
-        begin := parameter | class_;
+        begin := parameter& | class_;
 
-        # if a begin& constructor modifies a class then a copy is created
-        # on the tree after the location of the previous copy
+        # TemplateClassAbstract modifies the tree and instantiates parameter with
+        # a real type
         begin& := class_ | parameter { 
-            class_ = parameter.parameterClass 
+            class_ = parameter
         };
     }
 
-    parent list< Parents > classParents := ':' join<',', classParents>;
+    parent list< Parent > classParents := ':' join<',', classParents>;
 
     contents :=  rules | nestedClasses;
 
