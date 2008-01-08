@@ -21,10 +21,10 @@ builtin class multi_bit_set(id...);
 # join is specialised over list
 # call begin over and over until there are no more joins pushing back each
 # match to the list
-builtin inline class join(str, exp : collection);
+builtin class join(str, exp : collection);
 
 # join is specialised over reference to list list
-builtin inline class join(str, exp : collection&);
+builtin class join(str, exp : collection&);
 # match begin& for each element in the referred to list with as many joined
 # elements as we have, then continue to match begin& with
 # special type null for remaining parameters in the NON reference case
@@ -33,16 +33,16 @@ builtin inline class join(str, exp : collection&);
 # types
 ################################################################################
 # if this is the type of a rule then store true if it is matched, else false
-builtin inline class bool;
+type bool;
 
 # flatten the elements out into a string
-builtin inline class string;
+type string;
 
 # convert string arguments to corresponding numbers
-builtin inline class int;
-builtin inline class long;
-builtin inline class float;
-builtin inline class double;
+type int;
+type long;
+type float;
+type double;
 
 ################################################################################
 # functions

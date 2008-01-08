@@ -37,7 +37,7 @@ abstract class ClassAbstract : RuleAbstract {
     begin& := super;
 }
 
-class TemplateClassAbstract : ClassAbstract {
+abstract class TemplateClassAbstract : ClassAbstract {
     class Parameter {
         RuleAbstract& default;
         RuleAbstract& restriction;
@@ -61,6 +61,9 @@ class TemplateClassAbstract : ClassAbstract {
             };
 
         # when constructing a reference to TemplateClassAbstract use this constructor
+        # note that when constructing a reference to TemplateClassAbstract we construct
+        # parameter which does not exist in the non-reference case. This implies we create
+        # a new class on the tree with the reference
         TemplateClassAbstract:begin& := parameter;
         begin& := name;
     }
@@ -122,6 +125,7 @@ class Action {
 # this is what comes after a := in a rule expression.. it is all inlined into
 # a list of expressions
 class RuleExpression {
+    # TODO: I don't know what i was talking about here
     # the RuleAbstract&, ClassAbstract& etc. can be non-abstract versions as
     # long as the reference begin still matches and is not overridden
     anyDigit     := '\d';
