@@ -29,17 +29,12 @@ abstract class RuleAbstract {
 # class definition baby
 # like for defined rule but matches classes, keys are for searching
 abstract class ClassAbstract : RuleAbstract {
-    begin  := 'class' super;
+    bit_set< abstract > modifiers;
+    begin  := modifiers? 'class' super;
  
     # use super begin (name) as reference, the superclass has no reference
     # constructor so use the superclass' normal constructor
     begin& := super;
-}
-
-class Reference {
-    # this could also point to a TemplateClass etc.
-    ClassAbstract& class_;
-    begin := class_ '&';
 }
 
 class TemplateClassAbstract : ClassAbstract {
@@ -174,7 +169,7 @@ class RuleExpression {
 class Rule : RuleAbstract {
     # a compile time bitset which has an enum with the same names as the
     # strings it matches, multi because you can specify many options
-    multi_bit_set( private, parent ) typeSpecifier;
+    multi_bit_set< private, parent > typeSpecifier;
 
     RuleExpression expression;
 
