@@ -1,5 +1,7 @@
-default: backup
-proj := $(shell basename $(shell dirname $(shell pwd)))
+.PHONY: backup
 
-backup: 
-	tar czf ${proj}.tar.gz --exclude ${proj}.tar.gz --exclude 'doc/research docs' --exclude doc/internet_docs --exclude src/obj -C .. trunk
+include mk/Makefile
+
+BACKUP_EXCLUDE += doc/research_docs doc/internet_docs src/obj
+
+backup: backupFiles
