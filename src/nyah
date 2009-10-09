@@ -1,0 +1,3 @@
+#!/bin/sh
+
+scala -classpath .:/usr/lib/nyah org.nyah.Nyah $*
