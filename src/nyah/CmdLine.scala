@@ -1,7 +1,9 @@
 package org.nyah.config
 import scala.collection.mutable.HashMap
 
-class UnknownOption(error:String) extends Throwable
+class UnknownOption(unknownKey:String) extends Throwable {
+    val key = unknownKey
+}
 
 class CmdLineIterator(args:Array[String]) {
     var idx = 0
@@ -81,6 +83,19 @@ class IntValue(default:Int) extends Value[Int](default) {
 class CmdLine {
     def +=(keys:String, value:ValueAbstract, desc:String):CmdLine = {
         values += keys -> value
+        return this
+    }
+
+    def +=(keys:(String, String), value:ValueAbstract, desc:String):CmdLine = {
+        values += keys._1 -> value
+        values += keys._2 -> value
+        return this
+    }
+
+    def +=(keys:(String, String, String), value:ValueAbstract, desc:String):CmdLine = {
+        values += keys._1 -> value
+        values += keys._2 -> value
+        values += keys._3 -> value
         return this
     }
 
