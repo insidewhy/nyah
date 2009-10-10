@@ -1,0 +1,40 @@
+Identifier {
+    begin:value = [_a-zA-Z][_a-zA-Z0-9]*
+}
+
+String {
+    begin = ('"' !'"'*:value '"') |
+            ('\'' !'\''*:value '\'')
+}
+
+Number {
+    begin:value = [0-9]+
+}
+
+TextNode {
+    begin = Identifier:marker
+}
+
+Node {
+    begin:value = TextNode | HtmlNode | String
+}
+
+Macro {
+}
+
+Expression {
+    begin:value = (Number | String)
+}
+
+VariableDefinition {
+    # Expression:var equivalent to Expression:expression
+    begin = '$' Identifier:name '=' Expression:var
+}
+
+
+Global {
+    # begin:var = Rule1 ... RuleN
+    # equivalent to:
+    #   begin = Rule1:var .... RuleN:var
+    begin:var = (Node | Macro | VariableDefinition)*
+}
