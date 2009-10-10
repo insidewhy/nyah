@@ -35,6 +35,10 @@ object Value {
     def apply(arg:String):StringValue = {
         return new StringValue(arg)
     }
+
+    def apply(arg:Int):IntValue = {
+        return new IntValue(arg)
+    }
 }
 
 class BoolValue(default:Boolean) extends Value[Boolean](default) {
