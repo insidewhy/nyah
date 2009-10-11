@@ -82,19 +82,41 @@ class IntValue(default:Int) extends Value[Int](default) {
 }
 
 class CmdLine {
-    class HelpDescription(aKey:String, aDescription:String) {
+    class HelpDescription(aKey:String, aDescription:String, aAlternates:List[String]) {
         val key = aKey
         val description = aDescription
+        var alternates:List[String] = aAlternates
+
+        def headerSize:Int = {
+            if (alternates == Nil) keySize(key)
+            else aAlternates.map(keySize(_))
+                .foldLeft(keySize(key) + 5) { _ + _ }
+        }
+
+        private def keySize(key:String) = 
+            if (key.size > 1) 2 + key.size else 1 + key.size
+
+        private def keyString(key:String) = 
+            if (key.size > 1) "--" + key else "-" + key
+
+        def header:String = {
+            if (alternates == Nil) "  " + keyString(key) + " "
+            else
+                "  " + keyString(key) + " [ " + 
+                    alternates.map(keyString(_)).reduceLeft(_ + ", " + _) + " ]"
+        }
     }
 
     def +=(keys:String, value:ValueAbstract, desc:String):CmdLine = {
         values += keys -> value
+        descriptions += new HelpDescription(keys, desc, Nil)
         return this
     }
 
     def +=(keys:(String, String), value:ValueAbstract, desc:String):CmdLine = {
         values += keys._1 -> value
         values += keys._2 -> value
+        descriptions += new HelpDescription(keys._1, desc, keys._2 :: Nil)
         return this
     }
 
@@ -102,10 +124,17 @@ class CmdLine {
         values += keys._1 -> value
         values += keys._2 -> value
         values += keys._3 -> value
+        descriptions += new HelpDescription(keys._1, desc, keys._2 :: keys._3 :: Nil)
         return this
     }
 
     def help {
+        val maxLength = Iterable.max(descriptions.map( _.headerSize )) + 3
+        descriptions.foreach((desc:HelpDescription) => {
+            val thisHeader = desc.header
+            print(thisHeader +  " " * (maxLength - thisHeader.size))
+            println(desc.description)
+        })
     }
 
     def parse(args:Array[String]) {
