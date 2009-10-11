@@ -89,9 +89,8 @@ class CmdLine {
 
         def headerSize:Int = {
             if (alternates == Nil) keySize(key)
-            else
-                aAlternates.map(keySize(_)).foldLeft(
-                    keySize(key) + 5) { _ + _ } + (2 * (alternates.size - 1))
+            else (2 * (alternates.size - 1)) +
+                aAlternates.foldLeft(keySize(key) + 5) { _ + keySize(_) }
         }
 
         private def keySize(key:String) =
