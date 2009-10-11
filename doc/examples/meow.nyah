@@ -1,40 +1,69 @@
+WhitespaceNoNewlines {
+    begin = [ \t]+
+}
+
+Whitespace {
+    begin = [ \t\n]+
+}
+
+Comment {
+    begin = '//' (!\n)*
+}
+
 Identifier {
-    begin:value = [_a-zA-Z][_a-zA-Z0-9]*
+    self begin = [_a-zA-Z] ^ [_a-zA-Z0-9]*
 }
 
 String {
-    begin = ('"' !'"'*:value '"') |
-            ('\'' !'\''*:value '\'')
+    begin = ('"' self (!'"')* '"') |
+            ('\'' self (!'\'')* '\'')
 }
 
 Number {
-    begin:value = [0-9]+
-}
-
-TextNode {
-    begin = Identifier:marker
+    self begin = [0-9]+
 }
 
 Node {
-    begin:value = TextNode | HtmlNode | String
+    self begin = (Node | Macro | VariableDefinition)
+}
+
+NodeChildren {
+    var begin = Node*
+}
+
+HtmlNode {
+    children:NodeChildren = '{' value '}'
+
+    # since children already exists as a declared member, :Node will "cast"
+    # it by parsing only an Node and storing it in the children member
+    # (for this to work the cast type must be an expression that the type
+    #  cast from would also match)
+    begin = marker:Identifier children |
+            '%' marker:Identifier (
+                ^ WhitespaceNoNewlines ^ children:Node
+                | children
+            )
+}
+
+TextNode {
+}
+
+Node {
+    self begin = TextNode | HtmlNode | String
 }
 
 Macro {
 }
 
 Expression {
-    begin:value = (Number | String)
+    self begin = (Number | String)
 }
 
 VariableDefinition {
-    # Expression:var equivalent to Expression:expression
-    begin = '$' Identifier:name '=' Expression:var
+    # var Expression equivalent to expression:Expression
+    begin = '$' name:Identifier '=' var Expression
 }
 
-
 Global {
-    # begin:var = Rule1 ... RuleN
-    # equivalent to:
-    #   begin = Rule1:var .... RuleN:var
-    begin:var = (Node | Macro | VariableDefinition)*
+    var begin = children:NodeChildren
 }
