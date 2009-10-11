@@ -7,9 +7,9 @@ object Nyah {
         var help = Value(false)
         var outputDir = Value(".")
         var cmdLine = new CmdLine
-        cmdLine += 
+        cmdLine +=
             (("h", "help"), help, "display usage") +=
-            (("v", "verbose"), verbose, "increase verbosity") += 
+            (("v", "verbose"), verbose, "increase verbosity") +=
             ("o", outputDir, "output directory")
 
         try {

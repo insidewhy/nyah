@@ -12,8 +12,8 @@ class CmdLineIterator(args:Array[String]) {
     var value = if (args.size > 0) args(0) else ""
 
     def atEnd = idx >= args.size
-    def +=(inc:Int) { 
-        idx += inc 
+    def +=(inc:Int) {
+        idx += inc
         value = if (args.size > idx) args(idx) else ""
     }
     def size = value.size - position
@@ -89,20 +89,21 @@ class CmdLine {
 
         def headerSize:Int = {
             if (alternates == Nil) keySize(key)
-            else aAlternates.map(keySize(_))
-                .foldLeft(keySize(key) + 5) { _ + _ }
+            else
+                aAlternates.map(keySize(_)).foldLeft(
+                    keySize(key) + 5) { _ + _ } + (2 * (alternates.size - 1))
         }
 
-        private def keySize(key:String) = 
+        private def keySize(key:String) =
             if (key.size > 1) 2 + key.size else 1 + key.size
 
-        private def keyString(key:String) = 
+        private def keyString(key:String) =
             if (key.size > 1) "--" + key else "-" + key
 
         def header:String = {
             if (alternates == Nil) "  " + keyString(key) + " "
             else
-                "  " + keyString(key) + " [ " + 
+                "  " + keyString(key) + " [ " +
                     alternates.map(keyString(_)).reduceLeft(_ + ", " + _) + " ]"
         }
     }
@@ -146,7 +147,7 @@ class CmdLine {
                     if (values.contains(search)) {
                         it += 1
                         values(search)(it)
-                    }   
+                    }
                     else throw new UnknownOption(search)
                 }
                 else {
