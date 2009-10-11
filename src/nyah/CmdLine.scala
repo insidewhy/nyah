@@ -44,43 +44,41 @@ object Value {
     }
 }
 
-abstract class SwitchValue[T](default:T) extends Value[T](default) {
+abstract class SwitchArgument[T](default:T) extends Value[T](default) {
     override def after(argIt:CmdLineIterator):Boolean = {
         apply(argIt)
         argIt.size > 0
     }
 }
 
-class BoolValue(default:Boolean) extends SwitchValue[Boolean](default) {
+class BoolValue(default:Boolean) extends SwitchArgument[Boolean](default) {
     override def apply(argIt:CmdLineIterator) {
         value = true
     }
 }
 
-class StringValue(default:String) extends Value[String](default) {
+abstract class ValueArgument[T](default:T) extends Value[T](default) {
     override def apply(argIt:CmdLineIterator) {
-        value = argIt.value
+        store(argIt.value)
         argIt += 1
     }
 
     override def after(argIt:CmdLineIterator):Boolean = {
-        value = argIt.positionedValue
+        store(argIt.positionedValue)
         argIt += 1
         false
     }
+
+    def store(argValue:String)
 }
 
-class IntValue(default:Int) extends Value[Int](default) {
-    override def apply(argIt:CmdLineIterator) {
-        value = argIt.value.toInt
-        argIt += 1
-    }
 
-    override def after(argIt:CmdLineIterator):Boolean = {
-        value = argIt.positionedValue.toInt
-        argIt += 1
-        false
-    }
+class StringValue(default:String) extends ValueArgument[String](default) {
+    override def store(argValue:String) { value = argValue }
+}
+
+class IntValue(default:Int) extends ValueArgument[Int](default) {
+    override def store(argValue:String) { value = argValue.toInt }
 }
 
 class CmdLine {
@@ -88,7 +86,7 @@ class CmdLine {
     private var descriptions = new Queue[HelpDescription]
     var positionals = new Queue[String]
 
-    class HelpDescription(aKey:String, aDescription:String, aAlternates:List[String]) {
+    private class HelpDescription(aKey:String, aDescription:String, aAlternates:List[String]) {
         val key = aKey
         val description = aDescription
         var alternates:List[String] = aAlternates
