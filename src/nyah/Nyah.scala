@@ -10,7 +10,7 @@ object Nyah {
         cmdLine +=
             (("h", "help"), help, "display usage") +=
             (("v", "verbose"), verbose, "increase verbosity") +=
-            ("o", outputDir, "output directory")
+            (("o", "output-dir"), outputDir, "output directory")
 
         try {
             cmdLine.parse(args)

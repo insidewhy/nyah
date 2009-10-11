@@ -24,6 +24,7 @@ class CmdLineIterator(args:Array[String]) {
 abstract class ValueAbstract {
     def apply(argIt:CmdLineIterator)
     def after(argIt:CmdLineIterator):Boolean
+    def suffix:String = ""
 }
 
 abstract class Value[T](default:T) extends ValueAbstract {
@@ -69,6 +70,8 @@ abstract class ValueArgument[T](default:T) extends Value[T](default) {
         false
     }
 
+    override def suffix:String = " <arg>"
+
     def store(argValue:String)
 }
 
@@ -86,14 +89,15 @@ class CmdLine {
     private var descriptions = new Queue[HelpDescription]
     var positionals = new Queue[String]
 
-    private class HelpDescription(aKey:String, aDescription:String, aAlternates:List[String]) {
+    private class HelpDescription(aKey:String, aDescription:String, aAlternates:List[String], aSuffix:String) {
         val key = aKey
         val description = aDescription
         var alternates:List[String] = aAlternates
+        var suffix = aSuffix
 
         def headerSize:Int = {
-            if (alternates == Nil) keySize(key)
-            else (2 * (alternates.size - 1)) +
+            if (alternates == Nil) keySize(key) + suffix.size
+            else (2 * (alternates.size - 1)) + suffix.size +
                 aAlternates.foldLeft(keySize(key) + 5) { _ + keySize(_) }
         }
 
@@ -104,23 +108,23 @@ class CmdLine {
             if (key.size > 1) "--" + key else "-" + key
 
         def header:String = {
-            if (alternates == Nil) "  " + keyString(key) + " "
+            if (alternates == Nil) "  " + keyString(key) + suffix
             else
                 "  " + keyString(key) + " [ " +
-                    alternates.map(keyString(_)).reduceLeft(_ + ", " + _) + " ]"
+                    alternates.map(keyString(_)).reduceLeft(_ + ", " + _) + " ]" + suffix
         }
     }
 
     def +=(keys:String, value:ValueAbstract, desc:String):CmdLine = {
         values += keys -> value
-        descriptions += new HelpDescription(keys, desc, Nil)
+        descriptions += new HelpDescription(keys, desc, Nil, value.suffix)
         return this
     }
 
     def +=(keys:(String, String), value:ValueAbstract, desc:String):CmdLine = {
         values += keys._1 -> value
         values += keys._2 -> value
-        descriptions += new HelpDescription(keys._1, desc, keys._2 :: Nil)
+        descriptions += new HelpDescription(keys._1, desc, keys._2 :: Nil, value.suffix)
         return this
     }
 
@@ -128,12 +132,13 @@ class CmdLine {
         values += keys._1 -> value
         values += keys._2 -> value
         values += keys._3 -> value
-        descriptions += new HelpDescription(keys._1, desc, keys._2 :: keys._3 :: Nil)
+        descriptions += new HelpDescription(keys._1, desc, keys._2 :: keys._3 :: Nil, value.suffix)
         return this
     }
 
     def help {
-        val maxLength = Iterable.max(descriptions.map( _.headerSize )) + 3
+        // + 2 for header and + 2 for space after argument header
+        val maxLength = Iterable.max(descriptions.map( _.headerSize )) + 4
         descriptions.foreach((desc:HelpDescription) => {
             val thisHeader = desc.header
             print(thisHeader +  " " * (maxLength - thisHeader.size))
