@@ -45,23 +45,23 @@ object Value {
 }
 
 class BoolValue(default:Boolean) extends Value[Boolean](default) {
-    def apply(argIt:CmdLineIterator) {
+    override def apply(argIt:CmdLineIterator) {
         value = true
     }
 
-    def after(argIt:CmdLineIterator):Boolean = {
+    override def after(argIt:CmdLineIterator):Boolean = {
         value = true
         argIt.size > 0
     }
 }
 
 class StringValue(default:String) extends Value[String](default) {
-    def apply(argIt:CmdLineIterator) {
+    override def apply(argIt:CmdLineIterator) {
         value = argIt.value
         argIt += 1
     }
 
-    def after(argIt:CmdLineIterator):Boolean = {
+    override def after(argIt:CmdLineIterator):Boolean = {
         value = argIt.positionedValue
         argIt += 1
         false
@@ -69,12 +69,12 @@ class StringValue(default:String) extends Value[String](default) {
 }
 
 class IntValue(default:Int) extends Value[Int](default) {
-    def apply(argIt:CmdLineIterator) {
+    override def apply(argIt:CmdLineIterator) {
         value = argIt.value.toInt
         argIt += 1
     }
 
-    def after(argIt:CmdLineIterator):Boolean = {
+    override def after(argIt:CmdLineIterator):Boolean = {
         value = argIt.positionedValue.toInt
         argIt += 1
         false
@@ -82,6 +82,10 @@ class IntValue(default:Int) extends Value[Int](default) {
 }
 
 class CmdLine {
+    private var values = new HashMap[String, ValueAbstract]
+    private var descriptions = new Queue[HelpDescription]
+    var positionals = new Queue[String]
+
     class HelpDescription(aKey:String, aDescription:String, aAlternates:List[String]) {
         val key = aKey
         val description = aDescription
@@ -142,12 +146,21 @@ class CmdLine {
         while (! it.atEnd) {
             if (it.value.size > 1 && it.value(0) == '-') {
                 if (it.value(1) == '-') {
-                    val search = it.value.substring(2)
-                    if (values.contains(search)) {
+                    if (it.size == 2) {
                         it += 1
-                        values(search)(it)
+                        while (! it.atEnd) {
+                            positionals += it.value
+                            it += 1
+                        }
                     }
-                    else throw new UnknownOption(search)
+                    else {
+                        val search = it.value.substring(2)
+                        if (values.contains(search)) {
+                            it += 1
+                            values(search)(it)
+                        }
+                        else throw new UnknownOption(search)
+                    }
                 }
                 else {
                     it.position = 1
@@ -170,10 +183,7 @@ class CmdLine {
                     } while (good)
                 }
             }
-            // else positionals.push(it.value)
+            else positionals += it.value
         }
     }
-
-    var values = new HashMap[String, ValueAbstract]
-    var descriptions = new Queue[HelpDescription]
 }
