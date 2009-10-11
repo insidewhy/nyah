@@ -44,14 +44,16 @@ object Value {
     }
 }
 
-class BoolValue(default:Boolean) extends Value[Boolean](default) {
+abstract class SwitchValue[T](default:T) extends Value[T](default) {
+    override def after(argIt:CmdLineIterator):Boolean = {
+        apply(argIt)
+        argIt.size > 0
+    }
+}
+
+class BoolValue(default:Boolean) extends SwitchValue[Boolean](default) {
     override def apply(argIt:CmdLineIterator) {
         value = true
-    }
-
-    override def after(argIt:CmdLineIterator):Boolean = {
-        value = true
-        argIt.size > 0
     }
 }
 
