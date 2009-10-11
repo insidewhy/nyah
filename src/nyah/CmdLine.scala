@@ -1,5 +1,6 @@
 package org.nyah.config
 import scala.collection.mutable.HashMap
+import scala.collection.mutable.Queue
 
 class UnknownOption(unknownKey:String) extends Throwable {
     val key = unknownKey
@@ -81,6 +82,11 @@ class IntValue(default:Int) extends Value[Int](default) {
 }
 
 class CmdLine {
+    class HelpDescription(aKey:String, aDescription:String) {
+        val key = aKey
+        val description = aDescription
+    }
+
     def +=(keys:String, value:ValueAbstract, desc:String):CmdLine = {
         values += keys -> value
         return this
@@ -97,6 +103,9 @@ class CmdLine {
         values += keys._2 -> value
         values += keys._3 -> value
         return this
+    }
+
+    def help {
     }
 
     def parse(args:Array[String]) {
@@ -137,4 +146,5 @@ class CmdLine {
     }
 
     var values = new HashMap[String, ValueAbstract]
+    var descriptions = new Queue[HelpDescription]
 }
