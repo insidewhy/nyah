@@ -10,9 +10,7 @@ Comment {
     begin = '//' (!\n)*
 }
 
-Identifier {
-    self begin = [_a-zA-Z] ^ [_a-zA-Z0-9]*
-}
+Identifier = [_a-zA-Z][_a-zA-Z0-9]*
 
 String {
     begin = ('"' self (!'"')* '"') |
@@ -23,33 +21,40 @@ Number {
     self begin = [0-9]+
 }
 
-Node {
-    self begin = (Node | Macro | VariableDefinition)
-}
+Node = TextNode | HtmlNode | StringNode | VariableDefinition
 
 NodeChildren {
     var begin = Node*
 }
 
+HeadNode : Node {
+    begin = Macro | super
+}
+
+HeadNodeChildren {
+    var begin = HeadNode*
+}
+
 HtmlNode {
     children:NodeChildren = '{' value '}'
 
-    # since children already exists as a declared member, :Node will "cast"
+    # since children already exists as a declared member :HtmlNode will "cast"
     # it by parsing only an Node and storing it in the children member
     # (for this to work the cast type must be an expression that the type
     #  cast from would also match)
-    begin = marker:Identifier children |
-            '%' marker:Identifier (
-                ^ WhitespaceNoNewlines ^ children:Node
-                | children
-            )
+    # must expression triggers global error
+    begin = (marker:Identifier children) |
+            ('%' must marker:Identifier "expected identifier after %" (
+                ^ WhitespaceNoNewlines ^ children:Node | 
+                children?))
+            
 }
 
 TextNode {
+    begin = '<<' ^ textMarker:Identifier self Until(\n ^ textMarker)
 }
 
-Node {
-    self begin = TextNode | HtmlNode | String
+StringNode {
 }
 
 Macro {
@@ -65,5 +70,5 @@ VariableDefinition {
 }
 
 Global {
-    var begin = children:NodeChildren
+    var begin = children:HeadNodeChildren
 }
