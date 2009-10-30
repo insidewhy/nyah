@@ -4,15 +4,15 @@ Comment = '//' UntilSkip(\n)
 Identifier = [_a-zA-Z][_a-zA-Z0-9]*
 
 // \" is like '"'
+// !\"* would implicitly be turned into a string grab but using self
+// here for readability
 StringNode = \" self !\"* \" | \' self !\'* \'
 
 Number = [0-9]+
 
 SimpleNode = TextNode | HtmlNode | StringNode
 Node = SimpleNode | VariableDefinition | MasterHtmlNode
-HeadNode = Node | Macro
-NodeChildren = Node*
-HeadNodeChildren = HeadNode*
+HeadNode = Node | MacroDefinition
 
 // [!,)] matches any character except , or )
 HtmlArgumentValue = StringNode | [!,)]+
@@ -20,26 +20,29 @@ HtmlArgumentValue = StringNode | [!,)]+
 HtmlNodeArgument = (name:Identifier '=')? value:HtmlArgumentValue
 
 HtmlNode {
-    children = '{' NodeChildren '}'
-
-    arguments = '(' must Joined(','?, HtmlNodeArgument) ')'
+    children = '{' must Node* '}'
+    arguments = '(' must Joined(','?, HtmlNodeArgument)? ')'
+    nodeName = Identifier
 
     // since children already exists as a declared member :SimpleNode will "cast"
     // it by parsing only an Node and storing it in the children member
     // (for this to work the cast type must be an expression that the type
     //  cast from would also match)
     // must expression triggers global error
-    begin = marker:Identifier children |
-            ( '%' must marker:Identifier arguments? |
-              marker:Identifier arguments )
+    begin = nodeName children |
+            ( '%' must nodeName arguments? |
+              nodeName arguments )
             ( ^ WhitespaceNoNewlines ^ children:SimpleNode | children?)
             
 }
 
 // ~ means sequence with whitespace, same as just leaving space between two
 // parser but can be used to join lines
-MasterHtmlNode : HtmlNode =
-    '!' must marker:Identifier arguments? ~
+// must used with custom error output.
+// ?: means this node will be identical to the HtmlNode type and also have the
+//    same type identifier (and thus exists just to help the grammar out)
+MasterHtmlNode ?: HtmlNode =
+    '!' nodeName arguments? ~
         must(\n, "nothing allowed on line after ! node") ~
         children:Node*
 
@@ -48,15 +51,22 @@ MasterHtmlNode : HtmlNode =
 // matched returns a parser which matches the string the parser
 // variable matched
 TextNode = 
-    '<<' ^ local textMarker:Identifier \n UntilSkip(\n ^ matched textMarker)
+    '<<' ^ must local textMarker:Identifier \n UntilSkip(\n ^ matched textMarker)
 
-Macro {
-    // TODO
+Yield = 'yield' argument:Identifier
+
+MacroDefinition {
+    arguments = '(' must Joined(',', Identifier)? ')'
+    header = '$function' must name:Identifier arguments?
+
+    children = (Node | Yield)*
+    begin = '!' header children |
+            header '{' children '}'
 }
 
 Expression = Number | StringNode
 
 // var Expression equivalent to expression:Expression
-VariableDefinition = '$' name:Identifier '=' var Expression
+VariableDefinition = '$' name:Identifier '=' must var Expression
 
-Global = children:HeadNodeChildren
+Global = children:HeadNode*

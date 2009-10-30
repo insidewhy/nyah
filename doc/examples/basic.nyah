@@ -6,4 +6,6 @@ Joined(joiner, joined) = joined (local joiner joined)*
 // Casting self to a string makes it includes all the whitespace as well
 // in one long string instead of being a list of (! until) which would
 // produce an error.
-UntilSkip(until) = !until+ !until
+// The ? after the * makes the match non-greedy, whatever succeeds it will
+// be tested first and only then will the parser advance by the match
+UntilSkip(until) = .*? local until
