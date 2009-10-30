@@ -27,8 +27,9 @@ HeadNode = Node | Macro
 NodeChildren = Node*
 HeadNodeChildren = HeadNode*
 
+// ![,)] matches any character except , or )
 HtmlArgumentValue {
-    begin = (StringNode | (!',')+)
+    begin = StringNode | [!,)]+
 }
 
 HtmlArgument {
@@ -38,7 +39,7 @@ HtmlArgument {
 HtmlNode {
     children = '{' NodeChildren '}'
 
-    arguments = '(' Joined(',', HtmlArgument) ')'
+    arguments = '(' must Joined(','?, HtmlArgument) ')'
 
     // since children already exists as a declared member :HtmlNode will "cast"
     // it by parsing only an Node and storing it in the children member
@@ -46,7 +47,7 @@ HtmlNode {
     //  cast from would also match)
     // must expression triggers global error
     begin = (marker:Identifier arguments? children) |
-            ('%' must(marker:Identifier, "expected identifier after %") arguments? (
+            ('%' must marker:Identifier  arguments? (
                 ^ WhitespaceNoNewlines ^ children:SimpleNode | 
                 children?))
             
@@ -54,7 +55,7 @@ HtmlNode {
 
 MasterHtmlNode : HtmlNode {
     // "\" at end of line to continue statement
-    begin = '!' must(marker:Identifier, "expected identifier after !") arguments  \
+    begin = '!' must marker:Identifier  arguments  \
                 must('\n', "nothing allowed on line after ! node")    \
                 children:NodeChildren+
 }
