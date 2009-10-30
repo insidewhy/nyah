@@ -21,8 +21,8 @@ Number {
     begin = [0-9]+
 }
 
-SimpleNode = TextNode | MasterHtmlNode | HtmlNode | StringNode
-Node = SimpleNode | VariableDefinition
+SimpleNode = TextNode | HtmlNode | StringNode
+Node = SimpleNode | VariableDefinition | MasterHtmlNode
 HeadNode = Node | Macro
 NodeChildren = Node*
 HeadNodeChildren = HeadNode*
@@ -47,7 +47,7 @@ HtmlNode {
     //  cast from would also match)
     // must expression triggers global error
     begin = marker:Identifier children |
-            ( must marker:Identifier  arguments? |
+            ( '%' must marker:Identifier arguments? |
               marker:Identifier arguments )
             ( ^ WhitespaceNoNewlines ^ children:SimpleNode | children?)
             
@@ -55,7 +55,7 @@ HtmlNode {
 
 MasterHtmlNode : HtmlNode {
     // "\" at end of line to continue statement
-    begin = '!' must marker:Identifier  arguments  \
+    begin = '!' must marker:Identifier arguments?  \
                 must(\n, "nothing allowed on line after ! node")    \
                 children:NodeChildren+
 }
