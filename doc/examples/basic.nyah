@@ -1,0 +1,9 @@
+// since self can be matched multiple times it's type is List(joined)
+Joined(joiner, joined) = self joined (joiner self joined)*
+
+// casting self to a string makes it includes all the whitespace as well
+// in one long string instead of being a list of (! until) which would
+// produce an error
+Until(until) = self:String (!until)+
+
+UntilIncluding(until) = Until(until) !until

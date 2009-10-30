@@ -1,5 +1,5 @@
 package org.nyah
-import org.nyah.config._
+import org.beard.config._
 
 object Nyah {
     def main(args:Array[String]):Int = {

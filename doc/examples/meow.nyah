@@ -7,68 +7,82 @@ Whitespace {
 }
 
 Comment {
-    begin = '//' (!\n)*
+    begin = '//' UntilIncluding(\n)
 }
 
 Identifier = [_a-zA-Z][_a-zA-Z0-9]*
 
-String {
+StringNode {
     begin = ('"' self (!'"')* '"') |
             ('\'' self (!'\'')* '\'')
 }
 
 Number {
-    self begin = [0-9]+
+    begin = [0-9]+
 }
 
-Node = TextNode | HtmlNode | StringNode | VariableDefinition
+SimpleNode = TextNode | MasterHtmlNode | HtmlNode | StringNode
+Node = SimpleNode | VariableDefinition
+HeadNode = Node | Macro
+NodeChildren = Node*
+HeadNodeChildren = HeadNode*
 
-NodeChildren {
-    var begin = Node*
+HtmlArgumentValue {
+    begin = (StringNode | (!',')+)
 }
 
-HeadNode : Node {
-    begin = Macro | super
-}
-
-HeadNodeChildren {
-    var begin = HeadNode*
+HtmlArgument {
+    begin = ((name:Identifier '=')? value:HtmlArgumentValue)
 }
 
 HtmlNode {
-    children:NodeChildren = '{' value '}'
+    children = '{' NodeChildren '}'
 
-    # since children already exists as a declared member :HtmlNode will "cast"
-    # it by parsing only an Node and storing it in the children member
-    # (for this to work the cast type must be an expression that the type
-    #  cast from would also match)
-    # must expression triggers global error
-    begin = (marker:Identifier children) |
-            ('%' must marker:Identifier "expected identifier after %" (
-                ^ WhitespaceNoNewlines ^ children:Node | 
+    arguments = '(' Joined(',', HtmlArgument) ')'
+
+    // since children already exists as a declared member :HtmlNode will "cast"
+    // it by parsing only an Node and storing it in the children member
+    // (for this to work the cast type must be an expression that the type
+    //  cast from would also match)
+    // must expression triggers global error
+    begin = (marker:Identifier arguments? children) |
+            ('%' must(marker:Identifier, "expected identifier after %") arguments? (
+                ^ WhitespaceNoNewlines ^ children:SimpleNode | 
                 children?))
             
 }
 
-TextNode {
-    begin = '<<' ^ textMarker:Identifier self Until(\n ^ textMarker)
+MasterHtmlNode : HtmlNode {
+    // "\" at end of line to continue statement
+    begin = '!' must(marker:Identifier, "expected identifier after !") arguments  \
+                must('\n', "nothing allowed on line after ! node")    \
+                children:NodeChildren+
 }
 
-StringNode {
+TextNode {
+    // local means the variable is not stored as an attribute (in this case it
+    // is just used in the Until object) and does not form part of the type
+    // (so the type is the same as the Until (which is String) in this case
+    // matched returns a parser which matches the string the parser
+    // variable matched
+
+    begin = '<<' ^ local textMarker:Identifier \n \
+            UntilIncluding(\n ^ matched textMarker)
 }
 
 Macro {
+    // TODO
 }
 
 Expression {
-    self begin = (Number | String)
+    begin = (Number | StringNode)
 }
 
 VariableDefinition {
-    # var Expression equivalent to expression:Expression
+    // var Expression equivalent to expression:Expression
     begin = '$' name:Identifier '=' var Expression
 }
 
 Global {
-    var begin = children:HeadNodeChildren
+    begin = children:HeadNodeChildren
 }
