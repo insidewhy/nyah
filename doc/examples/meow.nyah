@@ -1,25 +1,12 @@
-WhitespaceNoNewlines {
-    begin = [ \t]+
-}
-
-Whitespace {
-    begin = [ \t\n]+
-}
-
-Comment {
-    begin = '//' UntilSkip(\n)
-}
-
+WhitespaceNoNewlines = [ \t]+
+Whitespace = [ \t\n]+
+Comment = '//' UntilSkip(\n)
 Identifier = [_a-zA-Z][_a-zA-Z0-9]*
 
-StringNode {
-    begin = '"' self (!'"')* '"' |
-            '\'' self (!'\'')* '\''
-}
+// \" is like '"'
+StringNode = \" self !\"* \" | \' self !\'* \'
 
-Number {
-    begin = [0-9]+
-}
+Number = [0-9]+
 
 SimpleNode = TextNode | HtmlNode | StringNode
 Node = SimpleNode | VariableDefinition | MasterHtmlNode
@@ -27,21 +14,17 @@ HeadNode = Node | Macro
 NodeChildren = Node*
 HeadNodeChildren = HeadNode*
 
-// ![,)] matches any character except , or )
-HtmlArgumentValue {
-    begin = StringNode | [!,)]+
-}
+// [!,)] matches any character except , or )
+HtmlArgumentValue = StringNode | [!,)]+
 
-HtmlNodeArgument {
-    begin = ((name:Identifier '=')? value:HtmlArgumentValue)
-}
+HtmlNodeArgument = (name:Identifier '=')? value:HtmlArgumentValue
 
 HtmlNode {
     children = '{' NodeChildren '}'
 
     arguments = '(' must Joined(','?, HtmlNodeArgument) ')'
 
-    // since children already exists as a declared member :HtmlNode will "cast"
+    // since children already exists as a declared member :SimpleNode will "cast"
     // it by parsing only an Node and storing it in the children member
     // (for this to work the cast type must be an expression that the type
     //  cast from would also match)
@@ -53,37 +36,27 @@ HtmlNode {
             
 }
 
-MasterHtmlNode : HtmlNode {
-    // "\" at end of line to continue statement
-    begin = '!' must marker:Identifier arguments?  \
-                must(\n, "nothing allowed on line after ! node")    \
-                children:NodeChildren+
-}
+// ~ means sequence with whitespace, same as just leaving space between two
+// parser but can be used to join lines
+MasterHtmlNode : HtmlNode =
+    '!' must marker:Identifier arguments? ~
+        must(\n, "nothing allowed on line after ! node") ~
+        children:Node*
 
-TextNode {
-    // local means the variable is not stored as an attribute (in this case it
-    // is just used in the Until object) and does not form part of the type
-    // (so the type is the same as the Until (which is String) in this case
-    // matched returns a parser which matches the string the parser
-    // variable matched
-
-    begin = '<<' ^ local textMarker:Identifier \n \
-            UntilSkip(\n ^ matched textMarker)
-}
+// local means the variable is not stored 
+// In this case it means the stored of TextNode is the same as UntilSkip...
+// matched returns a parser which matches the string the parser
+// variable matched
+TextNode = 
+    '<<' ^ local textMarker:Identifier \n UntilSkip(\n ^ matched textMarker)
 
 Macro {
     // TODO
 }
 
-Expression {
-    begin = (Number | StringNode)
-}
+Expression = Number | StringNode
 
-VariableDefinition {
-    // var Expression equivalent to expression:Expression
-    begin = '$' name:Identifier '=' var Expression
-}
+// var Expression equivalent to expression:Expression
+VariableDefinition = '$' name:Identifier '=' var Expression
 
-Global {
-    begin = children:HeadNodeChildren
-}
+Global = children:HeadNodeChildren
