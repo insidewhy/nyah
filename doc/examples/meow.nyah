@@ -7,14 +7,14 @@ Whitespace {
 }
 
 Comment {
-    begin = '//' UntilIncluding(\n)
+    begin = '//' UntilSkip(\n)
 }
 
 Identifier = [_a-zA-Z][_a-zA-Z0-9]*
 
 StringNode {
-    begin = ('"' self (!'"')* '"') |
-            ('\'' self (!'\'')* '\'')
+    begin = '"' self (!'"')* '"' |
+            '\'' self (!'\'')* '\''
 }
 
 Number {
@@ -32,31 +32,31 @@ HtmlArgumentValue {
     begin = StringNode | [!,)]+
 }
 
-HtmlArgument {
+HtmlNodeArgument {
     begin = ((name:Identifier '=')? value:HtmlArgumentValue)
 }
 
 HtmlNode {
     children = '{' NodeChildren '}'
 
-    arguments = '(' must Joined(','?, HtmlArgument) ')'
+    arguments = '(' must Joined(','?, HtmlNodeArgument) ')'
 
     // since children already exists as a declared member :HtmlNode will "cast"
     // it by parsing only an Node and storing it in the children member
     // (for this to work the cast type must be an expression that the type
     //  cast from would also match)
     // must expression triggers global error
-    begin = (marker:Identifier arguments? children) |
-            ('%' must marker:Identifier  arguments? (
-                ^ WhitespaceNoNewlines ^ children:SimpleNode | 
-                children?))
+    begin = marker:Identifier children |
+            ( must marker:Identifier  arguments? |
+              marker:Identifier arguments )
+            ( ^ WhitespaceNoNewlines ^ children:SimpleNode | children?)
             
 }
 
 MasterHtmlNode : HtmlNode {
     // "\" at end of line to continue statement
     begin = '!' must marker:Identifier  arguments  \
-                must('\n', "nothing allowed on line after ! node")    \
+                must(\n, "nothing allowed on line after ! node")    \
                 children:NodeChildren+
 }
 
@@ -68,7 +68,7 @@ TextNode {
     // variable matched
 
     begin = '<<' ^ local textMarker:Identifier \n \
-            UntilIncluding(\n ^ matched textMarker)
+            UntilSkip(\n ^ matched textMarker)
 }
 
 Macro {

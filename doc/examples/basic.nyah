@@ -1,9 +1,9 @@
-// since self can be matched multiple times it's type is List(joined)
-Joined(joiner, joined) = self joined (joiner self joined)*
+// Local can be used to make a match not stored, as if all the
+// other parsers had self before them.
+// Since self can be matched multiple times it's type is List(joined)
+Joined(joiner, joined) = joined (local joiner joined)*
 
-// casting self to a string makes it includes all the whitespace as well
+// Casting self to a string makes it includes all the whitespace as well
 // in one long string instead of being a list of (! until) which would
-// produce an error
-Until(until) = self:String (!until)+
-
-UntilIncluding(until) = Until(until) !until
+// produce an error.
+UntilSkip(until) = !until+ !until
