@@ -3,14 +3,27 @@ Whitespace = [ \t\n]+
 Comment = '//' UntilSkip(\n)
 Identifier = [_a-zA-Z][_a-zA-Z0-9]*
 
+// order precedence:
+// \.
+// !a
+// a* a+
+// a?
+// ab
+// a ^ b
+// a | b
+// a ~ b
+
+RawString = .*? ~
+    fail('$', "expected function declaration or variable assignment")
+
 // \" is like '"'
 // !\"* would implicitly be turned into a string grab but using self
 // here for readability
-StringNode = \" self !\"* \" | \' self !\'* \'
+StringNode = \" must self !\"* \" | \' must self !\'* \'
 
 Number = [0-9]+
 
-SimpleNode = TextNode | HtmlNode | StringNode
+SimpleNode = TextNode | HtmlNode | StringNode | RawString
 Node = SimpleNode | VariableDefinition | MasterHtmlNode
 HeadNode = Node | MacroDefinition
 
@@ -40,7 +53,7 @@ HtmlNode {
 // parser but can be used to join lines
 // must used with custom error output.
 // ?: means this node will be identical to the HtmlNode type and also have the
-//    same type identifier (and thus exists just to help the grammar out)
+//    same type identifier (it exists just to help the grammar out)
 MasterHtmlNode ?: HtmlNode =
     '!' nodeName arguments? ~
         must(\n, "nothing allowed on line after ! node") ~
@@ -53,7 +66,7 @@ MasterHtmlNode ?: HtmlNode =
 TextNode = 
     '<<' ^ must local textMarker:Identifier \n UntilSkip(\n ^ matched textMarker)
 
-Yield = 'yield' argument:Identifier
+Yield = 'yield' must argument:Identifier
 
 MacroDefinition {
     arguments = '(' must Joined(',', Identifier)? ')'
