@@ -1,20 +1,13 @@
-WhitespaceNoNewlines = [ \t]+
-Whitespace = [ \t\n]+
-Comment = '//' UntilSkip(\n)
+// skip means objects of this type will not be made into attributes by default.
+skip WhitespaceNoNewlines = [ \t]+
+// this could be override with: someWhitespace = parse WhitespaceNoNewlines
+
+skip Whitespace = \s+
+skip Comment = '//' !\n*
 Identifier = [_a-zA-Z][_a-zA-Z0-9]*
 
-// order precedence:
-// \.
-// !a
-// a* a+
-// a?
-// ab
-// a ^ b
-// a | b
-// a ~ b
-
-RawString = .*? ~
-    fail('$', "expected function declaration or variable assignment")
+RawString = 
+    ( fail('$', "expected function declaration or variable assignment") | . )*
 
 // \" is like '"'
 // !\"* would implicitly be turned into a string grab but using self
@@ -34,7 +27,7 @@ HtmlNodeArgument = (name:Identifier '=')? value:HtmlArgumentValue
 
 HtmlNode {
     children = '{' must Node* '}'
-    arguments = '(' must Joined(','?, HtmlNodeArgument)? ')'
+    arguments = '(' must (HtmlNodeArgument % ','?)? ')'
     nodeName = Identifier
 
     // since children already exists as a declared member :SimpleNode will "cast"
@@ -59,17 +52,14 @@ MasterHtmlNode ?: HtmlNode =
         must(\n, "nothing allowed on line after ! node") ~
         children:Node*
 
-// local means the variable is not stored 
-// In this case it means the stored of TextNode is the same as UntilSkip...
-// matched returns a parser which matches the string the parser
-// variable matched
-TextNode = 
-    '<<' ^ must local textMarker:Identifier \n UntilSkip(\n ^ matched textMarker)
+// skip means the variable is not stored 
+TextNode = '<<' ^ must skip textMarker:Identifier \n ~
+            skip (. - (\n ^ matched textMarker))*
 
 Yield = 'yield' must argument:Identifier
 
 MacroDefinition {
-    arguments = '(' must Joined(',', Identifier)? ')'
+    arguments = '(' must (Identifier % ',')? ')'
     header = '$function' must name:Identifier arguments?
 
     children = (Node | Yield)*
