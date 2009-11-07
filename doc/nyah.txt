@@ -9,32 +9,31 @@ Single Character Matches:
   [!abc]   Match any character except a, b or c.
     
 Order Precedence
-    !a     Returns false if a matches, and true if a fails,
-           If a is a single character match then advance the parser
-           by one character (unless & is used before !), otherwise the 
-           position is left as it was before the !a rule was started.
+    !a      Returns false if a matches, and true if a fails,
+            If a is a single character match then advance the parser
+            by one character (unless & is used before !), otherwise the 
+            position is left as it was before the !a rule was started.
 
-    &a     Match a but leave the parser position where it was before the &a
-           rule was started on success.
+    &a      Match a but leave the parser position where it was before the &a
+            rule was started on success.
 
-    a*     Match a zero or more times.
-    a+     Match a one or more times.
+    a*      Match a zero or more times.
+    a+      Match a one or more times.
+    a?      Match a zero or once.
 
-    a?     Match a zero or once.
+    a ^ b   Match a followed by b with no whitespace between.
 
-    a  b     Match a followed by b.
+    a  b    Match a followed by b.
 
-    a ^ b    Match a followed by b with no whitespace between.
+    a - b   Match a but not b.
 
-    a - b    Match a but not b.
+    a | b   Try to match a, then try to match b if that fails.
 
-    a | b    Try to match a, then try to match b if that fails.
-
-    a ~ b    Match a followed by b.
+    a ~ b   Match a followed by b.
 
 Shortcuts
-    - Transitivity of -:
-        For a - b, b is transitive over any |s in a e.g.
+    - Transitivity of -
+        For a - b, b is transitive over any | in a e.g.
         (a | b) - c  --> (a - c | b - c)
 
         a* - b --> (a - b)*
