@@ -4,8 +4,9 @@ skip Whitespace = \s+
 skip Comment = '//' !\n*
 Identifier = [_a-zA-Z][_a-zA-Z0-9]*
 
-RawString = 
-    ( fail('$', "expected function declaration or variable assignment") | . )*
+RawString = (
+    '$' { fail("expected function declaration or variable assignment") } | 
+    . )*
 
 inline StringNode = \" create !\"* \" | \' create !\'* \'
 
@@ -30,9 +31,9 @@ HtmlNode {
     //  cast from would also match)
     begin = nodeName children |
             ( '%' create nodeName arguments? |
-              nodeName arguments create )
+              nodeName arguments create ) ~
             ( ^ WhitespaceNoNewlines ^ children:SimpleNode | children?)
-            
+
 }
 
 // ?: means this node will be identical to the HtmlNode type and also have the
