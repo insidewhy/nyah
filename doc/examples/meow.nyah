@@ -32,7 +32,7 @@ HtmlNode {
     begin = nodeName children |
             ( '%' create nodeName arguments? |
               nodeName arguments create ) ~
-            ( ^ WhitespaceNoNewlines ^ children:SimpleNode | children?)
+            ( ^ WhitespaceNoNewlines ^ (children:SimpleNode | children?))
 
 }
 

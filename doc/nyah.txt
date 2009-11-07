@@ -69,12 +69,12 @@ Operator Precedence
     p?      Match p zero or once. Stores optional(p).
             These three operations are non-constant.
 
-    p ^ q   Match p followed by q with no whitespace between.
-            Stores type_join(p q).
-
     p - q   Equivalent to anything that matches p but not q. Stores p.
 
     p % q   Match p joined by q. Stores list(p). non-constant.
+
+    p ^ q   Match p followed by q with no whitespace between.
+            Stores type_join(p q).
 
     p  q    Match p followed by q.
             If p and q are both character match then do not allow whitespace
