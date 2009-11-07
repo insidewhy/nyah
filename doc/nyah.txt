@@ -1,14 +1,17 @@
 Single Character Matches:
-  \n newline
-  \s whitespace
-  \t tab
-  \' parser for single quote
-  \" parser to match double quote
-  .  any character.
-  [pqr]    Match any of the individual characters p, q or r.
-  [!pqr]   Match any character except p, q or r.
-  'c'      Same as [c]
-  "c"      Same as [c]
+    The following are always skipped by the parser.
+      \n       newline
+      \s       whitespace
+      \t       tab
+      \'       parser for single quote
+      \"       parser to match double quote
+
+    The following are stored as single characters.
+      .        Any character.
+      [pqr]    Match any of the individual characters p, q or r.
+      [!pqr]   Match any character except p, q or r.
+      'c'      Same as [c]
+      "c"      Same as [c]
 
 Operator Precedence
     !p      Returns false if p matches, and true if p fails,
@@ -33,6 +36,8 @@ Operator Precedence
             If both p and q are not single character matches then allow
             optional whitespace to separate them.
 
+    function  See Functions
+
     p | q   Try to match p, then try to match q if that fails.
 
     p ~ q   Match p followed by q separated by optional whitespace.
@@ -47,3 +52,8 @@ Shortcuts
         Combining these
         (p | q)* - r  --> (p - r | q - r)*
 
+Functions
+    skip p  Match p but do not store it.
+
+    create  Ensure that from here onwards the current object must succeed in
+            parsing, otherwise a global failure is generated.

@@ -1,6 +1,4 @@
-// skip means objects of this type will not be made into attributes by default.
 skip WhitespaceNoNewlines = [ \t]+
-// this could be override with: someWhitespace = parse WhitespaceNoNewlines
 
 skip Whitespace = \s+
 skip Comment = '//' !\n*
@@ -9,10 +7,7 @@ Identifier = [_a-zA-Z][_a-zA-Z0-9]*
 RawString = 
     ( fail('$', "expected function declaration or variable assignment") | . )*
 
-// \" is like '"'
-// !\"* would implicitly be turned into a string grab but using self
-// here for readability
-StringNode = \" must self !\"* \" | \' must self !\'* \'
+inline StringNode = \" create !\"* \" | \' create !\'* \'
 
 Number = [0-9]+
 
@@ -20,47 +15,42 @@ SimpleNode = TextNode | HtmlNode | StringNode | RawString
 Node = SimpleNode | VariableDefinition | MasterHtmlNode
 HeadNode = Node | MacroDefinition
 
-// [!,)] matches any character except , or )
 HtmlArgumentValue = StringNode | [!,)]+
 
 HtmlNodeArgument = (name:Identifier '=')? value:HtmlArgumentValue
 
 HtmlNode {
-    children = '{' must Node* '}'
-    arguments = '(' must (HtmlNodeArgument % ','?)? ')'
+    children = '{' create Node* '}'
+    arguments = '(' create (HtmlNodeArgument % ','?)? ')'
     nodeName = Identifier
 
     // since children already exists as a declared member :SimpleNode will "cast"
     // it by parsing only an Node and storing it in the children member
     // (for this to work the cast type must be an expression that the type
     //  cast from would also match)
-    // must expression triggers global error
     begin = nodeName children |
-            ( '%' must nodeName arguments? |
-              nodeName arguments )
+            ( '%' create nodeName arguments? |
+              nodeName arguments create )
             ( ^ WhitespaceNoNewlines ^ children:SimpleNode | children?)
             
 }
 
-// ~ means sequence with whitespace, same as just leaving space between two
-// parser but can be used to join lines
-// must used with custom error output.
 // ?: means this node will be identical to the HtmlNode type and also have the
 //    same type identifier (it exists just to help the grammar out)
 MasterHtmlNode ?: HtmlNode =
-    '!' nodeName arguments? ~
-        must(\n, "nothing allowed on line after ! node") ~
+    '!' nodeName arguments? ~ \n create ~
         children:Node*
 
-// skip means the variable is not stored 
-TextNode = '<<' ^ must skip textMarker:Identifier \n ~
+// skip a named parameter means the parameter can be used by name during
+// the current parse but is not stored in the object.
+TextNode = '<<' ^ create skip textMarker:Identifier \n ~
             skip (. - (\n ^ matched textMarker))*
 
-Yield = 'yield' must argument:Identifier
+Yield = 'yield' create argument:Identifier
 
 MacroDefinition {
-    arguments = '(' must (Identifier % ',')? ')'
-    header = '$function' must name:Identifier arguments?
+    arguments = '(' create (Identifier % ',')? ')'
+    header = '$function' create name:Identifier arguments?
 
     children = (Node | Yield)*
     begin = '!' header children |
@@ -70,6 +60,6 @@ MacroDefinition {
 Expression = Number | StringNode
 
 // var Expression equivalent to expression:Expression
-VariableDefinition = '$' name:Identifier '=' must var Expression
+VariableDefinition = '$' name:Identifier '=' create var Expression
 
 Global = children:HeadNode*
