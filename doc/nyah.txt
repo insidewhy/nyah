@@ -5,39 +5,45 @@ Single Character Matches:
   \' parser for single quote
   \" parser to match double quote
   .  any character.
-  [abc]    Match any of the individual characters a, b or c.
-  [!abc]   Match any character except a, b or c.
-    
-Order Precedence
-    !a      Returns false if a matches, and true if a fails,
-            If a is a single character match then advance the parser
-            by one character (unless & is used before !), otherwise the 
-            position is left as it was before the !a rule was started.
+  [pqr]    Match any of the individual characters p, q or r.
+  [!pqr]   Match any character except p, q or r.
+  'c'      Same as [c]
+  "c"      Same as [c]
 
-    &a      Match a but leave the parser position where it was before the &a
-            rule was started on success.
+Operator Precedence
+    !p      Returns false if p matches, and true if p fails,
+            If p is a single character match then advance the parser
+            by one character (unless & is used before !), otherwise the
+            position is left as it was before the !p rule was matched.
 
-    a*      Match a zero or more times.
-    a+      Match a one or more times.
-    a?      Match a zero or once.
+    &p      Match p but leave the parser position where it was before the &p
+            rule was matched even if p succeeds.
 
-    a ^ b   Match a followed by b with no whitespace between.
+    p*      Match p zero or more times.
+    p+      Match p one or more times.
+    p?      Match p zero or once.
 
-    a  b    Match a followed by b.
+    p ^ q   Match p followed by q with no whitespace between.
 
-    a - b   Match a but not b.
+    p - q   Match p but not q.
 
-    a | b   Try to match a, then try to match b if that fails.
+    p % q   Match p joined by q. The result type is list(p).
 
-    a ~ b   Match a followed by b.
+    p  q    Match p followed by q.
+            If both p and q are not single character matches then allow
+            optional whitespace to separate them.
+
+    p | q   Try to match p, then try to match q if that fails.
+
+    p ~ q   Match p followed by q separated by optional whitespace.
 
 Shortcuts
     - Transitivity of -
-        For a - b, b is transitive over any | in a e.g.
-        (a | b) - c  --> (a - c | b - c)
+        For p - q, q is transitive over any | in p e.g.
+        (p | q) - r  --> (p - r | q - r)
 
-        a* - b --> (a - b)*
+        p* - q --> (p - q)*
 
         Combining these
-        (a | b)* - c  --> (a - c | b - c)*
+        (p | q)* - r  --> (p - r | q - r)*
 
