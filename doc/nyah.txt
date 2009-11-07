@@ -1,59 +1,84 @@
-Single Character Matches:
+Single Character Matches
     The following are always skipped by the parser.
-      \n       newline
-      \s       whitespace
-      \t       tab
-      \'       parser for single quote
-      \"       parser to match double quote
+        \n       newline
+        \s       whitespace
+        \t       tab
+        \'       parser for single quote
+        \"       parser to match double quote
 
     The following are stored as single characters.
-      .        Any character.
-      [pqr]    Match any of the individual characters p, q or r.
-      [!pqr]   Match any character except p, q or r.
-      'c'      Same as [c]
-      "c"      Same as [c]
+        .        Any character.
+        [p-z]    Match characters between p and z inclusive. Non-constant.
+        [pqr]    Match any of the individual characters p, q or r. Constant.
+        [!pqr]   Match any character except p, q or r. Non-constant.
+        [ps-z!r] Shortcut for ( [p] | [s-z] | [!r] ). Non-constant.
+        'c'      Same as [c]
+        "c"      Same as [c]
+
+    All of these matches are "constant" matches except `.' and [p-z].
+
+Multiple Character Matches
+    Constant string matches.
+        "str"   Match the string str.
+        'str'   Match the string str.
+        These matches are contant matches.
 
 Operator Precedence
     !p      Returns false if p matches, and true if p fails,
-            If p is a single character match then advance the parser
-            by one character (unless & is used before !), otherwise the
-            position is left as it was before the !p rule was matched.
+            If p is a constant match then advance the parser over p (unless & 
+            is used before !), otherwise the position is left as it was before 
+            the !p rule was matched.
 
     &p      Match p but leave the parser position where it was before the &p
-            rule was matched even if p succeeds.
+            rule was matched even if p succeeds. !p cannot store.
 
-    p*      Match p zero or more times.
-    p+      Match p one or more times.
-    p?      Match p zero or once.
+    p*      Match p zero or more times. Stores list(p).
+    p+      Match p one or more times. Stores list(p).
+    p?      Match p zero or once. Stores optional(p).
+            These operations all non-constant.
 
     p ^ q   Match p followed by q with no whitespace between.
+            The type of p ^ q is constant only if p and q are constant.
 
-    p - q   Match p but not q.
+    p - q   Equivalent to anything that matches p but not q. Stores p.
 
-    p % q   Match p joined by q. The result type is list(p).
+    p % q   Match p joined by q. Stores list(p). non-constant.
 
     p  q    Match p followed by q.
             If both p and q are not single character matches then allow
-            optional whitespace to separate them.
+            optional whitespace to separate them. 
+            Stores tuple(p, q). The type of a tuple is constant
+            only if all of it's subtypes are constant.
 
     function  See Functions
 
     p | q   Try to match p, then try to match q if that fails.
+            Stores variant<p, q>. Non-constant.
 
     p ~ q   Match p followed by q separated by optional whitespace.
+            Non-constant.
 
-Shortcuts
-    - Transitivity of -
-        For p - q, q is transitive over any | in p e.g.
-        (p | q) - r  --> (p - r | q - r)
-
-        p* - q --> (p - q)*
-
-        Combining these
-        (p | q)* - r  --> (p - r | q - r)*
+Combinations
+    p*? q
+        Keep matching p until q matches. Stores tuple(p, q).
 
 Functions
     skip p  Match p but do not store it.
 
     create  Ensure that from here onwards the current object must succeed in
             parsing, otherwise a global failure is generated.
+
+    local var:p  Create a local variable named var with parser type p.
+                 This exists during the parsing of the current rule only.
+
+    match var    Return a parser that matches the character/string currently
+                 stored in the variable var. The result of this counts as a
+                 constant match, so will allow ! to skip it.
+
+Type storage
+    tuple(...)      Removes const types from the tuple.
+    tuple(q) -> q   Single element tuple is not a tuple.
+    e.g.
+        s = "p" [a-z]
+        stores: "single character" 
+        "p" is removed, tuple(type [a-z]) -> type [a-z]

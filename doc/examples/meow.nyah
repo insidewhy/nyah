@@ -38,13 +38,11 @@ HtmlNode {
 // ?: means this node will be identical to the HtmlNode type and also have the
 //    same type identifier (it exists just to help the grammar out)
 MasterHtmlNode ?: HtmlNode =
-    '!' nodeName arguments? ~ \n create ~
-        children:Node*
+    '!' create nodeName arguments? ~ \n children:Node*
 
-// skip a named parameter means the parameter can be used by name during
-// the current parse but is not stored in the object.
-TextNode = '<<' ^ create skip textMarker:Identifier \n ~
-            skip (. - (\n ^ matched textMarker))*
+// since type(\n ^ matched textMarker) is constant this will also be skipped.
+TextNode = '<<' ^ create local textMarker:Identifier \n ~
+            .*? \n ^ matched(textMarker)
 
 Yield = 'yield' create argument:Identifier
 
