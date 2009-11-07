@@ -22,8 +22,11 @@ Character Matches
 
 Multiple Character Matches
     The following are constant:
-        "str"   Match the string str.
-        'str'   Match the string str.
+        "str"    Match the string str.
+        'str'    Match the string str.
+    The following are non-constant:
+        Integer  Match any integer and stores an integer.
+        Float    Match any float and stores a float.
 
 Functions
     skip p  Match p but do not store it. Stores nothing.
@@ -40,10 +43,12 @@ Functions
                  stored in the variable var. The result of this counts as a
                  constant match, so will allow ! to skip it.
 
+    var Name     Equivalent to name:Name
+
     type_join (t1 t2 ...)
-        Removes all types that are constant.
-        Collapse all character/string stores together to store a single
-        string (including separating whitespace if it is allowed).
+        Collapse all non-constant character/string stores together to store
+        a single string (including separating whitespace if it is allowed).
+        Removes all remaining types that are constant.
         Store each collapsed item as an element in a tuple:
         e.g.
             type_join(\d+ \w+)
@@ -55,23 +60,30 @@ Functions
 
 
 Operator Precedence
-    !p      Returns false if p matches, and true if p fails,
-            If p is a constant match then advance the parser over p (unless &
-            is used before !), otherwise the position is left as it was before
-            the !p rule was matched.
-
     &p      Match p but leave the parser position where it was before the &p
             rule was matched even if p succeeds. Cannot store.
 
+    !p      Returns false if p matches, and true if p fails.
+            If !p succeeds and p is a constant match or character match then
+            advance the parser over p (unless & is used before !), otherwise
+            the position is left as it was before !p was matched.
+
     p*      Match p zero or more times.
-            If p is a single character, store a string, else store list(p)
+            If p is a character match, store a string, otherwise store list(p)
     p+      As above but p must match at least once.
     p?      Match p zero or once. Stores optional(p).
             These three operations are non-constant.
 
+    n : p   Match p and store it in an attribute in the current class named n.
+            Acts as though it stores nothing to the rule calling it.
+
     p - q   Equivalent to anything that matches p but not q. Stores p.
 
     p % q   Match p joined by q. Stores list(p). non-constant.
+
+    p as T  Match the existing attribute p but store to it using the parser
+            type T. The type of T must be compatible with the original type
+            of p.
 
     p ^ q   Match p followed by q with no whitespace between.
             Stores type_join(p q).
@@ -82,7 +94,7 @@ Operator Precedence
             Otherwise allow optional whitespace to separate them and
             store tuple(p, q).
 
-    p { d } If p is matched perform action d. 
+    p { d } If p is matched perform action d.
 
     function  See Functions
 
@@ -104,6 +116,26 @@ Type storage
         type(s) = tuple(nothing, character)
                 => tuple(character)
                 => character
+
+    optional(const type) => true if optional was matched, else false.
+
+    variant(..., variant(...), ...) -> variant(..., ..., ...)
+        s = 'a' | (Integer | Float)
+        type(s) = variant(character, variant(int, float))
+        type(s) = variant(character, int, float)
+
+    variant()       Types which are the same are removed from the variant.
+    variant(q) -> q
+        s = 'a' | 'b'
+        type(s) = variant(character, character)
+        type(s) = variant(character)
+        type(s) = character
+
+    variant(..., character, ..., string, ...) -> variant(string)
+        s = 'blimey' | Integer | 'a' | 'b'
+        type(s) = variant(string, int, character, character)
+        type(s) = variant(string, int, character)
+        type(s) = variant(string, int)
 
 Actions
     fail(message:string)    Raise global failure with indicated message.

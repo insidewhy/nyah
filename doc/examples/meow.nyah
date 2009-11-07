@@ -2,18 +2,18 @@ skip WhitespaceNoNewlines = [ \t]+
 
 skip Whitespace = \s+
 skip Comment = '//' !\n*
-Identifier = [_a-zA-Z][_a-zA-Z0-9]*
+Identifier = [_a-zA-Z]^[_a-zA-Z0-9]*
 
 RawString = (
-    '$' { fail("expected function declaration or variable assignment") } | 
+    '$' { fail("expected function declaration or variable assignment") } |
     . )*
 
-inline StringNode = \" create !\"* \" | \' create !\'* \'
+StringNode = \" create !\"* \" | \' create !\'* \'
 
 Number = [0-9]+
 
 SimpleNode = TextNode | HtmlNode | StringNode | RawString
-Node = SimpleNode | VariableDefinition | MasterHtmlNode
+Node = SimpleNode | VariableDefinition | MasterHtmlNode | Yield
 HeadNode = Node | MacroDefinition
 
 HtmlArgumentValue = StringNode | [!,)]+
@@ -25,14 +25,10 @@ HtmlNode {
     arguments = '(' create (HtmlNodeArgument % ','?)? ')'
     nodeName = Identifier
 
-    // since children already exists as a declared member :SimpleNode will "cast"
-    // it by parsing only an Node and storing it in the children member
-    // (for this to work the cast type must be an expression that the type
-    //  cast from would also match)
     begin = nodeName children |
             ( '%' create nodeName arguments? |
               nodeName arguments create ) ~
-            ( ^ WhitespaceNoNewlines ^ (children:SimpleNode | children?))
+            ( ^ WhitespaceNoNewlines ^ (children as SimpleNode | children?))
 
 }
 
@@ -41,7 +37,6 @@ HtmlNode {
 MasterHtmlNode ?: HtmlNode =
     '!' create nodeName arguments? ~ \n children:Node*
 
-// since type(\n ^ matched textMarker) is constant this will also be skipped.
 TextNode = '<<' ^ create local textMarker:Identifier \n ~
             .*? \n ^ matched(textMarker)
 
@@ -51,7 +46,8 @@ MacroDefinition {
     arguments = '(' create (Identifier % ',')? ')'
     header = '$function' create name:Identifier arguments?
 
-    children = (Node | Yield)*
+    children = Node*
+
     begin = '!' header children |
             header '{' children '}'
 }
@@ -61,4 +57,4 @@ Expression = Number | StringNode
 // var Expression equivalent to expression:Expression
 VariableDefinition = '$' name:Identifier '=' create var Expression
 
-Global = children:HeadNode*
+Global = HeadNode*
