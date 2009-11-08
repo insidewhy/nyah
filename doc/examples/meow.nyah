@@ -8,12 +8,12 @@ RawString = (
     '$' { fail("expected function declaration or variable assignment") } |
     . )*
 
-StringNode = \" create !\"* \" | \' create !\'* \'
+StringNode = \" > !\"* \" | \' > !\'* \'
 
 Number = [0-9]+
 
 SimpleNode = TextNode | HtmlNode | StringNode | RawString
-Node = SimpleNode | VariableDefinition | MasterHtmlNode | Yield
+Node = SimpleNode | VariableDefinition | MasterHtmlNode as HtmlNode | Yield
 HeadNode = Node | MacroDefinition
 
 HtmlArgumentValue = StringNode | [!,)]+
@@ -21,30 +21,28 @@ HtmlArgumentValue = StringNode | [!,)]+
 HtmlNodeArgument = (name:Identifier '=')? value:HtmlArgumentValue
 
 HtmlNode {
-    children = '{' create Node* '}'
-    arguments = '(' create (HtmlNodeArgument % ','?)? ')'
+    children = '{' > Node* '}'
+    arguments = '(' > (HtmlNodeArgument % ','?)? ')'
     nodeName = Identifier
 
     begin = nodeName children |
-            ( '%' create nodeName arguments? |
-              nodeName arguments create ) ~
+            ( '%' > nodeName arguments? |
+              nodeName arguments > ) ~
             ( ^ WhitespaceNoNewlines ^ (children as SimpleNode | children?))
 
 }
 
-// ?: means this node will be identical to the HtmlNode type and also have the
-//    same type identifier (it exists just to help the grammar out)
-MasterHtmlNode ?: HtmlNode =
-    '!' create nodeName arguments? ~ \n children:Node*
+MasterHtmlNode : HtmlNode =
+    '!' > nodeName arguments? ~ \n children:Node*
 
-TextNode = '<<' ^ create local textMarker:Identifier \n ~
+TextNode = '<<' > ^ local textMarker:Identifier \n ~
             .*? \n ^ matched(textMarker)
 
-Yield = 'yield' create argument:Identifier
+Yield = 'yield' > argument:Identifier
 
 MacroDefinition {
-    arguments = '(' create (Identifier % ',')? ')'
-    header = '$function' create name:Identifier arguments?
+    arguments = '(' > (Identifier % ',')? ')'
+    header = '$function' > name:Identifier arguments?
 
     children = Node*
 
@@ -55,6 +53,6 @@ MacroDefinition {
 Expression = Number | StringNode
 
 // var Expression equivalent to expression:Expression
-VariableDefinition = '$' name:Identifier '=' create var Expression
+VariableDefinition = '$' name:Identifier '=' > var Expression
 
 Global = HeadNode*
