@@ -36,22 +36,24 @@ Functions
     local var:p  Create a local variable named var with parser type p.
                  This exists during the parsing of the current rule only.
 
-    match var    Return a parser that matches the character/string currently
-                 stored in the variable var. The result of this counts as a
-                 constant match, so will allow ! to skip it.
+    match p      Return a parser that matches the character/string currently
+                 stored in the attribute p. The result of this counts as a
+                 constant match.
 
     var Name     Equivalent to name:Name
 
     type_join (t1 t2 ...)
-        Collapse all non-constant character/string stores together to store
-        a single string (including separating whitespace if it is allowed).
-        Removes all remaining types that are constant.
-        Store each collapsed item as an element in a tuple:
+        1. Collapse all adjacent non-constant character/string stores together 
+           to store a single string (including separating whitespace if it is 
+           allowed).
+        2. Remove all remaining types that are constant.
+        3. Store each remaining item as an element in a tuple:
         e.g.
             type_join(\d+ \w+)
                 would store "2 babies" as "2 babies" rather than
                 tuple("2", "babies")
             type_join(\d+ \w+ name:StringNode \w+)
+                => type_join(string string name:StringNode string)
                 => type_join(string name:StringNode string)
                 => tuple(string, string)
 
@@ -72,6 +74,8 @@ Operator Precedence
     p?      Match p zero or once. Stores optional(p).
             These three operations are non-constant.
 
+    p :: r  Match p through calling the alternate begin rule named r.
+
     n : p   Match p and store it in an attribute in the current class named n.
             Acts as though it stores nothing to the rule calling it.
 
@@ -86,8 +90,9 @@ Operator Precedence
             Stores type_join(p q).
 
     p  q    Match p followed by q.
-            If p and q are both character match then do not allow whitespace
-            to separate them and store type_join(p q).
+            If p and q are both character matches then it is equivalent to p ^ q
+            If q would also match the Whitespace rule then it is equivalent to
+            p ^ skip (Whitespace - q) ^ q
             Otherwise allow optional whitespace to separate them and
             store tuple(p, q).
 
@@ -98,12 +103,13 @@ Operator Precedence
     p | q   Try to match p, then try to match q if that fails.
             Stores variant(store p, store q). Non-constant.
 
-    p || q  Match p or q in sequence.
+    p || q  Match p or q in sequence. Non-constant.
 
     p ~ q   Match p followed by q separated by optional whitespace.
             Non-constant. Stores tuple(p, q).
 
-    p > q   If p matches and q does not, raise a global error.
+    p > q   If p matches and q does not, raise a global error. 
+            Stores tuple(p, q).
 
 Combinations
     p*? q

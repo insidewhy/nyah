@@ -13,8 +13,7 @@ StringNode = \" > !\"* \" | \' > !\'* \'
 Number = [0-9]+
 
 SimpleNode = TextNode | HtmlNode | StringNode | RawString
-Node = SimpleNode | VariableDefinition | MasterHtmlNode as HtmlNode | Yield
-HeadNode = Node | MacroDefinition
+Node = HtmlNode::master | HtmlNode::important | SimpleNode | VariableDefinition | Yield
 
 HtmlArgumentValue = StringNode | [!,)]+
 
@@ -30,10 +29,10 @@ HtmlNode {
               nodeName arguments > ) ~
             ( ^ WhitespaceNoNewlines ^ (children as SimpleNode | children?))
 
+    // alternate constructors
+    begin master = '!' > nodeName arguments? \n children as Node*
+    begin important = '!!' > nodeName arguments? \n children as (Node - ImportantHtmlNode)*
 }
-
-MasterHtmlNode : HtmlNode =
-    '!' > nodeName arguments? ~ \n children:Node*
 
 TextNode = '<<' > ^ local textMarker:Identifier \n ~
             .*? \n ^ matched(textMarker)
@@ -42,7 +41,7 @@ Yield = 'yield' > argument:Identifier
 
 MacroDefinition {
     arguments = '(' > (Identifier % ',')? ')'
-    header = '$function' > name:Identifier arguments?
+    header = '$' 'function' > name:Identifier arguments?
 
     children = Node*
 
@@ -55,4 +54,4 @@ Expression = Number | StringNode
 // var Expression equivalent to expression:Expression
 VariableDefinition = '$' name:Identifier '=' > var Expression
 
-Global = HeadNode*
+Global = (Node | MacroDefinition)*
