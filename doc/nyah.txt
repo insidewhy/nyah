@@ -42,6 +42,8 @@ Functions
 
     var Name     Equivalent to name:Name
 
+    epsilon      Always matches and skips nothing.
+
     type_join (t1 t2 ...)
         1. Collapse all adjacent non-constant character/string stores together 
            to store a single string (including separating whitespace if it is 
@@ -60,7 +62,7 @@ Functions
 
 Operator Precedence
     &p      Match p but leave the parser position where it was before the &p
-            rule was matched even if p succeeds. Cannot store.
+            rule was matched even if p succeeds. Does not store.
 
     !p      Returns false if p matches, and true if p fails.
             If !p succeeds and p is a constant match or character match then
@@ -72,14 +74,16 @@ Operator Precedence
             character and store a string, otherwise store list(p).
     p+      As above but p must match at least once.
     p?      Match p zero or once. Stores optional(p).
-            These three operations are non-constant.
+    p*? q   Same as p* but limit until q matches. Stores tuple(p, q).
+    p+? q   Same as p+ but limit until q matches. Stores tuple(p, q).
+            These five operations are non-constant.
 
-    p :: r  Match p through calling the alternate begin rule named r.
+    p :: r  Match p through calling the alternate begin rule r.
 
     n : p   Match p and store it in an attribute in the current class named n.
             Acts as though it stores nothing to the rule calling it.
 
-    p - q   Equivalent to anything that matches p but not q. Stores p.
+    p - q   Equivalent to &!p q
 
     p % q   Match p joined by q. Stores list(p). non-constant.
 
@@ -88,6 +92,13 @@ Operator Precedence
 
     p ^ q   Match p followed by q with no whitespace between.
             Stores type_join(p q).
+
+    p > q   Same as (p q) but if p matches and q does not, raise a global 
+            error.  Stores tuple(p, q).
+
+    p >^ q  Same as (p ^ q) but if p matches and q does not, raise a global 
+            error.  Stores tuple(p, q).
+
 
     p  q    Match p followed by q.
             If p and q are both character matches then it is equivalent to p ^ q
@@ -103,17 +114,11 @@ Operator Precedence
     p | q   Try to match p, then try to match q if that fails.
             Stores variant(store p, store q). Non-constant.
 
-    p || q  Match p or q in sequence. Non-constant.
+    p || q  Matches the same as (p | p q)  but stores 
+            tuple(optional(p), optional(q)).
 
     p ~ q   Match p followed by q separated by optional whitespace.
             Non-constant. Stores tuple(p, q).
-
-    p > q   If p matches and q does not, raise a global error. 
-            Stores tuple(p, q).
-
-Combinations
-    p*? q
-        Keep matching p until q matches. Stores tuple(p, q).
 
 Type storage
     nothing         Is a const type.

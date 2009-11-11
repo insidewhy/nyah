@@ -13,7 +13,8 @@ StringNode = \" > !\"* \" | \' > !\'* \'
 Number = [0-9]+
 
 SimpleNode = TextNode | HtmlNode | StringNode | RawString
-Node = HtmlNode::master | HtmlNode::important | SimpleNode | VariableDefinition | Yield
+Node = HtmlNode::master | HtmlNode::important | SimpleNode | 
+       VariableDefinition | Yield
 
 HtmlArgumentValue = StringNode | [!,)]+
 
@@ -26,12 +27,12 @@ HtmlNode {
 
     begin = nodeName children |
             ( '%' > nodeName arguments? |
-              nodeName arguments > ) ~
-            ( ^ WhitespaceNoNewlines ^ (children as SimpleNode | children?))
+              nodeName arguments ) ^ ( 
+            WhitespaceNoNewlines ^ (children as SimpleNode | children?))
 
     // alternate constructors
     begin master = '!' > nodeName arguments? \n children as Node*
-    begin important = '!!' > nodeName arguments? \n children as (Node - ImportantHtmlNode)*
+    begin important = '!!' > nodeName arguments? \n children as (Node - HtmlNode::important)*
 }
 
 TextNode = '<<' > ^ local textMarker:Identifier \n ~
