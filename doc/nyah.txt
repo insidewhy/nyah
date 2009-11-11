@@ -27,6 +27,7 @@ Multiple Character Matches
     The following are non-constant:
         Integer  Match any integer and stores an integer.
         Float    Match any float and stores a float.
+        Number   Same as (Integer | Float).
 
 Functions
     skip p  Match p and store nothing.
@@ -41,6 +42,11 @@ Functions
                  constant match.
 
     var Name     Equivalent to name:Name
+
+    key var:p    Create an attribute var of type p. The pattern this attribute
+                 matches will become part of the key of this object. In the
+                 same scope two objects of the same type with the same key may
+                 not exist.
 
     epsilon      Always matches and skips nothing.
 

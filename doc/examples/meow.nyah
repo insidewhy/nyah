@@ -9,7 +9,7 @@ RawString = (
 
 StringNode = \" >> !\"* \" | \' >> !\'* \'
 
-Number = [0-9]+
+Yield = 'yield' >> '(' argument:Identifier ')'
 
 SimpleNode = TextNode | HtmlNode | StringNode | RawString | Yield
 Node = SimpleNode | HtmlNode->master | HtmlNode->important | VariableDefinition
@@ -31,13 +31,11 @@ HtmlNode {
     // alternate constructors
     begin master = '!' >> nodeName arguments? \n children as Node*
     begin important = '!!' >> nodeName arguments? \n ~
-                      children as (Node - HtmlNode->important)*
+                      children as (Node - important - master)*
 }
 
 TextNode = '<<' >> ^ local textMarker:Identifier \n ~
             .*? \n ^ matched(textMarker)
-
-Yield = 'yield' >> '(' argument:Identifier ')'
 
 MacroDefinition {
     arguments = '(' > (Identifier % ',')? ')'
