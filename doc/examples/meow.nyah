@@ -1,5 +1,4 @@
 skip WhitespaceNoNewlines = [ \t]+
-
 skip Whitespace = \s+
 skip Comment = '//' !\n*
 Identifier = [_a-zA-Z]^[_a-zA-Z0-9]*
@@ -8,41 +7,41 @@ RawString = (
     '$' { fail("expected function declaration or variable assignment") } |
     . )*
 
-StringNode = \" > !\"* \" | \' > !\'* \'
+StringNode = \" >> !\"* \" | \' >> !\'* \'
 
 Number = [0-9]+
 
-SimpleNode = TextNode | HtmlNode | StringNode | RawString
-Node = HtmlNode::master | HtmlNode::important | SimpleNode | 
-       VariableDefinition | Yield
+SimpleNode = TextNode | HtmlNode | StringNode | RawString | Yield
+Node = SimpleNode | HtmlNode::master | HtmlNode::important | VariableDefinition
 
 HtmlArgumentValue = StringNode | [!,)]+
 
 HtmlNodeArgument = (name:Identifier '=')? value:HtmlArgumentValue
 
 HtmlNode {
-    children = '{' > Node* '}'
-    arguments = '(' > (HtmlNodeArgument % ','?)? ')'
+    children = '{' >> Node* '}'
+    arguments = '(' >> (HtmlNodeArgument % ','?)? ')'
     nodeName = Identifier
 
     begin = nodeName children |
-            ( '%' > nodeName arguments? |
+            ( '%' >> nodeName arguments? |
               nodeName arguments ) ^ ( 
             WhitespaceNoNewlines ^ (children as SimpleNode | children?))
 
     // alternate constructors
-    begin master = '!' > nodeName arguments? \n children as Node*
-    begin important = '!!' > nodeName arguments? \n children as (Node - HtmlNode::important)*
+    begin master = '!' >> nodeName arguments? \n children as Node*
+    begin important = '!!' >> nodeName arguments? \n ~
+                      children as (Node - HtmlNode::important)*
 }
 
-TextNode = '<<' > ^ local textMarker:Identifier \n ~
+TextNode = '<<' >> ^ local textMarker:Identifier \n ~
             .*? \n ^ matched(textMarker)
 
-Yield = 'yield' > argument:Identifier
+Yield = 'yield' >> '(' argument:Identifier ')'
 
 MacroDefinition {
     arguments = '(' > (Identifier % ',')? ')'
-    header = '$' 'function' > name:Identifier arguments?
+    header = '$' 'function' >> name:Identifier arguments?
 
     children = Node*
 
