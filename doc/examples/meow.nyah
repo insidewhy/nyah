@@ -34,7 +34,7 @@ HtmlNode {
                       children as (Node - important - master)*
 }
 
-TextNode = '<<' >> ^ local textMarker:Identifier \n ~
+TextNode = '<<' ^ >> local textMarker:Identifier \n ~
             .*? \n ^ matched(textMarker)
 
 MacroDefinition {

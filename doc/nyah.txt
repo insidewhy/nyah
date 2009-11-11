@@ -97,14 +97,10 @@ Operator Precedence
     p as q  Match p but store to it using the parser type q. The type of p 
             must be compatible with the type of q.
 
-    p >^ q  Same as (p ^ q) but if p matches and q does not, raise a global 
-            error.
+    > q     If q does not match raise a global error.
 
-    p > q   Same as (p q) but if p matches and q does not, raise a global 
-            error.
-
-    p >>^ q Same as (p >^ q) or (p > q), but in addition to q, if the current
-    p >> q  object does not succeed raise a global failure.
+    >> q    If q does not match, or if the current object is not matched
+            after q, raise a global error.
 
     p ^ q   Match p followed by q with no whitespace between.
             Stores type_join(p q).
@@ -158,4 +154,5 @@ Type storage
         type(s) = variant(string, int)
 
 Actions
-    fail(message:string)    Raise global failure with indicated message.
+    fail(message:string)  Raise global failure with indicated message:
+                          '"' (. | '$' { fail("$ not allowed in string") })* '"'
