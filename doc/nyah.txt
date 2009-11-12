@@ -34,7 +34,8 @@ Special Matches.
     eof      Matches the end of a file.
     TODO     Mark unimplemented section, raises error when parsing.
 
-Operator Precedence.
+Operators in order of precedence.
+Unary operators.
     &p      Match p but leave the parser position where it was before the &p
             rule was matched even if p succeeds. Does not store.
 
@@ -49,6 +50,8 @@ Operator Precedence.
             character and store a string, otherwise store list(p).
     p+      As above but p must match at least once.
     p?      Match p zero or once. Stores optional(p).
+
+Binary operators.
     p*? q   Same as p* but limit until q matches. Stores tuple(type of p*, q)
     p+? q   Same as p+ but limit until q matches. Stores tuple(type of p+, q)
             These five operations are mutable.
@@ -73,16 +76,22 @@ Operator Precedence.
     p as q  Match p but store to it using the parser type q. The type of p
             must be compatible with the type of q.
 
+    p ^ q   Match p followed by q with no whitespace between.
+            Stores type_join(p q).
+
+Global Error Raising Unary Operators.
     > q     If q does not match raise a global error.
 
     >> q    If q does not match, or if the current object is not matched
             after q, raise a global error.
 
-    p ^ q   Match p followed by q with no whitespace between.
-            Stores type_join(p q).
-
+Action Operator.
     p { d } If p is matched perform action d.
 
+Modifier Operator.
+    See modifiers.
+
+Sequence Operator.
     p q     Match p followed by q.
             If p and q are both character matches then it is equivalent to
             (p ^ q).
@@ -91,17 +100,22 @@ Operator Precedence.
             Otherwise allow optional whitespace to separate them and
             store tuple(p, q).
 
-    modifier  See Modifiers
-
+Variant matching binary operators.
     p | q   Try to match p, then try to match q if that fails.
             Stores variant(p, q). Immutable.
 
-    p || q  Ordered sequence. Matches the same as (p | p q) but stores:
+    p |~ q  Ordered sequence. Matches the same as (p | p q) but stores:
             tuple(optional(p), optional(q)).
 
-    p ||| q Unordered sequence. Matches the same as (p q? | q p?) but stores:
+    p |* q  Optional unordered sequence.
+            Matches the same as (p q? | q p?)? but stores:
             tuple(optional(p), optional(q)).
 
+    p |+ q  Unordered sequence.
+            Matches the same as (p q? | q p?) but stores:
+            tuple(optional(p), optional(q)).
+
+Low priority binary operators.
     p ~ q   Match p followed by q separated by optional whitespace.
             Immutable. Stores tuple(p, q).
 
@@ -177,19 +191,18 @@ Modifiers (for both Attributes and Expressions).
                 "first"   -> 0
                 "second"  -> 1
 
-                enum p = 'a' || 'b' || 'c'
+                enum p = 'a' |~ 'b' |~ 'c'
                 type(p) = enum { enum_a = 1, enum_b = 2, enum_c = 4 }
                 "a b" -> 3
                 "b c" -> 6
 
         The type of p becomes an enumeration. All named matches in p are
         stored as an entry in the enum attribute with the identifier name
-        of the match prefix by enum_. If it is
-        determined that multiple enum entries can match, then the
-        enum values are set in powers of 2 and additive. Immutable matches
-        are always named and stored as they have default names, and
-        skip should be placed before non-named matches to silence
-        compiler warnings.
+        of the match prefix by enum_. If it is determined that multiple enum
+        entries can match, then the enum values are set in powers of 2 and
+        additive. Immutable matches are always named and stored as they have
+        default names, and skip should be placed before non-named matches to
+        silence compiler warnings.
 
     type_join p
         1. Collapse all adjacent mutable character/string stores together
@@ -232,6 +245,10 @@ Expression Modifiers.
                   type(p) = boolean
                 p = store "a"
                   type(p) = immutable character
+                p = "a" \w+
+                  type(p) = string
+                p = store "a" \w+
+                  type(p) = tuple(character, string)
 
 Special declarations
     grammar <quoted or double quoted string>

@@ -19,7 +19,7 @@ Expression {
 
 Attribute {
     key name = AttributeName
-    enum prefix = 'key' | ('local' ||| 'skip')?
+    enum prefix = 'key' | ('local' |* 'skip')
 
     begin = prefix name '=' > value=Expression
 }
@@ -27,7 +27,7 @@ Attribute {
 Class : ClassPrefix {
     key name    = ClassName
     contents    = (Class | Attribute)+
-    enum prefix = 'skip' | 'enum' 
+    enum prefix = 'skip' | 'enum'
 
     begin = prefix className ~ '=' > Expression | '{' >> contents '}'
 }

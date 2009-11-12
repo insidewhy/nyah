@@ -22,8 +22,10 @@ HtmlNode {
     children = '{' >> Node* '}'
 
     namedArguments = NamedArgument % ','?
+
     arguments = '(' >> (
         (HtmlNodeArgument % ','? (',' namedArguments)?) | namedArguments? ')'
+
     nodeName = Identifier
 
     begin = nodeName children |
