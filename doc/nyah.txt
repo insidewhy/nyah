@@ -50,20 +50,20 @@ Operator Precedence
 
     p -> r  Match p through calling the alternate begin rule r.
 
-    p named n
-            Give the match p the name n. This n is useful for producing
-            more accurate output. Each name has a corresponding "identifier
-            name", which is obtained by replacing whitespace with underscores,
-            and removing all non alphanumeric characters from the name. This
-            identifier name is used in the enum function.
-
-    n : p   Match p and store it in an attribute named n.
+    n = p   Match p and store it in an attribute named n.
             If p is immutable, then n will store a boolean which will only
             be true in objects where n was matched.
 
     p - q   Shortcut for (&!p q)
 
     p % q   Match p joined by whitespace and q.  Stores list(p). mutable.
+
+    p named n
+            Give the match p the name n. This n is useful for producing
+            more accurate output. Each name has a corresponding "identifier
+            name", which is obtained by replacing whitespace with underscores,
+            and removing all non alphanumeric characters from the name. This
+            identifier name is used in the enum function.
 
     p as q  Match p but store to it using the parser type q. The type of p
             must be compatible with the type of q.
@@ -195,24 +195,18 @@ Modifiers that can only be used to prefix attributes.
              the same scope.
 
 Modifiers that cannot be used to prefix attributes.
-    local var:p  Create a local variable named var with parser type p.
-                 This exists only during the parsing of the current object.
-
     match p      Return a parser that matches the character/string currently
                  stored in the attribute p. The result of this counts as an
                  immutable match and is named after the matching string. It's
                  identifier name however will be match_p:
-                     func = 'begin' name:String .*? ~
+                     func = 'begin' name=String .*? ~
                             'end' enum (match name | 'default')
                      type(func) =
                         tuple(string, enum { enum_match_name, enum_default })
 
     store p      Do not remove the match of p from tuples even if it is immutable.
 
-    var Name     Equivalent to name:Name // CONSIDERING
-
-    key var:p    Create an attribute var of type p. The pattern this attribute
-                 matches will become part of the key of this object.
+    var Name     Equivalent to name=Name // CONSIDERING
 
     epsilon      Always matches and skips nothing.
 
@@ -226,9 +220,9 @@ Modifiers that cannot be used to prefix attributes.
             type_join(\d+ \w+)
                 would store "2  babies" as "2  babies" rather than
                 tuple("2", "babies")
-            type_join(\d+ \w+ name:StringNode \w+)
-                => type_join(string string name:StringNode string)
-                => type_join(string name:StringNode string)
+            type_join(\d+ \w+ name=StringNode \w+)
+                => type_join(string string name=StringNode string)
+                => type_join(string name=StringNode string)
                 => tuple(string, string)
         type_join is immutable only if (t1 t2 ...) are immutable.
 

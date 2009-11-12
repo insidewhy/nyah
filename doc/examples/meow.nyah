@@ -9,14 +9,14 @@ RawString = (
 
 StringNode = \" >> !\"* \" | \' >> !\'* \'
 
-Yield = 'yield' >> '(' argument:Identifier ')'
+Yield = 'yield' >> '(' argument=Identifier ')'
 
 SimpleNode = TextNode | HtmlNode | StringNode | RawString | Yield
 Node = SimpleNode | HtmlNode->master | HtmlNode->important | VariableDefinition
 
 HtmlArgumentValue = StringNode | [!,)]+
 
-HtmlNodeArgument = (key name:Identifier '=')? value:HtmlArgumentValue
+HtmlNodeArgument = (key name=Identifier '=')? value=HtmlArgumentValue
 
 HtmlNode {
     children = '{' >> Node* '}'
@@ -34,12 +34,12 @@ HtmlNode {
                       children as (Node - important - master)*
 }
 
-TextNode = '<<' ^ >> local textMarker:Identifier \n ~
+TextNode = '<<' ^ >> local textMarker=Identifier \n ~
             .*? \n ^ matched(textMarker)
 
 MacroDefinition {
     arguments = '(' > (Identifier % ',')? ')'
-    header = '$' 'function' >> name:Identifier arguments?
+    header = '$' 'function' >> name=Identifier arguments?
 
     children = Node*
 
@@ -49,6 +49,6 @@ MacroDefinition {
 
 Expression = Number | StringNode
 
-VariableDefinition = '$' name:Identifier '=' > expression:Expression
+VariableDefinition = '$' name=Identifier '=' > expression=Expression
 
 Global = (Node | MacroDefinition)*

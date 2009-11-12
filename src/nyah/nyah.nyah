@@ -22,7 +22,7 @@ Attribute {
     key name = AttributeName
     enum prefix = 'key' | ('local' ||| 'skip')?
 
-    begin = prefix name '=' value:Expression
+    begin = prefix name '=' value=Expression
 }
 
 Class : ClassPrefix {
