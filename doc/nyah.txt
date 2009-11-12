@@ -126,8 +126,8 @@ Immutable Matches Have Default Names.
         "hey" ^ \r\n   -> hey_linefeed_newline
 
 Tuple Details.
-    Immutable types are always removed from tuples unless prefixed by the
-    store modifier. A tuple with one type is replaced with that type.
+    All Immutable types are removed from tuples. A tuple with one type is
+    replaced with that type.
 
 Tuple Examples.
     s = '$' String '=' Integer
@@ -228,6 +228,10 @@ Expression Modifiers.
                     tuple(string, enum { enum_match_name, enum_default })
 
     store p  Treat p as a mutable match. p must be immutable.
+                p = "a"
+                  type(p) = boolean
+                p = store "a"
+                  type(p) = immutable character
 
 Special declarations
     grammar <quoted or double quoted string>
