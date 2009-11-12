@@ -52,17 +52,16 @@ Unary operators.
     p?      Match p zero or once. Stores optional(p).
 
 Binary operators.
-    p*? q   Same as p* but limit until q matches. Stores tuple(type of p*, q)
-    p+? q   Same as p+ but limit until q matches. Stores tuple(type of p+, q)
-            These five operations are mutable.
+    p*? q   Identical to ((p - q)* q). Mutable.
+    p+? q   Identical to ((p - q)+ q). Mutable.
 
-    p -> r  Match p through calling the alternate begin rule r.
+    c -> r  Match c through calling the alternate begin rule r.
 
     n = p   Match p and store it in an attribute named n.
             If p is immutable, then n will store a boolean which will only
             be true in objects where n was matched.
 
-    p - q   Shortcut for (&!p q)
+    p - q   Identical to (&!p q).
 
     p % q   Match p joined by whitespace and q.  Stores list(p). mutable.
 
