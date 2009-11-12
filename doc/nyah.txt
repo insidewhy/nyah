@@ -29,17 +29,22 @@ Multiple Character Matches
         Float    Match any float and stores a float.
         Number   Same as (Integer | Float).
 
-Functions
-    skip p       Match p and store nothing.
+Functions that can also be used to prefix attributes.
+    skip p       Match and store nothing.
 
-    store p      Do not remove the match of p from tuples even if it constant.
+Functions that can only be used to prefix attributes.
+    local p      p acts like an attribute but is a variable stored only during
+                 the parsing of the current object.
 
+Functions that cannot be used to prefix attributes
     local var:p  Create a local variable named var with parser type p.
-                 This exists during the parsing of the current rule only.
+                 This exists only during the parsing of the current object.
 
     match p      Return a parser that matches the character/string currently
                  stored in the attribute p. The result of this counts as a
                  constant match.
+
+    store p      Do not remove the match of p from tuples even if it constant.
 
     var Name     Equivalent to name:Name
 
@@ -65,6 +70,9 @@ Functions
                 => type_join(string name:StringNode string)
                 => tuple(string, string)
 
+    TODO
+        Mark unimplemented rule, raises an error when parsing
+
 
 Operator Precedence
     &p      Match p but leave the parser position where it was before the &p
@@ -88,7 +96,8 @@ Operator Precedence
     p -> r  Match p through calling the alternate begin rule r.
 
     n : p   Match p and store it in an attribute named n.
-            Acts as though it stores nothing to the rule calling it.
+            If p is constant, then n will store a boolean which will only 
+            be true in objects where n was matched.
 
     p - q   Shortcut for (&!p q)
 
@@ -127,32 +136,39 @@ Operator Precedence
             Non-constant. Stores tuple(p, q).
 
 Type storage
-    nothing         Is a const type.
-    tuple(...)      Removes const types from the tuple.
-    tuple(q) -> q   Single element tuple is not a tuple.
+    Removes const types from a tuple.
+        tuple(const t, ...) -> tuple(...)
+        s = '$' String '=' Integer
+        type(s) = tuple(const character, string, const character, int)
+        type(s) = tuple(string, int)
+
+    Single element tuples are not tuples.
+        tuple(q) -> q   
         s = "p" [a-z]
-        type(s) = tuple(nothing, character)
+        type(s) = tuple(const character, character)
                 => tuple(character)
                 => character
 
-    variant(..., variant(...), ...) -> variant(..., ..., ...)
+    Nested variants are expanded into the current variant:
+        variant(..., variant(...), ...) -> variant(..., ..., ...)
         s = 'a' | (Integer | Float)
         type(s) = variant(character, variant(int, float))
         type(s) = variant(character, int, float)
 
-    variant()       Types which are the same are removed from the variant.
-        s = 'a' | 'b' | Integer
+    Types that are the same are removed from the variant.
+        variant(t, ..., t) -> variant(t, ...)
+        s = \w | [_-] | Integer
         type(s) = variant(character, character, int)
         type(s) = variant(character, int)
 
-    variant(..., character, ..., character, ...) -> variant(character, ...)
+    A character and string are collapsed to be a string.
     variant(..., character, ..., string, ...) -> variant(string, ...)
-        s = 'blimey' | Integer | 'a' | 'b'
+        s = \w+ | Integer | \d | \w
         type(s) = variant(string, int, character, character)
         type(s) = variant(string, int, character)
         type(s) = variant(string, int)
 
-    variant(q) -> q
+    variant(t) -> t
 
 Actions
     fail(message:string)  Raise global failure with indicated message:

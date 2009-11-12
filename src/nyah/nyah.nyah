@@ -4,15 +4,15 @@ ClassName = [A-Z] ^ IdentifierTail
 RuleName  = [a-z] ^ IdentifierTail
 
 Attribute {
+    begin = TODO
 }
 
 RuleValue {
     prefix = 'key' | 'skip'
-    begin = 
+    begin = TODO
 }
 
-Rule {
-}
+Attribute = TODO
 
 Class : ClassPrefix {
     prefix          = 'skip' | 'store'
