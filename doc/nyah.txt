@@ -40,10 +40,10 @@ Unary operators.
             rule was matched even if p succeeds. Does not store.
 
     !p      Fails if p matches, and succeeds if p fails.
-            If !p succeeds, p is a character match, and it is not prefix by &
+            If !p succeeds, p is a character match, and it is not prefixed by &
             then advance the parser one character, otherwise the position
             is left as it was before !p was matched. !p only stores if p is a
-            mutable character match.
+            character match.
 
     p*      Match p zero or more times.
             If p is a character match, don't allow whitespace in between each
@@ -66,7 +66,7 @@ Binary operators.
     p % q   Match p joined by whitespace and q.  Stores list(p). mutable.
 
     p named n
-            Give the match p the name n. This n is useful for producing
+            Give the match p the name n. This name is useful for producing
             more accurate output. Each name has a corresponding "identifier
             name", which is obtained by replacing whitespace with underscores,
             and removing all non alphanumeric characters from the name. This
@@ -99,24 +99,36 @@ Sequence Operator.
             Otherwise allow optional whitespace to separate them and
             store tuple(p, q).
 
-Variant matching binary operators.
-    p | q   Try to match p, then try to match q if that fails.
-            Stores variant(p, q). Immutable.
+Variant matching operators.
+    p | q
+        Ordered Choice. Try to match each argument in sequence until the first
+        one matches.
+        Stores variant(p, q). Immutable.
 
-    p |~ q  Ordered sequence. Matches the same as (p | p q) but stores:
-            tuple(optional(p), optional(q)).
+    The following three are infix operators but can operate on more than one
+    type, for example (p |~ q |~ r) is treated like one modifer with p, q and
+    r as arguments, which is not the same as ((p |~ q) |~ r).
 
-    p |* q  Optional unordered sequence.
-            Matches the same as (p q? | q p?)? but stores:
-            tuple(optional(p), optional(q)).
+    p |~ q |~ ...
+        Ordered multiple choice: Try to match each argument in the order
+        specified.  Succeeds if at least one of the arguments matches, but
+        allow multiple arguments to match.
+        Stores tuple(optional(p), optional(q), ...).
 
-    p |+ q  Unordered sequence.
-            Matches the same as (p q? | q p?) but stores:
-            tuple(optional(p), optional(q)).
+    p |+ q |+ ...
+        Unordered multiple choice: Try to match each of the
+        arguments in any given order. Allow multiple arguments to match.
+        Succeeds if at least one of the arguments matches.
+        Stores tuple(optional(p), optional(q), ...).
+
+    p |* q |* ...
+        Optional Unordered multiple choice: Same as |+ but also succeed if
+        none of the options match.
 
 Low priority binary operators.
-    p ~ q   Match p followed by q separated by optional whitespace.
-            Immutable. Stores tuple(p, q).
+    p ~ q
+        Match p followed by q separated by optional whitespace.  Immutable.
+        Stores tuple(p, q).
 
 Immutable Matches Have Default Names.
     Immutable matches have names identical to the string/character constant
