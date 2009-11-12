@@ -25,7 +25,7 @@ HtmlNode {
 
     begin = nodeName children |
             ( '%' >> nodeName arguments? |
-              nodeName arguments ) ^ ( 
+              nodeName arguments ) ^ (
             WhitespaceNoNewlines ^ (children as SimpleNode | children?))
 
     // alternate constructors

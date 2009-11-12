@@ -29,53 +29,6 @@ Multiple Character Matches
         Float    Match any float and stores a float.
         Number   Same as (Integer | Float).
 
-Functions that can also be used to prefix attributes.
-    skip p       Match and store nothing.
-
-Functions that can only be used to prefix attributes.
-    local p  p acts like an attribute but is a variable stored only during
-             the parsing of the current object.
-
-    key p    The attribute p will become part of the key of the current class. 
-             Two objects of the same type with the same key may not exist in 
-             the same scope.
-
-Functions that cannot be used to prefix attributes
-    local var:p  Create a local variable named var with parser type p.
-                 This exists only during the parsing of the current object.
-
-    match p      Return a parser that matches the character/string currently
-                 stored in the attribute p. The result of this counts as a
-                 constant match.
-
-    store p      Do not remove the match of p from tuples even if it constant.
-
-    var Name     Equivalent to name:Name // CONSIDERING
-
-    key var:p    Create an attribute var of type p. The pattern this attribute
-                 matches will become part of the key of this object.
-
-    epsilon      Always matches and skips nothing.
-
-    type_join (t1 t2 ...)
-        1. Collapse all adjacent non-constant character/string stores together 
-           to store a single string (including separating whitespace if it is 
-           allowed).
-        2. Remove all remaining types that are constant.
-        3. Store each remaining item as an element in a tuple:
-        e.g.
-            type_join(\d+ \w+)
-                would store "2 babies" as "2 babies" rather than
-                tuple("2", "babies")
-            type_join(\d+ \w+ name:StringNode \w+)
-                => type_join(string string name:StringNode string)
-                => type_join(string name:StringNode string)
-                => tuple(string, string)
-
-    TODO
-        Mark unimplemented rule, raises an error when parsing
-
-
 Operator Precedence
     &p      Match p but leave the parser position where it was before the &p
             rule was matched even if p succeeds. Does not store.
@@ -106,7 +59,7 @@ Operator Precedence
 
     p % q   Match p joined by whitespace and q.  Stores list(p). non-constant.
 
-    p as q  Match p but store to it using the parser type q. The type of p 
+    p as q  Match p but store to it using the parser type q. The type of p
             must be compatible with the type of q.
 
     > q     If q does not match raise a global error.
@@ -120,7 +73,7 @@ Operator Precedence
     p { d } If p is matched perform action d.
 
     p q     Match p followed by q.
-            If p and q are both character matches then it is equivalent to 
+            If p and q are both character matches then it is equivalent to
             (p ^ q).
             If q would also match the Whitespace rule then it is equivalent to
             (p ^ skip (Whitespace - q) ^ q).
@@ -132,7 +85,7 @@ Operator Precedence
     p | q   Try to match p, then try to match q if that fails.
             Stores variant(p, q). Non-constant.
 
-    p || q  Matches the same as (p | p q)  but stores 
+    p || q  Matches the same as (p | p q)  but stores
             tuple(optional(p), optional(q)).
 
     p ~ q   Match p followed by q separated by optional whitespace.
@@ -146,7 +99,7 @@ Type storage
         type(s) = tuple(string, int)
 
     Single element tuples are not tuples.
-        tuple(q) -> q   
+        tuple(q) -> q
         s = "p" [a-z]
         type(s) = tuple(const character, character)
                 => tuple(character)
@@ -176,3 +129,49 @@ Type storage
 Actions
     fail(message:string)  Raise global failure with indicated message:
                           '"' (. | '$' { fail("$ not allowed in string") })* '"'
+
+Functions that can also be used to prefix attributes.
+    skip p       Match and store nothing.
+
+Functions that can only be used to prefix attributes.
+    local p  p acts like an attribute but is a variable stored only during
+             the parsing of the current object.
+
+    key p    The attribute p will become part of the key of the current class.
+             Two objects of the same type with the same key may not exist in
+             the same scope.
+
+Functions that cannot be used to prefix attributes
+    local var:p  Create a local variable named var with parser type p.
+                 This exists only during the parsing of the current object.
+
+    match p      Return a parser that matches the character/string currently
+                 stored in the attribute p. The result of this counts as a
+                 constant match.
+
+    store p      Do not remove the match of p from tuples even if it constant.
+
+    var Name     Equivalent to name:Name // CONSIDERING
+
+    key var:p    Create an attribute var of type p. The pattern this attribute
+                 matches will become part of the key of this object.
+
+    epsilon      Always matches and skips nothing.
+
+    type_join (t1 t2 ...)
+        1. Collapse all adjacent non-constant character/string stores together
+           to store a single string (including separating whitespace if it is
+           allowed).
+        2. Remove all remaining types that are constant.
+        3. Store each remaining item as an element in a tuple:
+        e.g.
+            type_join(\d+ \w+)
+                would store "2 babies" as "2 babies" rather than
+                tuple("2", "babies")
+            type_join(\d+ \w+ name:StringNode \w+)
+                => type_join(string string name:StringNode string)
+                => type_join(string name:StringNode string)
+                => tuple(string, string)
+
+    TODO
+        Mark unimplemented rule, raises an error when parsing
