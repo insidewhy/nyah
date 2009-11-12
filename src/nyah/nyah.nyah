@@ -2,27 +2,35 @@ grammar "nyah"
 
 IdentifierTail = [A-Za-z0-9_]*
 
-ClassName = [A-Z] ^ IdentifierTail
-RuleName  = [a-z] ^ IdentifierTail
+ClassName      = [A-Z] ^ IdentifierTail
+AttributeName  = [a-z] ^ IdentifierTail
+
+ConstantSpecialCharacter = '\' [nrst'"]
+ConstantCharacter = SpecialCharacter | "'" !\' "'" | '"' !\" '"'
+
+MutableSpecialCharacter = '\' [wWSdD] | '.'
+CharacterRange = '[' (.|'\'.)+? ']'
+MutableCharacter = CharacterRange | MutableSpecialCharacter
+
+ConstantStringMatch = \' .*? \' | \" .*? \"
+
+Expression {
+    begin = TODO
+}
 
 Attribute {
-    begin = TODO
-}
-
-RuleValue {
+    key name = AttributeName
     enum prefix = 'key' | ('local' ||| 'skip')?
-    begin = TODO
-}
 
-Attribute = TODO
+    begin = prefix name '=' value:Expression
+}
 
 Class : ClassPrefix {
-    key className   = ClassName
-    contents        = TODO
+    key name    = ClassName
+    contents    = (Class | Attribute)+
+    enum prefix = 'skip' | 'enum' 
 
-    begin = prefix:'skip'? className ~
-            '=' > RuleValue |
-            '{' >> contents '}'
+    begin = prefix className ~ '=' > Expression | '{' >> contents '}'
 }
 
 Global = Class*

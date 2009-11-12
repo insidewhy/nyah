@@ -1,5 +1,5 @@
 Character Matches
-    The following are constant:
+    The following are immutable:
         \n      Newline.
         \r      Linebreak.
         \s      Whitespace.
@@ -8,7 +8,7 @@ Character Matches
         \"      Parser to match double quote.
         'c'     Matches the character c.
         "c"     Same as 'c'.
-    The following are non-constant:
+    The following are mutable:
         \w      Word character (alphanumeric or _).
         \W      Non-word character (alphanumeric or _).
         \S      Non-whitespace.
@@ -20,11 +20,11 @@ Character Matches
         [!pqr]   Match any character except p, q or r.
         [ps-z!r] Shortcut for ( [p] | [s-z] | [!r] ).
 
-Multiple Character Matches
-    The following are constant:
+String Matches
+    The following are immutable:
         "str"    Match the string str.
         'str'    Match the string str.
-    The following are non-constant:
+    The following are mutable:
         Integer  Match any integer and stores an integer.
         Float    Match any float and stores a float.
         Number   Same as (Integer | Float).
@@ -37,7 +37,7 @@ Operator Precedence
             If !p succeeds, p is a character match, and it is not prefix by &
             then advance the parser one character, otherwise the position
             is left as it was before !p was matched. !p only stores if p is a
-            non-constant character match.
+            mutable character match.
 
     p*      Match p zero or more times.
             If p is a character match, don't allow whitespace in between each
@@ -46,7 +46,7 @@ Operator Precedence
     p?      Match p zero or once. Stores optional(p).
     p*? q   Same as p* but limit until q matches. Stores tuple(type of p*, q)
     p+? q   Same as p+ but limit until q matches. Stores tuple(type of p+, q)
-            These five operations are non-constant.
+            These five operations are mutable.
 
     p -> r  Match p through calling the alternate begin rule r.
 
@@ -58,12 +58,12 @@ Operator Precedence
             identifier name is used in the enum function.
 
     n : p   Match p and store it in an attribute named n.
-            If p is constant, then n will store a boolean which will only
+            If p is immutable, then n will store a boolean which will only
             be true in objects where n was matched.
 
     p - q   Shortcut for (&!p q)
 
-    p % q   Match p joined by whitespace and q.  Stores list(p). non-constant.
+    p % q   Match p joined by whitespace and q.  Stores list(p). mutable.
 
     p as q  Match p but store to it using the parser type q. The type of p
             must be compatible with the type of q.
@@ -89,7 +89,7 @@ Operator Precedence
     modifier  See Modifiers
 
     p | q   Try to match p, then try to match q if that fails.
-            Stores variant(p, q). Non-constant.
+            Stores variant(p, q). Immutable.
 
     p || q  Ordered sequence. Matches the same as (p | p q) but stores:
             tuple(optional(p), optional(q)).
@@ -98,10 +98,10 @@ Operator Precedence
             tuple(optional(p), optional(q)).
 
     p ~ q   Match p followed by q separated by optional whitespace.
-            Non-constant. Stores tuple(p, q).
+            Immutable. Stores tuple(p, q).
 
-Constant Matches Have Default Names.
-    Constant matches have names identical to the string/character constant
+Immutable Matches Have Default Names.
+    Immutable matches have names identical to the string/character constant
     specified. Special characters are mapped according to the following table:
         \n      <newline>
         \r      <linebreak>
@@ -110,7 +110,7 @@ Constant Matches Have Default Names.
         \'      <quote>
         \"      <double quote>
 
-    In the result that the constant match resulted from a type_join operations
+    In the result that the immutable match resulted from a type_join operations
     the names on the LHS are RHS are appended with a space:
         "hey"          -> hey
         "hey" ^ \t     -> hey <tab>
@@ -181,7 +181,7 @@ Modifiers that can also be used to prefix attributes.
         stored as an entry in the enum attribute with the identifier name
         of the match prefix by enum_. If it is
         determined that multiple enum entries can match, then the
-        enum values are set in powers of 2 and additive. Constant matches
+        enum values are set in powers of 2 and additive. Immutable matches
         are always named and stored as they have default names, and
         skip should be placed before non-named matches to silence
         compiler warnings.
@@ -199,15 +199,15 @@ Modifiers that cannot be used to prefix attributes.
                  This exists only during the parsing of the current object.
 
     match p      Return a parser that matches the character/string currently
-                 stored in the attribute p. The result of this counts as a
-                 constant match and is named after the matching string. It's
+                 stored in the attribute p. The result of this counts as an
+                 immutable match and is named after the matching string. It's
                  identifier name however will be match_p:
                      func = 'begin' name:String .*? ~
                             'end' enum (match name | 'default')
                      type(func) =
                         tuple(string, enum { enum_match_name, enum_default })
 
-    store p      Do not remove the match of p from tuples even if it constant.
+    store p      Do not remove the match of p from tuples even if it is immutable.
 
     var Name     Equivalent to name:Name // CONSIDERING
 
@@ -217,10 +217,10 @@ Modifiers that cannot be used to prefix attributes.
     epsilon      Always matches and skips nothing.
 
     type_join (t1 t2 ...)
-        1. Collapse all adjacent non-constant character/string stores together
+        1. Collapse all adjacent mutable character/string stores together
            to store a single string (including separating whitespace if it is
            allowed).
-        2. Remove all remaining types that are constant.
+        2. Remove all remaining types that are immutable.
         3. Store each remaining item as an element in a tuple:
         e.g.
             type_join(\d+ \w+)
@@ -230,7 +230,7 @@ Modifiers that cannot be used to prefix attributes.
                 => type_join(string string name:StringNode string)
                 => type_join(string name:StringNode string)
                 => tuple(string, string)
-        type_join is constant only if (t1 t2 ...) are constant.
+        type_join is immutable only if (t1 t2 ...) are immutable.
 
     TODO
         Mark unimplemented rule, raises an error when parsing
