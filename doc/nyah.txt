@@ -201,3 +201,26 @@ Functions that cannot be used to prefix attributes
 
     TODO
         Mark unimplemented rule, raises an error when parsing
+
+Special declarations
+    grammar <quoted or double quoted string>
+        Start a grammar from here until the next grammar statement or the end
+        of the file.
+
+Special classes
+    Whitespace.
+        By default:
+            skip Whitespace = \s*
+        This rule is used to skip whitespace between rules when and as
+        described above in addition to the comment rule. Use skip if
+        whitespace should not be stored in the tree.
+
+    Comment.
+        By default:
+            skip Comment = '//' .*? \n | '/*' .*? '*/'
+        Used for skipping whitespace as described above. Use skip if
+        comments should not be stored in the tree. This should be a good
+        place to include a documenting system.
+
+    Global
+        The entry rule to the grammar.

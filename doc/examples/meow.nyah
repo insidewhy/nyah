@@ -1,6 +1,6 @@
+grammar "meow"
+
 skip WhitespaceNoNewlines = [ \t]+
-skip Whitespace = \s+
-skip Comment = '//' !\n*
 Identifier = [_a-zA-Z]^[_a-zA-Z0-9]*
 
 RawString = (
