@@ -10,7 +10,7 @@ Attribute {
 }
 
 RuleValue {
-    enum prefix = 'key' | 'local'
+    enum prefix = 'key' | ('local' ||| 'skip')?
     begin = TODO
 }
 
