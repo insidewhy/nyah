@@ -34,17 +34,16 @@ Operator Precedence
             rule was matched even if p succeeds. Does not store.
 
     !p      Fails if p matches, and succeeds if p fails.
-            If !p succeeds and p is a constant match or character match then
-            advance the parser over p (unless & is used before !), otherwise
-            the position is left as it was before !p was matched. !p only
-            stores if p is a non-constant character match.
+            If !p succeeds, p is a character match, and it is not prefix by &
+            then advance the parser one character, otherwise the position
+            is left as it was before !p was matched. !p only stores if p is a
+            non-constant character match.
 
     p*      Match p zero or more times.
             If p is a character match, don't allow whitespace in between each
             character and store a string, otherwise store list(p).
     p+      As above but p must match at least once.
-    p?      Match p zero or once. Stores optional(p) if p is non-constant,
-            otherwise store nothing.
+    p?      Match p zero or once. Stores optional(p).
     p*? q   Same as p* but limit until q matches. Stores tuple(type of p*, q)
     p+? q   Same as p+ but limit until q matches. Stores tuple(type of p+, q)
             These five operations are non-constant.
@@ -91,6 +90,26 @@ Operator Precedence
     p ~ q   Match p followed by q separated by optional whitespace.
             Non-constant. Stores tuple(p, q).
 
+Constant Matches Have Names.
+    Constant matches have names identical to the string/character constant
+    specified. Special characters are mapped according to the following table:
+        \n      <newline>
+        \r      <linebreak>
+        \s      <whitespace>
+        \t      <tab>
+        \'      <quote>
+        \"      <double quote>
+
+    In the result that the constant match resulted from a type_join operations
+    the names on the LHS are RHS are appended with a space:
+        "hey"          -> hey
+        "hey" ^ \t     -> hey <tab>
+        "hey" ^ \r\n   -> hey <linefeed> <newline>
+
+    Identifier names are the same as the name with spaces replace by
+    underscores and all brackets removed:
+        "hey" ^ \r\n   -> hey_linefeed_newline
+
 Type storage
     Removes const types from a tuple.
         tuple(const t, ...) -> tuple(...)
@@ -131,7 +150,13 @@ Actions
                           '"' (. | '$' { fail("$ not allowed in string") })* '"'
 
 Functions that can also be used to prefix attributes.
-    skip p       Match and store nothing.
+    skip p   Match and store nothing.
+
+    enum p   The type of p becomes "enum". All non-const matches in p are
+             not stored, and constant matches write to an entry in the enum
+             with the identifier name of the match prefix by enum_.
+                p = enum ('a'\n | 'b') Number
+                type(p) = enum { enum_a_newline, enum_b }
 
 Functions that can only be used to prefix attributes.
     local p  p acts like an attribute but is a variable stored only during
@@ -172,6 +197,7 @@ Functions that cannot be used to prefix attributes
                 => type_join(string string name:StringNode string)
                 => type_join(string name:StringNode string)
                 => tuple(string, string)
+        type_join is constant only if (t1 t2 ...) are constant.
 
     TODO
         Mark unimplemented rule, raises an error when parsing

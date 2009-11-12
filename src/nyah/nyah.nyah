@@ -8,7 +8,7 @@ Attribute {
 }
 
 RuleValue {
-    prefix = enum 'key' | 'local'
+    enum prefix = 'key' | 'local'
     begin = TODO
 }
 
@@ -21,7 +21,6 @@ Class : ClassPrefix {
     begin = prefix:'skip'? className ~
             '=' > RuleValue |
             '{' >> contents '}'
-
 }
 
 Global = Class*
