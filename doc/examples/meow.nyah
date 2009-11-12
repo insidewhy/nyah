@@ -14,13 +14,16 @@ Yield = 'yield' >> '(' argument=Identifier ')'
 SimpleNode = TextNode | HtmlNode | StringNode | RawString | Yield
 Node = SimpleNode | HtmlNode->master | HtmlNode->important | VariableDefinition
 
-HtmlArgumentValue = StringNode | [!,)]+
-
-HtmlNodeArgument = (key name=Identifier '=')? value=HtmlArgumentValue
-
 HtmlNode {
+    ArgumentValue = StringNode | [!,)]+
+    UnnamedArgument = value=ArgumentValue
+    NamedArgument = key name=Identifier '=' value=ArgumentValue
+
     children = '{' >> Node* '}'
-    arguments = '(' >> (HtmlNodeArgument % ','?)? ')'
+
+    namedArguments = NamedArgument % ','?
+    arguments = '(' >> (
+        (HtmlNodeArgument % ','? (',' namedArguments)?) | namedArguments? ')'
     nodeName = Identifier
 
     begin = nodeName children |
