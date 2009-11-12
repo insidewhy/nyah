@@ -32,6 +32,7 @@ String Matches.
 Special Matches.
     epsilon  Does nothing but succeed.
     eof      Matches the end of a file.
+    TODO     Mark unimplemented section, raises error when parsing.
 
 Operator Precedence.
     &p      Match p but leave the parser position where it was before the &p
@@ -125,7 +126,7 @@ Immutable Matches Have Default Names.
         "hey" ^ \r\n   -> hey_linefeed_newline
 
 Tuple Details.
-    Const types are always removed from tuples unless prefixed with the
+    Immutable types are always removed from tuples unless prefixed by the
     store modifier. A tuple with one type is replaced with that type.
 
 Tuple Examples.
@@ -189,6 +190,24 @@ Modifiers (for both Attributes and Expressions).
         skip should be placed before non-named matches to silence
         compiler warnings.
 
+    type_join p
+        1. Collapse all adjacent mutable character/string stores together
+           to store a single string (including separating whitespace if it is
+           allowed).
+        2. Remove all remaining types that are immutable and not prefixed
+           by the store modifier.
+        3. Store each remaining item as an element in a tuple:
+        e.g.
+            type_join(\d+ \w+)
+                would store "2  babies" as "2  babies" rather than
+                tuple("2", "babies")
+            type_join(\d+ \w+ name=StringNode \w+)
+                => type_join(string string name=StringNode string)
+                => type_join(string name=StringNode string)
+                => tuple(string, string)
+        type_join is immutable only if (t1 t2 ...) are immutable.
+
+
 Attribute Modifiers.
     local p  p acts like an attribute but is a variable stored only during
              the parsing of the current object.
@@ -208,26 +227,6 @@ Expression Modifiers.
                     tuple(string, enum { enum_match_name, enum_default })
 
     store p  Do not remove the match of p from tuples even if it is immutable.
-
-    type_join (t1 t2 ...)
-        1. Collapse all adjacent mutable character/string stores together
-           to store a single string (including separating whitespace if it is
-           allowed).
-        2. Remove all remaining types that are immutable and not prefixed 
-           with "store".
-        3. Store each remaining item as an element in a tuple:
-        e.g.
-            type_join(\d+ \w+)
-                would store "2  babies" as "2  babies" rather than
-                tuple("2", "babies")
-            type_join(\d+ \w+ name=StringNode \w+)
-                => type_join(string string name=StringNode string)
-                => type_join(string name=StringNode string)
-                => tuple(string, string)
-        type_join is immutable only if (t1 t2 ...) are immutable.
-
-    TODO
-        Mark unimplemented rule, raises an error when parsing
 
 Special declarations
     grammar <quoted or double quoted string>

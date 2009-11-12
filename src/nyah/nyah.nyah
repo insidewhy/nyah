@@ -5,14 +5,13 @@ IdentifierTail = [A-Za-z0-9_]*
 ClassName      = [A-Z] ^ IdentifierTail
 AttributeName  = [a-z] ^ IdentifierTail
 
-ConstantSpecialCharacter = '\' [nrst'"]
-ConstantCharacter = SpecialCharacter | "'" !\' "'" | '"' !\" '"'
+SpecialCharacter = '\' [nrst'"]
+Character = SpecialCharacter | "'" !\' "'" | '"' !\" '"'
+StringMatch = \' .*? \' | \" .*? \"
 
 MutableSpecialCharacter = '\' [wWSdD] | '.'
 CharacterRange = '[' (.|'\'.)+? ']'
 MutableCharacter = CharacterRange | MutableSpecialCharacter
-
-ConstantStringMatch = \' .*? \' | \" .*? \"
 
 Expression {
     begin = TODO
@@ -22,7 +21,7 @@ Attribute {
     key name = AttributeName
     enum prefix = 'key' | ('local' ||| 'skip')?
 
-    begin = prefix name '=' value=Expression
+    begin = prefix name '=' > value=Expression
 }
 
 Class : ClassPrefix {
