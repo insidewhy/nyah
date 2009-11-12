@@ -6,9 +6,8 @@ Character Matches
         \t      Tab.
         \'      Parser for single quote.
         \"      Parser to match double quote.
-        [pqr]   Any of the individual characters p, q or r. Constant.
-        'c'     Same as [c]
-        "c"     Same as [c]
+        'c'     Matches the character c.
+        "c"     Same as 'c'.
     The following are non-constant:
         \w      Word character (alphanumeric or _).
         \W      Non-word character (alphanumeric or _).
@@ -16,6 +15,7 @@ Character Matches
         \d      Digit.
         \D      Non-digit.
         .       Any character.
+        [pqr]   Any of the individual characters p, q or r.
         [p-z]    Match characters between p and z inclusive.
         [!pqr]   Match any character except p, q or r.
         [ps-z!r] Shortcut for ( [p] | [s-z] | [!r] ).
@@ -30,9 +30,9 @@ Multiple Character Matches
         Number   Same as (Integer | Float).
 
 Functions
-    skip p  Match p and store nothing.
+    skip p       Match p and store nothing.
 
-    store p Match p and always store it, even if p is constant.
+    store p      Do not remove the match of p from tuples even if it constant.
 
     local var:p  Create a local variable named var with parser type p.
                  This exists during the parsing of the current rule only.
@@ -105,6 +105,8 @@ Operator Precedence
     p ^ q   Match p followed by q with no whitespace between.
             Stores type_join(p q).
 
+    p { d } If p is matched perform action d.
+
     p q     Match p followed by q.
             If p and q are both character matches then it is equivalent to 
             (p ^ q).
@@ -113,12 +115,10 @@ Operator Precedence
             Otherwise allow optional whitespace to separate them and
             store tuple(p, q).
 
-    p { d } If p is matched perform action d.
-
     function  See Functions
 
     p | q   Try to match p, then try to match q if that fails.
-            Stores variant(store p, store q). Non-constant.
+            Stores variant(p, q). Non-constant.
 
     p || q  Matches the same as (p | p q)  but stores 
             tuple(optional(p), optional(q)).
@@ -141,17 +141,18 @@ Type storage
         type(s) = variant(character, int, float)
 
     variant()       Types which are the same are removed from the variant.
-    variant(q) -> q
-        s = 'a' | 'b'
-        type(s) = variant(character, character)
-        type(s) = variant(character)
-        type(s) = character
+        s = 'a' | 'b' | Integer
+        type(s) = variant(character, character, int)
+        type(s) = variant(character, int)
 
-    variant(..., character, ..., string, ...) -> variant(string)
+    variant(..., character, ..., character, ...) -> variant(character, ...)
+    variant(..., character, ..., string, ...) -> variant(string, ...)
         s = 'blimey' | Integer | 'a' | 'b'
         type(s) = variant(string, int, character, character)
         type(s) = variant(string, int, character)
         type(s) = variant(string, int)
+
+    variant(q) -> q
 
 Actions
     fail(message:string)  Raise global failure with indicated message:

@@ -16,7 +16,7 @@ Node = SimpleNode | HtmlNode->master | HtmlNode->important | VariableDefinition
 
 HtmlArgumentValue = StringNode | [!,)]+
 
-HtmlNodeArgument = (name:Identifier '=')? value:HtmlArgumentValue
+HtmlNodeArgument = (key name:Identifier '=')? value:HtmlArgumentValue
 
 HtmlNode {
     children = '{' >> Node* '}'

@@ -1,0 +1,28 @@
+IdentifierTail = [A-Za-z0-9_]*
+
+ClassName = [A-Z] ^ IdentifierTail
+RuleName  = [a-z] ^ IdentifierTail
+
+Attribute {
+}
+
+RuleValue {
+    prefix = 'key' | 'skip'
+    begin = 
+}
+
+Rule {
+}
+
+Class : ClassPrefix {
+    prefix          = 'skip' | 'store'
+    key className   = ClassName
+    contents        = TODO
+
+    begin = prefix className ~ 
+            '=' > RuleValue |
+            '{' >> contents '}'
+
+}
+
+Global = Class*
