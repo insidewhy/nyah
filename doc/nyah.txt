@@ -33,8 +33,12 @@ Functions that can also be used to prefix attributes.
     skip p       Match and store nothing.
 
 Functions that can only be used to prefix attributes.
-    local p      p acts like an attribute but is a variable stored only during
-                 the parsing of the current object.
+    local p  p acts like an attribute but is a variable stored only during
+             the parsing of the current object.
+
+    key p    The attribute p will become part of the key of the current class. 
+             Two objects of the same type with the same key may not exist in 
+             the same scope.
 
 Functions that cannot be used to prefix attributes
     local var:p  Create a local variable named var with parser type p.
@@ -46,12 +50,10 @@ Functions that cannot be used to prefix attributes
 
     store p      Do not remove the match of p from tuples even if it constant.
 
-    var Name     Equivalent to name:Name
+    var Name     Equivalent to name:Name // CONSIDERING
 
     key var:p    Create an attribute var of type p. The pattern this attribute
-                 matches will become part of the key of this object. In the
-                 same scope two objects of the same type with the same key may
-                 not exist.
+                 matches will become part of the key of this object.
 
     epsilon      Always matches and skips nothing.
 
@@ -88,7 +90,8 @@ Operator Precedence
             If p is a character match, don't allow whitespace in between each
             character and store a string, otherwise store list(p).
     p+      As above but p must match at least once.
-    p?      Match p zero or once. Stores optional(p).
+    p?      Match p zero or once. Stores optional(p) if p is non-constant,
+            otherwise store nothing.
     p*? q   Same as p* but limit until q matches. Stores tuple(type of p*, q)
     p+? q   Same as p+ but limit until q matches. Stores tuple(type of p+, q)
             These five operations are non-constant.
@@ -96,7 +99,7 @@ Operator Precedence
     p -> r  Match p through calling the alternate begin rule r.
 
     n : p   Match p and store it in an attribute named n.
-            If p is constant, then n will store a boolean which will only 
+            If p is constant, then n will store a boolean which will only
             be true in objects where n was matched.
 
     p - q   Shortcut for (&!p q)

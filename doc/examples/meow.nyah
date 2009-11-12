@@ -49,7 +49,6 @@ MacroDefinition {
 
 Expression = Number | StringNode
 
-// var Expression equivalent to expression:Expression
-VariableDefinition = '$' name:Identifier '=' > var Expression
+VariableDefinition = '$' name:Identifier '=' > expression:Expression
 
 Global = (Node | MacroDefinition)*

@@ -8,18 +8,17 @@ Attribute {
 }
 
 RuleValue {
-    prefix = 'key' | 'skip'
+    prefix = enum 'key' | 'local'
     begin = TODO
 }
 
 Attribute = TODO
 
 Class : ClassPrefix {
-    prefix          = 'skip' | 'store'
     key className   = ClassName
     contents        = TODO
 
-    begin = prefix className ~ 
+    begin = prefix:'skip'? className ~ 
             '=' > RuleValue |
             '{' >> contents '}'
 
