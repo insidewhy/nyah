@@ -1,5 +1,5 @@
-Character Matches
-    The following are immutable:
+Character Matches.
+    The following are immutable.
         \n      Newline.
         \r      Linebreak.
         \s      Whitespace.
@@ -8,7 +8,7 @@ Character Matches
         \"      Parser to match double quote.
         'c'     Matches the character c.
         "c"     Same as 'c'.
-    The following are mutable:
+    The following are mutable.
         \w      Word character (alphanumeric or _).
         \W      Non-word character (alphanumeric or _).
         \S      Non-whitespace.
@@ -20,16 +20,20 @@ Character Matches
         [!pqr]   Match any character except p, q or r.
         [ps-z!r] Shortcut for ( [p] | [s-z] | [!r] ).
 
-String Matches
-    The following are immutable:
+String Matches.
+    The following are immutable.
         "str"    Match the string str.
         'str'    Match the string str.
-    The following are mutable:
+    The following are mutable.
         Integer  Match any integer and stores an integer.
         Float    Match any float and stores a float.
         Number   Same as (Integer | Float).
 
-Operator Precedence
+Special Matches.
+    epsilon  Does nothing but succeed.
+    eof      Matches the end of a file.
+
+Operator Precedence.
     &p      Match p but leave the parser position where it was before the &p
             rule was matched even if p succeeds. Does not store.
 
@@ -134,7 +138,6 @@ Tuple Examples.
                 => tuple(character)
                 => character
 
-
 Variant Details.
     A variant is a set of types. Any subvariant is removed from a variant
     and it's elements are combined with the parent variant's type set.
@@ -158,11 +161,11 @@ Variant Examples.
 
     variant(t) -> t
 
-Actions
+Actions.
     fail(message:string)  Raise global failure with indicated message:
                           '"' (. | '$' { fail("$ not allowed in string") })* '"'
 
-Modifiers that can also be used to prefix attributes.
+Modifiers (for both Attributes and Expressions).
     skip p   Match and store nothing.
 
     enum p
@@ -186,7 +189,7 @@ Modifiers that can also be used to prefix attributes.
         skip should be placed before non-named matches to silence
         compiler warnings.
 
-Modifiers that can only be used to prefix attributes.
+Attribute Modifiers.
     local p  p acts like an attribute but is a variable stored only during
              the parsing of the current object.
 
@@ -194,27 +197,24 @@ Modifiers that can only be used to prefix attributes.
              Two objects of the same type with the same key may not exist in
              the same scope.
 
-Modifiers that cannot be used to prefix attributes.
-    match p      Return a parser that matches the character/string currently
-                 stored in the attribute p. The result of this counts as an
-                 immutable match and is named after the matching string. It's
-                 identifier name however will be match_p:
-                     func = 'begin' name=String .*? ~
-                            'end' enum (match name | 'default')
-                     type(func) =
-                        tuple(string, enum { enum_match_name, enum_default })
+Expression Modifiers.
+    match p  Return a parser that matches the character/string currently
+             stored in the attribute p. The result of this counts as an
+             immutable match and is named after the matching string. It's
+             identifier name however will be match_p:
+                 func = 'begin' name=String .*? ~
+                        'end' enum (match name | 'default')
+                 type(func) =
+                    tuple(string, enum { enum_match_name, enum_default })
 
-    store p      Do not remove the match of p from tuples even if it is immutable.
-
-    var Name     Equivalent to name=Name // CONSIDERING
-
-    epsilon      Always matches and skips nothing.
+    store p  Do not remove the match of p from tuples even if it is immutable.
 
     type_join (t1 t2 ...)
         1. Collapse all adjacent mutable character/string stores together
            to store a single string (including separating whitespace if it is
            allowed).
-        2. Remove all remaining types that are immutable.
+        2. Remove all remaining types that are immutable and not prefixed 
+           with "store".
         3. Store each remaining item as an element in a tuple:
         e.g.
             type_join(\d+ \w+)
