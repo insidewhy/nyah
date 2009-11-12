@@ -134,17 +134,18 @@ Tuple Examples.
         type(s) =  tuple(const character, string, const character, int)
                 => tuple(string, int)
 
-    s = "p" [a-z]
-        type(s) =  tuple(const character, character)
-                => tuple(character)
-                => character
+    s = "p" Identifier
+        type(s) =  tuple(const character, string)
+                => tuple(string)
+                => string
 
 Variant Details.
-    A variant is a set of types. Any subvariant is removed from a variant
-    and it's elements are combined with the parent variant's type set.
-    Strings and characters are considered to be identical types to the variant
-    but if both are present the string will replace the character. A variant
-    with one type is replaced with that type.
+    A variant is a set of types. Any subvariant is removed from a variant and
+    the variant's type becomes the union of it's types and the types of the
+    subvariant. Strings and characters are considered to be identical types
+    to the variant but if both are present the string will replace the
+    character. A variant with one type is replaced with that type. The variant
+    may only store a value of one of the given types at any time.
 
 Variant Examples.
     s = 'a' | (Integer | Float)
@@ -226,7 +227,7 @@ Expression Modifiers.
                  type(func) =
                     tuple(string, enum { enum_match_name, enum_default })
 
-    store p  Do not remove the match of p from tuples even if it is immutable.
+    store p  Treat p as a mutable match. p must be immutable.
 
 Special declarations
     grammar <quoted or double quoted string>
