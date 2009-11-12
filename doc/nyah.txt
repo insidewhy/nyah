@@ -120,13 +120,27 @@ Constant Matches Have Default Names.
     underscores and all brackets removed:
         "hey" ^ \r\n   -> hey_linefeed_newline
 
+Tuple Details.
+    Const types are always removed from tuples unless prefixed with the
+    store modifier. A tuple with one type is replaced with that type.
+
+Tuple Examples.
+    s = '$' String '=' Integer
+        type(s) =  tuple(const character, string, const character, int)
+                => tuple(string, int)
+
+    s = "p" [a-z]
+        type(s) =  tuple(const character, character)
+                => tuple(character)
+                => character
+
+
 Variant Details.
-    A variant is a set of type so identical types are stored once
-    in a variant. Additionally any subvariant is removed from a variant
+    A variant is a set of types. Any subvariant is removed from a variant
     and it's elements are combined with the parent variant's type set.
     Strings and characters are considered to be identical types to the variant
     but if both are present the string will replace the character. A variant
-    with a single entry is expanded to the entry itself.
+    with one type is replaced with that type.
 
 Variant Examples.
     s = 'a' | (Integer | Float)
@@ -143,21 +157,6 @@ Variant Examples.
         type(s) = variant(string, int)
 
     variant(t) -> t
-
-Type storage
-    Type storage is manipulated in the following order:
-    1. Removes const types from tuples.
-        tuple(const t, ...) -> tuple(...)
-        s = '$' String '=' Integer
-        type(s) = tuple(const character, string, const character, int)
-        type(s) = tuple(string, int)
-
-    2. Single element tuples are not tuples.
-        tuple(q) -> q
-        s = "p" [a-z]
-        type(s) = tuple(const character, character)
-                => tuple(character)
-                => character
 
 Actions
     fail(message:string)  Raise global failure with indicated message:
@@ -195,7 +194,7 @@ Modifiers that can only be used to prefix attributes.
              Two objects of the same type with the same key may not exist in
              the same scope.
 
-Modifiers that cannot be used to prefix attributes
+Modifiers that cannot be used to prefix attributes.
     local var:p  Create a local variable named var with parser type p.
                  This exists only during the parsing of the current object.
 
