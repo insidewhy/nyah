@@ -54,7 +54,10 @@ inline int main(int argc, char *argv[]) {
             std::cerr << "could not load file " << argv[i] << " exiting\n";
             return 1;
         }
-        p.parse();
+        if (! p.parse()) {
+            std::cerr << "exiting\n";
+            return 1;
+        }
     }
 
     return 0;

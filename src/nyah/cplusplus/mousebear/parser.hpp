@@ -8,10 +8,11 @@
 namespace nyah { namespace mousebear {
 
 typedef chilon::parser::file_parser parser_abstract;
+using chilon::range;
 
 struct parser : parser_abstract {
 
-    void parse();
+    bool parse();
     bool load() { return parser_abstract::load(fileName_.c_str()); }
 
     parser(char const * const fileName) : fileName_(fileName) {}
