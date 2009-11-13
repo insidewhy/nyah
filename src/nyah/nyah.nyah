@@ -25,7 +25,7 @@ Expression {
     UnorderedMultipleChoice         = (ChoiceItem % '|+')=value
     OptionalUnorderedMultipleChoice = (ChoiceItem % '|*')=value
 
-    Choice = OrderedChoice | OrderedMultipleChoice | 
+    Choice = OrderedChoice | OrderedMultipleChoice |
              UnorderedMultipleChoice  | OptionalUnorderedMultipleChoice
 
     UnjoinedSequenceItem = Choice | ChoiceItem

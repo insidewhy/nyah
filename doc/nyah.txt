@@ -154,8 +154,8 @@ Immutable Matches Have Default Names.
         "hey" ^ \r\n   -> hey_linefeed_newline
 
 Tuple Details.
-    All Immutable types are removed from tuples. A tuple with one type is
-    replaced with that type.
+    Inner tuples are replaced by their elements then all Immutable types are
+    removed. A tuple with one type is replaced with that type.
 
 Tuple Examples.
     s = '$' String '=' Integer
@@ -167,13 +167,55 @@ Tuple Examples.
                 => tuple(string)
                 => string
 
+    s = Identifier (Integer Integer) Identifier
+        type(s) = tuple(string, tuple(int, int), string)
+                => tuple(string, int, int, string)
+
 Variant Details.
-    A variant is a set of types. Any subvariant is removed from a variant and
-    the variant's type becomes the union of it's types and the types of the
-    subvariant. Strings and characters are considered to be identical types
-    to the variant but if both are present the string will replace the
-    character. A variant with one type is replaced with that type. The variant
-    may only store a value of one of the given types at any time.
+    A variant represents a set of types, where each type corresponds to
+    different possible matches at a point where the tree may branch into
+    various possible choices.
+
+    Recursion.
+    If the variant contains the same type as the rule it is part of, then it 
+    is removed from itself, and the parser is signalled to memoize the result 
+    of the variant when it starts matching to ensure it can operate in linear 
+    time without entering an infinite loop.
+
+    Further details.
+    Any subvariant is removed from a variant and the variant's type becomes
+    the union of it's types and the types of the subvariant. Strings and
+    characters are considered to be identical types to the variant but if both
+    are present the string will replace the character. A variant with one type
+    is replaced with that type. The variant may only store a value of one of
+    the given types at any time.
+
+    Notes.
+    It is possible that two different branches may have the same storage type
+    and since the variant erases duplicate types it will not be possible to
+    find which possible match created the variant's value. It is simple to
+    resolve this ambiguity using types to force a new branch, attributes to
+    store the results seperately, or the store modifier, to force storage of
+    string information to aid in disambiguition.
+        t = 'a' Integer | 'b' Integer
+        // type(t) = variant(tuple(const character, int),
+        //                   tuple(const character, int))
+        // type(t) = variant(int, int)
+        // type(t) = int
+
+        // resolve using types
+        AInt = value=('a' Integer)
+        BInt = value=('b' Integer)
+        t = AInt | BInt
+        // type(t) = variant(AInt, BInt)
+
+        // resolve using parameters
+        t = store('a') Integer | store('b') Integer
+        // type(t) = variant(tuple(character, int), tuple(character, int))
+        // type(t) = variant(tuple(character, int))
+        // Code can now check the first element in the tuple to resolve
+        // ambiguity.
+
 
 Variant Examples.
     s = 'a' | (Integer | Float)
