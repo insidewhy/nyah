@@ -5,6 +5,7 @@
 #include <chilon/parser/eg/choice.hpp>
 #include <chilon/parser/eg/lexeme.hpp>
 #include <chilon/parser/eg/until.hpp>
+#include <chilon/parser/eg/sequence.hpp>
 
 namespace nyah { namespace mousebear {
 
@@ -13,12 +14,14 @@ bool parser::parse() {
 
     typedef eg::choice<
         eg::lexeme< eg::char_<'"'>, eg::until<eg::any_char, eg::char_<'"'>> >,
-        eg::lexeme< eg::char_<'\''>, eg::until<eg::any_char, eg::char_<'\''>> > 
+        eg::lexeme< eg::char_<'\''>, eg::until<eg::any_char, eg::char_<'\''>> > >
     quoted_string_match;
 
     range res;
     if (store< 
-            eg::char_<'g','r','a','m','m','a','r'> 
+            eg::sequence<
+                eg::char_<'g','r','a', 'm', 'm', 'a', 'r'>,
+                quoted_string_match>
         >(res)) 
     {
     }
