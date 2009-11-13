@@ -1,18 +1,20 @@
 #include <mousebear/parser.hpp>
+
 #include <chilon/parser/eg/is_mutable.hpp>
 #include <chilon/parser/eg/char.hpp>
+#include <chilon/parser/eg/choice.hpp>
+#include <chilon/parser/eg/lexeme.hpp>
+#include <chilon/parser/eg/until.hpp>
 
 namespace nyah { namespace mousebear {
 
-namespace eg = chilon::parser::eg;
-
 bool parser::parse() {
-    std::cout << "is_mutable<char_<'a'>>::value = " << 
-                 eg::is_mutable<eg::char_<'a'>>::value << std::endl;
-    std::cout << "is_mutable<char_<'a', 'b'>>::value = " << 
-                 eg::is_mutable<eg::char_<'a', 'b'>>::value << std::endl;
-    std::cout << "is_mutable<float>::value = " << 
-                 eg::is_mutable<float>::value << std::endl;
+    skip_whitespace();
+
+    typedef eg::choice<
+        eg::lexeme< eg::char_<'"'>, eg::until<eg::any_char, eg::char_<'"'>> >,
+        eg::lexeme< eg::char_<'\''>, eg::until<eg::any_char, eg::char_<'\''>> > 
+    quoted_string_match;
 
     range res;
     if (store< 

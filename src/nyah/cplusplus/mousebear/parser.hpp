@@ -2,12 +2,21 @@
 #define MOUSEBEAR_PARSER_HPP
 
 #include <chilon/parser/parser.hpp>
+#include <chilon/parser/whitespace.hpp>
 
 #include <string>
 
 namespace nyah { namespace mousebear {
 
-typedef chilon::parser::file_parser parser_abstract;
+namespace eg = chilon::parser::eg;
+
+typedef chilon::parser::skip_ws_and_comments_with_line_number<
+    chilon::parser::file_parser,
+    chilon::parser::comment< 
+        chilon::parser::or_< eg::char_<'#', ' '>, eg::char_<'/', '/'> >, eg::char_<'\n'> >,
+    chilon::parser::whitespace
+> parser_abstract;
+
 using chilon::range;
 
 struct parser : parser_abstract {
