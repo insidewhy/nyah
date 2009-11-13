@@ -1,3 +1,5 @@
+#include <mousebear/parser.hpp>
+
 #include <chilon/conf/cmd/command_line.hpp>
 
 #include <iostream>
@@ -17,7 +19,7 @@ inline int main(int argc, char *argv[]) {
 
         options_description options;
         options.add_options()
-            .help("mousebear "   MOUSEBEAR_VERSION "\nusage: mousebear [arguments] [grammar files to process]")
+            .help("mousebear "   MOUSEBEAR_VERSION "\nusage: mousebear [arguments] <grammar files to process>")
             ("v,verbose",        verbose, "increase verbosity")
             ;
 
@@ -37,7 +39,24 @@ inline int main(int argc, char *argv[]) {
             std::cout << options << std::endl;
             return 1;
         }
+
+        if (nPositionals < 1) {
+            std::cerr << "please supply at least one grammar to parse\n";
+            std::cout << options << std::endl;
+            return 1;
+        }
     }
+
+    for (int i = 1; i <= nPositionals; ++i) {
+        if (verbose) std::cout << "parsing grammar " << argv[i] << std::endl;
+        parser p(argv[i]);
+        if (! p.load()) {
+            std::cerr << "could not load file " << argv[i] << " exiting\n";
+            return 1;
+        }
+        p.parse();
+    }
+
     return 0;
 }
 
