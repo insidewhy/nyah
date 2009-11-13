@@ -1,5 +1,7 @@
-add_executable(mousebear mousebear.cpp)
+add_executable(mousebear mousebear.cpp parser.cpp)
 
 install(TARGETS mousebear
         RUNTIME DESTINATION ${BIN_DIR}
         LIBRARY DESTINATION ${LIB_DIR})
+file(GLOB headers *.hpp)
+install(FILES ${headers} DESTINATION ${HEADER_DIR}/nyah/mousebear)

@@ -10,7 +10,7 @@ include(C++0x)
 include(Installer)
 # configureFile(config.hpp)
 
-include_directories(..  ${CHILON_DIR}/..)
+include_directories(.  ${CHILON_DIR}/..)
 add_subdirectory(mousebear)
 # add_library(nyah-dynamic SHARED <source files>)
 # set_target_properties(nyah-dynamic PROPERTIES OUTPUT_NAME nyah CLEAN_DIRECT_OUTPUT 1)
@@ -20,5 +20,3 @@ add_subdirectory(mousebear)
 # install(TARGETS nyah nyah-dynamic 
 #         RUNTIME DESTINATION ${BIN_DIR}
 #         LIBRARY DESTINATION ${LIB_DIR})
-# file(GLOB_RECURSE headers *.hpp)
-# install(FILES ${headers} DESTINATION ${HEADER_DIR}/nyah)
