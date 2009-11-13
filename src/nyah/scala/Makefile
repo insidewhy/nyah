@@ -1,5 +1,5 @@
 .PHONY: beard nyah
-CLASSPATH = ../../beard/src
+CLASSPATH = ../../../beard/src
 
 default: beard nyah
 
@@ -8,4 +8,4 @@ beard:
 
 nyah: build
 
-include ../../beard/src/Makefile
+include ../../../beard/src/Makefile

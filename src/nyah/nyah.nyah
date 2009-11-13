@@ -14,10 +14,11 @@ CharacterRange = '[' (SpecialCharacter|.)+? ']'
 MutableCharacter = CharacterRange | MutableSpecialCharacter
 
 Expression {
-    BasicItem = '(' Value ')'
+    BasicItem = '(' >Value ')' | Value
 
-    SequenceItem = Choice | ChoiceItem
-    Sequence = (SequenceItem % '~')=value
+    // TODO: SequenceItem should be
+    SequenceItem = BasicItem
+    Sequence = ( SequenceItem+ )=value
 
     ChoiceItem = Sequence | SequenceItem
 
