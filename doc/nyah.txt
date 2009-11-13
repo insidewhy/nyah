@@ -176,12 +176,6 @@ Variant Details.
     different possible matches at a point where the tree may branch into
     various possible choices.
 
-    Recursion.
-    If the variant contains the same type as the rule it is part of, then it 
-    is removed from itself, and the parser is signalled to memoize the result 
-    of the variant when it starts matching to ensure it can operate in linear 
-    time without entering an infinite loop.
-
     Further details.
     Any subvariant is removed from a variant and the variant's type becomes
     the union of it's types and the types of the subvariant. Strings and
@@ -189,6 +183,14 @@ Variant Details.
     are present the string will replace the character. A variant with one type
     is replaced with that type. The variant may only store a value of one of
     the given types at any time.
+
+    Recursion.
+    If the variant contains the same type as the rule it is part of as the
+    left hand side of any subtype, then the parser is signalled to store
+    the position of the variant when it starts matching to ensure it can operate
+    in linear time. If the variant returns back to itself then the stored
+    position is checked and if it is the same a recursive loop is detected and
+    error is signalled. I think some people call this "memoization" maybe.
 
     Notes.
     It is possible that two different branches may have the same storage type
