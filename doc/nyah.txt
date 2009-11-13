@@ -1,11 +1,19 @@
 Character Matches.
     The following are immutable.
+        \?      Question mark.
+        \!      Exclamation mark.
+        \[      Left bracket.
+        \]      Right bracket.
+        \(      Left parenthesis.
+        \)      Right parenthesis.
+        \.      Full stop.
+        \'      Single quote.
+        \"      Double quote.
+        \\      Backslash.
         \n      Newline.
         \r      Linebreak.
         \s      Whitespace.
         \t      Tab.
-        \'      Parser for single quote.
-        \"      Parser to match double quote.
         'c'     Matches the character c.
         "c"     Same as 'c'.
     The following are mutable.
@@ -107,7 +115,7 @@ Variant matching operators.
 
     The following three are infix operators but can operate on more than one
     type, for example (p |~ q |~ r) is treated like one modifer with p, q and
-    r as arguments, which is not the same as ((p |~ q) |~ r).
+    r as arguments, which matches and stores differently to ((p |~ q) |~ r).
 
     p |~ q |~ ...
         Ordered multiple choice: Try to match each argument in the order
@@ -132,13 +140,8 @@ Low priority binary operators.
 
 Immutable Matches Have Default Names.
     Immutable matches have names identical to the string/character constant
-    specified. Special characters are mapped according to the following table:
-        \n      <newline>
-        \r      <linebreak>
-        \s      <whitespace>
-        \t      <tab>
-        \'      <quote>
-        \"      <double quote>
+    specified. Special characters are mapped according to their names listed
+    previously in lower case.
 
     In the result that the immutable match resulted from a type_join operations
     the names on the LHS are RHS are appended with a space:

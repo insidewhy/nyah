@@ -5,16 +5,35 @@ IdentifierTail = [A-Za-z0-9_]*
 ClassName      = [A-Z] ^ IdentifierTail
 AttributeName  = [a-z] ^ IdentifierTail
 
-SpecialCharacter = '\' [nrst'"]
+SpecialCharacter = '\' [?\!\[\]\.()'"\\nrst'"]
 Character = SpecialCharacter | "'" !\' "'" | '"' !\" '"'
 StringMatch = \' .*? \' | \" .*? \"
 
 MutableSpecialCharacter = '\' [wWSdD] | '.'
-CharacterRange = '[' (.|'\'.)+? ']'
+CharacterRange = '[' (SpecialCharacter|.)+? ']'
 MutableCharacter = CharacterRange | MutableSpecialCharacter
 
 Expression {
-    begin = TODO
+
+    SequenceItem = Choice | ChoiceItem
+    Sequence = (SequenceItem % '~')=value
+
+    ChoiceItem = Sequence | SequenceItem
+
+    OrderedChoice                   = (ChoiceItem % '|')=value
+    OrderedMultipleChoice           = (ChoiceItem % '|~')=value
+    UnorderedMultipleChoice         = (ChoiceItem % '|+')=value
+    OptionalUnorderedMultipleChoice = (ChoiceItem % '|*')=value
+
+    Choice = OrderedChoice | OrderedMultipleChoice | 
+             UnorderedMultipleChoice  | OptionalUnorderedMultipleChoice
+
+    UnjoinedSequenceItem = Choice | ChoiceItem
+    UnjoinedSequence = (UnjoinedSequenceItem % '~')=value
+
+    Value = UnjoinedSequence | UnjoinedSequenceItem
+
+    begin = Value:value
 }
 
 Attribute {
@@ -24,7 +43,7 @@ Attribute {
     begin = prefix name '=' > value=Expression
 }
 
-Class : ClassPrefix {
+Class {
     key name    = ClassName
     contents    = (Class | Attribute)+
     enum prefix = 'skip' | 'enum'
