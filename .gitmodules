@@ -1,3 +1,6 @@
 [submodule "beard"]
 	path = beard
 	url = git://github.com/tuxjay/beard.git
+[submodule "chilon"]
+	path = chilon
+	url = git://gitorious.org/chilon/chilon.git

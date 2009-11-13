@@ -16,7 +16,7 @@ MutableCharacter = CharacterRange | MutableSpecialCharacter
 Expression {
     BasicItem = '(' >Value ')' | Value
 
-    // TODO: SequenceItem should be
+    // TODO: SequenceItem should be something else
     SequenceItem = BasicItem
     Sequence = ( SequenceItem+ )=value
 
