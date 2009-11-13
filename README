@@ -1,0 +1,14 @@
+This project is organised like this:
+    External projects
+        beard/    - Scala utility library used by this project.
+        chilon/   - C++ utility library used by this project.
+    doc/
+        evolution1/ - Old version of the language.
+        examples/   - Example grammars.
+        nyah.txt
+    src/nyah/
+        cplusplus/  - C++ nyah
+            mousebear/  - A quick and dirty bootstrap compiler that is good
+                          enough to turn nyah.nyah into a working parser.
+        scala/      - Scala nyah.
+        nyah/       - This contains the nyah grammar of nyah.
