@@ -1,0 +1,3 @@
+[submodule "beard"]
+	path = beard
+	url = git://github.com/tuxjay/beard.git
