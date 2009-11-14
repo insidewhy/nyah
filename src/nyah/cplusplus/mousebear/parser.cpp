@@ -13,14 +13,16 @@ namespace nyah { namespace mousebear {
 bool parser::parse() {
     skip_whitespace();
 
-    typedef eg::choice<
-        eg::lexeme< eg::char_<'"'>, eg::until<eg::any_char, eg::char_<'"'>> >,
-        eg::lexeme< eg::char_<'\''>, eg::until<eg::any_char, eg::char_<'\''>> > >
-    quoted_string_match;
+    // typedef eg::make_choice<
+    //     eg::make_lexeme< eg::char_<'"'>, eg::until<eg::any_char, eg::char_<'"'>> >::type,
+    //     eg::make_lexeme< eg::char_<'\''>, eg::until<eg::any_char, eg::char_<'\''>> >::type >::type
+    // quoted_string_match;
 
-    typedef eg::sequence<
+    typedef eg::make_lexeme< eg::char_<'\''>, eg::until<eg::any_char, eg::char_<'\''>> >::type quoted_string_match;
+
+    typedef eg::make_sequence<
         eg::char_<'g','r','a', 'm', 'm', 'a', 'r'>,
-        quoted_string_match> grammar_begin_match;
+        quoted_string_match>::type grammar_begin_match;
 
     eg::store<grammar_begin_match>::type res;
 
