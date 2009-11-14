@@ -7,6 +7,7 @@
 #include <chilon/parser/eg/until.hpp>
 #include <chilon/parser/eg/sequence.hpp>
 #include <chilon/parser/eg/parse.hpp>
+#include <chilon/parser/eg/store.hpp>
 
 namespace nyah { namespace mousebear {
 
