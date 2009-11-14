@@ -6,7 +6,7 @@
 #include <chilon/parser/eg/lexeme.hpp>
 #include <chilon/parser/eg/until.hpp>
 #include <chilon/parser/eg/sequence.hpp>
-#include <chilon/parser/eg/store.hpp>
+#include <chilon/parser/eg/parse.hpp>
 
 namespace nyah { namespace mousebear {
 
@@ -18,13 +18,15 @@ bool parser::parse() {
     //     eg::make_lexeme< eg::char_<'\''>, eg::until<eg::any_char, eg::char_<'\''>> >::type >::type
     // quoted_string_match;
 
-    typedef eg::make_lexeme< eg::char_<'\''>, eg::until<eg::any_char, eg::char_<'\''>> >::type quoted_string_match;
+    typedef eg::make_lexeme<
+        eg::char_<'\''>,
+        eg::until< eg::any_char, eg::char_<'\''> > >::type quoted_string_match;
 
     typedef eg::make_sequence<
         eg::char_<'g','r','a', 'm', 'm', 'a', 'r'>,
         quoted_string_match>::type grammar_begin_match;
 
-    eg::store<grammar_begin_match>::type res;
+    eg::parse<grammar_begin_match>::type res;
 
     if (store<grammar_begin_match>(res)) {
         std::cout << "cowboy (" << res << ")\n";
