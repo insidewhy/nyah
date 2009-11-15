@@ -11,20 +11,22 @@
 
 namespace nyah { namespace mousebear {
 
+using namespace chilon::parser::eg;
+
 bool parser::parse() {
     skip_whitespace();
 
-    // typedef eg::make_choice<
-    //     eg::make_lexeme< eg::char_<'"'>, eg::until<eg::any_char, eg::char_<'"'>> >::type,
-    //     eg::make_lexeme< eg::char_<'\''>, eg::until<eg::any_char, eg::char_<'\''>> >::type >::type
+    // typedef make_choice<
+    //     make_lexeme< char_<'"'>, until<any_char, char_<'"'>> >::type,
+    //     make_lexeme< char_<'\''>, until<any_char, char_<'\''>> >::type >::type
     // quoted_string_match;
 
-    typedef eg::make_lexeme<
-        eg::char_<'\''>,
-        eg::until< eg::any_char, eg::char_<'\''> > >::type quoted_string_match;
+    typedef make_lexeme<
+        char_<'\''>,
+        until< any_char, char_<'\''> > >::type quoted_string_match;
 
     eg::store<
-        eg::char_<'g','r','a', 'm', 'm', 'a', 'r'>,
+        char_<'g','r','a', 'm', 'm', 'a', 'r'>,
         quoted_string_match> grammar_store;
 
     if (grammar_store(*this)) {

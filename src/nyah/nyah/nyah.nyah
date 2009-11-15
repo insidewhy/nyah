@@ -53,4 +53,8 @@ Class {
     begin = prefix className ~ '=' > Expression | '{' >> contents '}'
 }
 
-Global = Class*
+GrammarDefinition {
+    begin = 'grammar' name=QuotedString
+}
+
+Global = GrammarDefinition Class*
