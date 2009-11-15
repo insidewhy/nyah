@@ -23,9 +23,9 @@ bool parser::parse() {
         eg::char_<'\''>,
         eg::until< eg::any_char, eg::char_<'\''> > >::type quoted_string_match;
 
-    eg::store< eg::make_sequence<
+    eg::store<
         eg::char_<'g','r','a', 'm', 'm', 'a', 'r'>,
-        quoted_string_match>::type> grammar_store;
+        quoted_string_match> grammar_store;
 
     if (grammar_store(*this)) {
         std::cout << "cowboy (" << grammar_store.value_ << ")\n";
