@@ -23,14 +23,12 @@ bool parser::parse() {
         eg::char_<'\''>,
         eg::until< eg::any_char, eg::char_<'\''> > >::type quoted_string_match;
 
-    typedef eg::make_sequence<
+    eg::store< eg::make_sequence<
         eg::char_<'g','r','a', 'm', 'm', 'a', 'r'>,
-        quoted_string_match>::type grammar_begin_match;
+        quoted_string_match>::type> grammar_store;
 
-    eg::parse<grammar_begin_match>::type res;
-
-    if (store<grammar_begin_match>(res)) {
-        std::cout << "cowboy (" << res << ")\n";
+    if (grammar_store(*this)) {
+        std::cout << "cowboy (" << grammar_store.value_ << ")\n";
     }
     else {
         std::cerr << "invalid grammar\n";
