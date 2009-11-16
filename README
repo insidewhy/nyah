@@ -1,3 +1,9 @@
+This project needs gcc 4.4 at least to compile.
+
+In addition I've found gcc 4.4.1 compiles some of the code to do with testing
+char_ in lexeme incorrectly. Tests which should succeed are failed due to
+bad asm. Not sure if gcc 4.4.0 works, about to try gcc 4.4.2.
+
 This project is organised like this:
     External projects
         beard/    - Scala utility library used by this project.

@@ -12,6 +12,8 @@ include(Installer)
 
 include_directories(.  ${CHILON_DIR}/..)
 add_subdirectory(mousebear)
+add_definitions(-Wall)
+
 # add_library(nyah-dynamic SHARED <source files>)
 # set_target_properties(nyah-dynamic PROPERTIES OUTPUT_NAME nyah CLEAN_DIRECT_OUTPUT 1)
 # add_executable(nyah nyah.cpp)

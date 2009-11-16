@@ -14,7 +14,7 @@ CharacterRange = '[' (SpecialCharacter|.)+? ']'
 MutableCharacter = CharacterRange | MutableSpecialCharacter
 
 Expression {
-    BasicItem = '(' >Value ')' | Value
+    BasicItem = '(' >Value ')' | Value | AttributeName | ClassName
 
     // TODO: SequenceItem should be something else
     SequenceItem = BasicItem

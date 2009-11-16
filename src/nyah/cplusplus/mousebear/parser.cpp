@@ -34,6 +34,7 @@ bool parser::parse() {
     }
     else {
         std::cerr << "invalid grammar\n";
+        std::cerr << begin();
         return false;
     }
 
