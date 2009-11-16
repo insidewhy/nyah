@@ -43,15 +43,11 @@ bool parser::parse() {
 }
 
 bool parser::parse_classes() {
-    // typedef eq::lexeme<
-    //     char_range<'A', 'Z'>, 
-    //         many< variant_range<
-    //         char_range<'A', 'Z'>,
-    //         char_range<'a', 'z'>,
-    //         char_<'_'>
-    // >>
     eg::store<
-        char_range<'A', 'Z'>
+        eg::make_lexeme<
+            char_range<'A', 'Z'>,
+            many<char_range<'a', 'z'>>
+        >::type
     > class_store;
 
     if (class_store(*this)) {
