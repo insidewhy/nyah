@@ -1,8 +1,15 @@
-This project needs gcc 4.4 at least to compile.
+This project is miscompiled due to compiler bugs in:
+    gcc 4.4.1
+    gcc 4.4.2
 
-In addition I've found gcc 4.4.1 compiles some of the code to do with testing
-char_ in lexeme incorrectly. Tests which should succeed are failed due to
-bad asm. Not sure if gcc 4.4.0 works, about to try gcc 4.4.2.
+This project works with
+    gcc 4.5.0pre
+
+No other compilers have been tested.
+
+I'd love to report the compiler bug to gcc but reducing the code down to a 
+small case which fails incorrectly is difficult. I don't think they'd be
+happy to have to read much of my code to fix it.
 
 This project is organised like this:
     External projects

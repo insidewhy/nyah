@@ -21,6 +21,7 @@ using chilon::range;
 
 struct parser : parser_abstract {
 
+    bool parse_classes();
     bool parse();
     bool load() { return parser_abstract::load(fileName_.c_str()); }
 

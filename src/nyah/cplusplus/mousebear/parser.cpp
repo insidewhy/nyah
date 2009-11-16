@@ -2,6 +2,7 @@
 
 #include <chilon/parser/eg/is_mutable.hpp>
 #include <chilon/parser/eg/char.hpp>
+#include <chilon/parser/eg/char_range.hpp>
 #include <chilon/parser/eg/choice.hpp>
 #include <chilon/parser/eg/lexeme.hpp>
 #include <chilon/parser/eg/until.hpp>
@@ -30,15 +31,38 @@ bool parser::parse() {
         quoted_string_match> grammar_store;
 
     if (grammar_store(*this)) {
-        std::cout << "cowboy (" << grammar_store.value_ << ")\n";
+        std::cout << "grammar (" << grammar_store.value_ << ")\n";
+        skip_whitespace();
+        return parse_classes();
     }
     else {
         std::cerr << "invalid grammar\n";
         std::cerr << begin();
         return false;
     }
+}
 
-    return true;
+bool parser::parse_classes() {
+    // typedef eq::lexeme<
+    //     char_range<'A', 'Z'>, 
+    //         many< variant_range<
+    //         char_range<'A', 'Z'>,
+    //         char_range<'a', 'z'>,
+    //         char_<'_'>
+    // >>
+    eg::store<
+        char_range<'A', 'Z'>
+    > class_store;
+
+    if (class_store(*this)) {
+        std::cout << "class (" << class_store.value_ << ")\n";
+        return true;
+    }
+    else {
+        std::cerr << "invalid grammar searching for class\n";
+        std::cerr << begin();
+        return false;
+    }
 }
 
 } }
