@@ -9,6 +9,7 @@
 #include <chilon/parser/eg/sequence.hpp>
 #include <chilon/parser/eg/parse.hpp>
 #include <chilon/parser/eg/store.hpp>
+#include <chilon/parser/eg/print.hpp>
 
 namespace nyah { namespace mousebear {
 
@@ -31,7 +32,7 @@ bool parser::parse() {
         quoted_string_match> grammar_store;
 
     if (grammar_store(*this)) {
-        std::cout << "grammar (" << grammar_store.value_ << ")\n";
+        print(std::cout, "grammar (", grammar_store.value_, ")");
         skip_whitespace();
         return parse_classes();
     }
@@ -51,7 +52,7 @@ bool parser::parse_classes() {
     > class_store;
 
     if (class_store(*this)) {
-        std::cout << "class (" << class_store.value_ << ")\n";
+        print(std::cout, "class (", class_store.value_, ")");
         return true;
     }
     else {
