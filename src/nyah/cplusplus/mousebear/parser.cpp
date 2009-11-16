@@ -32,7 +32,7 @@ bool parser::parse() {
         quoted_string_match> grammar_store;
 
     if (grammar_store(*this)) {
-        print(std::cout, "grammar (", grammar_store.value_, ")");
+        print(std::cout, "grammar", grammar_store.value_);
         skip_whitespace();
         return parse_classes();
     }
@@ -52,7 +52,7 @@ bool parser::parse_classes() {
     > class_store;
 
     if (class_store(*this)) {
-        print(std::cout, "class (", class_store.value_, ")");
+        print(std::cout, "class", class_store.value_);
         return true;
     }
     else {
