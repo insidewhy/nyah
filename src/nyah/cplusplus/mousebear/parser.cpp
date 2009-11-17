@@ -1,6 +1,5 @@
 #include <mousebear/parser.hpp>
 
-#include <chilon/parser/eg/is_mutable.hpp>
 #include <chilon/parser/eg/char.hpp>
 #include <chilon/parser/eg/char_range.hpp>
 #include <chilon/parser/eg/choice.hpp>
@@ -54,7 +53,7 @@ bool parser::parse_classes() {
 
     eg::store<
         class_name,
-        char_<'='>,
+        eg::store<char_<'='>>,
         rule_name
     > class_store;
 
