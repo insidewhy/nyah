@@ -28,7 +28,7 @@ bool parser::parse() {
         until< any_char, char_<'\''> > >::type quoted_string_match;
 
     eg::store<
-        char_<'g','r','a', 'm', 'm', 'a', 'r'>,
+        eg::store<char_<'g','r','a', 'm', 'm', 'a', 'r'>>,
         quoted_string_match> grammar_store;
 
     if (grammar_store(*this)) {
@@ -44,11 +44,18 @@ bool parser::parse() {
 }
 
 bool parser::parse_classes() {
+    typedef eg::make_lexeme<
+        char_range<'A', 'Z'>,
+        many<char_range<'a', 'z'>> >::type  class_name;
+
+    typedef eg::make_lexeme<
+        char_range<'a', 'z'>,
+        many<char_range<'a', 'z'>> >::type  rule_name;
+
     eg::store<
-        eg::make_lexeme<
-            char_range<'A', 'Z'>,
-            many<char_range<'a', 'z'>>
-        >::type
+        class_name,
+        char_<'='>,
+        rule_name
     > class_store;
 
     if (class_store(*this)) {
@@ -57,6 +64,7 @@ bool parser::parse_classes() {
     }
     else {
         std::cerr << "invalid grammar searching for class\n";
+        print(std::cout, "class", class_store.value_);
         std::cerr << begin();
         return false;
     }
