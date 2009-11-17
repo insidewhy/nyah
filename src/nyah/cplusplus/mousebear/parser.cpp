@@ -19,16 +19,16 @@ bool parser::parse() {
     skip_whitespace();
 
     // typedef make_choice<
-    //     make_lexeme< char_<'"'>, until<any_char, char_<'"'>> >::type,
-    //     make_lexeme< char_<'\''>, until<any_char, char_<'\''>> >::type >::type
+    //     lexeme< char_<'"'>, until<any_char, char_<'"'>> >,
+    //     lexeme< char_<'\''>, until<any_char, char_<'\''>> >::type >
     // quoted_string_match;
 
-    typedef make_lexeme<
+    typedef lexeme<
         char_<'\''>,
-        until< any_char, char_<'\''> > >::type quoted_string_match;
+        until< any_char, char_<'\''> > > quoted_string_match;
 
     eg::store<
-        eg::store<char_<'g','r','a', 'm', 'm', 'a', 'r'>>,
+        char_<'g','r','a', 'm', 'm', 'a', 'r'>,
         quoted_string_match> grammar_store;
 
     if (grammar_store(*this)) {
@@ -44,13 +44,13 @@ bool parser::parse() {
 }
 
 bool parser::parse_classes() {
-    typedef eg::make_lexeme<
+    typedef lexeme<
         char_range<'A', 'Z'>,
-        many<char_range<'a', 'z'>> >::type  class_name;
+        many<char_range<'a', 'z'>> >  class_name;
 
-    typedef eg::make_lexeme<
+    typedef lexeme<
         char_range<'a', 'z'>,
-        many<char_range<'a', 'z'>> >::type  rule_name;
+        many<char_range<'a', 'z'>> >  rule_name;
 
     eg::store<
         class_name,
