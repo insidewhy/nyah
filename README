@@ -1,15 +1,5 @@
-This project is miscompiled due to compiler bugs in:
-    gcc 4.4.1
-    gcc 4.4.2
-
-This project works with
-    gcc 4.5.0pre
-
-No other compilers have been tested.
-
-I'd love to report the compiler bug to gcc but reducing the code down to a 
-small case which fails incorrectly is difficult. I don't think they'd be
-happy to have to read much of my code to fix it.
+This project needs gcc 4.4 minimum to compile. It has been tested with gcc
+4.4.2 and gcc 4.5 rev. 153642.
 
 This project is organised like this:
     External projects
@@ -21,7 +11,8 @@ This project is organised like this:
         nyah.txt
     src/nyah/
         cplusplus/  - C++ nyah
-            mousebear/  - A quick and dirty bootstrap compiler that is good
-                          enough to turn nyah.nyah into a working parser.
+            mousebear/  - Bootstrap compiler, this doesn't have to be pretty
+                          code because as soon as it can turn nyah.nyah into
+                          a working parser it has become redundant.
         scala/      - Scala nyah.
         nyah/       - This contains the nyah grammar of nyah.

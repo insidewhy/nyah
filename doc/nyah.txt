@@ -56,7 +56,10 @@ Unary operators.
     p*      Match p zero or more times.
             If p is a character match, don't allow whitespace in between each
             character and store a string, otherwise store list(p).
-    p+      As above but p must match at least once.
+    p^*     Same as p* but never allow whitespace in between each character
+            and always stores a string.
+    p+      Same as p* but p must match at least once.
+    p^+     Same as p^* but p must match at least once.
     p?      Match p zero or once. Stores optional(p).
 
 Binary operators.

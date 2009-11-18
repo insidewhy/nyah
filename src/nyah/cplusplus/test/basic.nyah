@@ -1,3 +1,6 @@
 grammar 'basic'
 
-Global = bum
+Thought = wherearemybricks
+Guns    = notthekitten
+Navaro  = ohplease
+Global  = bum
