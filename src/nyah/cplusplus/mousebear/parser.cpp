@@ -52,13 +52,7 @@ bool parser::parse_classes() {
         many<char_range<'a', 'z'>> >  rule_name;
 
     eg::store<
-        many<
-            sequence<
-                class_name,
-                char_<'='>,
-                rule_name
-            >
-        >
+        many<class_name, char_<'='>, rule_name>
     > class_store;
 
     if (class_store(*this)) {
