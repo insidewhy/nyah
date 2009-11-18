@@ -56,7 +56,7 @@ bool parser::parse_classes() {
     > class_store;
 
     if (class_store(*this)) {
-        print(std::cout, "class", class_store.value_);
+        print(std::cout, class_store.value_);
         return true;
     }
     else {

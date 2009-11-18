@@ -5,7 +5,8 @@
 #include <iostream>
 
 // #define MOUSEBEAR_VERSION "1000 (just don't get in a car, and stay away from my family)"
-#define MOUSEBEAR_VERSION "999 (she's also known as darwinius)"
+// #define MOUSEBEAR_VERSION "999 (she's also known as darwinius)"
+#define MOUSEBEAR_VERSION "998 (grind machine)"
 
 namespace nyah { namespace mousebear {
 
