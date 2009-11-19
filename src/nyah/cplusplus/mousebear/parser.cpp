@@ -17,10 +17,11 @@ using namespace chilon::parser::eg;
 bool parser::parse() {
     skip_whitespace();
 
-    // typedef make_choice<
+    // typedef choice<
     //     lexeme< char_<'"'>, until<any_char, char_<'"'>> >,
-    //     lexeme< char_<'\''>, until<any_char, char_<'\''>> >::type >
-    // quoted_string_match;
+    //     lexeme< char_<'\''>, until<any_char, char_<'\''>> >
+    // > // quoted_string_match;
+
 
     typedef lexeme<
         char_<'\''>,
@@ -36,7 +37,7 @@ bool parser::parse() {
         return parse_classes();
     }
     else {
-        std::cerr << "invalid grammar\n";
+        std::cerr << "bad match from:\n";
         std::cerr << begin();
         return false;
     }
@@ -56,12 +57,12 @@ bool parser::parse_classes() {
     > class_store;
 
     if (class_store(*this)) {
-        print(std::cout, class_store.value_);
+        print(class_store.value_);
         return true;
     }
     else {
         std::cerr << "invalid grammar searching for class\n";
-        print(std::cout, "class", class_store.value_);
+        print("class", class_store.value_);
         std::cerr << begin();
         return false;
     }
