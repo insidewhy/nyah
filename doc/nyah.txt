@@ -189,11 +189,8 @@ Variant Details.
 
     Recursion.
     If the variant contains the same type as the rule it is part of as the
-    left hand side of any subtype, then the parser is signalled to store
-    the position of the variant when it starts matching to ensure it can operate
-    in linear time. If the variant returns back to itself then the stored
-    position is checked and if it is the same a recursive loop is detected and
-    error is signalled. I think some people call this "memoization" maybe.
+    left hand side of any subtype, then the parser is substituted with a
+    memoizing parser at this point.
 
     Notes.
     It is possible that two different branches may have the same storage type
