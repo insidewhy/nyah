@@ -13,27 +13,38 @@ MutableSpecialCharacter = '\' [wWSdD] | '.'
 CharacterRange = '[' (SpecialCharacter|.)+? ']'
 MutableCharacter = CharacterRange | MutableSpecialCharacter
 
+ActionBody {
+    // TODO
+}
+
 Expression {
-    BasicItem = '(' >Value ')' | Value | AttributeName | ClassName
 
-    // TODO: SequenceItem should be something else
-    SequenceItem = BasicItem
-    Sequence = ( SequenceItem+ )=value
-
-    ChoiceItem = Sequence | SequenceItem
-
-    OrderedChoice                   = (ChoiceItem % '|')=value
-    OrderedMultipleChoice           = (ChoiceItem % '|~')=value
-    UnorderedMultipleChoice         = (ChoiceItem % '|+')=value
-    OptionalUnorderedMultipleChoice = (ChoiceItem % '|*')=value
-
-    Choice = OrderedChoice | OrderedMultipleChoice |
-             UnorderedMultipleChoice  | OptionalUnorderedMultipleChoice
-
-    UnjoinedSequenceItem = Choice | ChoiceItem
-    UnjoinedSequence = (UnjoinedSequenceItem % '~')=value
-
-    Value = UnjoinedSequence | UnjoinedSequenceItem
+    Value = 
+        // >| erases the current type from all "self" matches on its left hand side.
+        '(' self ')' |
+        Match:             '&' self >|
+        Not:               '!' self >|
+        ( Many:              self '*'  |
+          ManyJoined:        self '^*' |
+          AtLeastOne:        self '+'  |
+          AtLeastOneJoined:  self '+')  >|
+        Optional:          self '?'  >|
+        Until:             self '*' '?' self >|
+        AtLeastOneUntil:   self '+' '?' self >|
+        AlternateConstruction: ClassName '->' AttributeName >|
+        AttributeStore:    self '=' AttributeName  >|
+        Except:            self - self >|
+        Joined:            self '%' self >|
+        Named:             self 'named' QuotedString >|
+        As:                self 'as' ClassName >|
+        Lexeme:            self % '^'  >|
+        Mustclass:         '>' '>' self >|
+        Must:              '>' self >|
+        // TODO: fill the below in
+        Action:            self '{' ActionBody '}' >|
+        Sequence:          self+ >|
+        ClassName |
+        AttributeName
 
     begin = Value:value
 }

@@ -66,7 +66,7 @@ Binary operators.
     p*? q   Identical to ((p - q)* q). Mutable.
     p+? q   Identical to ((p - q)+ q). Mutable.
 
-    c -> r  Match c through calling the alternate begin rule r.
+    C -> r  Match C through calling the alternate begin rule r.
 
     n = p   Match p and store it in an attribute named n.
             If p is immutable, then n will store a boolean which will only
