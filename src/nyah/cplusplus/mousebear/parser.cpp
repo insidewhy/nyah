@@ -10,10 +10,12 @@
 #include <chilon/parser/eg/store.hpp>
 #include <chilon/parser/eg/print.hpp>
 #include <chilon/parser/eg/many.hpp>
+#include <chilon/parser/eg/ascii.hpp>
 
 namespace nyah { namespace mousebear {
 
 using namespace chilon::parser::eg;
+using namespace chilon::parser::eg::ascii;
 
 bool parser::parse() {
     skip_whitespace();
@@ -27,42 +29,27 @@ bool parser::parse() {
         char_<'\''>,
         until< any_char, char_<'\''> > > quoted_string_match;
 
-    store<
-        char_<'g','r','a', 'm', 'm', 'a', 'r'>,
-        quoted_string_match> grammar_store;
-
-    if (grammar_store(*this)) {
-        print("grammar", grammar_store.value_);
-        skip_whitespace();
-        return parse_classes();
-    }
-    else {
-        std::cerr << "bad match from:\n";
-        std::cerr << begin();
-        return false;
-    }
-}
-
-bool parser::parse_classes() {
     typedef lexeme<
-        char_range<'A', 'Z'>,
-        many<char_range<'a', 'z'>> >  class_name;
+        char_range<A, Z>,
+        many<char_range<a, z>> >  class_name;
 
     typedef lexeme<
-        char_range<'a', 'z'>,
-        many<char_range<'a', 'z'>> >  rule_name;
+        char_range<a, z>,
+        many<char_range<a, z>> >  rule_name;
 
-    store<
-        many<class_name, char_<'='>, rule_name>
-    > class_store;
+    typedef store<
+        char_<g, r, a, m, m, a, r>,
+        quoted_string_match,
+        many<class_name, char_<'='>, rule_name> > project_parser;
 
-    if (class_store(*this)) {
-        print(class_store.value_);
+    project_parser project;
+    if (project(*this)) {
+        print(project.value_);
         return true;
     }
     else {
         std::cerr << "invalid grammar searching for class\n";
-        print("class", class_store.value_);
+        print("class", project.value_);
         std::cerr << begin();
         return false;
     }
