@@ -3,18 +3,28 @@
 
 #include <chilon/parser/parser.hpp>
 #include <chilon/parser/whitespace.hpp>
+#include <chilon/parser/sequence.hpp>
+#include <chilon/parser/choice.hpp>
+#include <chilon/parser/until.hpp>
+#include <chilon/parser/any_char.hpp>
+#include <chilon/parser/char.hpp>
 
 #include <string>
 
 namespace nyah { namespace mousebear {
 
-namespace eg = chilon::parser::eg;
+namespace chpar = chilon::parser;
 
-typedef chilon::parser::skip_ws_and_comments_with_line_number<
-    chilon::parser::file_parser,
-    chilon::parser::comment< 
-        chilon::parser::or_< eg::char_<'#', ' '>, eg::char_<'/', '/'> >, eg::char_<'\n'> >,
-    chilon::parser::whitespace
+typedef chpar::skip_ws_and_comments_with_line_number<
+    chpar::file_parser,
+    chpar::sequence<
+        chpar::choice<
+            chpar::char_<'#', ' '>,
+            chpar::char_<'/', '/'>
+        >,
+        chpar::until<chpar::any_char, chpar::char_<'\n'>>
+    >,
+    chpar::whitespace
 > parser_abstract;
 
 using chilon::range;

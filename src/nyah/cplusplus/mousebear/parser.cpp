@@ -1,21 +1,21 @@
 #include <mousebear/parser.hpp>
 
-#include <chilon/parser/eg/char.hpp>
-#include <chilon/parser/eg/char_range.hpp>
-#include <chilon/parser/eg/choice.hpp>
-#include <chilon/parser/eg/lexeme.hpp>
-#include <chilon/parser/eg/until.hpp>
-#include <chilon/parser/eg/sequence.hpp>
-#include <chilon/parser/eg/parse.hpp>
-#include <chilon/parser/eg/store.hpp>
-#include <chilon/parser/eg/print.hpp>
-#include <chilon/parser/eg/many.hpp>
-#include <chilon/parser/eg/ascii.hpp>
+#include <chilon/parser/char.hpp>
+#include <chilon/parser/char_range.hpp>
+#include <chilon/parser/choice.hpp>
+#include <chilon/parser/lexeme.hpp>
+#include <chilon/parser/until.hpp>
+#include <chilon/parser/sequence.hpp>
+#include <chilon/parser/parse.hpp>
+#include <chilon/parser/store.hpp>
+#include <chilon/parser/print.hpp>
+#include <chilon/parser/many.hpp>
+#include <chilon/parser/ascii.hpp>
 
 namespace nyah { namespace mousebear {
 
-using namespace chilon::parser::eg;
-using namespace chilon::parser::eg::ascii;
+using namespace chilon::parser;
+using namespace chilon::parser::ascii;
 
 bool parser::parse() {
     skip_whitespace();
