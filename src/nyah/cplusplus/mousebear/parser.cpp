@@ -8,9 +8,9 @@
 #include <chilon/parser/sequence.hpp>
 #include <chilon/parser/parse.hpp>
 #include <chilon/parser/store.hpp>
-#include <chilon/parser/print.hpp>
 #include <chilon/parser/many.hpp>
 #include <chilon/parser/ascii.hpp>
+#include <chilon/print.hpp>
 
 namespace nyah { namespace mousebear {
 
