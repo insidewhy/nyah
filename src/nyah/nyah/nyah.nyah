@@ -1,17 +1,17 @@
 grammar "nyah"
 
-IdentifierTail = [A-Za-z0-9_]*
+IdentifierTail <- [A-Za-z0-9_]*
 
-ClassName      = [A-Z] ^ IdentifierTail
-AttributeName  = [a-z] ^ IdentifierTail
+ClassName      <- [A-Z] ^ IdentifierTail
+AttributeName  <- [a-z] ^ IdentifierTail
 
-SpecialCharacter = '\' [?\!\[\]\.()'"\\nrst'"]
-Character = SpecialCharacter | "'" !\' "'" | '"' !\" '"'
-StringMatch = \' .*? \' | \" .*? \"
+SpecialCharacter <- '\' [?\!\[\]\.()'"\\nrst'"]
+Character <- SpecialCharacter | "'" !\' "'" | '"' !\" '"'
+StringMatch <- \' .*? \' | \" .*? \"
 
-MutableSpecialCharacter = '\' [wWSdD] | '.'
-CharacterRange = '[' (SpecialCharacter|.)+? ']'
-MutableCharacter = CharacterRange | MutableSpecialCharacter
+MutableSpecialCharacter <- '\' [wWSdD] | '.'
+CharacterRange <- '[' (SpecialCharacter|.)+? ']'
+MutableCharacter <- CharacterRange | MutableSpecialCharacter
 
 ActionBody {
     // TODO
@@ -19,7 +19,7 @@ ActionBody {
 
 Expression {
 
-    Value = 
+    Value <- 
         // >| erases the current type from all "self" matches on its left hand side.
         '(' self ')' |
         Match:             '&' self >|
@@ -46,26 +46,26 @@ Expression {
         ClassName |
         AttributeName
 
-    begin = Value:value
+    match <- Value:value
 }
 
 Attribute {
-    key name = AttributeName
-    enum prefix = 'key' | ('local' |* 'skip')
+    key name <- AttributeName
+    enum prefix <- 'key' | ('local' |* 'skip')
 
-    begin = prefix name '=' > value=Expression
+    match <- prefix name '=' > value=Expression
 }
 
 Class {
-    key name    = ClassName
-    contents    = (Class | Attribute)+
-    enum prefix = 'skip' | 'enum'
+    key name    <- ClassName
+    contents    <- (Class | Attribute)+
+    enum prefix <- 'skip' | 'enum'
 
-    begin = prefix className ~ '=' > Expression | '{' >> contents '}'
+    match <- prefix className ~ '=' > Expression | '{' >> contents '}'
 }
 
 GrammarDefinition {
-    begin = 'grammar' name=QuotedString
+    match <- 'grammar' name=QuotedString
 }
 
-Global = GrammarDefinition Class*
+Global <- GrammarDefinition Class*
