@@ -6,7 +6,8 @@
 
 // #define MOUSEBEAR_VERSION "1000 (just don't get in a car, and stay away from my family)"
 // #define MOUSEBEAR_VERSION "999 (she's also known as darwinius)"
-#define MOUSEBEAR_VERSION "998 (grind machine)"
+// #define MOUSEBEAR_VERSION "998 (grind machine)"
+#define MOUSEBEAR_VERSION "997 (420 mishap)"
 
 namespace nyah { namespace mousebear {
 
@@ -51,15 +52,13 @@ inline int main(int argc, char *argv[]) {
 
     for (int i = 1; i <= nPositionals; ++i) {
         if (verbose) std::cout << "parsing grammar " << argv[i] << std::endl;
-        parser p(argv[i]);
-        if (! p.load()) {
+        nyah_stream stream;
+        if (! stream.load(argv[i])) {
             std::cerr << "could not load file " << argv[i] << " exiting\n";
             return 1;
         }
-        if (! p.parse()) {
-            std::cerr << "exiting\n";
-            return 1;
-        }
+
+        // TODO: parse data from stream
     }
 
     return 0;

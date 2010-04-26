@@ -1,4 +1,4 @@
-add_executable(mousebear mousebear.cpp parser.cpp)
+add_executable(mousebear mousebear.cpp)
 
 install(TARGETS mousebear
         RUNTIME DESTINATION ${BIN_DIR}

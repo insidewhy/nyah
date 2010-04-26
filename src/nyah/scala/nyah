@@ -1,3 +1,0 @@
-#!/bin/sh
-
-scala -classpath .:/usr/lib/nyah:../../../beard/src org.nyah.Nyah $*

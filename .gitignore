@@ -1,4 +1,2 @@
-src/nyah/cplusplus/.obj
-src/nyah/cplusplus/Makefile
-src/nyah/scala/org
-src/nyah/scala/.deps
+src/nyah/.obj
+src/nyah/Makefile
