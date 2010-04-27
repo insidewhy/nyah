@@ -1,18 +1,12 @@
 This project needs gcc 4.4 minimum to compile. It has been tested with gcc
-4.4.2 and gcc 4.5 rev. 153642.
+4.4.2, 4.4.3 and gcc 4.5 rev. 153642.
 
 This project is organised like this:
-    External projects
-        beard/    - Scala utility library used by this project.
-        chilon/   - C++ utility library used by this project.
     doc/
         evolution1/ - Old version of the language.
         examples/   - Example grammars.
         nyah.txt
-    src/nyah/
-        cplusplus/  - C++ nyah
-            mousebear/  - Bootstrap compiler, this doesn't have to be pretty
-                          code because as soon as it can turn nyah.nyah into
-                          a working parser it has become redundant.
-        scala/      - Scala nyah.
-        nyah/       - This contains the nyah grammar of nyah.
+    src/
+        nyah/
+            mousebear/  - Bootstrap nyah compiler.
+        chilon/         - Library used by this project. git submodule
