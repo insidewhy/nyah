@@ -1,6 +1,7 @@
 #include <mousebear/parser.hpp>
 
 #include <chilon/conf/cmd/command_line.hpp>
+#include <chilon/print.hpp>
 
 #include <iostream>
 
@@ -16,6 +17,7 @@ namespace cmd_line = chilon::conf::cmd;
 inline int main(int argc, char *argv[]) {
     int nPositionals;
     bool verbose = false;
+    bool doPrint = false;
     {
         using chilon::conf::value;
         using cmd_line::options_description;
@@ -23,6 +25,7 @@ inline int main(int argc, char *argv[]) {
         options_description options;
         options.add_options()
             .help("mousebear "   MOUSEBEAR_VERSION "\nusage: mousebear [arguments] <grammar files to process>")
+            ("p,print",          doPrint, "print AST of parsing nyah file")
             ("v,verbose",        verbose, "increase verbosity")
             ;
 
@@ -58,7 +61,30 @@ inline int main(int argc, char *argv[]) {
             return 1;
         }
 
-        // TODO: parse data from stream
+        stream.skip_whitespace();
+
+        store<Grammar> storer;
+
+        if (storer(stream)) {
+            stream.skip_whitespace();
+            if (! stream.empty()) {
+                std::cerr << argv[i] << ": partial match\n";
+                continue;
+            }
+            else if (verbose)
+                std::cerr << argv[i] << ": parsed grammar\n";
+        }
+        else {
+            std::cerr << argv[i] << ": invalid grammar\n";
+            continue;
+        }
+
+        if (doPrint) {
+            chilon::print(argv[i], " grammar: ", storer.value_);
+        }
+        else {
+            std::cerr << "only -p is supported at the moment\n";
+        }
     }
 
     return 0;
