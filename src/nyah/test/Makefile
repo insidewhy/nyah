@@ -6,10 +6,10 @@ test: $(subst .nyah,.out,$(wildcard *.nyah))
 
 %.out: %.nyah ${mousebear}
 	@${mousebear} -p $< > $@.new
-	@diff $@.new $@
+	@diff $@ $@.new
 	@touch $@
 	@rm $@.new
-	@echo $< succeeded 
+	@echo $< succeeded
 
 accept:
 	@$(foreach file,$(wildcard *.out.new), \

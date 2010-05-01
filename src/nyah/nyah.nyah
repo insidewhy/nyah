@@ -9,7 +9,8 @@ Primary        <- RuleName ! "<" / "(" Expression ")" /
                   AnyCharacter / String / Escape / RuleName / CharacterRange
 Suffix         <- Primary ( "^+" / "^*" / [?*+] )
 Prefix         <- ( "&!" / [&!] )? Suffix
-Joined         <- (Prefix ("^%" / "%+" / "%") Prefix / Prefix) %+ "^"
+Join           <- Prefix ("^%" / "%+" / "%") Prefix
+Joined         <- (Join / Prefix) %+ "^"
 Sequence       <- Joined+
 Expression     <= Sequence %+ "/"
 Rule           <= RuleName "<-" Expression

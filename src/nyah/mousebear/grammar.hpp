@@ -80,17 +80,16 @@ typedef sequence<Primary, optional<Suffixes>> Suffix;
 typedef sequence<optional<Prefixes>, Suffix>  Prefix;
 typedef Prefix Affix;
 
-typedef joined_plus<
-    char_<'^'>,
+typedef sequence<
+    Affix,
     choice<
-        sequence<
-            Affix,
-            choice<
-                sequence< store<char_<'^'>>, store<char_<'%'>> >,
-                sequence< store<char_<'%'>>, store<char_<'+'>> >,
-                char_<'%'> >,
-            Affix>,
-        Affix> >   Joined;
+        sequence< store<char_<'^'>>, store<char_<'%'>> >,
+        sequence< store<char_<'%'>>, store<char_<'+'>> >,
+        char_<'%'> >,
+    Affix> Join;
+
+typedef joined_plus<
+    char_<'^'>, choice<Join, Affix> >      Joined;
 
 typedef many_plus<Joined>                  Sequence;
 

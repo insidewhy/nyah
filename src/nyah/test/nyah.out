@@ -363,43 +363,51 @@ nyah.nyah grammar: vector[
         ] ]
     >
     variant: Rule: tuple<
+        RuleName: "Join"
+        vector[ vector[
+            vector[ variant: tuple<
+                variant: empty
+                variant: RuleName: "Prefix"
+                variant: empty
+            > ]
+            vector[ variant: tuple<
+                variant: empty
+                variant: vector[
+                    vector[ vector[ variant: tuple<
+                        variant: empty
+                        variant: "^%"
+                        variant: empty
+                    > ] ]
+                    vector[ vector[ variant: tuple<
+                        variant: empty
+                        variant: "%+"
+                        variant: empty
+                    > ] ]
+                    vector[ vector[ variant: tuple<
+                        variant: empty
+                        variant: "%"
+                        variant: empty
+                    > ] ]
+                ]
+                variant: empty
+            > ]
+            vector[ variant: tuple<
+                variant: empty
+                variant: RuleName: "Prefix"
+                variant: empty
+            > ]
+        ] ]
+    >
+    variant: Rule: tuple<
         RuleName: "Joined"
         vector[ vector[ vector[ variant: tuple<
             variant: empty
             variant: vector[
-                vector[
-                    vector[ variant: tuple<
-                        variant: empty
-                        variant: RuleName: "Prefix"
-                        variant: empty
-                    > ]
-                    vector[ variant: tuple<
-                        variant: empty
-                        variant: vector[
-                            vector[ vector[ variant: tuple<
-                                variant: empty
-                                variant: "^%"
-                                variant: empty
-                            > ] ]
-                            vector[ vector[ variant: tuple<
-                                variant: empty
-                                variant: "%+"
-                                variant: empty
-                            > ] ]
-                            vector[ vector[ variant: tuple<
-                                variant: empty
-                                variant: "%"
-                                variant: empty
-                            > ] ]
-                        ]
-                        variant: empty
-                    > ]
-                    vector[ variant: tuple<
-                        variant: empty
-                        variant: RuleName: "Prefix"
-                        variant: empty
-                    > ]
-                ]
+                vector[ vector[ variant: tuple<
+                    variant: empty
+                    variant: RuleName: "Join"
+                    variant: empty
+                > ] ]
                 vector[ vector[ variant: tuple<
                     variant: empty
                     variant: RuleName: "Prefix"
