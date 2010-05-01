@@ -432,8 +432,8 @@ nyah.nyah grammar: vector[
             variant: '+'
         > ] ] ]
     >
-    variant: NodeRule: tuple<
-        RuleName: "Expression"
+    variant: Rule: tuple<
+        RuleName: "OrderedChoice"
         vector[ vector[ vector[ variant: tuple<
             variant: empty
             variant: RuleName: "Sequence"
@@ -444,6 +444,14 @@ nyah.nyah grammar: vector[
             >
             variant: empty
             variant: "/"
+            variant: empty
+        > ] ] ]
+    >
+    variant: NodeRule: tuple<
+        RuleName: "Expression"
+        vector[ vector[ vector[ variant: tuple<
+            variant: empty
+            variant: RuleName: "OrderedChoice"
             variant: empty
         > ] ] ]
     >

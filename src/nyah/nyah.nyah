@@ -12,7 +12,8 @@ Prefix         <- ( "&!" / [&!] )? Suffix
 Join           <- Prefix ("^%" / "%+" / "%") Prefix
 Joined         <- (Join / Prefix) %+ "^"
 Sequence       <- Joined+
-Expression     <= Sequence %+ "/"
+OrderedChoice  <- Sequence %+ "/"
+Expression     <= OrderedChoice
 Rule           <= RuleName "<-" Expression
 NodeRule       <= RuleName "<=" Expression
 Grammar        <- (Rule / NodeRule)+
