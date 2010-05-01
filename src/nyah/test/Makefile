@@ -8,6 +8,7 @@ test: $(subst .nyah,.out,$(wildcard *.nyah))
 	@${mousebear} -p $< > $@.new
 	@diff $@.new $@
 	@touch $@
+	@rm $@.new
 	@echo $< succeeded 
 
 accept:
