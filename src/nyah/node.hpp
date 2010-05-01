@@ -15,13 +15,15 @@
         print_tail(indent, stream, value.value_); \
     }
 
+#define NYAH_NODE_CLASS(name, ...) \
+    struct name : simple_node<name, __VA_ARGS__ > \
 
 #define NYAH_NODE(name, ...) \
-    struct name : simple_node<name, __VA_ARGS__ > {}; \
+    NYAH_NODE_CLASS(name, __VA_ARGS__) {}; \
     NYAH_NODE_PRINT(name)
 
 #define NYAH_NODE_INLINE(name, ...) \
-    struct name : simple_node<name, __VA_ARGS__ > {}; \
+    NYAH_NODE_CLASS(name, __VA_ARGS__) {}; \
     NYAH_NODE_PRINT_INLINE(name)
 
 #endif
