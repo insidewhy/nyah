@@ -8,7 +8,8 @@
 // #define MOUSEBEAR_VERSION "1000 (just don't get in a car, and stay away from my family)"
 // #define MOUSEBEAR_VERSION "999 (she's also known as darwinius)"
 // #define MOUSEBEAR_VERSION "998 (grind machine)"
-#define MOUSEBEAR_VERSION "997 (420 mishap)"
+// #define MOUSEBEAR_VERSION "997 (420 mishap)"
+#define MOUSEBEAR_VERSION "996 (super mousebear 4)"
 
 namespace nyah { namespace mousebear {
 
@@ -25,7 +26,7 @@ inline int main(int argc, char *argv[]) {
         options_description options;
         options.add_options()
             .help("mousebear "   MOUSEBEAR_VERSION "\nusage: mousebear [arguments] <grammar files to process>")
-            ("p,print",          doPrint, "print AST of parsing nyah file")
+            ("p,print",          doPrint, "print AST of grammar")
             ("v,verbose",        verbose, "increase verbosity")
             ;
 

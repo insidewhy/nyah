@@ -1,2 +1,3 @@
 src/nyah/.obj
 src/nyah/Makefile
+src/nyah/test/*.new

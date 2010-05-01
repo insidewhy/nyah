@@ -1,0 +1,501 @@
+nyah.nyah grammar: vector[
+    variant: rule: tuple<
+        rule name: "Spacing"
+        vector[ vector[ vector[ variant: tuple<
+            variant: empty
+            variant: vector[
+                vector[ vector[ variant: tuple<
+                    variant: empty
+                    variant: "\s"
+                    variant: empty
+                > ] ]
+                vector[ vector[
+                    variant: tuple<
+                        variant: empty
+                        variant: "#"
+                        variant: empty
+                    >
+                    variant: tuple<
+                        variant: empty
+                        variant: vector[ vector[ vector[ variant: tuple<
+                            variant: '!'
+                            variant: "\n"
+                            variant: empty
+                        > ] ] ]
+                        variant: '*'
+                    >
+                    variant: tuple<
+                        variant: empty
+                        variant: "\n"
+                        variant: empty
+                    >
+                ] ]
+            ]
+            variant: '+'
+        > ] ] ]
+    >
+    variant: rule: tuple<
+        rule name: "AnyCharacter"
+        vector[ vector[ vector[ variant: tuple<
+            variant: empty
+            variant: "."
+            variant: empty
+        > ] ] ]
+    >
+    variant: rule: tuple<
+        rule name: "CharacterRange"
+        vector[ vector[
+            vector[
+                variant: tuple<
+                    variant: empty
+                    variant: "["
+                    variant: empty
+                >
+                variant: tuple<
+                    variant: empty
+                    variant: vector[
+                        vector[ vector[
+                            variant: tuple<
+                                variant: empty
+                                variant: vector[ variant: "\\" ]
+                                variant: empty
+                            >
+                            variant: tuple<
+                                variant: empty
+                                variant: vector[
+                                    variant: "\\"
+                                    variant: "\]"
+                                    variant: 's'
+                                    variant: 'S'
+                                    variant: 'n'
+                                    variant: 'N'
+                                    variant: 't'
+                                    variant: 'T'
+                                    variant: 'w'
+                                    variant: 'W'
+                                ]
+                                variant: empty
+                            >
+                        ] ]
+                        vector[ vector[ variant: tuple<
+                            variant: empty
+                            variant: vector[ vector[ vector[
+                                variant: tuple<
+                                    variant: empty
+                                    variant: '.'
+                                    variant: empty
+                                >
+                                variant: tuple<
+                                    variant: empty
+                                    variant: "-"
+                                    variant: empty
+                                >
+                                variant: tuple<
+                                    variant: empty
+                                    variant: '.'
+                                    variant: empty
+                                >
+                            ] ] ]
+                            variant: empty
+                        > ] ]
+                        vector[ vector[ variant: tuple<
+                            variant: empty
+                            variant: '.'
+                            variant: empty
+                        > ] ]
+                    ]
+                    variant: '*'
+                >
+            ]
+            vector[ variant: tuple<
+                variant: empty
+                variant: "]"
+                variant: empty
+            > ]
+        ] ]
+    >
+    variant: rule: tuple<
+        rule name: "Escape"
+        vector[ vector[ vector[
+            variant: tuple<
+                variant: empty
+                variant: vector[ variant: "\\" ]
+                variant: empty
+            >
+            variant: tuple<
+                variant: empty
+                variant: vector[
+                    variant: 's'
+                    variant: 'S'
+                    variant: 'n'
+                    variant: 'N'
+                    variant: 't'
+                    variant: 'T'
+                    variant: 'w'
+                    variant: 'W'
+                    variant: '.'
+                    variant: '"'
+                    variant: '\''
+                    variant: '&'
+                    variant: '!'
+                    variant: '+'
+                    variant: '*'
+                    variant: "\\"
+                ]
+                variant: empty
+            >
+        ] ] ]
+    >
+    variant: rule: tuple<
+        rule name: "String"
+        vector[
+            vector[ vector[
+                variant: tuple<
+                    variant: empty
+                    variant: "\""
+                    variant: empty
+                >
+                variant: tuple<
+                    variant: empty
+                    variant: vector[
+                        vector[ vector[ variant: tuple<
+                            variant: empty
+                            variant: rule name: "Escape"
+                            variant: empty
+                        > ] ]
+                        vector[ vector[ variant: tuple<
+                            variant: '!'
+                            variant: "\""
+                            variant: empty
+                        > ] ]
+                    ]
+                    variant: "^*"
+                >
+                variant: tuple<
+                    variant: empty
+                    variant: "\""
+                    variant: empty
+                >
+            ] ]
+            vector[ vector[
+                variant: tuple<
+                    variant: empty
+                    variant: "'"
+                    variant: empty
+                >
+                variant: tuple<
+                    variant: empty
+                    variant: vector[
+                        vector[ vector[ variant: tuple<
+                            variant: empty
+                            variant: rule name: "Escape"
+                            variant: empty
+                        > ] ]
+                        vector[ vector[ variant: tuple<
+                            variant: '!'
+                            variant: "'"
+                            variant: empty
+                        > ] ]
+                    ]
+                    variant: "^*"
+                >
+                variant: tuple<
+                    variant: empty
+                    variant: "'"
+                    variant: empty
+                >
+            ] ]
+        ]
+    >
+    variant: node rule: tuple<
+        rule name: "RuleName"
+        vector[ vector[ vector[
+            variant: tuple<
+                variant: empty
+                variant: vector[ variant: tuple<
+                    'A'
+                    'Z'
+                > ]
+                variant: empty
+            >
+            variant: tuple<
+                variant: empty
+                variant: vector[
+                    variant: tuple<
+                        'a'
+                        'z'
+                    >
+                    variant: tuple<
+                        'A'
+                        'Z'
+                    >
+                    variant: tuple<
+                        '0'
+                        '9'
+                    >
+                    variant: '_'
+                ]
+                variant: '+'
+            >
+        ] ] ]
+    >
+    variant: rule: tuple<
+        rule name: "Primary"
+        vector[
+            vector[
+                vector[ variant: tuple<
+                    variant: empty
+                    variant: rule name: "RuleName"
+                    variant: empty
+                > ]
+                vector[ variant: tuple<
+                    variant: '!'
+                    variant: "<"
+                    variant: empty
+                > ]
+            ]
+            vector[
+                vector[ variant: tuple<
+                    variant: empty
+                    variant: "("
+                    variant: empty
+                > ]
+                vector[ variant: tuple<
+                    variant: empty
+                    variant: rule name: "Expression"
+                    variant: empty
+                > ]
+                vector[ variant: tuple<
+                    variant: empty
+                    variant: ")"
+                    variant: empty
+                > ]
+            ]
+            vector[ vector[ variant: tuple<
+                variant: empty
+                variant: rule name: "AnyCharacter"
+                variant: empty
+            > ] ]
+            vector[ vector[ variant: tuple<
+                variant: empty
+                variant: rule name: "String"
+                variant: empty
+            > ] ]
+            vector[ vector[ variant: tuple<
+                variant: empty
+                variant: rule name: "Escape"
+                variant: empty
+            > ] ]
+            vector[ vector[ variant: tuple<
+                variant: empty
+                variant: rule name: "RuleName"
+                variant: empty
+            > ] ]
+            vector[ vector[ variant: tuple<
+                variant: empty
+                variant: rule name: "CharacterRange"
+                variant: empty
+            > ] ]
+        ]
+    >
+    variant: rule: tuple<
+        rule name: "Suffix"
+        vector[ vector[
+            vector[ variant: tuple<
+                variant: empty
+                variant: rule name: "Primary"
+                variant: empty
+            > ]
+            vector[ variant: tuple<
+                variant: empty
+                variant: vector[
+                    vector[ vector[ variant: tuple<
+                        variant: empty
+                        variant: "^+"
+                        variant: empty
+                    > ] ]
+                    vector[ vector[ variant: tuple<
+                        variant: empty
+                        variant: "^*"
+                        variant: empty
+                    > ] ]
+                    vector[ vector[ variant: tuple<
+                        variant: empty
+                        variant: vector[
+                            variant: '?'
+                            variant: '*'
+                            variant: '+'
+                        ]
+                        variant: empty
+                    > ] ]
+                ]
+                variant: empty
+            > ]
+        ] ]
+    >
+    variant: rule: tuple<
+        rule name: "Prefix"
+        vector[ vector[
+            vector[ variant: tuple<
+                variant: empty
+                variant: vector[
+                    vector[ vector[ variant: tuple<
+                        variant: empty
+                        variant: "&!"
+                        variant: empty
+                    > ] ]
+                    vector[ vector[ variant: tuple<
+                        variant: empty
+                        variant: vector[
+                            variant: '&'
+                            variant: '!'
+                        ]
+                        variant: empty
+                    > ] ]
+                ]
+                variant: '?'
+            > ]
+            vector[ variant: tuple<
+                variant: empty
+                variant: rule name: "Suffix"
+                variant: empty
+            > ]
+        ] ]
+    >
+    variant: rule: tuple<
+        rule name: "Joined"
+        vector[ vector[ vector[ variant: tuple<
+            variant: empty
+            variant: vector[
+                vector[
+                    vector[ variant: tuple<
+                        variant: empty
+                        variant: rule name: "Prefix"
+                        variant: empty
+                    > ]
+                    vector[ variant: tuple<
+                        variant: empty
+                        variant: vector[
+                            vector[ vector[ variant: tuple<
+                                variant: empty
+                                variant: "^%"
+                                variant: empty
+                            > ] ]
+                            vector[ vector[ variant: tuple<
+                                variant: empty
+                                variant: "%+"
+                                variant: empty
+                            > ] ]
+                            vector[ vector[ variant: tuple<
+                                variant: empty
+                                variant: "%"
+                                variant: empty
+                            > ] ]
+                        ]
+                        variant: empty
+                    > ]
+                    vector[ variant: tuple<
+                        variant: empty
+                        variant: rule name: "Prefix"
+                        variant: empty
+                    > ]
+                ]
+                vector[ vector[ variant: tuple<
+                    variant: empty
+                    variant: rule name: "Prefix"
+                    variant: empty
+                > ] ]
+            ]
+            variant: empty
+            variant: tuple<
+                '%'
+                '+'
+            >
+            variant: empty
+            variant: "^"
+            variant: empty
+        > ] ] ]
+    >
+    variant: rule: tuple<
+        rule name: "Sequence"
+        vector[ vector[ vector[ variant: tuple<
+            variant: empty
+            variant: rule name: "Joined"
+            variant: '+'
+        > ] ] ]
+    >
+    variant: node rule: tuple<
+        rule name: "Expression"
+        vector[ vector[ vector[ variant: tuple<
+            variant: empty
+            variant: rule name: "Sequence"
+            variant: empty
+            variant: tuple<
+                '%'
+                '+'
+            >
+            variant: empty
+            variant: "/"
+            variant: empty
+        > ] ] ]
+    >
+    variant: node rule: tuple<
+        rule name: "Rule"
+        vector[ vector[
+            vector[ variant: tuple<
+                variant: empty
+                variant: rule name: "RuleName"
+                variant: empty
+            > ]
+            vector[ variant: tuple<
+                variant: empty
+                variant: "<-"
+                variant: empty
+            > ]
+            vector[ variant: tuple<
+                variant: empty
+                variant: rule name: "Expression"
+                variant: empty
+            > ]
+        ] ]
+    >
+    variant: node rule: tuple<
+        rule name: "NodeRule"
+        vector[ vector[
+            vector[ variant: tuple<
+                variant: empty
+                variant: rule name: "RuleName"
+                variant: empty
+            > ]
+            vector[ variant: tuple<
+                variant: empty
+                variant: "<="
+                variant: empty
+            > ]
+            vector[ variant: tuple<
+                variant: empty
+                variant: rule name: "Expression"
+                variant: empty
+            > ]
+        ] ]
+    >
+    variant: rule: tuple<
+        rule name: "Grammar"
+        vector[ vector[ vector[ variant: tuple<
+            variant: empty
+            variant: vector[
+                vector[ vector[ variant: tuple<
+                    variant: empty
+                    variant: rule name: "Rule"
+                    variant: empty
+                > ] ]
+                vector[ vector[ variant: tuple<
+                    variant: empty
+                    variant: rule name: "NodeRule"
+                    variant: empty
+                > ] ]
+            ]
+            variant: '+'
+        > ] ] ]
+    >
+]
