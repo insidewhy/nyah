@@ -1,5 +1,5 @@
-#ifndef MOUSEBEAR_PARSER_HPP
-#define MOUSEBEAR_PARSER_HPP
+#ifndef MOUSEBEAR_GRAMMAR_HPP
+#define MOUSEBEAR_GRAMMAR_HPP
 
 #include <chilon/parser/source_code_stream.hpp>
 #include <chilon/parser/sequence.hpp>
@@ -15,8 +15,6 @@
 #include <chilon/parser/simple_node.hpp>
 #include <chilon/parser/not.hpp>
 #include <chilon/parser/optional.hpp>
-
-#include <string>
 
 namespace nyah { namespace mousebear {
 
@@ -135,17 +133,17 @@ void print_tail(int const indent, O& stream, Expression const& value) {
 
 template <class O>
 void print_tail(int const indent, O& stream, Rule const& value) {
-    print_tail(indent, stream, "rule: ", value.value_);
+    print_tail(indent, stream, "Rule: ", value.value_);
 }
 
 template <class O>
 void print_tail(int const indent, O& stream, RuleName const& value) {
-    print_tail(indent, stream, "rule name: ", value.value_);
+    print_tail(indent, stream, "RuleName: ", value.value_);
 }
 
 template <class O>
 void print_tail(int const indent, O& stream, NodeRule const& value) {
-    print_tail(indent, stream, "node rule: ", value.value_);
+    print_tail(indent, stream, "NodeRule: ", value.value_);
 }
 
 } }

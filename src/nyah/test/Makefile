@@ -1,8 +1,8 @@
-.PHONY: default
+.PHONY: test accept
 
 mousebear = ../.obj/mousebear/mousebear
 
-default: $(subst .nyah,.out,$(wildcard *.nyah))
+test: $(subst .nyah,.out,$(wildcard *.nyah))
 
 %.out: %.nyah ${mousebear}
 	@${mousebear} -p $< > $@.new
@@ -10,3 +10,6 @@ default: $(subst .nyah,.out,$(wildcard *.nyah))
 	@touch $@
 	@echo $< succeeded 
 
+accept:
+	@$(foreach file,$(wildcard *.out.new), \
+		mv ${file} $(patsubst %.out.new,%.out,${file}))

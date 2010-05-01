@@ -1,6 +1,6 @@
 nyah.nyah grammar: vector[
-    variant: rule: tuple<
-        rule name: "Spacing"
+    variant: Rule: tuple<
+        RuleName: "Spacing"
         vector[ vector[ vector[ variant: tuple<
             variant: empty
             variant: vector[
@@ -34,16 +34,16 @@ nyah.nyah grammar: vector[
             variant: '+'
         > ] ] ]
     >
-    variant: rule: tuple<
-        rule name: "AnyCharacter"
+    variant: Rule: tuple<
+        RuleName: "AnyCharacter"
         vector[ vector[ vector[ variant: tuple<
             variant: empty
             variant: "."
             variant: empty
         > ] ] ]
     >
-    variant: rule: tuple<
-        rule name: "CharacterRange"
+    variant: Rule: tuple<
+        RuleName: "CharacterRange"
         vector[ vector[
             vector[
                 variant: tuple<
@@ -114,8 +114,8 @@ nyah.nyah grammar: vector[
             > ]
         ] ]
     >
-    variant: rule: tuple<
-        rule name: "Escape"
+    variant: Rule: tuple<
+        RuleName: "Escape"
         vector[ vector[ vector[
             variant: tuple<
                 variant: empty
@@ -146,8 +146,8 @@ nyah.nyah grammar: vector[
             >
         ] ] ]
     >
-    variant: rule: tuple<
-        rule name: "String"
+    variant: Rule: tuple<
+        RuleName: "String"
         vector[
             vector[ vector[
                 variant: tuple<
@@ -160,7 +160,7 @@ nyah.nyah grammar: vector[
                     variant: vector[
                         vector[ vector[ variant: tuple<
                             variant: empty
-                            variant: rule name: "Escape"
+                            variant: RuleName: "Escape"
                             variant: empty
                         > ] ]
                         vector[ vector[ variant: tuple<
@@ -188,7 +188,7 @@ nyah.nyah grammar: vector[
                     variant: vector[
                         vector[ vector[ variant: tuple<
                             variant: empty
-                            variant: rule name: "Escape"
+                            variant: RuleName: "Escape"
                             variant: empty
                         > ] ]
                         vector[ vector[ variant: tuple<
@@ -207,8 +207,8 @@ nyah.nyah grammar: vector[
             ] ]
         ]
     >
-    variant: node rule: tuple<
-        rule name: "RuleName"
+    variant: NodeRule: tuple<
+        RuleName: "RuleName"
         vector[ vector[ vector[
             variant: tuple<
                 variant: empty
@@ -239,13 +239,13 @@ nyah.nyah grammar: vector[
             >
         ] ] ]
     >
-    variant: rule: tuple<
-        rule name: "Primary"
+    variant: Rule: tuple<
+        RuleName: "Primary"
         vector[
             vector[
                 vector[ variant: tuple<
                     variant: empty
-                    variant: rule name: "RuleName"
+                    variant: RuleName: "RuleName"
                     variant: empty
                 > ]
                 vector[ variant: tuple<
@@ -262,7 +262,7 @@ nyah.nyah grammar: vector[
                 > ]
                 vector[ variant: tuple<
                     variant: empty
-                    variant: rule name: "Expression"
+                    variant: RuleName: "Expression"
                     variant: empty
                 > ]
                 vector[ variant: tuple<
@@ -273,37 +273,37 @@ nyah.nyah grammar: vector[
             ]
             vector[ vector[ variant: tuple<
                 variant: empty
-                variant: rule name: "AnyCharacter"
+                variant: RuleName: "AnyCharacter"
                 variant: empty
             > ] ]
             vector[ vector[ variant: tuple<
                 variant: empty
-                variant: rule name: "String"
+                variant: RuleName: "String"
                 variant: empty
             > ] ]
             vector[ vector[ variant: tuple<
                 variant: empty
-                variant: rule name: "Escape"
+                variant: RuleName: "Escape"
                 variant: empty
             > ] ]
             vector[ vector[ variant: tuple<
                 variant: empty
-                variant: rule name: "RuleName"
+                variant: RuleName: "RuleName"
                 variant: empty
             > ] ]
             vector[ vector[ variant: tuple<
                 variant: empty
-                variant: rule name: "CharacterRange"
+                variant: RuleName: "CharacterRange"
                 variant: empty
             > ] ]
         ]
     >
-    variant: rule: tuple<
-        rule name: "Suffix"
+    variant: Rule: tuple<
+        RuleName: "Suffix"
         vector[ vector[
             vector[ variant: tuple<
                 variant: empty
-                variant: rule name: "Primary"
+                variant: RuleName: "Primary"
                 variant: empty
             > ]
             vector[ variant: tuple<
@@ -333,8 +333,8 @@ nyah.nyah grammar: vector[
             > ]
         ] ]
     >
-    variant: rule: tuple<
-        rule name: "Prefix"
+    variant: Rule: tuple<
+        RuleName: "Prefix"
         vector[ vector[
             vector[ variant: tuple<
                 variant: empty
@@ -357,20 +357,20 @@ nyah.nyah grammar: vector[
             > ]
             vector[ variant: tuple<
                 variant: empty
-                variant: rule name: "Suffix"
+                variant: RuleName: "Suffix"
                 variant: empty
             > ]
         ] ]
     >
-    variant: rule: tuple<
-        rule name: "Joined"
+    variant: Rule: tuple<
+        RuleName: "Joined"
         vector[ vector[ vector[ variant: tuple<
             variant: empty
             variant: vector[
                 vector[
                     vector[ variant: tuple<
                         variant: empty
-                        variant: rule name: "Prefix"
+                        variant: RuleName: "Prefix"
                         variant: empty
                     > ]
                     vector[ variant: tuple<
@@ -396,13 +396,13 @@ nyah.nyah grammar: vector[
                     > ]
                     vector[ variant: tuple<
                         variant: empty
-                        variant: rule name: "Prefix"
+                        variant: RuleName: "Prefix"
                         variant: empty
                     > ]
                 ]
                 vector[ vector[ variant: tuple<
                     variant: empty
-                    variant: rule name: "Prefix"
+                    variant: RuleName: "Prefix"
                     variant: empty
                 > ] ]
             ]
@@ -416,19 +416,19 @@ nyah.nyah grammar: vector[
             variant: empty
         > ] ] ]
     >
-    variant: rule: tuple<
-        rule name: "Sequence"
+    variant: Rule: tuple<
+        RuleName: "Sequence"
         vector[ vector[ vector[ variant: tuple<
             variant: empty
-            variant: rule name: "Joined"
+            variant: RuleName: "Joined"
             variant: '+'
         > ] ] ]
     >
-    variant: node rule: tuple<
-        rule name: "Expression"
+    variant: NodeRule: tuple<
+        RuleName: "Expression"
         vector[ vector[ vector[ variant: tuple<
             variant: empty
-            variant: rule name: "Sequence"
+            variant: RuleName: "Sequence"
             variant: empty
             variant: tuple<
                 '%'
@@ -439,12 +439,12 @@ nyah.nyah grammar: vector[
             variant: empty
         > ] ] ]
     >
-    variant: node rule: tuple<
-        rule name: "Rule"
+    variant: NodeRule: tuple<
+        RuleName: "Rule"
         vector[ vector[
             vector[ variant: tuple<
                 variant: empty
-                variant: rule name: "RuleName"
+                variant: RuleName: "RuleName"
                 variant: empty
             > ]
             vector[ variant: tuple<
@@ -454,17 +454,17 @@ nyah.nyah grammar: vector[
             > ]
             vector[ variant: tuple<
                 variant: empty
-                variant: rule name: "Expression"
+                variant: RuleName: "Expression"
                 variant: empty
             > ]
         ] ]
     >
-    variant: node rule: tuple<
-        rule name: "NodeRule"
+    variant: NodeRule: tuple<
+        RuleName: "NodeRule"
         vector[ vector[
             vector[ variant: tuple<
                 variant: empty
-                variant: rule name: "RuleName"
+                variant: RuleName: "RuleName"
                 variant: empty
             > ]
             vector[ variant: tuple<
@@ -474,24 +474,24 @@ nyah.nyah grammar: vector[
             > ]
             vector[ variant: tuple<
                 variant: empty
-                variant: rule name: "Expression"
+                variant: RuleName: "Expression"
                 variant: empty
             > ]
         ] ]
     >
-    variant: rule: tuple<
-        rule name: "Grammar"
+    variant: Rule: tuple<
+        RuleName: "Grammar"
         vector[ vector[ vector[ variant: tuple<
             variant: empty
             variant: vector[
                 vector[ vector[ variant: tuple<
                     variant: empty
-                    variant: rule name: "Rule"
+                    variant: RuleName: "Rule"
                     variant: empty
                 > ] ]
                 vector[ vector[ variant: tuple<
                     variant: empty
-                    variant: rule name: "NodeRule"
+                    variant: RuleName: "NodeRule"
                     variant: empty
                 > ] ]
             ]

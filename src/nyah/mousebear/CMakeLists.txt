@@ -1,3 +1,5 @@
+include_directories(..)
+
 add_executable(mousebear mousebear.cpp)
 
 install(TARGETS mousebear

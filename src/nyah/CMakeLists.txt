@@ -10,7 +10,7 @@ include(C++0x)
 include(Installer)
 # configureFile(config.hpp)
 
-include_directories(.  ${CHILON_DIR}/..)
+include_directories(..)
 add_subdirectory(mousebear)
 add_definitions(-Wall)
 
