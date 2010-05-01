@@ -1,4 +1,4 @@
-#include <mousebear/parser.hpp>
+#include <mousebear/grammar.hpp>
 
 #include <chilon/conf/cmd/command_line.hpp>
 #include <chilon/print.hpp>
