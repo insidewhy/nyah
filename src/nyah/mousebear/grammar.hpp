@@ -81,21 +81,20 @@ typedef sequence<Primary, optional<Suffixes>> Suffix;
 typedef sequence<optional<Prefixes>, Suffix>  Prefix;
 typedef Prefix Affix;
 
-typedef sequence<
+NYAH_NODE(Join, sequence<
     Affix,
     choice<
         char_<'^', '%'>,
         char_<'%', '+'>,
         char_<'%'>,
         char_<'|', '%'> >,
-    Affix> Join;
+    Affix>)
 
-typedef joined_plus<
-    char_<'^'>, choice<Join, Affix> >      Joined;
+NYAH_NODE(Joined, joined_plus<char_<'^'>, choice<Join, Affix> >)
 
-typedef many_plus<Joined>                  Sequence;
+NYAH_NODE(Sequence, many_plus<Joined>)
 
-typedef joined_plus<char_<'/'>, Sequence>  OrderedChoice;
+NYAH_NODE(OrderedChoice, joined_plus<char_<'/'>, Sequence>)
 
 NYAH_NODE_INLINE(Expression, OrderedChoice)
 

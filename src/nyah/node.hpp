@@ -16,7 +16,7 @@
     }
 
 #define NYAH_NODE_CLASS(name, ...) \
-    struct name : simple_node<name, __VA_ARGS__ > \
+    struct name : simple_node<name, __VA_ARGS__ >
 
 #define NYAH_NODE(name, ...) \
     NYAH_NODE_CLASS(name, __VA_ARGS__) {}; \
