@@ -74,7 +74,8 @@ typedef choice<char_<'&', '!'>, char_from<'&', '!'> > Prefixes;
 typedef choice<
     char_<'^', '+'>,
     char_<'^', '*'>,
-    char_from<'+', '?', '*'> > Suffixes;
+    char_from<'+', '?', '*'>,
+    char_<'|', '+'> > Suffixes;
 
 typedef sequence<Primary, optional<Suffixes>> Suffix;
 typedef sequence<optional<Prefixes>, Suffix>  Prefix;
@@ -83,9 +84,10 @@ typedef Prefix Affix;
 typedef sequence<
     Affix,
     choice<
-        sequence< store<char_<'^'>>, store<char_<'%'>> >,
-        sequence< store<char_<'%'>>, store<char_<'+'>> >,
-        char_<'%'> >,
+        char_<'^', '%'>,
+        char_<'%', '+'>,
+        char_<'%'>,
+        char_<'|', '%'> >,
     Affix> Join;
 
 typedef joined_plus<
