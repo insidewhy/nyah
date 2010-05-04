@@ -14,8 +14,7 @@
 #include <chilon/parser/lexeme.hpp>
 #include <chilon/parser/not.hpp>
 #include <chilon/parser/optional.hpp>
-
-#include <nyah/node.hpp>
+#include <chilon/parser/simple_node.hpp>
 
 namespace nyah { namespace mousebear {
 
@@ -58,8 +57,8 @@ typedef choice<
     char_<'\''> >
 > String;
 
-NYAH_NODE(RuleName,
-    lexeme<char_range<A, Z>, many< char_range<a,z, A,Z> > >)
+struct RuleName : simple_node<RuleName,
+    lexeme<char_range<A, Z>, many< char_range<a,z, A,Z> > > > {};
 
 struct Expression;
 
@@ -81,30 +80,35 @@ typedef sequence<Primary, optional<Suffixes>> Suffix;
 typedef sequence<optional<Prefixes>, Suffix>  Prefix;
 typedef Prefix Affix;
 
-NYAH_NODE(Join, sequence<
+struct Join : simple_node<Join, sequence<
     Affix,
     choice<
         char_<'^', '%'>,
         char_<'%', '+'>,
         char_<'%'>,
         char_<'|', '%'> >,
-    Affix>)
+    Affix> > {};
 
-NYAH_NODE(Joined, joined_plus<char_<'^'>, choice<Join, Affix> >)
+struct Joined : simple_node<Joined, joined_plus<char_<'^'>, choice<Join, Affix> > > {};
 
-NYAH_NODE(Sequence, many_plus<Joined>)
+struct Sequence : simple_node<Sequence, many_plus<Joined> > {};
 
-NYAH_NODE(OrderedChoice, joined_plus<char_<'/'>, Sequence>)
+struct OrderedChoice : simple_node<OrderedChoice, joined_plus<char_<'/'>, Sequence> > {};
 
-NYAH_NODE_INLINE(Expression, OrderedChoice)
+struct Expression : simple_node<Expression, OrderedChoice> {};
 
-NYAH_NODE(Rule,
-    sequence<node<RuleName>, char_<'<', '-'>, node<Expression>>)
+struct Rule : simple_node<Rule,
+    sequence<node<RuleName>, char_<'<', '-'>, node<Expression>>> {};
 
-NYAH_NODE(NodeRule,
-    sequence<node<RuleName>, char_<'<', '='>, node<Expression>>)
+struct NodeRule : simple_node<NodeRule,
+    sequence<node<RuleName>, char_<'<', '='>, node<Expression>> > {};
 
 typedef many< choice< node<Rule>, node<NodeRule> > > Grammar;
+
+template <class O>
+void print_tail(int const indent, O& stream, Expression const& expr) {
+    print_tail(indent, stream, expr.value_);
+}
 
 } }
 #endif
