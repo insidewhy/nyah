@@ -1,15 +1,15 @@
-nyah.nyah grammar: vector[
+nyah.nyah grammar: [
     variant: Rule: tuple<
         RuleName: "Spacing"
-        OrderedChoice: vector[ Sequence: vector[ Joined: vector[ variant: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
             variant: empty
-            variant: OrderedChoice: vector[
-                Sequence: vector[ Joined: vector[ variant: tuple<
+            variant: OrderedChoice: [
+                Sequence: [ Joined: [ variant: tuple<
                     variant: empty
                     variant: "\s"
                     variant: empty
                 > ] ]
-                Sequence: vector[ Joined: vector[
+                Sequence: [ Joined: [
                     variant: tuple<
                         variant: empty
                         variant: "#"
@@ -17,7 +17,7 @@ nyah.nyah grammar: vector[
                     >
                     variant: tuple<
                         variant: empty
-                        variant: OrderedChoice: vector[ Sequence: vector[ Joined: vector[ variant: tuple<
+                        variant: OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
                             variant: '!'
                             variant: "\n"
                             variant: empty
@@ -36,7 +36,7 @@ nyah.nyah grammar: vector[
     >
     variant: Rule: tuple<
         RuleName: "AnyCharacter"
-        OrderedChoice: vector[ Sequence: vector[ Joined: vector[ variant: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
             variant: empty
             variant: "."
             variant: empty
@@ -44,8 +44,8 @@ nyah.nyah grammar: vector[
     >
     variant: Rule: tuple<
         RuleName: "CharacterRange"
-        OrderedChoice: vector[ Sequence: vector[
-            Joined: vector[
+        OrderedChoice: [ Sequence: [
+            Joined: [
                 variant: tuple<
                     variant: empty
                     variant: "["
@@ -53,16 +53,16 @@ nyah.nyah grammar: vector[
                 >
                 variant: tuple<
                     variant: empty
-                    variant: OrderedChoice: vector[
-                        Sequence: vector[ Joined: vector[
+                    variant: OrderedChoice: [
+                        Sequence: [ Joined: [
                             variant: tuple<
                                 variant: empty
-                                variant: vector[ variant: "\\" ]
+                                variant: [ variant: "\\" ]
                                 variant: empty
                             >
                             variant: tuple<
                                 variant: empty
-                                variant: vector[
+                                variant: [
                                     variant: "\\"
                                     variant: "\]"
                                     variant: 's'
@@ -77,9 +77,9 @@ nyah.nyah grammar: vector[
                                 variant: empty
                             >
                         ] ]
-                        Sequence: vector[ Joined: vector[ variant: tuple<
+                        Sequence: [ Joined: [ variant: tuple<
                             variant: empty
-                            variant: OrderedChoice: vector[ Sequence: vector[ Joined: vector[
+                            variant: OrderedChoice: [ Sequence: [ Joined: [
                                 variant: tuple<
                                     variant: empty
                                     variant: '.'
@@ -98,7 +98,7 @@ nyah.nyah grammar: vector[
                             ] ] ]
                             variant: empty
                         > ] ]
-                        Sequence: vector[ Joined: vector[ variant: tuple<
+                        Sequence: [ Joined: [ variant: tuple<
                             variant: empty
                             variant: '.'
                             variant: empty
@@ -107,7 +107,7 @@ nyah.nyah grammar: vector[
                     variant: '*'
                 >
             ]
-            Joined: vector[ variant: tuple<
+            Joined: [ variant: tuple<
                 variant: empty
                 variant: "]"
                 variant: empty
@@ -116,15 +116,15 @@ nyah.nyah grammar: vector[
     >
     variant: Rule: tuple<
         RuleName: "Escape"
-        OrderedChoice: vector[ Sequence: vector[ Joined: vector[
+        OrderedChoice: [ Sequence: [ Joined: [
             variant: tuple<
                 variant: empty
-                variant: vector[ variant: "\\" ]
+                variant: [ variant: "\\" ]
                 variant: empty
             >
             variant: tuple<
                 variant: empty
-                variant: vector[
+                variant: [
                     variant: 's'
                     variant: 'S'
                     variant: 'n'
@@ -148,8 +148,8 @@ nyah.nyah grammar: vector[
     >
     variant: Rule: tuple<
         RuleName: "String"
-        OrderedChoice: vector[
-            Sequence: vector[ Joined: vector[
+        OrderedChoice: [
+            Sequence: [ Joined: [
                 variant: tuple<
                     variant: empty
                     variant: "\""
@@ -157,13 +157,13 @@ nyah.nyah grammar: vector[
                 >
                 variant: tuple<
                     variant: empty
-                    variant: OrderedChoice: vector[
-                        Sequence: vector[ Joined: vector[ variant: tuple<
+                    variant: OrderedChoice: [
+                        Sequence: [ Joined: [ variant: tuple<
                             variant: empty
                             variant: RuleName: "Escape"
                             variant: empty
                         > ] ]
-                        Sequence: vector[ Joined: vector[ variant: tuple<
+                        Sequence: [ Joined: [ variant: tuple<
                             variant: '!'
                             variant: "\""
                             variant: empty
@@ -177,7 +177,7 @@ nyah.nyah grammar: vector[
                     variant: empty
                 >
             ] ]
-            Sequence: vector[ Joined: vector[
+            Sequence: [ Joined: [
                 variant: tuple<
                     variant: empty
                     variant: "'"
@@ -185,13 +185,13 @@ nyah.nyah grammar: vector[
                 >
                 variant: tuple<
                     variant: empty
-                    variant: OrderedChoice: vector[
-                        Sequence: vector[ Joined: vector[ variant: tuple<
+                    variant: OrderedChoice: [
+                        Sequence: [ Joined: [ variant: tuple<
                             variant: empty
                             variant: RuleName: "Escape"
                             variant: empty
                         > ] ]
-                        Sequence: vector[ Joined: vector[ variant: tuple<
+                        Sequence: [ Joined: [ variant: tuple<
                             variant: '!'
                             variant: "'"
                             variant: empty
@@ -209,10 +209,10 @@ nyah.nyah grammar: vector[
     >
     variant: NodeRule: tuple<
         RuleName: "RuleName"
-        OrderedChoice: vector[ Sequence: vector[ Joined: vector[
+        OrderedChoice: [ Sequence: [ Joined: [
             variant: tuple<
                 variant: empty
-                variant: vector[ variant: tuple<
+                variant: [ variant: tuple<
                     'A'
                     'Z'
                 > ]
@@ -220,7 +220,7 @@ nyah.nyah grammar: vector[
             >
             variant: tuple<
                 variant: empty
-                variant: vector[
+                variant: [
                     variant: tuple<
                         'a'
                         'z'
@@ -241,57 +241,57 @@ nyah.nyah grammar: vector[
     >
     variant: Rule: tuple<
         RuleName: "Primary"
-        OrderedChoice: vector[
-            Sequence: vector[
-                Joined: vector[ variant: tuple<
+        OrderedChoice: [
+            Sequence: [
+                Joined: [ variant: tuple<
                     variant: empty
                     variant: RuleName: "RuleName"
                     variant: empty
                 > ]
-                Joined: vector[ variant: tuple<
+                Joined: [ variant: tuple<
                     variant: '!'
                     variant: "<"
                     variant: empty
                 > ]
             ]
-            Sequence: vector[
-                Joined: vector[ variant: tuple<
+            Sequence: [
+                Joined: [ variant: tuple<
                     variant: empty
                     variant: "("
                     variant: empty
                 > ]
-                Joined: vector[ variant: tuple<
+                Joined: [ variant: tuple<
                     variant: empty
                     variant: RuleName: "Expression"
                     variant: empty
                 > ]
-                Joined: vector[ variant: tuple<
+                Joined: [ variant: tuple<
                     variant: empty
                     variant: ")"
                     variant: empty
                 > ]
             ]
-            Sequence: vector[ Joined: vector[ variant: tuple<
+            Sequence: [ Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "AnyCharacter"
                 variant: empty
             > ] ]
-            Sequence: vector[ Joined: vector[ variant: tuple<
+            Sequence: [ Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "String"
                 variant: empty
             > ] ]
-            Sequence: vector[ Joined: vector[ variant: tuple<
+            Sequence: [ Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "Escape"
                 variant: empty
             > ] ]
-            Sequence: vector[ Joined: vector[ variant: tuple<
+            Sequence: [ Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "RuleName"
                 variant: empty
             > ] ]
-            Sequence: vector[ Joined: vector[ variant: tuple<
+            Sequence: [ Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "CharacterRange"
                 variant: empty
@@ -300,35 +300,35 @@ nyah.nyah grammar: vector[
     >
     variant: Rule: tuple<
         RuleName: "Suffix"
-        OrderedChoice: vector[ Sequence: vector[
-            Joined: vector[ variant: tuple<
+        OrderedChoice: [ Sequence: [
+            Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "Primary"
                 variant: empty
             > ]
-            Joined: vector[ variant: tuple<
+            Joined: [ variant: tuple<
                 variant: empty
-                variant: OrderedChoice: vector[
-                    Sequence: vector[ Joined: vector[ variant: tuple<
+                variant: OrderedChoice: [
+                    Sequence: [ Joined: [ variant: tuple<
                         variant: empty
                         variant: "^+"
                         variant: empty
                     > ] ]
-                    Sequence: vector[ Joined: vector[ variant: tuple<
+                    Sequence: [ Joined: [ variant: tuple<
                         variant: empty
                         variant: "^*"
                         variant: empty
                     > ] ]
-                    Sequence: vector[ Joined: vector[ variant: tuple<
+                    Sequence: [ Joined: [ variant: tuple<
                         variant: empty
-                        variant: vector[
+                        variant: [
                             variant: '?'
                             variant: '*'
                             variant: '+'
                         ]
                         variant: empty
                     > ] ]
-                    Sequence: vector[ Joined: vector[ variant: tuple<
+                    Sequence: [ Joined: [ variant: tuple<
                         variant: empty
                         variant: "|+"
                         variant: empty
@@ -340,18 +340,18 @@ nyah.nyah grammar: vector[
     >
     variant: Rule: tuple<
         RuleName: "Prefix"
-        OrderedChoice: vector[ Sequence: vector[
-            Joined: vector[ variant: tuple<
+        OrderedChoice: [ Sequence: [
+            Joined: [ variant: tuple<
                 variant: empty
-                variant: OrderedChoice: vector[
-                    Sequence: vector[ Joined: vector[ variant: tuple<
+                variant: OrderedChoice: [
+                    Sequence: [ Joined: [ variant: tuple<
                         variant: empty
                         variant: "&!"
                         variant: empty
                     > ] ]
-                    Sequence: vector[ Joined: vector[ variant: tuple<
+                    Sequence: [ Joined: [ variant: tuple<
                         variant: empty
-                        variant: vector[
+                        variant: [
                             variant: '&'
                             variant: '!'
                         ]
@@ -360,7 +360,7 @@ nyah.nyah grammar: vector[
                 ]
                 variant: '?'
             > ]
-            Joined: vector[ variant: tuple<
+            Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "Suffix"
                 variant: empty
@@ -369,31 +369,31 @@ nyah.nyah grammar: vector[
     >
     variant: NodeRule: tuple<
         RuleName: "Join"
-        OrderedChoice: vector[ Sequence: vector[
-            Joined: vector[ variant: tuple<
+        OrderedChoice: [ Sequence: [
+            Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "Prefix"
                 variant: empty
             > ]
-            Joined: vector[ variant: tuple<
+            Joined: [ variant: tuple<
                 variant: empty
-                variant: OrderedChoice: vector[
-                    Sequence: vector[ Joined: vector[ variant: tuple<
+                variant: OrderedChoice: [
+                    Sequence: [ Joined: [ variant: tuple<
                         variant: empty
                         variant: "^%"
                         variant: empty
                     > ] ]
-                    Sequence: vector[ Joined: vector[ variant: tuple<
+                    Sequence: [ Joined: [ variant: tuple<
                         variant: empty
                         variant: "%+"
                         variant: empty
                     > ] ]
-                    Sequence: vector[ Joined: vector[ variant: tuple<
+                    Sequence: [ Joined: [ variant: tuple<
                         variant: empty
                         variant: "%"
                         variant: empty
                     > ] ]
-                    Sequence: vector[ Joined: vector[ variant: tuple<
+                    Sequence: [ Joined: [ variant: tuple<
                         variant: empty
                         variant: "|%"
                         variant: empty
@@ -401,7 +401,7 @@ nyah.nyah grammar: vector[
                 ]
                 variant: empty
             > ]
-            Joined: vector[ variant: tuple<
+            Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "Prefix"
                 variant: empty
@@ -410,15 +410,15 @@ nyah.nyah grammar: vector[
     >
     variant: NodeRule: tuple<
         RuleName: "Joined"
-        OrderedChoice: vector[ Sequence: vector[ Joined: vector[ variant: Join: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: Join: tuple<
             variant: empty
-            variant: OrderedChoice: vector[
-                Sequence: vector[ Joined: vector[ variant: tuple<
+            variant: OrderedChoice: [
+                Sequence: [ Joined: [ variant: tuple<
                     variant: empty
                     variant: RuleName: "Join"
                     variant: empty
                 > ] ]
-                Sequence: vector[ Joined: vector[ variant: tuple<
+                Sequence: [ Joined: [ variant: tuple<
                     variant: empty
                     variant: RuleName: "Prefix"
                     variant: empty
@@ -433,7 +433,7 @@ nyah.nyah grammar: vector[
     >
     variant: NodeRule: tuple<
         RuleName: "Sequence"
-        OrderedChoice: vector[ Sequence: vector[ Joined: vector[ variant: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
             variant: empty
             variant: RuleName: "Joined"
             variant: "|+"
@@ -441,7 +441,7 @@ nyah.nyah grammar: vector[
     >
     variant: NodeRule: tuple<
         RuleName: "OrderedChoice"
-        OrderedChoice: vector[ Sequence: vector[ Joined: vector[ variant: Join: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: Join: tuple<
             variant: empty
             variant: RuleName: "Sequence"
             variant: empty
@@ -453,7 +453,7 @@ nyah.nyah grammar: vector[
     >
     variant: NodeRule: tuple<
         RuleName: "Expression"
-        OrderedChoice: vector[ Sequence: vector[ Joined: vector[ variant: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
             variant: empty
             variant: RuleName: "OrderedChoice"
             variant: empty
@@ -461,18 +461,18 @@ nyah.nyah grammar: vector[
     >
     variant: NodeRule: tuple<
         RuleName: "Rule"
-        OrderedChoice: vector[ Sequence: vector[
-            Joined: vector[ variant: tuple<
+        OrderedChoice: [ Sequence: [
+            Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "RuleName"
                 variant: empty
             > ]
-            Joined: vector[ variant: tuple<
+            Joined: [ variant: tuple<
                 variant: empty
                 variant: "<-"
                 variant: empty
             > ]
-            Joined: vector[ variant: tuple<
+            Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "Expression"
                 variant: empty
@@ -481,18 +481,18 @@ nyah.nyah grammar: vector[
     >
     variant: NodeRule: tuple<
         RuleName: "NodeRule"
-        OrderedChoice: vector[ Sequence: vector[
-            Joined: vector[ variant: tuple<
+        OrderedChoice: [ Sequence: [
+            Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "RuleName"
                 variant: empty
             > ]
-            Joined: vector[ variant: tuple<
+            Joined: [ variant: tuple<
                 variant: empty
                 variant: "<="
                 variant: empty
             > ]
-            Joined: vector[ variant: tuple<
+            Joined: [ variant: tuple<
                 variant: empty
                 variant: RuleName: "Expression"
                 variant: empty
@@ -501,15 +501,15 @@ nyah.nyah grammar: vector[
     >
     variant: Rule: tuple<
         RuleName: "Grammar"
-        OrderedChoice: vector[ Sequence: vector[ Joined: vector[ variant: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
             variant: empty
-            variant: OrderedChoice: vector[
-                Sequence: vector[ Joined: vector[ variant: tuple<
+            variant: OrderedChoice: [
+                Sequence: [ Joined: [ variant: tuple<
                     variant: empty
                     variant: RuleName: "Rule"
                     variant: empty
                 > ] ]
-                Sequence: vector[ Joined: vector[ variant: tuple<
+                Sequence: [ Joined: [ variant: tuple<
                     variant: empty
                     variant: RuleName: "NodeRule"
                     variant: empty
