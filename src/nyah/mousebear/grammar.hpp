@@ -93,7 +93,7 @@ struct Joined : simple_node<Joined, joined_plus<char_<'^'>, choice<Join, Affix> 
 
 struct Sequence : simple_node<Sequence, many_plus<Joined> > {};
 
-struct OrderedChoice : simple_node<OrderedChoice, joined_plus<char_<'/'>, Sequence> > {};
+struct OrderedChoice : simple_node<OrderedChoice, tree_joined<char_<'/'>, Sequence> > {};
 
 struct Expression : simple_node<Expression, OrderedChoice> {};
 
