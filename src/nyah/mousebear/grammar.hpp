@@ -64,7 +64,7 @@ struct Expression;
 
 typedef choice<
     String, CharacterRange, Escape, AnyCharacter,
-    sequence< node<RuleName>, not_< char_<'<'> > >,
+    sequence< RuleName, not_< char_<'<'> > >,
     sequence< char_<'('>, node<Expression>, char_<')'> >
 > Primary;
 
@@ -98,12 +98,12 @@ struct OrderedChoice : simple_node<OrderedChoice, joined_plus<char_<'/'>, Sequen
 struct Expression : simple_node<Expression, OrderedChoice> {};
 
 struct Rule : simple_node<Rule,
-    sequence<node<RuleName>, char_<'<', '-'>, node<Expression>>> {};
+    sequence<RuleName, char_<'<', '-'>, Expression >> {};
 
 struct NodeRule : simple_node<NodeRule,
-    sequence<node<RuleName>, char_<'<', '='>, node<Expression>> > {};
+    sequence<RuleName, char_<'<', '='>, Expression> > {};
 
-typedef many< choice< node<Rule>, node<NodeRule> > > Grammar;
+typedef many< choice<Rule, NodeRule> > Grammar;
 
 template <class O>
 void print_tail(int const indent, O& stream, Expression const& expr) {
