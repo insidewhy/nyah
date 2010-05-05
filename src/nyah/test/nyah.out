@@ -1,66 +1,66 @@
 nyah.nyah grammar: [
-    variant: Rule: tuple<
+    variant: Rule: (
         RuleName: "Spacing"
-        OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: (
             variant: empty
             variant: OrderedChoice: [
-                Sequence: [ Joined: [ variant: tuple<
+                Sequence: [ Joined: [ variant: (
                     variant: empty
                     variant: "\s"
                     variant: empty
-                > ] ]
+                ) ] ]
                 Sequence: [ Joined: [
-                    variant: tuple<
+                    variant: (
                         variant: empty
                         variant: "#"
                         variant: empty
-                    >
-                    variant: tuple<
+                    )
+                    variant: (
                         variant: empty
-                        variant: OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
+                        variant: OrderedChoice: [ Sequence: [ Joined: [ variant: (
                             variant: '!'
                             variant: "\n"
                             variant: empty
-                        > ] ] ]
+                        ) ] ] ]
                         variant: '*'
-                    >
-                    variant: tuple<
+                    )
+                    variant: (
                         variant: empty
                         variant: "\n"
                         variant: empty
-                    >
+                    )
                 ] ]
             ]
             variant: '+'
-        > ] ] ]
-    >
-    variant: Rule: tuple<
+        ) ] ] ]
+    )
+    variant: Rule: (
         RuleName: "AnyCharacter"
-        OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: (
             variant: empty
             variant: "."
             variant: empty
-        > ] ] ]
-    >
-    variant: Rule: tuple<
+        ) ] ] ]
+    )
+    variant: Rule: (
         RuleName: "CharacterRange"
         OrderedChoice: [ Sequence: [
             Joined: [
-                variant: tuple<
+                variant: (
                     variant: empty
                     variant: "["
                     variant: empty
-                >
-                variant: tuple<
+                )
+                variant: (
                     variant: empty
                     variant: OrderedChoice: [
                         Sequence: [ Joined: [
-                            variant: tuple<
+                            variant: (
                                 variant: empty
                                 variant: [ variant: "\\" ]
                                 variant: empty
-                            >
-                            variant: tuple<
+                            )
+                            variant: (
                                 variant: empty
                                 variant: [
                                     variant: "\\"
@@ -75,54 +75,54 @@ nyah.nyah grammar: [
                                     variant: 'W'
                                 ]
                                 variant: empty
-                            >
+                            )
                         ] ]
-                        Sequence: [ Joined: [ variant: tuple<
+                        Sequence: [ Joined: [ variant: (
                             variant: empty
                             variant: OrderedChoice: [ Sequence: [ Joined: [
-                                variant: tuple<
+                                variant: (
                                     variant: empty
                                     variant: '.'
                                     variant: empty
-                                >
-                                variant: tuple<
+                                )
+                                variant: (
                                     variant: empty
                                     variant: "-"
                                     variant: empty
-                                >
-                                variant: tuple<
+                                )
+                                variant: (
                                     variant: empty
                                     variant: '.'
                                     variant: empty
-                                >
+                                )
                             ] ] ]
                             variant: empty
-                        > ] ]
-                        Sequence: [ Joined: [ variant: tuple<
+                        ) ] ]
+                        Sequence: [ Joined: [ variant: (
                             variant: empty
                             variant: '.'
                             variant: empty
-                        > ] ]
+                        ) ] ]
                     ]
                     variant: '*'
-                >
+                )
             ]
-            Joined: [ variant: tuple<
+            Joined: [ variant: (
                 variant: empty
                 variant: "]"
                 variant: empty
-            > ]
+            ) ]
         ] ]
-    >
-    variant: Rule: tuple<
+    )
+    variant: Rule: (
         RuleName: "Escape"
         OrderedChoice: [ Sequence: [ Joined: [
-            variant: tuple<
+            variant: (
                 variant: empty
                 variant: [ variant: "\\" ]
                 variant: empty
-            >
-            variant: tuple<
+            )
+            variant: (
                 variant: empty
                 variant: [
                     variant: 's'
@@ -143,183 +143,183 @@ nyah.nyah grammar: [
                     variant: "\\"
                 ]
                 variant: empty
-            >
+            )
         ] ] ]
-    >
-    variant: Rule: tuple<
+    )
+    variant: Rule: (
         RuleName: "String"
         OrderedChoice: [
             Sequence: [ Joined: [
-                variant: tuple<
+                variant: (
                     variant: empty
                     variant: "\""
                     variant: empty
-                >
-                variant: tuple<
+                )
+                variant: (
                     variant: empty
                     variant: OrderedChoice: [
-                        Sequence: [ Joined: [ variant: tuple<
+                        Sequence: [ Joined: [ variant: (
                             variant: empty
                             variant: RuleName: "Escape"
                             variant: empty
-                        > ] ]
-                        Sequence: [ Joined: [ variant: tuple<
+                        ) ] ]
+                        Sequence: [ Joined: [ variant: (
                             variant: '!'
                             variant: "\""
                             variant: empty
-                        > ] ]
+                        ) ] ]
                     ]
                     variant: "^*"
-                >
-                variant: tuple<
+                )
+                variant: (
                     variant: empty
                     variant: "\""
                     variant: empty
-                >
+                )
             ] ]
             Sequence: [ Joined: [
-                variant: tuple<
+                variant: (
                     variant: empty
                     variant: "'"
                     variant: empty
-                >
-                variant: tuple<
+                )
+                variant: (
                     variant: empty
                     variant: OrderedChoice: [
-                        Sequence: [ Joined: [ variant: tuple<
+                        Sequence: [ Joined: [ variant: (
                             variant: empty
                             variant: RuleName: "Escape"
                             variant: empty
-                        > ] ]
-                        Sequence: [ Joined: [ variant: tuple<
+                        ) ] ]
+                        Sequence: [ Joined: [ variant: (
                             variant: '!'
                             variant: "'"
                             variant: empty
-                        > ] ]
+                        ) ] ]
                     ]
                     variant: "^*"
-                >
-                variant: tuple<
+                )
+                variant: (
                     variant: empty
                     variant: "'"
                     variant: empty
-                >
+                )
             ] ]
         ]
-    >
-    variant: NodeRule: tuple<
+    )
+    variant: NodeRule: (
         RuleName: "RuleName"
         OrderedChoice: [ Sequence: [ Joined: [
-            variant: tuple<
+            variant: (
                 variant: empty
-                variant: [ variant: tuple<
+                variant: [ variant: (
                     'A'
                     'Z'
-                > ]
+                ) ]
                 variant: empty
-            >
-            variant: tuple<
+            )
+            variant: (
                 variant: empty
                 variant: [
-                    variant: tuple<
+                    variant: (
                         'a'
                         'z'
-                    >
-                    variant: tuple<
+                    )
+                    variant: (
                         'A'
                         'Z'
-                    >
-                    variant: tuple<
+                    )
+                    variant: (
                         '0'
                         '9'
-                    >
+                    )
                     variant: '_'
                 ]
                 variant: '+'
-            >
+            )
         ] ] ]
-    >
-    variant: Rule: tuple<
+    )
+    variant: Rule: (
         RuleName: "Primary"
         OrderedChoice: [
             Sequence: [
-                Joined: [ variant: tuple<
+                Joined: [ variant: (
                     variant: empty
                     variant: RuleName: "RuleName"
                     variant: empty
-                > ]
-                Joined: [ variant: tuple<
+                ) ]
+                Joined: [ variant: (
                     variant: '!'
                     variant: "<"
                     variant: empty
-                > ]
+                ) ]
             ]
             Sequence: [
-                Joined: [ variant: tuple<
+                Joined: [ variant: (
                     variant: empty
                     variant: "("
                     variant: empty
-                > ]
-                Joined: [ variant: tuple<
+                ) ]
+                Joined: [ variant: (
                     variant: empty
                     variant: RuleName: "Expression"
                     variant: empty
-                > ]
-                Joined: [ variant: tuple<
+                ) ]
+                Joined: [ variant: (
                     variant: empty
                     variant: ")"
                     variant: empty
-                > ]
+                ) ]
             ]
-            Sequence: [ Joined: [ variant: tuple<
+            Sequence: [ Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "AnyCharacter"
                 variant: empty
-            > ] ]
-            Sequence: [ Joined: [ variant: tuple<
+            ) ] ]
+            Sequence: [ Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "String"
                 variant: empty
-            > ] ]
-            Sequence: [ Joined: [ variant: tuple<
+            ) ] ]
+            Sequence: [ Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "Escape"
                 variant: empty
-            > ] ]
-            Sequence: [ Joined: [ variant: tuple<
+            ) ] ]
+            Sequence: [ Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "RuleName"
                 variant: empty
-            > ] ]
-            Sequence: [ Joined: [ variant: tuple<
+            ) ] ]
+            Sequence: [ Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "CharacterRange"
                 variant: empty
-            > ] ]
+            ) ] ]
         ]
-    >
-    variant: Rule: tuple<
+    )
+    variant: Rule: (
         RuleName: "Suffix"
         OrderedChoice: [ Sequence: [
-            Joined: [ variant: tuple<
+            Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "Primary"
                 variant: empty
-            > ]
-            Joined: [ variant: tuple<
+            ) ]
+            Joined: [ variant: (
                 variant: empty
                 variant: OrderedChoice: [
-                    Sequence: [ Joined: [ variant: tuple<
+                    Sequence: [ Joined: [ variant: (
                         variant: empty
                         variant: "^+"
                         variant: empty
-                    > ] ]
-                    Sequence: [ Joined: [ variant: tuple<
+                    ) ] ]
+                    Sequence: [ Joined: [ variant: (
                         variant: empty
                         variant: "^*"
                         variant: empty
-                    > ] ]
-                    Sequence: [ Joined: [ variant: tuple<
+                    ) ] ]
+                    Sequence: [ Joined: [ variant: (
                         variant: empty
                         variant: [
                             variant: '?'
@@ -327,121 +327,121 @@ nyah.nyah grammar: [
                             variant: '+'
                         ]
                         variant: empty
-                    > ] ]
-                    Sequence: [ Joined: [ variant: tuple<
+                    ) ] ]
+                    Sequence: [ Joined: [ variant: (
                         variant: empty
                         variant: "|+"
                         variant: empty
-                    > ] ]
+                    ) ] ]
                 ]
                 variant: empty
-            > ]
+            ) ]
         ] ]
-    >
-    variant: Rule: tuple<
+    )
+    variant: Rule: (
         RuleName: "Prefix"
         OrderedChoice: [ Sequence: [
-            Joined: [ variant: tuple<
+            Joined: [ variant: (
                 variant: empty
                 variant: OrderedChoice: [
-                    Sequence: [ Joined: [ variant: tuple<
+                    Sequence: [ Joined: [ variant: (
                         variant: empty
                         variant: "&!"
                         variant: empty
-                    > ] ]
-                    Sequence: [ Joined: [ variant: tuple<
+                    ) ] ]
+                    Sequence: [ Joined: [ variant: (
                         variant: empty
                         variant: [
                             variant: '&'
                             variant: '!'
                         ]
                         variant: empty
-                    > ] ]
+                    ) ] ]
                 ]
                 variant: '?'
-            > ]
-            Joined: [ variant: tuple<
+            ) ]
+            Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "Suffix"
                 variant: empty
-            > ]
+            ) ]
         ] ]
-    >
-    variant: NodeRule: tuple<
+    )
+    variant: NodeRule: (
         RuleName: "Join"
         OrderedChoice: [ Sequence: [
-            Joined: [ variant: tuple<
+            Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "Prefix"
                 variant: empty
-            > ]
-            Joined: [ variant: tuple<
+            ) ]
+            Joined: [ variant: (
                 variant: empty
                 variant: OrderedChoice: [
-                    Sequence: [ Joined: [ variant: tuple<
+                    Sequence: [ Joined: [ variant: (
                         variant: empty
                         variant: "^%"
                         variant: empty
-                    > ] ]
-                    Sequence: [ Joined: [ variant: tuple<
+                    ) ] ]
+                    Sequence: [ Joined: [ variant: (
                         variant: empty
                         variant: "%+"
                         variant: empty
-                    > ] ]
-                    Sequence: [ Joined: [ variant: tuple<
+                    ) ] ]
+                    Sequence: [ Joined: [ variant: (
                         variant: empty
                         variant: "%"
                         variant: empty
-                    > ] ]
-                    Sequence: [ Joined: [ variant: tuple<
+                    ) ] ]
+                    Sequence: [ Joined: [ variant: (
                         variant: empty
                         variant: "|%"
                         variant: empty
-                    > ] ]
+                    ) ] ]
                 ]
                 variant: empty
-            > ]
-            Joined: [ variant: tuple<
+            ) ]
+            Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "Prefix"
                 variant: empty
-            > ]
+            ) ]
         ] ]
-    >
-    variant: NodeRule: tuple<
+    )
+    variant: NodeRule: (
         RuleName: "Joined"
-        OrderedChoice: [ Sequence: [ Joined: [ variant: Join: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: Join: (
             variant: empty
             variant: OrderedChoice: [
-                Sequence: [ Joined: [ variant: tuple<
+                Sequence: [ Joined: [ variant: (
                     variant: empty
                     variant: RuleName: "Join"
                     variant: empty
-                > ] ]
-                Sequence: [ Joined: [ variant: tuple<
+                ) ] ]
+                Sequence: [ Joined: [ variant: (
                     variant: empty
                     variant: RuleName: "Prefix"
                     variant: empty
-                > ] ]
+                ) ] ]
             ]
             variant: empty
             variant: "|%"
             variant: empty
             variant: "^"
             variant: empty
-        > ] ] ]
-    >
-    variant: NodeRule: tuple<
+        ) ] ] ]
+    )
+    variant: NodeRule: (
         RuleName: "Sequence"
-        OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: (
             variant: empty
             variant: RuleName: "Joined"
             variant: "|+"
-        > ] ] ]
-    >
-    variant: NodeRule: tuple<
+        ) ] ] ]
+    )
+    variant: NodeRule: (
         RuleName: "OrderedChoice"
-        OrderedChoice: [ Sequence: [ Joined: [ variant: Join: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: Join: (
             variant: empty
             variant: RuleName: "Sequence"
             variant: empty
@@ -449,73 +449,73 @@ nyah.nyah grammar: [
             variant: empty
             variant: "/"
             variant: empty
-        > ] ] ]
-    >
-    variant: NodeRule: tuple<
+        ) ] ] ]
+    )
+    variant: NodeRule: (
         RuleName: "Expression"
-        OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: (
             variant: empty
             variant: RuleName: "OrderedChoice"
             variant: empty
-        > ] ] ]
-    >
-    variant: NodeRule: tuple<
+        ) ] ] ]
+    )
+    variant: NodeRule: (
         RuleName: "Rule"
         OrderedChoice: [ Sequence: [
-            Joined: [ variant: tuple<
+            Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "RuleName"
                 variant: empty
-            > ]
-            Joined: [ variant: tuple<
+            ) ]
+            Joined: [ variant: (
                 variant: empty
                 variant: "<-"
                 variant: empty
-            > ]
-            Joined: [ variant: tuple<
+            ) ]
+            Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "Expression"
                 variant: empty
-            > ]
+            ) ]
         ] ]
-    >
-    variant: NodeRule: tuple<
+    )
+    variant: NodeRule: (
         RuleName: "NodeRule"
         OrderedChoice: [ Sequence: [
-            Joined: [ variant: tuple<
+            Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "RuleName"
                 variant: empty
-            > ]
-            Joined: [ variant: tuple<
+            ) ]
+            Joined: [ variant: (
                 variant: empty
                 variant: "<="
                 variant: empty
-            > ]
-            Joined: [ variant: tuple<
+            ) ]
+            Joined: [ variant: (
                 variant: empty
                 variant: RuleName: "Expression"
                 variant: empty
-            > ]
+            ) ]
         ] ]
-    >
-    variant: Rule: tuple<
+    )
+    variant: Rule: (
         RuleName: "Grammar"
-        OrderedChoice: [ Sequence: [ Joined: [ variant: tuple<
+        OrderedChoice: [ Sequence: [ Joined: [ variant: (
             variant: empty
             variant: OrderedChoice: [
-                Sequence: [ Joined: [ variant: tuple<
+                Sequence: [ Joined: [ variant: (
                     variant: empty
                     variant: RuleName: "Rule"
                     variant: empty
-                > ] ]
-                Sequence: [ Joined: [ variant: tuple<
+                ) ] ]
+                Sequence: [ Joined: [ variant: (
                     variant: empty
                     variant: RuleName: "NodeRule"
                     variant: empty
-                > ] ]
+                ) ] ]
             ]
             variant: '+'
-        > ] ] ]
-    >
+        ) ] ] ]
+    )
 ]
