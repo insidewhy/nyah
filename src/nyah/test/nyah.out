@@ -21,7 +21,7 @@ nyah.nyah grammar: [
                             variant: '!'
                             variant: "\n"
                             variant: empty
-                        ) ] ] ]
+                        ) ] ]
                         variant: '*'
                     )
                     variant: (
@@ -32,7 +32,7 @@ nyah.nyah grammar: [
                 ] ]
             ]
             variant: '+'
-        ) ] ] ]
+        ) ] ]
     )
     variant: Rule: (
         RuleName: "AnyCharacter"
@@ -40,7 +40,7 @@ nyah.nyah grammar: [
             variant: empty
             variant: "."
             variant: empty
-        ) ] ] ]
+        ) ] ]
     )
     variant: Rule: (
         RuleName: "CharacterRange"
@@ -95,7 +95,7 @@ nyah.nyah grammar: [
                                     variant: '.'
                                     variant: empty
                                 )
-                            ] ] ]
+                            ] ]
                             variant: empty
                         ) ] ]
                         Sequence: [ Joined: [ variant: (
@@ -112,7 +112,7 @@ nyah.nyah grammar: [
                 variant: "]"
                 variant: empty
             ) ]
-        ] ]
+        ]
     )
     variant: Rule: (
         RuleName: "Escape"
@@ -144,7 +144,7 @@ nyah.nyah grammar: [
                 ]
                 variant: empty
             )
-        ] ] ]
+        ] ]
     )
     variant: Rule: (
         RuleName: "String"
@@ -237,7 +237,7 @@ nyah.nyah grammar: [
                 ]
                 variant: '+'
             )
-        ] ] ]
+        ] ]
     )
     variant: Rule: (
         RuleName: "Primary"
@@ -336,7 +336,7 @@ nyah.nyah grammar: [
                 ]
                 variant: empty
             ) ]
-        ] ]
+        ]
     )
     variant: Rule: (
         RuleName: "Prefix"
@@ -365,7 +365,7 @@ nyah.nyah grammar: [
                 variant: RuleName: "Suffix"
                 variant: empty
             ) ]
-        ] ]
+        ]
     )
     variant: NodeRule: (
         RuleName: "Join"
@@ -406,7 +406,7 @@ nyah.nyah grammar: [
                 variant: RuleName: "Prefix"
                 variant: empty
             ) ]
-        ] ]
+        ]
     )
     variant: NodeRule: (
         RuleName: "Joined"
@@ -429,7 +429,7 @@ nyah.nyah grammar: [
             variant: empty
             variant: "^"
             variant: empty
-        ) ] ] ]
+        ) ] ]
     )
     variant: NodeRule: (
         RuleName: "Sequence"
@@ -437,7 +437,7 @@ nyah.nyah grammar: [
             variant: empty
             variant: RuleName: "Joined"
             variant: "|+"
-        ) ] ] ]
+        ) ] ]
     )
     variant: NodeRule: (
         RuleName: "OrderedChoice"
@@ -449,7 +449,7 @@ nyah.nyah grammar: [
             variant: empty
             variant: "/"
             variant: empty
-        ) ] ] ]
+        ) ] ]
     )
     variant: NodeRule: (
         RuleName: "Expression"
@@ -457,7 +457,7 @@ nyah.nyah grammar: [
             variant: empty
             variant: RuleName: "OrderedChoice"
             variant: empty
-        ) ] ] ]
+        ) ] ]
     )
     variant: NodeRule: (
         RuleName: "Rule"
@@ -477,7 +477,7 @@ nyah.nyah grammar: [
                 variant: RuleName: "Expression"
                 variant: empty
             ) ]
-        ] ]
+        ]
     )
     variant: NodeRule: (
         RuleName: "NodeRule"
@@ -497,7 +497,7 @@ nyah.nyah grammar: [
                 variant: RuleName: "Expression"
                 variant: empty
             ) ]
-        ] ]
+        ]
     )
     variant: Rule: (
         RuleName: "Grammar"
@@ -516,6 +516,6 @@ nyah.nyah grammar: [
                 ) ] ]
             ]
             variant: '+'
-        ) ] ] ]
+        ) ] ]
     )
 ]
