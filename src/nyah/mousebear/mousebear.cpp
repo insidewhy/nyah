@@ -9,7 +9,8 @@
 // #define MOUSEBEAR_VERSION "999 (she's also known as darwinius)"
 // #define MOUSEBEAR_VERSION "998 (grind machine)"
 // #define MOUSEBEAR_VERSION "997 (420 mishap)"
-#define MOUSEBEAR_VERSION "996 (super mousebear 4)"
+// #define MOUSEBEAR_VERSION "996 (super mousebear 4)"
+#define MOUSEBEAR_VERSION "995 (ibuki mousebear)"
 
 namespace nyah { namespace mousebear {
 

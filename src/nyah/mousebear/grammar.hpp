@@ -107,7 +107,8 @@ typedef many< choice<Rule, NodeRule> > Grammar;
 
 template <class O>
 void print_tail(int const indent, O& stream, Expression const& expr) {
-    print_tail(indent, stream, expr.value_);
+    stream << "Expression: ";
+    print_variant(indent, stream, expr.value_);
 }
 
 } }
