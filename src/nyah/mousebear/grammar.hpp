@@ -15,6 +15,8 @@
 #include <chilon/parser/not.hpp>
 #include <chilon/parser/optional.hpp>
 #include <chilon/parser/simple_node.hpp>
+#include <chilon/parser/tree_joined.hpp>
+#include <chilon/parser/tree_many.hpp>
 
 namespace nyah { namespace mousebear {
 
@@ -92,7 +94,7 @@ struct Join : simple_node<Join, sequence<
 struct Joined : simple_node<Joined,
     tree_joined<char_<'^'>, choice<Join, Affix> > > {};
 
-struct Sequence : simple_node<Sequence, many_plus<Joined> > {};
+struct Sequence : simple_node<Sequence, tree_many<Joined> > {};
 
 struct OrderedChoice : simple_node<OrderedChoice,
     tree_joined<char_<'/'>, Sequence> > {};

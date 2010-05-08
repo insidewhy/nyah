@@ -1,15 +1,15 @@
 nyah.nyah grammar: [
     variant: Rule: (
         RuleName: "Spacing"
-        Expression: Sequence: [ variant: (
+        Expression: (
             variant: empty
             variant: Expression: OrderedChoice: [
-                Sequence: [ variant: (
+                variant: (
                     variant: empty
                     variant: "\s"
                     variant: empty
-                ) ]
-                Sequence: [ variant: Joined: [
+                )
+                variant: Joined: [
                     variant: (
                         variant: empty
                         variant: "#"
@@ -17,11 +17,11 @@ nyah.nyah grammar: [
                     )
                     variant: (
                         variant: empty
-                        variant: Expression: Sequence: [ variant: (
+                        variant: Expression: (
                             variant: '!'
                             variant: "\n"
                             variant: empty
-                        ) ]
+                        )
                         variant: '*'
                     )
                     variant: (
@@ -29,18 +29,18 @@ nyah.nyah grammar: [
                         variant: "\n"
                         variant: empty
                     )
-                ] ]
+                ]
             ]
             variant: '+'
-        ) ]
+        )
     )
     variant: Rule: (
         RuleName: "AnyCharacter"
-        Expression: Sequence: [ variant: (
+        Expression: (
             variant: empty
             variant: "."
             variant: empty
-        ) ]
+        )
     )
     variant: Rule: (
         RuleName: "CharacterRange"
@@ -54,7 +54,7 @@ nyah.nyah grammar: [
                 variant: (
                     variant: empty
                     variant: Expression: OrderedChoice: [
-                        Sequence: [ variant: Joined: [
+                        variant: Joined: [
                             variant: (
                                 variant: empty
                                 variant: [ variant: "\\" ]
@@ -76,10 +76,10 @@ nyah.nyah grammar: [
                                 ]
                                 variant: empty
                             )
-                        ] ]
-                        Sequence: [ variant: (
+                        ]
+                        variant: (
                             variant: empty
-                            variant: Expression: Sequence: [ variant: Joined: [
+                            variant: Expression: Joined: [
                                 variant: (
                                     variant: empty
                                     variant: '.'
@@ -95,14 +95,14 @@ nyah.nyah grammar: [
                                     variant: '.'
                                     variant: empty
                                 )
-                            ] ]
+                            ]
                             variant: empty
-                        ) ]
-                        Sequence: [ variant: (
+                        )
+                        variant: (
                             variant: empty
                             variant: '.'
                             variant: empty
-                        ) ]
+                        )
                     ]
                     variant: '*'
                 )
@@ -116,7 +116,7 @@ nyah.nyah grammar: [
     )
     variant: Rule: (
         RuleName: "Escape"
-        Expression: Sequence: [ variant: Joined: [
+        Expression: Joined: [
             variant: (
                 variant: empty
                 variant: [ variant: "\\" ]
@@ -144,12 +144,12 @@ nyah.nyah grammar: [
                 ]
                 variant: empty
             )
-        ] ]
+        ]
     )
     variant: Rule: (
         RuleName: "String"
         Expression: OrderedChoice: [
-            Sequence: [ variant: Joined: [
+            variant: Joined: [
                 variant: (
                     variant: empty
                     variant: "\""
@@ -158,16 +158,16 @@ nyah.nyah grammar: [
                 variant: (
                     variant: empty
                     variant: Expression: OrderedChoice: [
-                        Sequence: [ variant: (
+                        variant: (
                             variant: empty
                             variant: RuleName: "Escape"
                             variant: empty
-                        ) ]
-                        Sequence: [ variant: (
+                        )
+                        variant: (
                             variant: '!'
                             variant: "\""
                             variant: empty
-                        ) ]
+                        )
                     ]
                     variant: "^*"
                 )
@@ -176,8 +176,8 @@ nyah.nyah grammar: [
                     variant: "\""
                     variant: empty
                 )
-            ] ]
-            Sequence: [ variant: Joined: [
+            ]
+            variant: Joined: [
                 variant: (
                     variant: empty
                     variant: "'"
@@ -186,16 +186,16 @@ nyah.nyah grammar: [
                 variant: (
                     variant: empty
                     variant: Expression: OrderedChoice: [
-                        Sequence: [ variant: (
+                        variant: (
                             variant: empty
                             variant: RuleName: "Escape"
                             variant: empty
-                        ) ]
-                        Sequence: [ variant: (
+                        )
+                        variant: (
                             variant: '!'
                             variant: "'"
                             variant: empty
-                        ) ]
+                        )
                     ]
                     variant: "^*"
                 )
@@ -204,12 +204,12 @@ nyah.nyah grammar: [
                     variant: "'"
                     variant: empty
                 )
-            ] ]
+            ]
         ]
     )
     variant: NodeRule: (
         RuleName: "RuleName"
-        Expression: Sequence: [ variant: Joined: [
+        Expression: Joined: [
             variant: (
                 variant: empty
                 variant: [ variant: (
@@ -237,12 +237,12 @@ nyah.nyah grammar: [
                 ]
                 variant: '+'
             )
-        ] ]
+        ]
     )
     variant: Rule: (
         RuleName: "Primary"
         Expression: OrderedChoice: [
-            Sequence: [
+            variant: Sequence: [
                 variant: (
                     variant: empty
                     variant: RuleName: "RuleName"
@@ -254,7 +254,7 @@ nyah.nyah grammar: [
                     variant: empty
                 )
             ]
-            Sequence: [
+            variant: Sequence: [
                 variant: (
                     variant: empty
                     variant: "("
@@ -271,31 +271,31 @@ nyah.nyah grammar: [
                     variant: empty
                 )
             ]
-            Sequence: [ variant: (
+            variant: (
                 variant: empty
                 variant: RuleName: "AnyCharacter"
                 variant: empty
-            ) ]
-            Sequence: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: RuleName: "String"
                 variant: empty
-            ) ]
-            Sequence: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: RuleName: "Escape"
                 variant: empty
-            ) ]
-            Sequence: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: RuleName: "RuleName"
                 variant: empty
-            ) ]
-            Sequence: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: RuleName: "CharacterRange"
                 variant: empty
-            ) ]
+            )
         ]
     )
     variant: Rule: (
@@ -309,17 +309,17 @@ nyah.nyah grammar: [
             variant: (
                 variant: empty
                 variant: Expression: OrderedChoice: [
-                    Sequence: [ variant: (
+                    variant: (
                         variant: empty
                         variant: "^+"
                         variant: empty
-                    ) ]
-                    Sequence: [ variant: (
+                    )
+                    variant: (
                         variant: empty
                         variant: "^*"
                         variant: empty
-                    ) ]
-                    Sequence: [ variant: (
+                    )
+                    variant: (
                         variant: empty
                         variant: [
                             variant: '?'
@@ -327,12 +327,12 @@ nyah.nyah grammar: [
                             variant: '+'
                         ]
                         variant: empty
-                    ) ]
-                    Sequence: [ variant: (
+                    )
+                    variant: (
                         variant: empty
                         variant: "|+"
                         variant: empty
-                    ) ]
+                    )
                 ]
                 variant: empty
             )
@@ -344,19 +344,19 @@ nyah.nyah grammar: [
             variant: (
                 variant: empty
                 variant: Expression: OrderedChoice: [
-                    Sequence: [ variant: (
+                    variant: (
                         variant: empty
                         variant: "&!"
                         variant: empty
-                    ) ]
-                    Sequence: [ variant: (
+                    )
+                    variant: (
                         variant: empty
                         variant: [
                             variant: '&'
                             variant: '!'
                         ]
                         variant: empty
-                    ) ]
+                    )
                 ]
                 variant: '?'
             )
@@ -378,26 +378,26 @@ nyah.nyah grammar: [
             variant: (
                 variant: empty
                 variant: Expression: OrderedChoice: [
-                    Sequence: [ variant: (
+                    variant: (
                         variant: empty
                         variant: "^%"
                         variant: empty
-                    ) ]
-                    Sequence: [ variant: (
+                    )
+                    variant: (
                         variant: empty
                         variant: "%+"
                         variant: empty
-                    ) ]
-                    Sequence: [ variant: (
+                    )
+                    variant: (
                         variant: empty
                         variant: "%"
                         variant: empty
-                    ) ]
-                    Sequence: [ variant: (
+                    )
+                    variant: (
                         variant: empty
                         variant: "|%"
                         variant: empty
-                    ) ]
+                    )
                 ]
                 variant: empty
             )
@@ -410,38 +410,38 @@ nyah.nyah grammar: [
     )
     variant: NodeRule: (
         RuleName: "Joined"
-        Expression: Sequence: [ variant: Join: (
+        Expression: Join: (
             variant: empty
             variant: Expression: OrderedChoice: [
-                Sequence: [ variant: (
+                variant: (
                     variant: empty
                     variant: RuleName: "Join"
                     variant: empty
-                ) ]
-                Sequence: [ variant: (
+                )
+                variant: (
                     variant: empty
                     variant: RuleName: "Prefix"
                     variant: empty
-                ) ]
+                )
             ]
             variant: empty
             variant: "|%"
             variant: empty
             variant: "^"
             variant: empty
-        ) ]
+        )
     )
     variant: NodeRule: (
         RuleName: "Sequence"
-        Expression: Sequence: [ variant: (
+        Expression: (
             variant: empty
             variant: RuleName: "Joined"
             variant: "|+"
-        ) ]
+        )
     )
     variant: NodeRule: (
         RuleName: "OrderedChoice"
-        Expression: Sequence: [ variant: Join: (
+        Expression: Join: (
             variant: empty
             variant: RuleName: "Sequence"
             variant: empty
@@ -449,15 +449,15 @@ nyah.nyah grammar: [
             variant: empty
             variant: "/"
             variant: empty
-        ) ]
+        )
     )
     variant: NodeRule: (
         RuleName: "Expression"
-        Expression: Sequence: [ variant: (
+        Expression: (
             variant: empty
             variant: RuleName: "OrderedChoice"
             variant: empty
-        ) ]
+        )
     )
     variant: NodeRule: (
         RuleName: "Rule"
@@ -501,21 +501,21 @@ nyah.nyah grammar: [
     )
     variant: Rule: (
         RuleName: "Grammar"
-        Expression: Sequence: [ variant: (
+        Expression: (
             variant: empty
             variant: Expression: OrderedChoice: [
-                Sequence: [ variant: (
+                variant: (
                     variant: empty
                     variant: RuleName: "Rule"
                     variant: empty
-                ) ]
-                Sequence: [ variant: (
+                )
+                variant: (
                     variant: empty
                     variant: RuleName: "NodeRule"
                     variant: empty
-                ) ]
+                )
             ]
             variant: '+'
-        ) ]
+        )
     )
 ]
