@@ -89,11 +89,13 @@ struct Join : simple_node<Join, sequence<
         char_<'|', '%'> >,
     Affix> > {};
 
-struct Joined : simple_node<Joined, joined_plus<char_<'^'>, choice<Join, Affix> > > {};
+struct Joined : simple_node<Joined,
+    tree_joined<char_<'^'>, choice<Join, Affix> > > {};
 
 struct Sequence : simple_node<Sequence, many_plus<Joined> > {};
 
-struct OrderedChoice : simple_node<OrderedChoice, tree_joined<char_<'/'>, Sequence> > {};
+struct OrderedChoice : simple_node<OrderedChoice,
+    tree_joined<char_<'/'>, Sequence> > {};
 
 struct Expression : simple_node<Expression, OrderedChoice> {};
 

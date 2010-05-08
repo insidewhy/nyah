@@ -1,15 +1,15 @@
 nyah.nyah grammar: [
     variant: Rule: (
         RuleName: "Spacing"
-        Expression: Sequence: [ Joined: [ variant: (
+        Expression: Sequence: [ variant: (
             variant: empty
             variant: Expression: OrderedChoice: [
-                Sequence: [ Joined: [ variant: (
+                Sequence: [ variant: (
                     variant: empty
                     variant: "\s"
                     variant: empty
-                ) ] ]
-                Sequence: [ Joined: [
+                ) ]
+                Sequence: [ variant: Joined: [
                     variant: (
                         variant: empty
                         variant: "#"
@@ -17,11 +17,11 @@ nyah.nyah grammar: [
                     )
                     variant: (
                         variant: empty
-                        variant: Expression: Sequence: [ Joined: [ variant: (
+                        variant: Expression: Sequence: [ variant: (
                             variant: '!'
                             variant: "\n"
                             variant: empty
-                        ) ] ]
+                        ) ]
                         variant: '*'
                     )
                     variant: (
@@ -32,20 +32,20 @@ nyah.nyah grammar: [
                 ] ]
             ]
             variant: '+'
-        ) ] ]
+        ) ]
     )
     variant: Rule: (
         RuleName: "AnyCharacter"
-        Expression: Sequence: [ Joined: [ variant: (
+        Expression: Sequence: [ variant: (
             variant: empty
             variant: "."
             variant: empty
-        ) ] ]
+        ) ]
     )
     variant: Rule: (
         RuleName: "CharacterRange"
         Expression: Sequence: [
-            Joined: [
+            variant: Joined: [
                 variant: (
                     variant: empty
                     variant: "["
@@ -54,7 +54,7 @@ nyah.nyah grammar: [
                 variant: (
                     variant: empty
                     variant: Expression: OrderedChoice: [
-                        Sequence: [ Joined: [
+                        Sequence: [ variant: Joined: [
                             variant: (
                                 variant: empty
                                 variant: [ variant: "\\" ]
@@ -77,9 +77,9 @@ nyah.nyah grammar: [
                                 variant: empty
                             )
                         ] ]
-                        Sequence: [ Joined: [ variant: (
+                        Sequence: [ variant: (
                             variant: empty
-                            variant: Expression: Sequence: [ Joined: [
+                            variant: Expression: Sequence: [ variant: Joined: [
                                 variant: (
                                     variant: empty
                                     variant: '.'
@@ -97,26 +97,26 @@ nyah.nyah grammar: [
                                 )
                             ] ]
                             variant: empty
-                        ) ] ]
-                        Sequence: [ Joined: [ variant: (
+                        ) ]
+                        Sequence: [ variant: (
                             variant: empty
                             variant: '.'
                             variant: empty
-                        ) ] ]
+                        ) ]
                     ]
                     variant: '*'
                 )
             ]
-            Joined: [ variant: (
+            variant: (
                 variant: empty
                 variant: "]"
                 variant: empty
-            ) ]
+            )
         ]
     )
     variant: Rule: (
         RuleName: "Escape"
-        Expression: Sequence: [ Joined: [
+        Expression: Sequence: [ variant: Joined: [
             variant: (
                 variant: empty
                 variant: [ variant: "\\" ]
@@ -149,7 +149,7 @@ nyah.nyah grammar: [
     variant: Rule: (
         RuleName: "String"
         Expression: OrderedChoice: [
-            Sequence: [ Joined: [
+            Sequence: [ variant: Joined: [
                 variant: (
                     variant: empty
                     variant: "\""
@@ -158,16 +158,16 @@ nyah.nyah grammar: [
                 variant: (
                     variant: empty
                     variant: Expression: OrderedChoice: [
-                        Sequence: [ Joined: [ variant: (
+                        Sequence: [ variant: (
                             variant: empty
                             variant: RuleName: "Escape"
                             variant: empty
-                        ) ] ]
-                        Sequence: [ Joined: [ variant: (
+                        ) ]
+                        Sequence: [ variant: (
                             variant: '!'
                             variant: "\""
                             variant: empty
-                        ) ] ]
+                        ) ]
                     ]
                     variant: "^*"
                 )
@@ -177,7 +177,7 @@ nyah.nyah grammar: [
                     variant: empty
                 )
             ] ]
-            Sequence: [ Joined: [
+            Sequence: [ variant: Joined: [
                 variant: (
                     variant: empty
                     variant: "'"
@@ -186,16 +186,16 @@ nyah.nyah grammar: [
                 variant: (
                     variant: empty
                     variant: Expression: OrderedChoice: [
-                        Sequence: [ Joined: [ variant: (
+                        Sequence: [ variant: (
                             variant: empty
                             variant: RuleName: "Escape"
                             variant: empty
-                        ) ] ]
-                        Sequence: [ Joined: [ variant: (
+                        ) ]
+                        Sequence: [ variant: (
                             variant: '!'
                             variant: "'"
                             variant: empty
-                        ) ] ]
+                        ) ]
                     ]
                     variant: "^*"
                 )
@@ -209,7 +209,7 @@ nyah.nyah grammar: [
     )
     variant: NodeRule: (
         RuleName: "RuleName"
-        Expression: Sequence: [ Joined: [
+        Expression: Sequence: [ variant: Joined: [
             variant: (
                 variant: empty
                 variant: [ variant: (
@@ -243,83 +243,83 @@ nyah.nyah grammar: [
         RuleName: "Primary"
         Expression: OrderedChoice: [
             Sequence: [
-                Joined: [ variant: (
+                variant: (
                     variant: empty
                     variant: RuleName: "RuleName"
                     variant: empty
-                ) ]
-                Joined: [ variant: (
+                )
+                variant: (
                     variant: '!'
                     variant: "<"
                     variant: empty
-                ) ]
+                )
             ]
             Sequence: [
-                Joined: [ variant: (
+                variant: (
                     variant: empty
                     variant: "("
                     variant: empty
-                ) ]
-                Joined: [ variant: (
+                )
+                variant: (
                     variant: empty
                     variant: RuleName: "Expression"
                     variant: empty
-                ) ]
-                Joined: [ variant: (
+                )
+                variant: (
                     variant: empty
                     variant: ")"
                     variant: empty
-                ) ]
+                )
             ]
-            Sequence: [ Joined: [ variant: (
+            Sequence: [ variant: (
                 variant: empty
                 variant: RuleName: "AnyCharacter"
                 variant: empty
-            ) ] ]
-            Sequence: [ Joined: [ variant: (
+            ) ]
+            Sequence: [ variant: (
                 variant: empty
                 variant: RuleName: "String"
                 variant: empty
-            ) ] ]
-            Sequence: [ Joined: [ variant: (
+            ) ]
+            Sequence: [ variant: (
                 variant: empty
                 variant: RuleName: "Escape"
                 variant: empty
-            ) ] ]
-            Sequence: [ Joined: [ variant: (
+            ) ]
+            Sequence: [ variant: (
                 variant: empty
                 variant: RuleName: "RuleName"
                 variant: empty
-            ) ] ]
-            Sequence: [ Joined: [ variant: (
+            ) ]
+            Sequence: [ variant: (
                 variant: empty
                 variant: RuleName: "CharacterRange"
                 variant: empty
-            ) ] ]
+            ) ]
         ]
     )
     variant: Rule: (
         RuleName: "Suffix"
         Expression: Sequence: [
-            Joined: [ variant: (
+            variant: (
                 variant: empty
                 variant: RuleName: "Primary"
                 variant: empty
-            ) ]
-            Joined: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: Expression: OrderedChoice: [
-                    Sequence: [ Joined: [ variant: (
+                    Sequence: [ variant: (
                         variant: empty
                         variant: "^+"
                         variant: empty
-                    ) ] ]
-                    Sequence: [ Joined: [ variant: (
+                    ) ]
+                    Sequence: [ variant: (
                         variant: empty
                         variant: "^*"
                         variant: empty
-                    ) ] ]
-                    Sequence: [ Joined: [ variant: (
+                    ) ]
+                    Sequence: [ variant: (
                         variant: empty
                         variant: [
                             variant: '?'
@@ -327,121 +327,121 @@ nyah.nyah grammar: [
                             variant: '+'
                         ]
                         variant: empty
-                    ) ] ]
-                    Sequence: [ Joined: [ variant: (
+                    ) ]
+                    Sequence: [ variant: (
                         variant: empty
                         variant: "|+"
                         variant: empty
-                    ) ] ]
+                    ) ]
                 ]
                 variant: empty
-            ) ]
+            )
         ]
     )
     variant: Rule: (
         RuleName: "Prefix"
         Expression: Sequence: [
-            Joined: [ variant: (
+            variant: (
                 variant: empty
                 variant: Expression: OrderedChoice: [
-                    Sequence: [ Joined: [ variant: (
+                    Sequence: [ variant: (
                         variant: empty
                         variant: "&!"
                         variant: empty
-                    ) ] ]
-                    Sequence: [ Joined: [ variant: (
+                    ) ]
+                    Sequence: [ variant: (
                         variant: empty
                         variant: [
                             variant: '&'
                             variant: '!'
                         ]
                         variant: empty
-                    ) ] ]
+                    ) ]
                 ]
                 variant: '?'
-            ) ]
-            Joined: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: RuleName: "Suffix"
                 variant: empty
-            ) ]
+            )
         ]
     )
     variant: NodeRule: (
         RuleName: "Join"
         Expression: Sequence: [
-            Joined: [ variant: (
+            variant: (
                 variant: empty
                 variant: RuleName: "Prefix"
                 variant: empty
-            ) ]
-            Joined: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: Expression: OrderedChoice: [
-                    Sequence: [ Joined: [ variant: (
+                    Sequence: [ variant: (
                         variant: empty
                         variant: "^%"
                         variant: empty
-                    ) ] ]
-                    Sequence: [ Joined: [ variant: (
+                    ) ]
+                    Sequence: [ variant: (
                         variant: empty
                         variant: "%+"
                         variant: empty
-                    ) ] ]
-                    Sequence: [ Joined: [ variant: (
+                    ) ]
+                    Sequence: [ variant: (
                         variant: empty
                         variant: "%"
                         variant: empty
-                    ) ] ]
-                    Sequence: [ Joined: [ variant: (
+                    ) ]
+                    Sequence: [ variant: (
                         variant: empty
                         variant: "|%"
                         variant: empty
-                    ) ] ]
+                    ) ]
                 ]
                 variant: empty
-            ) ]
-            Joined: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: RuleName: "Prefix"
                 variant: empty
-            ) ]
+            )
         ]
     )
     variant: NodeRule: (
         RuleName: "Joined"
-        Expression: Sequence: [ Joined: [ variant: Join: (
+        Expression: Sequence: [ variant: Join: (
             variant: empty
             variant: Expression: OrderedChoice: [
-                Sequence: [ Joined: [ variant: (
+                Sequence: [ variant: (
                     variant: empty
                     variant: RuleName: "Join"
                     variant: empty
-                ) ] ]
-                Sequence: [ Joined: [ variant: (
+                ) ]
+                Sequence: [ variant: (
                     variant: empty
                     variant: RuleName: "Prefix"
                     variant: empty
-                ) ] ]
+                ) ]
             ]
             variant: empty
             variant: "|%"
             variant: empty
             variant: "^"
             variant: empty
-        ) ] ]
+        ) ]
     )
     variant: NodeRule: (
         RuleName: "Sequence"
-        Expression: Sequence: [ Joined: [ variant: (
+        Expression: Sequence: [ variant: (
             variant: empty
             variant: RuleName: "Joined"
             variant: "|+"
-        ) ] ]
+        ) ]
     )
     variant: NodeRule: (
         RuleName: "OrderedChoice"
-        Expression: Sequence: [ Joined: [ variant: Join: (
+        Expression: Sequence: [ variant: Join: (
             variant: empty
             variant: RuleName: "Sequence"
             variant: empty
@@ -449,73 +449,73 @@ nyah.nyah grammar: [
             variant: empty
             variant: "/"
             variant: empty
-        ) ] ]
+        ) ]
     )
     variant: NodeRule: (
         RuleName: "Expression"
-        Expression: Sequence: [ Joined: [ variant: (
+        Expression: Sequence: [ variant: (
             variant: empty
             variant: RuleName: "OrderedChoice"
             variant: empty
-        ) ] ]
+        ) ]
     )
     variant: NodeRule: (
         RuleName: "Rule"
         Expression: Sequence: [
-            Joined: [ variant: (
+            variant: (
                 variant: empty
                 variant: RuleName: "RuleName"
                 variant: empty
-            ) ]
-            Joined: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: "<-"
                 variant: empty
-            ) ]
-            Joined: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: RuleName: "Expression"
                 variant: empty
-            ) ]
+            )
         ]
     )
     variant: NodeRule: (
         RuleName: "NodeRule"
         Expression: Sequence: [
-            Joined: [ variant: (
+            variant: (
                 variant: empty
                 variant: RuleName: "RuleName"
                 variant: empty
-            ) ]
-            Joined: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: "<="
                 variant: empty
-            ) ]
-            Joined: [ variant: (
+            )
+            variant: (
                 variant: empty
                 variant: RuleName: "Expression"
                 variant: empty
-            ) ]
+            )
         ]
     )
     variant: Rule: (
         RuleName: "Grammar"
-        Expression: Sequence: [ Joined: [ variant: (
+        Expression: Sequence: [ variant: (
             variant: empty
             variant: Expression: OrderedChoice: [
-                Sequence: [ Joined: [ variant: (
+                Sequence: [ variant: (
                     variant: empty
                     variant: RuleName: "Rule"
                     variant: empty
-                ) ] ]
-                Sequence: [ Joined: [ variant: (
+                ) ]
+                Sequence: [ variant: (
                     variant: empty
                     variant: RuleName: "NodeRule"
                     variant: empty
-                ) ] ]
+                ) ]
             ]
             variant: '+'
-        ) ] ]
+        ) ]
     )
 ]
