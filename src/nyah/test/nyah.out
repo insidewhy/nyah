@@ -1,526 +1,526 @@
 nyah.nyah grammar: [
-    variant: Rule: (
+    Rule: (
         RuleName: "Spacing"
         Expression: (
-            variant: empty
-            variant: Expression: OrderedChoice: [
-                variant: (
-                    variant: empty
-                    variant: "\s"
-                    variant: empty
+            empty
+            Expression: OrderedChoice: [
+                (
+                    empty
+                    "\s"
+                    empty
                 )
-                variant: Joined: [
-                    variant: (
-                        variant: empty
-                        variant: "#"
-                        variant: empty
+                Joined: [
+                    (
+                        empty
+                        "#"
+                        empty
                     )
-                    variant: (
-                        variant: empty
-                        variant: Expression: (
-                            variant: '!'
-                            variant: "\n"
-                            variant: empty
+                    (
+                        empty
+                        Expression: (
+                            '!'
+                            "\n"
+                            empty
                         )
-                        variant: '*'
+                        '*'
                     )
-                    variant: (
-                        variant: empty
-                        variant: "\n"
-                        variant: empty
+                    (
+                        empty
+                        "\n"
+                        empty
                     )
                 ]
             ]
-            variant: '+'
+            '+'
         )
     )
-    variant: Rule: (
+    Rule: (
         RuleName: "AnyCharacter"
         Expression: (
-            variant: empty
-            variant: "."
-            variant: empty
+            empty
+            "."
+            empty
         )
     )
-    variant: Rule: (
+    NodeRule: (
         RuleName: "CharacterRange"
         Expression: Sequence: [
-            variant: Joined: [
-                variant: (
-                    variant: empty
-                    variant: "["
-                    variant: empty
+            Joined: [
+                (
+                    empty
+                    "["
+                    empty
                 )
-                variant: (
-                    variant: empty
-                    variant: Expression: OrderedChoice: [
-                        variant: Joined: [
-                            variant: (
-                                variant: empty
-                                variant: [ variant: "\\" ]
-                                variant: empty
+                (
+                    empty
+                    Expression: OrderedChoice: [
+                        Joined: [
+                            (
+                                empty
+                                CharacterRange: [ "\\" ]
+                                empty
                             )
-                            variant: (
-                                variant: empty
-                                variant: [
-                                    variant: "\\"
-                                    variant: "\]"
-                                    variant: 's'
-                                    variant: 'S'
-                                    variant: 'n'
-                                    variant: 'N'
-                                    variant: 't'
-                                    variant: 'T'
-                                    variant: 'w'
-                                    variant: 'W'
+                            (
+                                empty
+                                CharacterRange: [
+                                    "\\"
+                                    "\]"
+                                    's'
+                                    'S'
+                                    'n'
+                                    'N'
+                                    't'
+                                    'T'
+                                    'w'
+                                    'W'
                                 ]
-                                variant: empty
+                                empty
                             )
                         ]
-                        variant: (
-                            variant: empty
-                            variant: Expression: Joined: [
-                                variant: (
-                                    variant: empty
-                                    variant: '.'
-                                    variant: empty
+                        (
+                            empty
+                            Expression: Joined: [
+                                (
+                                    empty
+                                    '.'
+                                    empty
                                 )
-                                variant: (
-                                    variant: empty
-                                    variant: "-"
-                                    variant: empty
+                                (
+                                    empty
+                                    "-"
+                                    empty
                                 )
-                                variant: (
-                                    variant: empty
-                                    variant: '.'
-                                    variant: empty
+                                (
+                                    empty
+                                    '.'
+                                    empty
                                 )
                             ]
-                            variant: empty
+                            empty
                         )
-                        variant: (
-                            variant: empty
-                            variant: '.'
-                            variant: empty
+                        (
+                            empty
+                            '.'
+                            empty
                         )
                     ]
-                    variant: '*'
+                    '*'
                 )
             ]
-            variant: (
-                variant: empty
-                variant: "]"
-                variant: empty
+            (
+                empty
+                "]"
+                empty
             )
         ]
     )
-    variant: Rule: (
+    Rule: (
         RuleName: "Escape"
         Expression: Joined: [
-            variant: (
-                variant: empty
-                variant: [ variant: "\\" ]
-                variant: empty
+            (
+                empty
+                CharacterRange: [ "\\" ]
+                empty
             )
-            variant: (
-                variant: empty
-                variant: [
-                    variant: 's'
-                    variant: 'S'
-                    variant: 'n'
-                    variant: 'N'
-                    variant: 't'
-                    variant: 'T'
-                    variant: 'w'
-                    variant: 'W'
-                    variant: '.'
-                    variant: '"'
-                    variant: '\''
-                    variant: '&'
-                    variant: '!'
-                    variant: '+'
-                    variant: '*'
-                    variant: "\\"
+            (
+                empty
+                CharacterRange: [
+                    's'
+                    'S'
+                    'n'
+                    'N'
+                    't'
+                    'T'
+                    'w'
+                    'W'
+                    '.'
+                    '"'
+                    '\''
+                    '&'
+                    '!'
+                    '+'
+                    '*'
+                    "\\"
                 ]
-                variant: empty
+                empty
             )
         ]
     )
-    variant: Rule: (
+    Rule: (
         RuleName: "String"
         Expression: OrderedChoice: [
-            variant: Joined: [
-                variant: (
-                    variant: empty
-                    variant: "\""
-                    variant: empty
+            Joined: [
+                (
+                    empty
+                    "\""
+                    empty
                 )
-                variant: (
-                    variant: empty
-                    variant: Expression: OrderedChoice: [
-                        variant: (
-                            variant: empty
-                            variant: RuleName: "Escape"
-                            variant: empty
+                (
+                    empty
+                    Expression: OrderedChoice: [
+                        (
+                            empty
+                            RuleName: "Escape"
+                            empty
                         )
-                        variant: (
-                            variant: '!'
-                            variant: "\""
-                            variant: empty
+                        (
+                            '!'
+                            "\""
+                            empty
                         )
                     ]
-                    variant: "^*"
+                    "^*"
                 )
-                variant: (
-                    variant: empty
-                    variant: "\""
-                    variant: empty
+                (
+                    empty
+                    "\""
+                    empty
                 )
             ]
-            variant: Joined: [
-                variant: (
-                    variant: empty
-                    variant: "'"
-                    variant: empty
+            Joined: [
+                (
+                    empty
+                    "'"
+                    empty
                 )
-                variant: (
-                    variant: empty
-                    variant: Expression: OrderedChoice: [
-                        variant: (
-                            variant: empty
-                            variant: RuleName: "Escape"
-                            variant: empty
+                (
+                    empty
+                    Expression: OrderedChoice: [
+                        (
+                            empty
+                            RuleName: "Escape"
+                            empty
                         )
-                        variant: (
-                            variant: '!'
-                            variant: "'"
-                            variant: empty
+                        (
+                            '!'
+                            "'"
+                            empty
                         )
                     ]
-                    variant: "^*"
+                    "^*"
                 )
-                variant: (
-                    variant: empty
-                    variant: "'"
-                    variant: empty
+                (
+                    empty
+                    "'"
+                    empty
                 )
             ]
         ]
     )
-    variant: NodeRule: (
+    NodeRule: (
         RuleName: "RuleName"
         Expression: Joined: [
-            variant: (
-                variant: empty
-                variant: [ variant: (
+            (
+                empty
+                CharacterRange: [ (
                     'A'
                     'Z'
                 ) ]
-                variant: empty
+                empty
             )
-            variant: (
-                variant: empty
-                variant: [
-                    variant: (
+            (
+                empty
+                CharacterRange: [
+                    (
                         'a'
                         'z'
                     )
-                    variant: (
+                    (
                         'A'
                         'Z'
                     )
-                    variant: (
+                    (
                         '0'
                         '9'
                     )
-                    variant: '_'
+                    '_'
                 ]
-                variant: '+'
+                '+'
             )
         ]
     )
-    variant: Rule: (
+    Rule: (
         RuleName: "Primary"
         Expression: OrderedChoice: [
-            variant: Sequence: [
-                variant: (
-                    variant: empty
-                    variant: RuleName: "RuleName"
-                    variant: empty
+            Sequence: [
+                (
+                    empty
+                    RuleName: "RuleName"
+                    empty
                 )
-                variant: (
-                    variant: '!'
-                    variant: "<"
-                    variant: empty
-                )
-            ]
-            variant: Sequence: [
-                variant: (
-                    variant: empty
-                    variant: "("
-                    variant: empty
-                )
-                variant: (
-                    variant: empty
-                    variant: RuleName: "Expression"
-                    variant: empty
-                )
-                variant: (
-                    variant: empty
-                    variant: ")"
-                    variant: empty
+                (
+                    '!'
+                    "<"
+                    empty
                 )
             ]
-            variant: (
-                variant: empty
-                variant: RuleName: "AnyCharacter"
-                variant: empty
+            Sequence: [
+                (
+                    empty
+                    "("
+                    empty
+                )
+                (
+                    empty
+                    RuleName: "Expression"
+                    empty
+                )
+                (
+                    empty
+                    ")"
+                    empty
+                )
+            ]
+            (
+                empty
+                RuleName: "AnyCharacter"
+                empty
             )
-            variant: (
-                variant: empty
-                variant: RuleName: "String"
-                variant: empty
+            (
+                empty
+                RuleName: "String"
+                empty
             )
-            variant: (
-                variant: empty
-                variant: RuleName: "Escape"
-                variant: empty
+            (
+                empty
+                RuleName: "Escape"
+                empty
             )
-            variant: (
-                variant: empty
-                variant: RuleName: "RuleName"
-                variant: empty
+            (
+                empty
+                RuleName: "RuleName"
+                empty
             )
-            variant: (
-                variant: empty
-                variant: RuleName: "CharacterRange"
-                variant: empty
+            (
+                empty
+                RuleName: "CharacterRange"
+                empty
             )
         ]
     )
-    variant: Rule: (
+    Rule: (
         RuleName: "Suffix"
         Expression: Sequence: [
-            variant: (
-                variant: empty
-                variant: RuleName: "Primary"
-                variant: empty
+            (
+                empty
+                RuleName: "Primary"
+                empty
             )
-            variant: (
-                variant: empty
-                variant: Expression: OrderedChoice: [
-                    variant: (
-                        variant: empty
-                        variant: "^+"
-                        variant: empty
+            (
+                empty
+                Expression: OrderedChoice: [
+                    (
+                        empty
+                        "^+"
+                        empty
                     )
-                    variant: (
-                        variant: empty
-                        variant: "^*"
-                        variant: empty
+                    (
+                        empty
+                        "^*"
+                        empty
                     )
-                    variant: (
-                        variant: empty
-                        variant: [
-                            variant: '?'
-                            variant: '*'
-                            variant: '+'
+                    (
+                        empty
+                        CharacterRange: [
+                            '?'
+                            '*'
+                            '+'
                         ]
-                        variant: empty
+                        empty
                     )
-                    variant: (
-                        variant: empty
-                        variant: "|+"
-                        variant: empty
+                    (
+                        empty
+                        "|+"
+                        empty
                     )
-                    variant: (
-                        variant: empty
-                        variant: "|?"
-                        variant: empty
+                    (
+                        empty
+                        "|?"
+                        empty
                     )
                 ]
-                variant: '?'
+                '?'
             )
         ]
     )
-    variant: Rule: (
+    Rule: (
         RuleName: "Prefix"
         Expression: Sequence: [
-            variant: (
-                variant: empty
-                variant: Expression: OrderedChoice: [
-                    variant: (
-                        variant: empty
-                        variant: "&!"
-                        variant: empty
+            (
+                empty
+                Expression: OrderedChoice: [
+                    (
+                        empty
+                        "&!"
+                        empty
                     )
-                    variant: (
-                        variant: empty
-                        variant: [
-                            variant: '&'
-                            variant: '!'
+                    (
+                        empty
+                        CharacterRange: [
+                            '&'
+                            '!'
                         ]
-                        variant: empty
+                        empty
                     )
                 ]
-                variant: '?'
+                '?'
             )
-            variant: (
-                variant: empty
-                variant: RuleName: "Suffix"
-                variant: empty
+            (
+                empty
+                RuleName: "Suffix"
+                empty
             )
         ]
     )
-    variant: NodeRule: (
+    NodeRule: (
         RuleName: "Join"
         Expression: Sequence: [
-            variant: (
-                variant: empty
-                variant: RuleName: "Prefix"
-                variant: empty
+            (
+                empty
+                RuleName: "Prefix"
+                empty
             )
-            variant: (
-                variant: empty
-                variant: Expression: OrderedChoice: [
-                    variant: (
-                        variant: empty
-                        variant: "^%"
-                        variant: empty
+            (
+                empty
+                Expression: OrderedChoice: [
+                    (
+                        empty
+                        "^%"
+                        empty
                     )
-                    variant: (
-                        variant: empty
-                        variant: "%+"
-                        variant: empty
+                    (
+                        empty
+                        "%+"
+                        empty
                     )
-                    variant: (
-                        variant: empty
-                        variant: "%"
-                        variant: empty
+                    (
+                        empty
+                        "%"
+                        empty
                     )
-                    variant: (
-                        variant: empty
-                        variant: "|%"
-                        variant: empty
+                    (
+                        empty
+                        "|%"
+                        empty
                     )
                 ]
-                variant: empty
+                empty
             )
-            variant: (
-                variant: empty
-                variant: RuleName: "Prefix"
-                variant: empty
+            (
+                empty
+                RuleName: "Prefix"
+                empty
             )
         ]
     )
-    variant: NodeRule: (
+    NodeRule: (
         RuleName: "Joined"
         Expression: Join: (
-            variant: empty
-            variant: Expression: OrderedChoice: [
-                variant: (
-                    variant: empty
-                    variant: RuleName: "Join"
-                    variant: empty
+            empty
+            Expression: OrderedChoice: [
+                (
+                    empty
+                    RuleName: "Join"
+                    empty
                 )
-                variant: (
-                    variant: empty
-                    variant: RuleName: "Prefix"
-                    variant: empty
+                (
+                    empty
+                    RuleName: "Prefix"
+                    empty
                 )
             ]
-            variant: empty
-            variant: "|%"
-            variant: empty
-            variant: "^"
-            variant: empty
+            empty
+            "|%"
+            empty
+            "^"
+            empty
         )
     )
-    variant: NodeRule: (
+    NodeRule: (
         RuleName: "Sequence"
         Expression: (
-            variant: empty
-            variant: RuleName: "Joined"
-            variant: "|+"
+            empty
+            RuleName: "Joined"
+            "|+"
         )
     )
-    variant: NodeRule: (
+    NodeRule: (
         RuleName: "OrderedChoice"
         Expression: Join: (
-            variant: empty
-            variant: RuleName: "Sequence"
-            variant: empty
-            variant: "|%"
-            variant: empty
-            variant: "/"
-            variant: empty
+            empty
+            RuleName: "Sequence"
+            empty
+            "|%"
+            empty
+            "/"
+            empty
         )
     )
-    variant: NodeRule: (
+    NodeRule: (
         RuleName: "Expression"
         Expression: (
-            variant: empty
-            variant: RuleName: "OrderedChoice"
-            variant: empty
+            empty
+            RuleName: "OrderedChoice"
+            empty
         )
     )
-    variant: NodeRule: (
+    NodeRule: (
         RuleName: "Rule"
         Expression: Sequence: [
-            variant: (
-                variant: empty
-                variant: RuleName: "RuleName"
-                variant: empty
+            (
+                empty
+                RuleName: "RuleName"
+                empty
             )
-            variant: (
-                variant: empty
-                variant: "<-"
-                variant: empty
+            (
+                empty
+                "<-"
+                empty
             )
-            variant: (
-                variant: empty
-                variant: RuleName: "Expression"
-                variant: empty
+            (
+                empty
+                RuleName: "Expression"
+                empty
             )
         ]
     )
-    variant: NodeRule: (
+    NodeRule: (
         RuleName: "NodeRule"
         Expression: Sequence: [
-            variant: (
-                variant: empty
-                variant: RuleName: "RuleName"
-                variant: empty
+            (
+                empty
+                RuleName: "RuleName"
+                empty
             )
-            variant: (
-                variant: empty
-                variant: "<="
-                variant: empty
+            (
+                empty
+                "<="
+                empty
             )
-            variant: (
-                variant: empty
-                variant: RuleName: "Expression"
-                variant: empty
+            (
+                empty
+                RuleName: "Expression"
+                empty
             )
         ]
     )
-    variant: Rule: (
+    Rule: (
         RuleName: "Grammar"
         Expression: (
-            variant: empty
-            variant: Expression: OrderedChoice: [
-                variant: (
-                    variant: empty
-                    variant: RuleName: "Rule"
-                    variant: empty
+            empty
+            Expression: OrderedChoice: [
+                (
+                    empty
+                    RuleName: "Rule"
+                    empty
                 )
-                variant: (
-                    variant: empty
-                    variant: RuleName: "NodeRule"
-                    variant: empty
+                (
+                    empty
+                    RuleName: "NodeRule"
+                    empty
                 )
             ]
-            variant: '+'
+            '+'
         )
     )
 ]
