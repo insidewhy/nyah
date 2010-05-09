@@ -76,7 +76,8 @@ typedef choice<
     char_<'^', '+'>,
     char_<'^', '*'>,
     char_from<'+', '?', '*'>,
-    char_<'|', '+'> > Suffixes;
+    char_<'|', '+'>,
+    char_<'|', '?'> > Suffixes;
 
 typedef sequence<Primary, optional<Suffixes>> Suffix;
 typedef sequence<optional<Prefixes>, Suffix>  Prefix;

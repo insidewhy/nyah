@@ -333,8 +333,13 @@ nyah.nyah grammar: [
                         variant: "|+"
                         variant: empty
                     )
+                    variant: (
+                        variant: empty
+                        variant: "|?"
+                        variant: empty
+                    )
                 ]
-                variant: empty
+                variant: '?'
             )
         ]
     )
