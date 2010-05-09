@@ -70,8 +70,6 @@ typedef choice<
     sequence< char_<'('>, node<Expression>, char_<')'> >
 > Primary;
 
-typedef choice<char_<'&', '!'>, char_from<'&', '!'> > Prefixes;
-
 typedef choice<
     char_<'^', '+'>,
     char_<'^', '*'>,
@@ -80,20 +78,21 @@ typedef choice<
     char_<'|', '?'> > Suffixes;
 
 typedef sequence<Primary, optional<Suffixes>> Suffix;
-typedef sequence<optional<Prefixes>, Suffix>  Prefix;
-typedef Prefix Affix;
+
+typedef choice<char_<'&', '!'>, char_from<'&', '!'> > Prefixes;
+typedef sequence<optional<Prefixes>, Suffix>          Prefix;
 
 struct Join : simple_node<Join, sequence<
-    Affix,
+    Prefix,
     choice<
         char_<'^', '%'>,
         char_<'%', '+'>,
         char_<'%'>,
         char_<'|', '%'> >,
-    Affix> > {};
+    Prefix> > {};
 
 struct Joined : simple_node<Joined,
-    tree_joined<char_<'^'>, choice<Join, Affix> > > {};
+    tree_joined<char_<'^'>, choice<Join, Prefix> > > {};
 
 struct Sequence : simple_node<Sequence, tree_many<Joined> > {};
 
