@@ -34,7 +34,7 @@ typedef source_code_stream<
 
 typedef char_<'.'> AnyCharacter;
 
-typedef lexeme<
+struct CharacterRange : simple_node<CharacterRange, lexeme<
     char_<'['>,
     many<
         choice<
@@ -44,7 +44,7 @@ typedef lexeme<
             sequence< not_char<']'>, char_<'-'>, not_char<']'> >,
             not_char<']'> > >,
     char_<']'>
-> CharacterRange;
+> > {};
 
 typedef lexeme<
     store<char_<'\\'>>,

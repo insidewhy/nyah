@@ -1,6 +1,6 @@
 Spacing        <- (\s / "#" ^ (!\n)* ^ \n)+
 AnyCharacter   <- '.'
-CharacterRange <- "[" ^ ( [\\] ^ [\\\]sSnNtTwW] / (. ^ "-" ^ .) / .)* "]"
+CharacterRange <= "[" ^ ( [\\] ^ [\\\]sSnNtTwW] / (. ^ "-" ^ .) / .)* "]"
 Escape         <- [\\] ^ [sSnNtTwW."'&!+*\\]
 String         <- '"' ^ (Escape / ! '"')^* ^ '"' /
                   "'" ^ (Escape / ! "'")^* ^ "'"
