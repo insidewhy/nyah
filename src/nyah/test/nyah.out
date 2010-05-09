@@ -1,30 +1,30 @@
 nyah.nyah grammar: [
     Rule: (
         RuleName: "Spacing"
-        Expression: (
+        Expression: Prefix: (
             empty
             Expression: OrderedChoice: [
-                (
+                Prefix: (
                     empty
                     "\s"
                     empty
                 )
                 Joined: [
-                    (
+                    Prefix: (
                         empty
                         "#"
                         empty
                     )
-                    (
+                    Prefix: (
                         empty
-                        Expression: (
+                        Expression: Prefix: (
                             '!'
                             "\n"
                             empty
                         )
                         '*'
                     )
-                    (
+                    Prefix: (
                         empty
                         "\n"
                         empty
@@ -36,7 +36,7 @@ nyah.nyah grammar: [
     )
     Rule: (
         RuleName: "AnyCharacter"
-        Expression: (
+        Expression: Prefix: (
             empty
             "."
             empty
@@ -46,21 +46,21 @@ nyah.nyah grammar: [
         RuleName: "CharacterRange"
         Expression: Sequence: [
             Joined: [
-                (
+                Prefix: (
                     empty
                     "["
                     empty
                 )
-                (
+                Prefix: (
                     empty
                     Expression: OrderedChoice: [
                         Joined: [
-                            (
+                            Prefix: (
                                 empty
                                 CharacterRange: [ "\\" ]
                                 empty
                             )
-                            (
+                            Prefix: (
                                 empty
                                 CharacterRange: [
                                     "\\"
@@ -77,20 +77,20 @@ nyah.nyah grammar: [
                                 empty
                             )
                         ]
-                        (
+                        Prefix: (
                             empty
                             Expression: Joined: [
-                                (
+                                Prefix: (
                                     empty
                                     '.'
                                     empty
                                 )
-                                (
+                                Prefix: (
                                     empty
                                     "-"
                                     empty
                                 )
-                                (
+                                Prefix: (
                                     empty
                                     '.'
                                     empty
@@ -98,7 +98,7 @@ nyah.nyah grammar: [
                             ]
                             empty
                         )
-                        (
+                        Prefix: (
                             empty
                             '.'
                             empty
@@ -107,7 +107,7 @@ nyah.nyah grammar: [
                     '*'
                 )
             ]
-            (
+            Prefix: (
                 empty
                 "]"
                 empty
@@ -117,12 +117,12 @@ nyah.nyah grammar: [
     Rule: (
         RuleName: "Escape"
         Expression: Joined: [
-            (
+            Prefix: (
                 empty
                 CharacterRange: [ "\\" ]
                 empty
             )
-            (
+            Prefix: (
                 empty
                 CharacterRange: [
                     's'
@@ -150,20 +150,20 @@ nyah.nyah grammar: [
         RuleName: "String"
         Expression: OrderedChoice: [
             Joined: [
-                (
+                Prefix: (
                     empty
                     "\""
                     empty
                 )
-                (
+                Prefix: (
                     empty
                     Expression: OrderedChoice: [
-                        (
+                        Prefix: (
                             empty
                             RuleName: "Escape"
                             empty
                         )
-                        (
+                        Prefix: (
                             '!'
                             "\""
                             empty
@@ -171,27 +171,27 @@ nyah.nyah grammar: [
                     ]
                     "^*"
                 )
-                (
+                Prefix: (
                     empty
                     "\""
                     empty
                 )
             ]
             Joined: [
-                (
+                Prefix: (
                     empty
                     "'"
                     empty
                 )
-                (
+                Prefix: (
                     empty
                     Expression: OrderedChoice: [
-                        (
+                        Prefix: (
                             empty
                             RuleName: "Escape"
                             empty
                         )
-                        (
+                        Prefix: (
                             '!'
                             "'"
                             empty
@@ -199,7 +199,7 @@ nyah.nyah grammar: [
                     ]
                     "^*"
                 )
-                (
+                Prefix: (
                     empty
                     "'"
                     empty
@@ -210,7 +210,7 @@ nyah.nyah grammar: [
     NodeRule: (
         RuleName: "RuleName"
         Expression: Joined: [
-            (
+            Prefix: (
                 empty
                 CharacterRange: [ (
                     'A'
@@ -218,7 +218,7 @@ nyah.nyah grammar: [
                 ) ]
                 empty
             )
-            (
+            Prefix: (
                 empty
                 CharacterRange: [
                     (
@@ -243,55 +243,55 @@ nyah.nyah grammar: [
         RuleName: "Primary"
         Expression: OrderedChoice: [
             Sequence: [
-                (
+                Prefix: (
                     empty
                     RuleName: "RuleName"
                     empty
                 )
-                (
+                Prefix: (
                     '!'
                     "<"
                     empty
                 )
             ]
             Sequence: [
-                (
+                Prefix: (
                     empty
                     "("
                     empty
                 )
-                (
+                Prefix: (
                     empty
                     RuleName: "Expression"
                     empty
                 )
-                (
+                Prefix: (
                     empty
                     ")"
                     empty
                 )
             ]
-            (
+            Prefix: (
                 empty
                 RuleName: "AnyCharacter"
                 empty
             )
-            (
+            Prefix: (
                 empty
                 RuleName: "String"
                 empty
             )
-            (
+            Prefix: (
                 empty
                 RuleName: "Escape"
                 empty
             )
-            (
+            Prefix: (
                 empty
                 RuleName: "RuleName"
                 empty
             )
-            (
+            Prefix: (
                 empty
                 RuleName: "CharacterRange"
                 empty
@@ -301,25 +301,25 @@ nyah.nyah grammar: [
     NodeRule: (
         RuleName: "Suffix"
         Expression: Sequence: [
-            (
+            Prefix: (
                 empty
                 RuleName: "Primary"
                 empty
             )
-            (
+            Prefix: (
                 empty
                 Expression: OrderedChoice: [
-                    (
+                    Prefix: (
                         empty
                         "^+"
                         empty
                     )
-                    (
+                    Prefix: (
                         empty
                         "^*"
                         empty
                     )
-                    (
+                    Prefix: (
                         empty
                         CharacterRange: [
                             '?'
@@ -328,12 +328,12 @@ nyah.nyah grammar: [
                         ]
                         empty
                     )
-                    (
+                    Prefix: (
                         empty
                         "|+"
                         empty
                     )
-                    (
+                    Prefix: (
                         empty
                         "|?"
                         empty
@@ -346,15 +346,15 @@ nyah.nyah grammar: [
     NodeRule: (
         RuleName: "Prefix"
         Expression: Sequence: [
-            (
+            Prefix: (
                 empty
                 Expression: OrderedChoice: [
-                    (
+                    Prefix: (
                         empty
                         "&!"
                         empty
                     )
-                    (
+                    Prefix: (
                         empty
                         CharacterRange: [
                             '&'
@@ -365,7 +365,7 @@ nyah.nyah grammar: [
                 ]
                 "|?"
             )
-            (
+            Prefix: (
                 empty
                 RuleName: "Suffix"
                 empty
@@ -375,30 +375,30 @@ nyah.nyah grammar: [
     NodeRule: (
         RuleName: "Join"
         Expression: Sequence: [
-            (
+            Prefix: (
                 empty
                 RuleName: "Prefix"
                 empty
             )
-            (
+            Prefix: (
                 empty
                 Expression: OrderedChoice: [
-                    (
+                    Prefix: (
                         empty
                         "^%"
                         empty
                     )
-                    (
+                    Prefix: (
                         empty
                         "%+"
                         empty
                     )
-                    (
+                    Prefix: (
                         empty
                         "%"
                         empty
                     )
-                    (
+                    Prefix: (
                         empty
                         "|%"
                         empty
@@ -406,7 +406,7 @@ nyah.nyah grammar: [
                 ]
                 empty
             )
-            (
+            Prefix: (
                 empty
                 RuleName: "Prefix"
                 empty
@@ -416,29 +416,33 @@ nyah.nyah grammar: [
     NodeRule: (
         RuleName: "Joined"
         Expression: Join: (
-            empty
-            Expression: OrderedChoice: [
-                (
-                    empty
-                    RuleName: "Join"
-                    empty
-                )
-                (
-                    empty
-                    RuleName: "Prefix"
-                    empty
-                )
-            ]
-            empty
+            Prefix: (
+                empty
+                Expression: OrderedChoice: [
+                    Prefix: (
+                        empty
+                        RuleName: "Join"
+                        empty
+                    )
+                    Prefix: (
+                        empty
+                        RuleName: "Prefix"
+                        empty
+                    )
+                ]
+                empty
+            )
             "|%"
-            empty
-            "^"
-            empty
+            Prefix: (
+                empty
+                "^"
+                empty
+            )
         )
     )
     NodeRule: (
         RuleName: "Sequence"
-        Expression: (
+        Expression: Prefix: (
             empty
             RuleName: "Joined"
             "|+"
@@ -447,18 +451,22 @@ nyah.nyah grammar: [
     NodeRule: (
         RuleName: "OrderedChoice"
         Expression: Join: (
-            empty
-            RuleName: "Sequence"
-            empty
+            Prefix: (
+                empty
+                RuleName: "Sequence"
+                empty
+            )
             "|%"
-            empty
-            "/"
-            empty
+            Prefix: (
+                empty
+                "/"
+                empty
+            )
         )
     )
     NodeRule: (
         RuleName: "Expression"
-        Expression: (
+        Expression: Prefix: (
             empty
             RuleName: "OrderedChoice"
             empty
@@ -467,17 +475,17 @@ nyah.nyah grammar: [
     NodeRule: (
         RuleName: "Rule"
         Expression: Sequence: [
-            (
+            Prefix: (
                 empty
                 RuleName: "RuleName"
                 empty
             )
-            (
+            Prefix: (
                 empty
                 "<-"
                 empty
             )
-            (
+            Prefix: (
                 empty
                 RuleName: "Expression"
                 empty
@@ -487,17 +495,17 @@ nyah.nyah grammar: [
     NodeRule: (
         RuleName: "NodeRule"
         Expression: Sequence: [
-            (
+            Prefix: (
                 empty
                 RuleName: "RuleName"
                 empty
             )
-            (
+            Prefix: (
                 empty
                 "<="
                 empty
             )
-            (
+            Prefix: (
                 empty
                 RuleName: "Expression"
                 empty
@@ -506,15 +514,15 @@ nyah.nyah grammar: [
     )
     Rule: (
         RuleName: "Grammar"
-        Expression: (
+        Expression: Prefix: (
             empty
             Expression: OrderedChoice: [
-                (
+                Prefix: (
                     empty
                     RuleName: "Rule"
                     empty
                 )
-                (
+                Prefix: (
                     empty
                     RuleName: "NodeRule"
                     empty
