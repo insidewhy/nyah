@@ -298,7 +298,7 @@ nyah.nyah grammar: [
             )
         ]
     )
-    Rule: (
+    NodeRule: (
         RuleName: "Suffix"
         Expression: Sequence: [
             (
@@ -339,11 +339,11 @@ nyah.nyah grammar: [
                         empty
                     )
                 ]
-                '?'
+                "|?"
             )
         ]
     )
-    Rule: (
+    NodeRule: (
         RuleName: "Prefix"
         Expression: Sequence: [
             (
@@ -363,7 +363,7 @@ nyah.nyah grammar: [
                         empty
                     )
                 ]
-                '?'
+                "|?"
             )
             (
                 empty
