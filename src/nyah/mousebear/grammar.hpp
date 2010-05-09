@@ -109,11 +109,5 @@ struct NodeRule : simple_node<NodeRule,
 
 typedef many< choice<Rule, NodeRule> > Grammar;
 
-template <class O>
-void print_tail(int const indent, O& stream, Expression const& expr) {
-    stream << "Expression: ";
-    print_variant(indent, stream, expr.value_);
-}
-
 } }
 #endif
