@@ -2,7 +2,7 @@ module std
 
 import std.memory
 
-class vector<T> {
+class vector[T] {
     value_type    ?= T
     iterator_type ?= T*
 

@@ -7,12 +7,12 @@ extern c {
     void *memcpy(void *dest, const void *src, size_t n)
 }
 
-new<T>:*T() = { malloc(T:sizeof) }
+new[T]():*T = { malloc(sizeof T) }
 
 reallocate(a:&*, size:size_t) {
-    a = realloc(a, size * a:sizeof)
+    a = realloc(a, size * sizeof a)
 }
 
 copy(dest?T*, src:T const) {
-    memcpy(dest, &src, T:sizeof)
+    memcpy(dest, &src, sizeof T)
 }
