@@ -1,36 +1,48 @@
 module std
 
-import memory
+import std.memory
 
 class vector<T> {
-    // & forces the return type to be a reference
-    front():& = *begin()
-    back():& = *end()
+    value_type    ?= T
+    iterator_type ?= T*
 
     // +const generates both a mutable and a const version
-    begin():+const = data_
-    end():+const   = data_ + nElements_ - 1
+    begin() +const = data_
+    end()   +const = data_ + size - 1
 
-    self() {
-        data_ = null
-        nElements_ = 0
-        capacity_ = 0
-    }
+    // & forces the return type to be a reference
+    front():& +const = *begin()
+    back():&  +const = *end()
 
-    self(a::T const) {
-        data_ = new T(a)
-        nElements_ = 1
-        capacity_ = 1
-    }
-
-    push_back(a::T const) {
-        if (nElements_ == capacity_ - 1) {
-            reallocate(data_, capacity_ *= 2)
+    resize(newSize:size_t) {
+        if (newSize < capacity) {
+        }
+        else if (newSize > capacity) {
         }
     }
 
+    self() {
+        data_ = null
+        size = 0
+        capacity = 0
+    }
+
+    self(a?T const) {
+        data_ = new<T>()
+        size = 1
+        capacity = 1
+    }
+
+    push_back(a?T const) {
+        if (size == capacity - 1) {
+            reallocate(data_, capacity *= 2)
+        }
+        copy(end(), a)
+        ++size
+    }
+
+    size:uint
+    capacity:size_t
   private:
     data_:T*
-    nElements_:int
-    capacity_:int
 }
