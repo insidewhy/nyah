@@ -13,6 +13,6 @@ reallocate(a:&*, size:size_t) {
     a = realloc(a, size * a:sizeof)
 }
 
-copy(dest?T*, src:T const) {
+copy(dest!T*, src:T const) {
     memcpy(dest, &src, T:sizeof)
 }
