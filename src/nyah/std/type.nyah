@@ -1,13 +1,13 @@
 module std
 
-// every class T inherits type<T>
+// every class T inherits type<T> except for type<T> itself
 class type<T> {
-    typeof != T
-    sizeof != T:sizeof
+    typeof ?= T
+    sizeof ?= T:sizeof
 
-    subclass_of<U>    != __internal
-    superclass_of<U>  != __internal
+    subclass_of<U>    ?= __internal
+    superclass_of<U>  ?= __internal
 
-    direct_subclass_of<U>    != __internal
-    direct_superclass_of<U>  != __internal
+    direct_subclass_of<U>    ?= __internal
+    direct_superclass_of<U>  ?= __internal
 }
