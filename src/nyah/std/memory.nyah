@@ -1,0 +1,14 @@
+module std
+
+extern c {
+    void *malloc(size_t size)
+    void *realloc(void *ptr, size_t size)
+    void free(void *ptr)
+}
+
+new<T>:*T = { malloc(T:sizeof) }
+
+reallocate(a:&*, size:size_t) {
+    a = realloc(a, size * a:sizeof)
+}
+

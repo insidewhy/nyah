@@ -1,0 +1,36 @@
+module std
+
+import memory
+
+class vector<T> {
+    // & forces the return type to be a reference
+    front():& = *begin()
+    back():& = *end()
+
+    // +const generates both a mutable and a const version
+    begin():+const = data_
+    end():+const   = data_ + nElements_ - 1
+
+    self() {
+        data_ = null
+        nElements_ = 0
+        capacity_ = 0
+    }
+
+    self(a::T const) {
+        data_ = new T(a)
+        nElements_ = 1
+        capacity_ = 1
+    }
+
+    push_back(a::T const) {
+        if (nElements_ == capacity_ - 1) {
+            reallocate(data_, capacity_ *= 2)
+        }
+    }
+
+  private:
+    data_:T*
+    nElements_:int
+    capacity_:int
+}
