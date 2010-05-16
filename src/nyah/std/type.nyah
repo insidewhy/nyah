@@ -2,7 +2,7 @@ module std
 
 // every class T inherits type[T] except for type[T] itself
 class type[T] {
-    typeof ?= T
+    typeof            ?= T
 
     sizeof:size_t     ?= __internal
 
@@ -12,3 +12,14 @@ class type[T] {
     direct_subclass_of[U]    ?= __internal
     direct_superclass_of[U]  ?= __internal
 }
+
+class type[?void] {
+    typeof            ?= void
+    sizeof:size_t     ?= 0
+
+    subclass_of[U]           ?= false
+    superclass_of[U]         ?= false
+    direct_subclass_of[U]    ?= false
+    direct_superclass_of[U]  ?= false
+}
+

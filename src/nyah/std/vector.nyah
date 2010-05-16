@@ -7,15 +7,20 @@ class vector[T] {
     iterator_type ?= T*
 
     // +const generates both a mutable and a const version
-    begin() +const = data_
-    end()   +const = data_ + size - 1
+  @+const:
+    begin() = data_
+    end()   = data_ + size - 1
 
     // & forces the return type to be a reference
-    front():& +const = *begin()
-    back():&  +const = *end()
+    front():& = *begin()
+    back():&  = *end()
 
+    // clears +const property
+  @mutable:
     resize(newSize:size_t) {
         if (newSize < capacity) {
+            if (newSize < size) {
+            }
         }
         else if (newSize > capacity) {
         }
