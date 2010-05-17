@@ -4,13 +4,14 @@ class ptr_array[N:uint, T] {
     @+const operator()(idx:uint):T& = data_(idx)
 
     indexes ?: 0u .. N-1
+    size    ?: sizeof...(T)
 
     ~self() {
-        for(i, indexes[]) delete data_(i)
+        for(i, indexes) delete data_(i)
     }
 
     self(init : [[T *]]) {
-        @for(i, indexes[]) {
+        @for(i, indexes) {
             @if(i < size init)
                data_(i) =  init(i)
             @else

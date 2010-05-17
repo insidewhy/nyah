@@ -5,7 +5,6 @@ property_group {
     @mutable = __internal
 }
 
-// every class T inherits type[T] except for type[T] itself
 class type[T] {
     type_of       ?: T
     sizeof?size_t  = __internal
