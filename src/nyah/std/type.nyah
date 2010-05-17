@@ -6,7 +6,6 @@ property_group {
 }
 
 class type[T] {
-    type_of       ?: T
     sizeof?size_t  = __internal
 
     subclass_of[U]          ?bool  : __internal
@@ -25,13 +24,11 @@ class not_class {
 // ? inheritance allows the type meta-function specialisations in
 // not_class to apply to type[:void]
 class type[:void] ? not_class {
-    type_of            ?: void
     sizeof?size_t      = 0
 }
 
 // specialisation for functions
 class type[F : (A...)?R] ? not_class {
-    type_of            ?: F
     return_type        ?: R
     arguments_type     ?: A
 }

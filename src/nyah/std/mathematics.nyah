@@ -4,10 +4,10 @@ factorial[T?uint] ?: T * factorial[T - 1]
 factorial[0u]     ?: 0u
 
 // : automatic before integers and floats, equivalent to either of:
-//      factorial[:0u]  = 0u
-//      factorial[T:0u] = 0u
+//      factorial[:0u]  ?: 0u
+//      factorial[T:0u] ?: 0u
 
 // an alternate way of writing this:
-// factorial[T?uint] =
-//    @if(T == 0) 0u;
+// factorial[T?uint] ?:
+//    @if(T == 0) 0u
 //    @else T * factorial[T - 1]

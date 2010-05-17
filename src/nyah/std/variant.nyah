@@ -31,7 +31,7 @@ class variant[T...] {
 }
 
 variant_apply(v:variant[T...], functor:const) = {
-    return_type ?: typeof[functor(T[0]())]
+    return_type ?: type_of[functor(T[0])]
 
     // @singleton within a function will create a new singleton for each
     // set of type parameters. lambda in singleton always copies the
