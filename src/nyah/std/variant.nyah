@@ -1,0 +1,47 @@
+module std
+import std.pack
+
+class variant[T...] {
+
+    operator=(v:const) {
+        @assert (contains[v, T...])
+        idx_  = index_of[v, T...]
+        data_ = new T(v)
+    }
+
+    self(v:const) {
+        @assert (contains[v, T...])
+        idx_  = index_of[v, T...]
+        data_ = new T(v)
+    }
+
+    @+const at[U] = {
+        @assert (contains[U, T...])
+        *reinterpret_cast[U *](data_)
+    }
+
+    @+const at[I:uint] = {
+        @assert (I < sizeof... T)
+        *reinterpret_cast[ T[I] *](data_)
+    }
+
+    self() {}
+  @private:
+    data_:void * = null
+    idx_ = 0u
+}
+
+variant_apply(v:variant[T...], functor:const) = {
+    return_type ?: typeof[functor(T[0]())]
+
+    // @singleton within a function will create a new singleton for each
+    // set of type parameters. lambda in singleton always copies the
+    // functor.
+    @singleton executors:ptr_array[sizeof...[T], executor_base] =
+        [[
+            i ? 0u .. sizeof...(T),
+            lambda functor(T[i])
+        ]]
+
+    return executors(v.type_index)()
+}

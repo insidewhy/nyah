@@ -1,0 +1,23 @@
+module std
+
+class ptr_array[N:uint, T] {
+    @+const operator()(idx:uint):T& = data_(idx)
+
+    indexes ?: 0u .. N-1
+
+    ~self() {
+        for(i, indexes[]) delete data_(i)
+    }
+
+    self(init : [[T *]]) {
+        @for(i, indexes[]) {
+            @if(i < size init)
+               data_(i) =  init(i)
+            @else
+                data_(i) = new T
+        }
+    }
+
+  @private:
+    data_ : array[N, T*]
+}

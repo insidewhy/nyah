@@ -1,31 +1,42 @@
 module std
 
-// every class T inherits type[T] except for type[T] itself
-class type[T] {
-    type_of       ?= T
-    sizeof?size_t  = __internal
-
-    subclass_of[U]          ?bool = __internal
-    superclass_of[U]        ?bool = __internal
-    direct_subclass_of[U]   ?bool  = __internal
-    direct_superclass_of[U] ?bool  = __internal
+property_group {
+    @const   = __internal
+    @mutable = __internal
 }
 
-class type[=void] {
-    type_of            ?= void
-    sizeof?size_t      = 0
+// every class T inherits type[T] except for type[T] itself
+class type[T] {
+    type_of       ?: T
+    sizeof?size_t  = __internal
 
-    subclass_of[U]          ?bool  = false
-    superclass_of[U]        ?bool  = false
-    direct_subclass_of[U]   ?bool  = false
-    direct_superclass_of[U] ?bool  = false
+    subclass_of[U]          ?bool  : __internal
+    superclass_of[U]        ?bool  : __internal
+    direct_subclass_of[U]   ?bool  : __internal
+    direct_superclass_of[U] ?bool  : __internal
+}
+
+class not_class {
+    subclass_of[U]          ?bool  : false
+    superclass_of[U]        ?bool  : false
+    direct_subclass_of[U]   ?bool  : false
+    direct_superclass_of[U] ?bool  : false
+}
+
+// ? inheritance allows the type meta-function specialisations in
+// not_class to apply to type[:void]
+class type[:void] ? not_class {
+    type_of            ?: void
+    sizeof?size_t      = 0
 }
 
 // specialisation for functions
-// ? inheritance allows the type functions in type[void] to
-//   apply to this
-class type[F ?= (A...)?T] ? type[void] {
-    type_of            ?= F
-    return_type        ?= T
-    arguments_type     ?= A
+class type[F : (A...)?R] ? not_class {
+    type_of            ?: F
+    return_type        ?: R
+    arguments_type     ?: A
+}
+
+class type[T?uint] ? not_class {
+    value ?: T
 }

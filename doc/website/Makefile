@@ -1,0 +1,2 @@
+default:
+	meow *.meow

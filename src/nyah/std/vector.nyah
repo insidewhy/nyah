@@ -3,10 +3,11 @@ module std
 import std.memory
 
 class vector[T] {
-    value_type    ?= T
-    iterator_type ?= T*
+    value_type    ?: T
+    iterator_type ?: T*
 
-    // @+const generates both a mutable and a const version
+    // @+const generates both a mutable and a const version of all
+    // functions
   @+const:
     begin() = data_
     end()   = data_ + size - 1
@@ -18,12 +19,19 @@ class vector[T] {
     // clears @+const
   @mutable:
     resize(newSize:size_t) {
-        if (newSize < capacity) {
-            if (newSize < size) {
-            }
+        if (newSize < capacity * 2) {
+            do {
+                capacity /= 2
+            } while (newSize < capacity * 2)
         }
         else if (newSize > capacity) {
+            do {
+                capacity *= 2
+            } while (newSize > capacity)
         }
+        else return
+
+        reallocate(data_, capacity)
     }
 
     self() {
@@ -58,8 +66,8 @@ class vector[T] {
 
     @+const operator()(n:size_t):& = *(data_ + n * sizeof T)
 
-    size:uint
-    capacity:size_t
+    size     :uint
+    capacity :size_t
   private:
-    data_:T*
+    data_    :T*
 }

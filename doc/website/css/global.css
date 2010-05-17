@@ -1,0 +1,68 @@
+body {
+    font-family: verdana;
+    margin: 10px 50px;
+}
+
+h1 {
+    margin: 0;
+    padding: 20px 0px 10px 0px;
+}
+
+h2 {
+    margin: 0;
+    padding: 20px 0px 10px 0px;
+    font-size: 140%;
+}
+
+a:link {
+    color: #cc0000;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #cc0000;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #cc0000;
+    text-decoration: underline;
+}
+
+a:active {
+    color: #cc0000;
+    text-decoration: none;
+}
+
+p {
+    margin: 0px 0px 20px 0px;
+    padding: 0;
+}
+
+.clear {
+    clear: left;
+}
+
+#links {
+    display: block;
+    margin-left: 3px;
+    padding-bottom: 20px;
+}
+
+#links a {
+    margin-left: 6px;
+    padding: 3px;
+}
+
+ul {
+    margin: 0 0 0 10px;
+    padding: 0 0 0 10px;
+}
+
+pre {
+    background-color: #fffadd;
+    border: 1px black dashed;
+    padding: 25px;
+    margin: 5px;
+    width: 52em;
+}
