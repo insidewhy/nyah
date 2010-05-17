@@ -7,7 +7,7 @@ extern c {
     void *memcpy(void *dest, const void *src, size_t n)
 }
 
-new[T]():*T = { malloc(sizeof T) }
+new[T]():*T = malloc(sizeof T)
 
 reallocate(a:&*, size:size_t) {
     a = realloc(a, size * sizeof a)

@@ -2,24 +2,30 @@ module std
 
 // every class T inherits type[T] except for type[T] itself
 class type[T] {
-    typeof            ?= T
+    type_of       ?= T
+    sizeof?size_t  = __internal
 
-    sizeof:size_t     ?= __internal
-
-    subclass_of[U]    ?= __internal
-    superclass_of[U]  ?= __internal
-
-    direct_subclass_of[U]    ?= __internal
-    direct_superclass_of[U]  ?= __internal
+    subclass_of[U]          ?bool = __internal
+    superclass_of[U]        ?bool = __internal
+    direct_subclass_of[U]   ?bool  = __internal
+    direct_superclass_of[U] ?bool  = __internal
 }
 
-class type[?void] {
-    typeof            ?= void
-    sizeof:size_t     ?= 0
+class type[=void] {
+    type_of            ?= void
+    sizeof?size_t      = 0
 
-    subclass_of[U]           ?= false
-    superclass_of[U]         ?= false
-    direct_subclass_of[U]    ?= false
-    direct_superclass_of[U]  ?= false
+    subclass_of[U]          ?bool  = false
+    superclass_of[U]        ?bool  = false
+    direct_subclass_of[U]   ?bool  = false
+    direct_superclass_of[U] ?bool  = false
 }
 
+// specialisation for functions
+// ? inheritance allows the type functions in type[void] to
+//   apply to this
+class type[F ?= (A...)?T] ? type[void] {
+    type_of            ?= F
+    return_type        ?= T
+    arguments_type     ?= A
+}

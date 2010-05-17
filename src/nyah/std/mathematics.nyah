@@ -1,4 +1,8 @@
 module std
 
-factorial[T:uint] = T * factorial[T - 1]
-factorial[?0]     = 0
+factorial[T?uint] = T * factorial[T - 1]
+
+factorial[0]      = 0
+// = automatic before integers and floats, equivalent to either of:
+//      factorial[=0]
+//      factorial[T?=0] = 0

@@ -6,7 +6,7 @@ class vector[T] {
     value_type    ?= T
     iterator_type ?= T*
 
-    // +const generates both a mutable and a const version
+    // @+const generates both a mutable and a const version
   @+const:
     begin() = data_
     end()   = data_ + size - 1
@@ -15,7 +15,7 @@ class vector[T] {
     front():& = *begin()
     back():&  = *end()
 
-    // clears +const property
+    // clears @+const
   @mutable:
     resize(newSize:size_t) {
         if (newSize < capacity) {
@@ -40,6 +40,14 @@ class vector[T] {
         capacity = 1
     }
 
+    // move constructor
+    self(a:vector[T]&&) {
+        data_ = a.data_
+        capacity = a.capacity
+        size = a.size
+        a.data_ = 0
+    }
+
     push_back(a?T const) {
         if (size == capacity - 1) {
             reallocate(data_, capacity *= 2)
@@ -47,6 +55,8 @@ class vector[T] {
         copy(end(), a)
         ++size
     }
+
+    @+const operator()(n:size_t):& = *(data_ + n * sizeof T)
 
     size:uint
     capacity:size_t
