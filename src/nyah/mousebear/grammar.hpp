@@ -82,7 +82,7 @@ typedef sequence<Primary, optional<Suffixes>> Suffix;
 typedef choice<char_<'&', '!'>, char_from<'&', '!'> > Prefixes;
 
 struct Prefix
-  : simple_node<Prefix, sequence<optional<Prefixes>, Suffix>> {};
+  : simple_node<Prefix, sequence<tree_optional<Prefixes>, Suffix>> {};
 
 struct Join : simple_node<Join, sequence<
     Prefix,
