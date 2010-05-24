@@ -110,7 +110,12 @@ struct Rule : simple_node<Rule,
 struct NodeRule : simple_node<NodeRule,
     sequence<RuleName, char_<'<', '='>, Expression> > {};
 
-typedef many< choice<Rule, NodeRule> > Grammar;
+}
 
-} }
+// override nyah namespace grammar
+struct Grammar : chilon::parser::simple_node<Grammar,
+    chilon::parser::many< chilon::parser::choice<
+        mousebear::Rule, mousebear::NodeRule> > > {};
+
+}
 #endif

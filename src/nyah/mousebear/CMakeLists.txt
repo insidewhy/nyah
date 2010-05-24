@@ -1,6 +1,6 @@
 include_directories(..)
 
-add_executable(mousebear mousebear.cpp)
+add_executable(mousebear mousebear.cpp source_builder.cpp)
 
 install(TARGETS mousebear
         RUNTIME DESTINATION ${BIN_DIR}

@@ -1,4 +1,5 @@
 #include <mousebear/grammar.hpp>
+#include <nyah/source_builder.hpp>
 
 #include <chilon/conf/cmd/command_line.hpp>
 #include <chilon/print.hpp>
@@ -11,7 +12,8 @@
 // #define MOUSEBEAR_VERSION "997 (420 mishap)"
 // #define MOUSEBEAR_VERSION "996 (super mousebear 4)"
 // #define MOUSEBEAR_VERSION "995 (ibuki mousebear)"
-#define MOUSEBEAR_VERSION "994 (maryam the butcher)"
+// #define MOUSEBEAR_VERSION "994 (maryam the butcher)"
+#define MOUSEBEAR_VERSION "993 (friendly beard)"
 
 namespace nyah { namespace mousebear {
 
@@ -83,11 +85,11 @@ inline int main(int argc, char *argv[]) {
         }
 
         if (doPrint) {
-            chilon::print(argv[i], " grammar: ", storer.value_);
+            chilon::print(argv[i], " grammar: ", storer.value_.value_);
         }
-        else {
-            std::cerr << "only -p is supported at the moment\n";
-        }
+
+        nyah::source_builder src_builder;
+        src_builder(storer.value_);
     }
 
     return 0;
