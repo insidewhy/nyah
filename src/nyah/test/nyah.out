@@ -1,29 +1,19 @@
 nyah.nyah grammar: [
     Rule: (
         RuleName: "Spacing"
-        Expression: (
+        Expression: Suffix: (
             Expression: OrderedChoice: [
-                (
-                    "\s"
-                    empty
-                )
+                "\s"
                 Joined: [
-                    (
-                        "#"
-                        empty
-                    )
-                    (
+                    "#"
+                    Suffix: (
                         Expression: Prefix: (
                             '!'
                             "\n"
-                            empty
                         )
                         '*'
                     )
-                    (
-                        "\n"
-                        empty
-                    )
+                    "\n"
                 ]
             ]
             '+'
@@ -31,167 +21,108 @@ nyah.nyah grammar: [
     )
     Rule: (
         RuleName: "AnyCharacter"
-        Expression: (
-            "."
-            empty
-        )
+        Expression: "."
     )
     NodeRule: (
         RuleName: "CharacterRange"
         Expression: Sequence: [
             Joined: [
-                (
-                    "["
-                    empty
-                )
-                (
+                "["
+                Suffix: (
                     Expression: OrderedChoice: [
                         Joined: [
-                            (
-                                CharacterRange: [ "\\" ]
-                                empty
-                            )
-                            (
-                                CharacterRange: [
-                                    "\\"
-                                    "\]"
-                                    's'
-                                    'S'
-                                    'n'
-                                    'N'
-                                    't'
-                                    'T'
-                                    'w'
-                                    'W'
-                                ]
-                                empty
-                            )
-                        ]
-                        (
-                            Expression: Joined: [
-                                (
-                                    '.'
-                                    empty
-                                )
-                                (
-                                    "-"
-                                    empty
-                                )
-                                (
-                                    '.'
-                                    empty
-                                )
+                            CharacterRange: [ "\\" ]
+                            CharacterRange: [
+                                "\\"
+                                "\]"
+                                's'
+                                'S'
+                                'n'
+                                'N'
+                                't'
+                                'T'
+                                'w'
+                                'W'
                             ]
-                            empty
-                        )
-                        (
+                        ]
+                        Expression: Joined: [
                             '.'
-                            empty
-                        )
+                            "-"
+                            '.'
+                        ]
+                        '.'
                     ]
                     '*'
                 )
             ]
-            (
-                "]"
-                empty
-            )
+            "]"
         ]
     )
     Rule: (
         RuleName: "Escape"
         Expression: Joined: [
-            (
-                CharacterRange: [ "\\" ]
-                empty
-            )
-            (
-                CharacterRange: [
-                    's'
-                    'S'
-                    'n'
-                    'N'
-                    't'
-                    'T'
-                    'w'
-                    'W'
-                    '.'
-                    '"'
-                    '\''
-                    '&'
-                    '!'
-                    '+'
-                    '*'
-                    "\\"
-                ]
-                empty
-            )
+            CharacterRange: [ "\\" ]
+            CharacterRange: [
+                's'
+                'S'
+                'n'
+                'N'
+                't'
+                'T'
+                'w'
+                'W'
+                '.'
+                '"'
+                '\''
+                '&'
+                '!'
+                '+'
+                '*'
+                "\\"
+            ]
         ]
     )
     Rule: (
         RuleName: "String"
         Expression: OrderedChoice: [
             Joined: [
-                (
-                    "\""
-                    empty
-                )
-                (
+                "\""
+                Suffix: (
                     Expression: OrderedChoice: [
-                        (
-                            RuleName: "Escape"
-                            empty
-                        )
+                        RuleName: "Escape"
                         Prefix: (
                             '!'
                             "\""
-                            empty
                         )
                     ]
                     "^*"
                 )
-                (
-                    "\""
-                    empty
-                )
+                "\""
             ]
             Joined: [
-                (
-                    "'"
-                    empty
-                )
-                (
+                "'"
+                Suffix: (
                     Expression: OrderedChoice: [
-                        (
-                            RuleName: "Escape"
-                            empty
-                        )
+                        RuleName: "Escape"
                         Prefix: (
                             '!'
                             "'"
-                            empty
                         )
                     ]
                     "^*"
                 )
-                (
-                    "'"
-                    empty
-                )
+                "'"
             ]
         ]
     )
     NodeRule: (
         RuleName: "RuleName"
         Expression: Joined: [
-            (
-                CharacterRange: [ (
-                    'A'
-                    'Z'
-                ) ]
-                empty
-            )
-            (
+            CharacterRange: [ (
+                'A'
+                'Z'
+            ) ]
+            Suffix: (
                 CharacterRange: [
                     (
                         'a'
@@ -215,85 +146,39 @@ nyah.nyah grammar: [
         RuleName: "Primary"
         Expression: OrderedChoice: [
             Sequence: [
-                (
-                    RuleName: "RuleName"
-                    empty
-                )
+                RuleName: "RuleName"
                 Prefix: (
                     '!'
                     "<"
-                    empty
                 )
             ]
             Sequence: [
-                (
-                    "("
-                    empty
-                )
-                (
-                    RuleName: "Expression"
-                    empty
-                )
-                (
-                    ")"
-                    empty
-                )
+                "("
+                RuleName: "Expression"
+                ")"
             ]
-            (
-                RuleName: "AnyCharacter"
-                empty
-            )
-            (
-                RuleName: "String"
-                empty
-            )
-            (
-                RuleName: "Escape"
-                empty
-            )
-            (
-                RuleName: "RuleName"
-                empty
-            )
-            (
-                RuleName: "CharacterRange"
-                empty
-            )
+            RuleName: "AnyCharacter"
+            RuleName: "String"
+            RuleName: "Escape"
+            RuleName: "RuleName"
+            RuleName: "CharacterRange"
         ]
     )
     NodeRule: (
         RuleName: "Suffix"
         Expression: Sequence: [
-            (
-                RuleName: "Primary"
-                empty
-            )
-            (
+            RuleName: "Primary"
+            Suffix: (
                 Expression: OrderedChoice: [
-                    (
-                        "^+"
-                        empty
-                    )
-                    (
-                        "^*"
-                        empty
-                    )
-                    (
-                        CharacterRange: [
-                            '?'
-                            '*'
-                            '+'
-                        ]
-                        empty
-                    )
-                    (
-                        "|+"
-                        empty
-                    )
-                    (
-                        "|?"
-                        empty
-                    )
+                    "^+"
+                    "^*"
+                    CharacterRange: [
+                        '?'
+                        '*'
+                        '+'
+                    ]
+                    "|+"
+                    "|?"
                 ]
                 "|?"
             )
@@ -302,88 +187,46 @@ nyah.nyah grammar: [
     NodeRule: (
         RuleName: "Prefix"
         Expression: Sequence: [
-            (
+            Suffix: (
                 Expression: OrderedChoice: [
-                    (
-                        "&!"
-                        empty
-                    )
-                    (
-                        CharacterRange: [
-                            '&'
-                            '!'
-                        ]
-                        empty
-                    )
+                    "&!"
+                    CharacterRange: [
+                        '&'
+                        '!'
+                    ]
                 ]
                 "|?"
             )
-            (
-                RuleName: "Suffix"
-                empty
-            )
+            RuleName: "Suffix"
         ]
     )
     NodeRule: (
         RuleName: "Join"
         Expression: Sequence: [
-            (
-                RuleName: "Prefix"
-                empty
-            )
-            (
-                Expression: OrderedChoice: [
-                    (
-                        "^%"
-                        empty
-                    )
-                    (
-                        "%+"
-                        empty
-                    )
-                    (
-                        "%"
-                        empty
-                    )
-                    (
-                        "|%"
-                        empty
-                    )
-                ]
-                empty
-            )
-            (
-                RuleName: "Prefix"
-                empty
-            )
+            RuleName: "Prefix"
+            Expression: OrderedChoice: [
+                "^%"
+                "%+"
+                "%"
+                "|%"
+            ]
+            RuleName: "Prefix"
         ]
     )
     NodeRule: (
         RuleName: "Joined"
         Expression: Join: (
-            (
-                Expression: OrderedChoice: [
-                    (
-                        RuleName: "Join"
-                        empty
-                    )
-                    (
-                        RuleName: "Prefix"
-                        empty
-                    )
-                ]
-                empty
-            )
+            Expression: OrderedChoice: [
+                RuleName: "Join"
+                RuleName: "Prefix"
+            ]
             "|%"
-            (
-                "^"
-                empty
-            )
+            "^"
         )
     )
     NodeRule: (
         RuleName: "Sequence"
-        Expression: (
+        Expression: Suffix: (
             RuleName: "Joined"
             "|+"
         )
@@ -391,70 +234,37 @@ nyah.nyah grammar: [
     NodeRule: (
         RuleName: "OrderedChoice"
         Expression: Join: (
-            (
-                RuleName: "Sequence"
-                empty
-            )
+            RuleName: "Sequence"
             "|%"
-            (
-                "/"
-                empty
-            )
+            "/"
         )
     )
     NodeRule: (
         RuleName: "Expression"
-        Expression: (
-            RuleName: "OrderedChoice"
-            empty
-        )
+        Expression: RuleName: "OrderedChoice"
     )
     NodeRule: (
         RuleName: "Rule"
         Expression: Sequence: [
-            (
-                RuleName: "RuleName"
-                empty
-            )
-            (
-                "<-"
-                empty
-            )
-            (
-                RuleName: "Expression"
-                empty
-            )
+            RuleName: "RuleName"
+            "<-"
+            RuleName: "Expression"
         ]
     )
     NodeRule: (
         RuleName: "NodeRule"
         Expression: Sequence: [
-            (
-                RuleName: "RuleName"
-                empty
-            )
-            (
-                "<="
-                empty
-            )
-            (
-                RuleName: "Expression"
-                empty
-            )
+            RuleName: "RuleName"
+            "<="
+            RuleName: "Expression"
         ]
     )
     Rule: (
         RuleName: "Grammar"
-        Expression: (
+        Expression: Suffix: (
             Expression: OrderedChoice: [
-                (
-                    RuleName: "Rule"
-                    empty
-                )
-                (
-                    RuleName: "NodeRule"
-                    empty
-                )
+                RuleName: "Rule"
+                RuleName: "NodeRule"
             ]
             '+'
         )
