@@ -22,6 +22,9 @@ EOF
     // create array of 3 integers
     a := [[ 1, 2, 3 ]]
 
-    // create array of 3 integers
-    a := [[ i ? 0..3, i ]]
+    // create array of 3 integers at compile time
+    b := [[ i ? 0..3, i ]]
+
+    // create array of 3 integers at run time
+    c := [[ i : 0..3, i ]]
 EOF
