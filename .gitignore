@@ -1,4 +1,4 @@
 src/nyah/.obj
 src/nyah/Makefile
-src/nyah/test/*.new
+src/nyah/test/.*
 doc/website/*.html

@@ -1,16 +1,17 @@
 .PHONY: test accept
 
 mousebear = ../.obj/mousebear/mousebear
+outdir = .new.output
 
 test: $(subst .nyah,.out,$(wildcard *.nyah))
 
 %.out: %.nyah ${mousebear}
-	@${mousebear} -p $< > $@.new
-	@diff $@ $@.new
+	@mkdir -p ${outdir}
+	@${mousebear} -o ${outdir} -p $< > ${outdir}/$@
+	@diff $@ ${outdir}/$@
 	@touch $@
-	@rm $@.new
+	@rm ${outdir}/$@
 	@echo $< succeeded
 
 accept:
-	@$(foreach file,$(wildcard *.out.new), \
-		mv ${file} $(patsubst %.out.new,%.out,${file}))
+	mv ${outdir}/* .

@@ -23,6 +23,8 @@ inline int main(int argc, char *argv[]) {
     int nPositionals;
     bool verbose = false;
     bool doPrint = false;
+    std::string outputDir = ".";
+    std::string outputNamespace;
     {
         using chilon::conf::value;
         using cmd_line::options_description;
@@ -30,8 +32,10 @@ inline int main(int argc, char *argv[]) {
         options_description options;
         options.add_options()
             .help("mousebear "   MOUSEBEAR_VERSION "\nusage: mousebear [arguments] <grammar files to process>")
-            ("p,print",          doPrint, "print AST of grammar")
-            ("v,verbose",        verbose, "increase verbosity")
+            ("p,print",        doPrint, "print AST of grammar")
+            ("v,verbose",      verbose, "increase verbosity")
+            ("o,output-dir",   outputDir, "directory to output code")
+            ("n,namespace",    outputNamespace, "namespace to use")
             ;
 
         try {
@@ -89,6 +93,7 @@ inline int main(int argc, char *argv[]) {
         }
 
         source_builder build_source;
+        build_source.output_dir(outputDir);
         build_source(storer.value_);
     }
 
