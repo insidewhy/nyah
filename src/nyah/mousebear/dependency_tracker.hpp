@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 #include <sstream>
 
 namespace nyah { namespace mousebear {
@@ -33,7 +34,7 @@ class dependency_tracker {
     };
 
     // first identifier is dependent, second is dependency
-    struct  node_dependency {
+    struct node_dependency {
         identifier const dependent_;
         identifier const dependency_;
         std::stringstream  string_;
@@ -52,10 +53,14 @@ class dependency_tracker {
     typedef std::vector<identifier>  dependency_list_t;
     struct cycle_error { dependency_list_t cycles_; };
 
-    std::unordered_set<node_dependency, hash_node_dependency>  dependencies_;
+    std::unordered_multiset<node_dependency, hash_node_dependency>  dependencies_;
+
+    // rule name against number of dependencies it currently has
+    std::unordered_map<range, unsigned int>                        dependency_count;
 
   public:
-    void add_depdendency(range const& rule_name, rule_t const& identifier);
+    // add dependency, return true if there is a circular reference
+    bool add_depdendency(range const& rule_name, rule_t const& identifier);
 };
 
 } }
