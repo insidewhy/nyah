@@ -2,6 +2,7 @@ include_directories(..)
 
 add_executable(mousebear mousebear.cpp source_builder.cpp
                          dependency_tracker.cpp)
+target_link_libraries(mousebear nyah-dynamic)
 
 install(TARGETS mousebear
         RUNTIME DESTINATION ${BIN_DIR}

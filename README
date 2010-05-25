@@ -1,5 +1,6 @@
 This project needs gcc 4.4 minimum to compile. It has been tested with gcc
-4.4.2, 4.4.3 and gcc 4.5 rev. 153642.
+4.4.2, 4.4.3 and gcc 4.5. 153642. Lately it compiles slowly with any version
+of gcc below 4.5
 
 This project is organised like this:
     doc/
