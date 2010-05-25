@@ -1,5 +1,5 @@
 #include <mousebear/grammar.hpp>
-#include <nyah/source_builder.hpp>
+#include <mousebear/source_builder.hpp>
 
 #include <chilon/conf/cmd/command_line.hpp>
 #include <chilon/print.hpp>
@@ -88,8 +88,8 @@ inline int main(int argc, char *argv[]) {
             chilon::print(argv[i], " grammar: ", storer.value_.value_);
         }
 
-        nyah::source_builder src_builder;
-        src_builder(storer.value_);
+        source_builder build_source;
+        build_source(storer.value_);
     }
 
     return 0;

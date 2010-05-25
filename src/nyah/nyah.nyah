@@ -16,4 +16,4 @@ OrderedChoice  <= Sequence |% "/"
 Expression     <= OrderedChoice
 Rule           <= RuleName "<-" Expression
 NodeRule       <= RuleName "<=" Expression
-Grammar        <- (Rule / NodeRule)+
+Grammar        <= (Rule / NodeRule)+

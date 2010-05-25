@@ -259,7 +259,7 @@ nyah.nyah grammar: [
             RuleName: "Expression"
         ]
     )
-    Rule: (
+    NodeRule: (
         RuleName: "Grammar"
         Expression: Suffix: (
             Expression: OrderedChoice: [
