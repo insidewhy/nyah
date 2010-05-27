@@ -26,36 +26,34 @@ grammar "grammar": [
     )
     NodeRule: (
         RuleName: "CharacterRange"
-        Expression: Sequence: [
-            Joined: [
-                "["
-                Suffix: (
-                    Expression: OrderedChoice: [
-                        Joined: [
-                            CharacterRange: [ "\\" ]
-                            CharacterRange: [
-                                "\\"
-                                "\]"
-                                's'
-                                'S'
-                                'n'
-                                'N'
-                                't'
-                                'T'
-                                'w'
-                                'W'
-                            ]
+        Expression: Joined: [
+            "["
+            Suffix: (
+                Expression: OrderedChoice: [
+                    Joined: [
+                        CharacterRange: [ "\\" ]
+                        CharacterRange: [
+                            "\\"
+                            "\]"
+                            's'
+                            'S'
+                            'n'
+                            'N'
+                            't'
+                            'T'
+                            'w'
+                            'W'
                         ]
-                        Expression: Joined: [
-                            '.'
-                            "-"
-                            '.'
-                        ]
+                    ]
+                    Expression: Joined: [
+                        '.'
+                        "-"
                         '.'
                     ]
-                    '*'
-                )
-            ]
+                    '.'
+                ]
+                '*'
+            )
             "]"
         ]
     )
