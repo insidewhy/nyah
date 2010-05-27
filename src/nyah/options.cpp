@@ -13,6 +13,7 @@ int options::parse_command_line(char const *header, int argc, char *argv[]) {
 
     using chilon::conf::value;
     using cmd_line::options_description;
+    chilon::range output_namespace;
 
     options_description opt_parser;
     opt_parser.add_options()
@@ -20,7 +21,7 @@ int options::parse_command_line(char const *header, int argc, char *argv[]) {
         ("p,print",        print_ast_, "print AST of grammar")
         ("v,verbose",      verbose_, "increase verbosity")
         ("o,output-dir",   output_dir_, "directory to output code")
-        ("n,namespace",    output_namespace_, "namespace to use")
+        ("n,namespace",    output_namespace, "namespace to use")
         ;
 
     try {
@@ -44,6 +45,9 @@ int options::parse_command_line(char const *header, int argc, char *argv[]) {
         std::cerr << "please supply at least one grammar to parse\n";
         std::cout << opt_parser << std::endl;
         return 0;
+    }
+
+    if (! output_namespace.empty()) {
     }
 
     return nPositionals;
