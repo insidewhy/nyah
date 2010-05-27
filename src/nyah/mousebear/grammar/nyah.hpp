@@ -16,7 +16,7 @@ typedef lexeme<
     > > > MetaIdentifier;
 
 struct Grammar : simple_node<Grammar, sequence<
-    char_<'@',g,r,a,m,m,a,r>, MetaIdentifier, grammar::Grammar> > {};
+    many< char_<'@',g,r,a,m,m,a,r>, MetaIdentifier, grammar::Grammar> > > {};
 
 } } } }
 #endif

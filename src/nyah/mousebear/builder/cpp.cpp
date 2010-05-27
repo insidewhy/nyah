@@ -54,9 +54,10 @@ void cpp::operator()(char const * const filename) {
 
     if (opts_.print_ast_) {
         chilon::print("file ", filename);
-        chilon::print("grammar ",
-            std::get<0>(ast.value_), ": ",
-            std::get<1>(ast.value_));
+
+        for (auto it = ast.value_.begin(); it != ast.value_.end(); ++it) {
+            chilon::print("grammar ", std::get<0>(*it), ": ", std::get<1>(*it));
+        }
     }
 
     //
