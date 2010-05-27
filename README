@@ -12,13 +12,14 @@ This project is organised like this:
         examples/   - Example grammars.
         nyah.txt
     src/
+        chilon/     - Library used by this project. git submodule
         nyah/
-            grammar.nyah  - Nyah TBPEG grammar source.
-            nyah.nyah     - Nyah meta grammar source.
+            grammar/  - Nyah grammars
+                grammar.nyah  - Nyah grammar meta-grammar source.
+                nyah.nyah     - Nyah meta-grammar source.
             mousebear/        - Bootstrap nyah compiler.
+                builder/          - mousebear AST -> code
+                    cpp.hpp, cpp.cpp   -  cplusplus code generator
                 grammar/          - mousebear chilon::parser grammar
                     grammar.hpp   - meta-grammar
                     nyah.hpp      - nyah grammar
-                builder/          - mousebear AST -> code
-                    cpp.hpp, cpp.cpp   -  cplusplus code generator
-        chilon/     - Library used by this project. git submodule

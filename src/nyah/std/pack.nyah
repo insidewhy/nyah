@@ -1,4 +1,4 @@
-module std
+@module std
 
 contains[T, T, U...] ?: true
 contains[T, O, U...] ?bool : contains[T, U...]

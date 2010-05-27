@@ -1,5 +1,5 @@
-module std
-import std.pack
+@module std
+@import std.pack
 
 class variant[T...] {
     operator=(v:const) {

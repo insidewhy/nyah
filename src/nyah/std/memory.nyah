@@ -1,4 +1,4 @@
-module std
+@module std
 
 extern c {
     void *malloc(size_t size)

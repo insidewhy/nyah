@@ -1,4 +1,4 @@
-module std
+@module std
 
 factorial[T?uint] ?: T * factorial[T - 1]
 factorial[0u]     ?: 0u

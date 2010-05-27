@@ -1,4 +1,4 @@
-module std
+@module std
 
 property_group {
     @const   = __internal
