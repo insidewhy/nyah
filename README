@@ -1,6 +1,10 @@
-This project needs gcc 4.4 minimum to compile. It has been tested with gcc
-4.4.2, 4.4.3 and gcc 4.5. 153642. Lately it compiles slowly with any version
-of gcc below 4.5
+This project needs gcc 4.4 minimum to compile. It has been tested with
+gcc 4.4.2, 4.4.3 and gcc 4.5. Lately it compiles slowly with any
+version of gcc below 4.5
+
+If you have checked nyah out from git, please fetch the chilon library
+dependency using:
+    git submodule update --init
 
 This project is organised like this:
     doc/
@@ -9,5 +13,12 @@ This project is organised like this:
         nyah.txt
     src/
         nyah/
-            mousebear/  - Bootstrap nyah compiler.
-        chilon/         - Library used by this project. git submodule
+            grammar.nyah  - Nyah TBPEG grammar source.
+            nyah.nyah     - Nyah meta grammar source.
+            mousebear/        - Bootstrap nyah compiler.
+                grammar/          - mousebear chilon::parser grammar
+                    grammar.hpp   - meta-grammar
+                    nyah.hpp      - nyah grammar
+                builder/          - mousebear AST -> code
+                    cpp.hpp, cpp.cpp   -  cplusplus code generator
+        chilon/     - Library used by this project. git submodule

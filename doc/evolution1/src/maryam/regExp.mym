@@ -1,7 +1,0 @@
-# regex utility library
-
-class RegularExpressionMatch {
-    # use = to assign a temporary rule during a match
-    begin := escape<'/', '\\'> | 
-             'm' ^ sep = . ^ escape<sep, '\\'>
-}

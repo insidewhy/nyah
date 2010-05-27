@@ -6,7 +6,7 @@ grammar "grammar": [
             Expression: OrderedChoice: [
                 "\s"
                 Joined: [
-                    "#"
+                    "//"
                     Suffix: (
                         Expression: Prefix: (
                             '!'
@@ -258,7 +258,7 @@ grammar "grammar": [
             RuleName: "Expression"
         ]
     )
-    NodeRule: (
+    Rule: (
         RuleName: "Grammar"
         Expression: Suffix: (
             Expression: OrderedChoice: [

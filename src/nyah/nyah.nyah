@@ -1,4 +1,5 @@
 @grammar nyah
-@import tbpeg
+@import grammar
 
-Grammar        <= "@grammar" tbpeg.Grammar
+MetaIdentifier <- [A-Za-z_] ^ [A-Za-z0-9_]*
+Grammar        <= "@grammar" MetaIdentifier grammar:Grammar

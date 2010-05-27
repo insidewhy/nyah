@@ -1,5 +1,0 @@
-# library for constructing operators
-
-class BracketExpression(expr, leftBracket = '(', rightBracket = ')') : expr {
-    begin := leftBracket super rightBracket;
-}

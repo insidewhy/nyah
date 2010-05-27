@@ -6,7 +6,7 @@
 
 #include <chilon/print.hpp>
 
-namespace nyah {
+namespace nyah { namespace mousebear {
 
 struct options {
     bool                       verbose_;
@@ -14,7 +14,8 @@ struct options {
     std::string                output_dir_;
     std::vector<chilon::range> output_namespace_;
 
-    // number of positionals, 0 for failure, prints errors to stderr
+    // returns number of positionals, 0 for failure, prints errors to
+    // stderr
     int parse_command_line(char const *header, int argc, char *argv[]);
 
     template <class... T>
@@ -25,6 +26,6 @@ struct options {
     options();
 };
 
-}
+} }
 
 #endif

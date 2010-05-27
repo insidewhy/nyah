@@ -1,6 +1,6 @@
 @grammar grammar
 
-Spacing        <- (\s / "#" ^ (!\n)* ^ \n)+
+Spacing        <- (\s / "//" ^ (!\n)* ^ \n)+
 AnyCharacter   <- '.'
 CharacterRange <= "[" ^ ( [\\] ^ [\\\]sSnNtTwW] / (. ^ "-" ^ .) / .)* ^ "]"
 Escape         <- [\\] ^ [sSnNtTwW."'&!+*\\]
@@ -18,4 +18,4 @@ OrderedChoice  <= Sequence |% "/"
 Expression     <= OrderedChoice
 Rule           <= RuleName "<-" Expression
 NodeRule       <= RuleName "<=" Expression
-Grammar        <= (Rule / NodeRule)+
+Grammar        <- (Rule / NodeRule)+

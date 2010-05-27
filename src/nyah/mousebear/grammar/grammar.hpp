@@ -1,5 +1,5 @@
-#ifndef MOUSEBEAR_GRAMMAR_HPP
-#define MOUSEBEAR_GRAMMAR_HPP
+#ifndef NYAH_MOUSEBEAR_GRAMMAR_GRAMMAR_HPP
+#define NYAH_MOUSEBEAR_GRAMMAR_GRAMMAR_HPP
 
 #include <chilon/parser/source_code_stream.hpp>
 #include <chilon/parser/sequence.hpp>
@@ -18,18 +18,20 @@
 #include <chilon/parser/tree_joined.hpp>
 #include <chilon/parser/tree_many.hpp>
 
-namespace nyah { namespace mousebear {
+namespace nyah { namespace mousebear { namespace grammar { namespace grammar {
 
 using namespace chilon::parser;
 using namespace chilon::parser::ascii;
 
 typedef source_code_stream<
     file_stream,
-    sequence<
-        char_<'/', '/'>,
-        until<any_char, char_<'\n'>>
-    >,
-    whitespace
+    choice<
+        sequence<
+            char_<'/', '/'>,
+            until<any_char, char_<'\n'>>
+        >,
+        whitespace
+    >
 > nyah_stream;
 
 typedef char_<'.'> AnyCharacter;
@@ -110,16 +112,7 @@ struct Rule : simple_node<Rule,
 struct NodeRule : simple_node<NodeRule,
     sequence<RuleName, char_<'<', '='>, Expression> > {};
 
-typedef lexeme<
-    choice<char_<'_'>, char_range<'a','z','A','Z'> >,
-    many< choice<
-        char_range<'a','z','A','Z','0','9'>,
-        char_from<'_','.'>
-    > > > MetaIdentifier;
+typedef sequence< many< choice<Rule, NodeRule> > > Grammar;
 
-struct Grammar : simple_node<Grammar, sequence<
-    char_<'@',g,r,a,m,m,a,r>, MetaIdentifier,
-    many< choice<Rule, NodeRule> > > > {};
-
-} }
+} } } }
 #endif

@@ -1,35 +1,65 @@
-#include <mousebear/grammar.hpp>
-#include <mousebear/source_builder.hpp>
+#include <nyah/mousebear/grammar/nyah.hpp>
+#include <nyah/mousebear/builder/cpp.hpp>
 
 #include <cstring>
 #include <stdexcept>
 
-namespace nyah { namespace mousebear {
+namespace nyah { namespace mousebear { namespace builder {
+
+namespace grammar = grammar::grammar;
+namespace nyah    = mousebear::grammar::nyah;
 
 namespace {
     struct applier {
       protected:
-        source_builder& builder_;
+        cpp& builder_;
       public:
         applier(decltype(builder_)& builder) : builder_(builder) {}
     };
 
     struct rule_apply : applier {
-        void operator()(Rule const& rule) const {
+        void operator()(grammar::Rule const& rule) const {
             auto& rule_name = std::get<0>(rule.value_).value_;
         }
 
-        void operator()(NodeRule const& rule) const {
+        void operator()(grammar::NodeRule const& rule) const {
             auto& rule_name = std::get<0>(rule.value_).value_;
         }
 
-        rule_apply(source_builder& builder) : applier(builder) {}
+        rule_apply(cpp& builder) : applier(builder) {}
     };
 }
 
-void source_builder::operator()(char const * const filename,
-                                Grammar const&     grammar)
-{
+void cpp::operator()(char const * const filename) {
+    using grammar::nyah_stream;
+    using nyah::Grammar;
+
+    opts_.verbose("parsing file ", filename);
+    nyah_stream stream;
+    if (! stream.load(filename))
+        throw cannot_open_file(filename);
+
+    stream.skip_whitespace();
+
+    chilon::parser::store<Grammar> storer;
+
+    if (storer(stream)) {
+        stream.skip_whitespace();
+        if (! stream.empty())
+            throw parsing_error(filename);
+        else
+            opts_.verbose(filename, ": parsed grammar");
+    }
+    else throw parsing_error("nothing parsed", filename);
+
+    if (opts_.print_ast_) {
+        chilon::print("file ", filename);
+        chilon::print("grammar ",
+            std::get<0>(storer.value_.value_), ": ",
+            std::get<1>(storer.value_.value_));
+    }
+
+    //
     int length = std::strlen(filename);
     if (length < 1) {
         throw std::runtime_error("filename is empty");
@@ -68,10 +98,10 @@ void source_builder::operator()(char const * const filename,
     }
 
 
-    auto const& rules = std::get<1>(grammar.value_);
+    auto const& rules = std::get<1>(storer.value_.value_);
     for (auto it = rules.begin(); it != rules.end(); ++it) {
         chilon::variant_apply(*it, rule_apply(*this));
     }
 }
 
-} }
+} } }

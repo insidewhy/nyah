@@ -1,7 +1,7 @@
-#include <mousebear/grammar.hpp>
-#include <mousebear/source_builder.hpp>
-
-#include <nyah/options.hpp>
+#include <nyah/mousebear/grammar/nyah.hpp>
+#include <nyah/mousebear/grammar/nyah.hpp>
+#include <nyah/mousebear/builder/cpp.hpp>
+#include <nyah/mousebear/options.hpp>
 
 #include <chilon/print.hpp>
 
@@ -27,46 +27,21 @@ inline int main(int argc, char *argv[]) {
 
     if (0 == nPositionals) return 1;
 
+    // cplusplus builder
+    builder::cpp build_source(opts);
+
     for (int i = 1; i <= nPositionals; ++i) {
-        opts.verbose("parsing file ", argv[i]);
-        nyah_stream stream;
-        if (! stream.load(argv[i])) {
-            std::cerr << "could not load file " << argv[i] << " exiting\n";
-            return 1;
-        }
-
-        stream.skip_whitespace();
-
-        store<Grammar> storer;
-
-        if (storer(stream)) {
-            stream.skip_whitespace();
-            if (! stream.empty()) {
-                std::cerr << argv[i] << ": partial match\n";
-                continue;
-            }
-            else {
-                opts.verbose(argv[i], ": parsed grammar");
-            }
-        }
-        else {
-            std::cerr << argv[i] << ": invalid grammar\n";
-            continue;
-        }
-
-        if (opts.print_ast_) {
-            chilon::print("file ", argv[i]);
-            chilon::print("grammar ",
-                std::get<0>(storer.value_.value_), ": ",
-                std::get<1>(storer.value_.value_));
-        }
-
-        source_builder build_source(opts);
         try {
-            build_source(argv[i], storer.value_);
+            build_source(argv[i]);
+        }
+        catch (builder::cannot_open_file const& e) {
+            chilon::print(std::cerr, e.what(), ": ", e.file_name_);
+        }
+        catch (builder::parsing_error const& e) {
+            chilon::print(std::cerr, e.what(), ": ", e.file_name_);
         }
         catch (std::runtime_error const& e) {
-            std::cerr << e.what() << std::endl;
+            chilon::print(std::cerr, e.what());
             return 1;
         }
     }

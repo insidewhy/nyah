@@ -1,4 +1,4 @@
-#include <nyah/options.hpp>
+#include <nyah/mousebear/options.hpp>
 
 #include <chilon/conf/cmd/command_line.hpp>
 #include <chilon/parser/joined.hpp>
@@ -6,7 +6,7 @@
 #include <chilon/parser/char.hpp>
 #include <chilon/parser/many.hpp>
 
-namespace nyah {
+namespace nyah { namespace mousebear {
 
 namespace cmd_line = chilon::conf::cmd;
 
@@ -74,4 +74,4 @@ int options::parse_command_line(char const *header, int argc, char *argv[]) {
     return nPositionals;
 }
 
-}
+} }

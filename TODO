@@ -1,2 +1,4 @@
  * mousebear code prodution
- * bootstrap nyah with mousebear
+ * bootstrap mousebear grammar using nyah.nyah
+ * release 0.5
+ * allow C++ constructs to be added to class in cplusplus mode
