@@ -1,6 +1,10 @@
 #include <nyah/options.hpp>
 
 #include <chilon/conf/cmd/command_line.hpp>
+#include <chilon/parser/joined.hpp>
+#include <chilon/parser/char_range.hpp>
+#include <chilon/parser/char.hpp>
+#include <chilon/parser/many.hpp>
 
 namespace nyah {
 
@@ -13,7 +17,7 @@ int options::parse_command_line(char const *header, int argc, char *argv[]) {
 
     using chilon::conf::value;
     using cmd_line::options_description;
-    chilon::range output_namespace;
+    char const *output_namespace = 0;
 
     options_description opt_parser;
     opt_parser.add_options()
@@ -47,7 +51,24 @@ int options::parse_command_line(char const *header, int argc, char *argv[]) {
         return 0;
     }
 
-    if (! output_namespace.empty()) {
+    if (output_namespace) {
+        using chilon::parser::parse;
+        using chilon::parser::char_range;
+        using chilon::parser::joined_plus_lexeme;
+        using chilon::parser::char_;
+        using chilon::parser::many_plus;
+        using chilon::to_range;
+
+        chilon::range ns_range = chilon::to_range(output_namespace);
+        parse< joined_plus_lexeme<
+            char_<'.'>,
+            many_plus< char_range<'a', 'z', 'A', 'Z'> > > >::skip(
+                ns_range, output_namespace_);
+
+        if (! ns_range.empty()) {
+            std::cerr << "invalid namespace string supplied\n";
+            return 0;
+        }
     }
 
     return nPositionals;
