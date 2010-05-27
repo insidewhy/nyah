@@ -26,7 +26,7 @@ using namespace chilon::parser::ascii;
 typedef source_code_stream<
     file_stream,
     sequence<
-        char_<'#', ' '>,
+        char_<'/', '/'>,
         until<any_char, char_<'\n'>>
     >,
     whitespace
@@ -110,7 +110,16 @@ struct Rule : simple_node<Rule,
 struct NodeRule : simple_node<NodeRule,
     sequence<RuleName, char_<'<', '='>, Expression> > {};
 
-struct Grammar : simple_node<Grammar, many< choice<Rule, NodeRule> > > {};
+typedef lexeme<
+    choice<char_<'_'>, char_range<'a','z','A','Z'> >,
+    many< choice<
+        char_range<'a','z','A','Z','0','9'>,
+        char_from<'_','.'>
+    > > > MetaIdentifier;
+
+struct Grammar : simple_node<Grammar, sequence<
+    char_<'@',g,r,a,m,m,a,r>, MetaIdentifier,
+    many< choice<Rule, NodeRule> > > > {};
 
 } }
 #endif

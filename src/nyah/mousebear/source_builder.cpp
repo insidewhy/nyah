@@ -68,7 +68,8 @@ void source_builder::operator()(char const * const filename,
     }
 
 
-    for (auto it = grammar.value_.begin(); it != grammar.value_.end(); ++it) {
+    auto const& rules = std::get<1>(grammar.value_);
+    for (auto it = rules.begin(); it != rules.end(); ++it) {
         chilon::variant_apply(*it, rule_apply(*this));
     }
 }

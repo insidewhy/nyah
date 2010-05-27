@@ -28,7 +28,7 @@ inline int main(int argc, char *argv[]) {
     if (0 == nPositionals) return 1;
 
     for (int i = 1; i <= nPositionals; ++i) {
-        opts.verbose("parsing grammar ", argv[i]);
+        opts.verbose("parsing file ", argv[i]);
         nyah_stream stream;
         if (! stream.load(argv[i])) {
             std::cerr << "could not load file " << argv[i] << " exiting\n";
@@ -55,7 +55,10 @@ inline int main(int argc, char *argv[]) {
         }
 
         if (opts.print_ast_) {
-            chilon::print(argv[i], " grammar: ", storer.value_.value_);
+            chilon::print("file ", argv[i]);
+            chilon::print("grammar ",
+                std::get<0>(storer.value_.value_), ": ",
+                std::get<1>(storer.value_.value_));
         }
 
         source_builder build_source(opts);

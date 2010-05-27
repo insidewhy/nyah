@@ -1,4 +1,5 @@
-nyah.nyah grammar: [
+file grammar.nyah
+grammar "grammar": [
     Rule: (
         RuleName: "Spacing"
         Expression: Suffix: (
