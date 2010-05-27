@@ -2,6 +2,7 @@
 #include <mousebear/source_builder.hpp>
 
 #include <cstring>
+#include <stdexcept>
 
 namespace nyah { namespace mousebear {
 
@@ -30,12 +31,17 @@ void source_builder::operator()(char const * const filename,
                                 Grammar const&     grammar)
 {
     int length = std::strlen(filename);
-    if (length < 1) return;
+    if (length < 1) {
+        throw std::runtime_error("filename is empty");
+    }
 
     std::unique_ptr<char> outputPath;
 
     if (! opts_.output_dir_.empty()) {
         auto const& outDir = opts_.output_dir_;
+        if (outDir.size() < 1) {
+            throw std::runtime_error("output directory is empty");
+        }
 
         if ('/' == outDir[outDir.size() - 1]) {
             outputPath.reset(new char[length + outDir.size() + 1]);

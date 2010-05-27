@@ -6,6 +6,7 @@
 #include <chilon/print.hpp>
 
 #include <iostream>
+#include <stdexcept>
 
 // #define MOUSEBEAR_VERSION "1000 (just don't get in a car, and stay away from my family)"
 // #define MOUSEBEAR_VERSION "999 (she's also known as darwinius)"
@@ -58,7 +59,13 @@ inline int main(int argc, char *argv[]) {
         }
 
         source_builder build_source(opts);
-        build_source(argv[i], storer.value_);
+        try {
+            build_source(argv[i], storer.value_);
+        }
+        catch (std::runtime_error const& e) {
+            std::cerr << e.what() << std::endl;
+            return 1;
+        }
     }
 
     return 0;
