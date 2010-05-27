@@ -21,7 +21,7 @@ class cpp {
     options const&      opts_;
 
   public:
-    void operator()(char const * const filename);
+    void operator()(char const * const file_path);
 
     cpp(decltype(opts_)& opts) : opts_(opts) {}
 

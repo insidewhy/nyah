@@ -30,14 +30,14 @@ namespace {
     };
 }
 
-void cpp::operator()(char const * const filename) {
+void cpp::operator()(char const * const file_path) {
     using grammar::nyah_stream;
     using nyah::Grammar;
 
-    opts_.verbose("parsing file ", filename);
+    opts_.verbose("parsing file ", file_path);
     nyah_stream stream;
-    if (! stream.load(filename))
-        throw cannot_open_file(filename);
+    if (! stream.load(file_path))
+        throw cannot_open_file(file_path);
 
     stream.skip_whitespace();
 
@@ -46,27 +46,26 @@ void cpp::operator()(char const * const filename) {
     if (chilon::parser::parse<Grammar>::skip(stream, ast)) {
         stream.skip_whitespace();
         if (! stream.empty())
-            throw parsing_error(filename);
+            throw parsing_error(file_path);
         else
-            opts_.verbose(filename, ": parsed grammar");
+            opts_.verbose(file_path, ": parsed grammar");
     }
-    else throw parsing_error("nothing parsed", filename);
+    else throw parsing_error("nothing parsed", file_path);
 
     if (opts_.print_ast_) {
-        chilon::print("file ", filename);
+        chilon::print("file ", file_path);
 
         for (auto it = ast.value_.begin(); it != ast.value_.end(); ++it) {
             chilon::print("grammar ", std::get<0>(*it), ": ", std::get<1>(*it));
         }
     }
 
-    //
-    int length = std::strlen(filename);
+#if 0
+    int length = std::strlen(file_path);
     if (length < 1) {
-        throw std::runtime_error("filename is empty");
+        throw std::runtime_error("file path is empty");
     }
 
-#if 0
     std::unique_ptr<char> outputPath;
 
     if (! opts_.output_dir_.empty()) {
@@ -80,7 +79,7 @@ void cpp::operator()(char const * const filename) {
             std::copy(
                 outDir.begin(), outDir.begin() + outDir.size(), outputPath.get());
             std::copy(
-                filename, filename + length, outputPath.get() + outDir.size());
+                file_path, file_path + length, outputPath.get() + outDir.size());
             outputPath.get()[length + outDir.size()] = '\0';
         }
         else {
@@ -89,14 +88,14 @@ void cpp::operator()(char const * const filename) {
                 outDir.begin(), outDir.begin() + outDir.size(), outputPath.get());
             outputPath.get()[outDir.size()] = '/';
             std::copy(
-                filename, filename + length, outputPath.get() + outDir.size() + 1);
+                file_path, file_path + length, outputPath.get() + outDir.size() + 1);
             outputPath.get()[length + 1 + outDir.size()] = '\0';
         }
 
         opts_.verbose("creating file ", outputPath.get());
     }
     else {
-        opts_.verbose("creating file ", filename);
+        opts_.verbose("creating file ", file_path);
     }
 
 

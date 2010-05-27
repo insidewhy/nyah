@@ -35,10 +35,10 @@ inline int main(int argc, char *argv[]) {
             build_source(argv[i]);
         }
         catch (cannot_open_file const& e) {
-            chilon::print(std::cerr, e.what(), ": ", e.file_name_);
+            chilon::print(std::cerr, e.what(), ": ", e.file_path_);
         }
         catch (parsing_error const& e) {
-            chilon::print(std::cerr, e.what(), ": ", e.file_name_);
+            chilon::print(std::cerr, e.what(), ": ", e.file_path_);
         }
         catch (std::runtime_error const& e) {
             chilon::print(std::cerr, e.what());
