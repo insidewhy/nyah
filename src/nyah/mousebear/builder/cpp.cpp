@@ -41,9 +41,9 @@ void cpp::operator()(char const * const filename) {
 
     stream.skip_whitespace();
 
-    chilon::parser::store<Grammar> storer;
+    Grammar ast;
 
-    if (storer(stream)) {
+    if (chilon::parser::parse<Grammar>::skip(stream, ast)) {
         stream.skip_whitespace();
         if (! stream.empty())
             throw parsing_error(filename);
@@ -55,8 +55,8 @@ void cpp::operator()(char const * const filename) {
     if (opts_.print_ast_) {
         chilon::print("file ", filename);
         chilon::print("grammar ",
-            std::get<0>(storer.value_.value_), ": ",
-            std::get<1>(storer.value_.value_));
+            std::get<0>(ast.value_), ": ",
+            std::get<1>(ast.value_));
     }
 
     //
@@ -65,6 +65,7 @@ void cpp::operator()(char const * const filename) {
         throw std::runtime_error("filename is empty");
     }
 
+#if 0
     std::unique_ptr<char> outputPath;
 
     if (! opts_.output_dir_.empty()) {
@@ -98,10 +99,11 @@ void cpp::operator()(char const * const filename) {
     }
 
 
-    auto const& rules = std::get<1>(storer.value_.value_);
+    auto const& rules = std::get<1>(ast.value_);
     for (auto it = rules.begin(); it != rules.end(); ++it) {
         chilon::variant_apply(*it, rule_apply(*this));
     }
+#endif
 }
 
 } } }
