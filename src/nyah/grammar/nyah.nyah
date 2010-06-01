@@ -1,5 +1,5 @@
 @grammar nyah
-@import grammar
+@extends grammar
 
 MetaIdentifier <- [A-Za-z_] ^ [A-Za-z0-9_]*
 Grammar        <= "@grammar" MetaIdentifier grammar:Grammar

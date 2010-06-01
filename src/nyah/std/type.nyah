@@ -1,10 +1,5 @@
 @module std
 
-property_group {
-    @const   = __internal
-    @mutable = __internal
-}
-
 class type[T] {
     sizeof?size_t  = __internal
 

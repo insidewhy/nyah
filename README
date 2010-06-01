@@ -17,6 +17,7 @@ This project is organised like this:
             grammar/  - Nyah grammars
                 grammar.nyah  - Nyah grammar meta-grammar source.
                 nyah.nyah     - Nyah meta-grammar source.
+            std/      - Nyah standard library
             mousebear/        - Bootstrap nyah compiler.
                 builder/          - mousebear AST -> code
                     cpp.hpp, cpp.cpp   -  cplusplus code generator

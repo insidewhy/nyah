@@ -1,4 +1,16 @@
- * mousebear code prodution
- * bootstrap mousebear grammar using nyah.nyah
- * release 0.5
- * allow C++ constructs to be added to class in cplusplus mode
+ * 0.5
+     * mousebear: grammar @extends
+     * mousebear: grammar -> chilon::parser translator
+     * mousebear: grammar/grammar.nyah -> mousebear::grammar::grammar
+ * 0.6
+     * Build nyah parser (using grammar/nyah.nyah)
+     * mousebear: nyah -> C++0x backend.
+     * mousebear: C++ attributes in classes
+ * 0.7
+     * nyah::std - vector, variant, tuple
+     * nyah::parser like chilon::parser
+     * mousebear: grammar should use nyah::parser rather than chilon::parser
+ * 0.8
+     * nyah::llvm
+ * 0.9
+     * mousebear: nyah -> llvm backend.
