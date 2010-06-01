@@ -7,10 +7,10 @@ extern c {
     void *memcpy(void *dest, const void *src, size_t n)
 }
 
-reallocate(a:*&, size:size_t) {
+def reallocate(a?*&, size:size_t) {
     a = realloc(a, size * sizeof a)
 }
 
-copy(dest?T*, src:T const) {
+def copy(dest?T*, src:T const) {
     memcpy(dest, &src, sizeof T)
 }

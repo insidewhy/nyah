@@ -8,16 +8,16 @@ class vector[T] {
     // @+const generates both a mutable and a const version of all
     // functions
   @+const:
-    begin() = data_
-    end()   = data_ + size - 1
+    def begin() = data_
+    def end()   = data_ + size - 1
 
     // & forces the return type to be a reference
-    front():& = *begin()
-    back():&  = *end()
+    def front():& = *begin()
+    def back():&  = *end()
 
     // clears @+const
   @mutable:
-    resize(newSize:size_t) {
+    def resize(newSize:size_t) {
         if (newSize < capacity * 2) {
             do {
                 capacity /= 2
@@ -33,13 +33,13 @@ class vector[T] {
         reallocate(data_, capacity)
     }
 
-    self() {
+    def self() {
         data_ = null
         size = 0
         capacity = 0
     }
 
-    self(a:T const) {
+    def self(a:T const) {
         // if a function has only one type argument or argument then brackets
         // are not needed to call it e.g. new...
         data_ = new T
@@ -48,14 +48,14 @@ class vector[T] {
     }
 
     // move constructor
-    self(a:vector[T]&&) {
+    def self(a:vector[T]&&) {
         data_ = a.data_
         capacity = a.capacity
         size = a.size
         a.data_ = 0
     }
 
-    push_back(a:T const) {
+    def push_back(a:T const) {
         if (size == capacity - 1) {
             reallocate(data_, capacity *= 2)
         }
@@ -63,7 +63,7 @@ class vector[T] {
         ++size
     }
 
-    @+const operator()(n:size_t):& = *(data_ + n * sizeof T)
+    @+const def operator()(n:size_t):& = *(data_ + n * sizeof T)
 
     size     :uint
     capacity :size_t

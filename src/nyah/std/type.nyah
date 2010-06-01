@@ -3,17 +3,17 @@
 class type[T] {
     sizeof?size_t  = __internal
 
-    subclass_of[U]          ?bool  : __internal
-    superclass_of[U]        ?bool  : __internal
-    direct_subclass_of[U]   ?bool  : __internal
-    direct_superclass_of[U] ?bool  : __internal
+    def subclass_of[U]          ?bool  : __internal
+    def superclass_of[U]        ?bool  : __internal
+    def direct_subclass_of[U]   ?bool  : __internal
+    def direct_superclass_of[U] ?bool  : __internal
 }
 
 class not_class {
-    subclass_of[U]          ?bool  : false
-    superclass_of[U]        ?bool  : false
-    direct_subclass_of[U]   ?bool  : false
-    direct_superclass_of[U] ?bool  : false
+    def subclass_of[U]          ?: false
+    def superclass_of[U]        ?: false
+    def direct_subclass_of[U]   ?: false
+    def direct_superclass_of[U] ?: false
 }
 
 // ? inheritance allows the type meta-function specialisations in
@@ -23,11 +23,11 @@ class type[:void] ? not_class {
 }
 
 // specialisation for functions
-class type[F : (A...)?R] ? not_class {
+class type[F : (?A...)?R] ? not_class {
     return_type        ?: R
     arguments_type     ?: A
 }
 
-class type[T?uint] ? not_class {
+class type[uint T] ? not_class {
     value ?: T
 }
