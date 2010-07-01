@@ -9,9 +9,9 @@ using namespace chilon::parser;
 using namespace chilon::parser::ascii;
 
 typedef lexeme<
-    choice<char_<'_'>, char_range<'a','z','A','Z'> >,
+    choice<char_<'_'>, char_range<a,z, A,Z> >,
     many< choice<
-        char_range<'a','z','A','Z','0','9'>,
+        char_range<a,z, A,Z, '0','9'>,
         char_from<'_','.'>
     > > > MetaIdentifier;
 

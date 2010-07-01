@@ -2,7 +2,7 @@
 
 namespace nyah { namespace mousebear {
 
-bool dependency_tracker::add_depdendency(range  const& rule_name,
+void dependency_tracker::add_depdendency(range  const& rule_name,
                                          rule_t const& dependency)
 {
     // babylonian satu

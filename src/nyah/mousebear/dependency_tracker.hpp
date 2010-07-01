@@ -33,7 +33,6 @@ class dependency_tracker {
           : rule_name_(rule_name), rule_(&rule) {};
     };
 
-    // first grammar_id is dependent, second is dependency
     struct grammar_rule_dep {
         grammar_id const dependent_;
         grammar_id const dependency_;
@@ -59,8 +58,8 @@ class dependency_tracker {
     std::unordered_map<range, unsigned int>                      grammar_dep_count_;
 
   public:
-    // add dependency, return true if there is a circular reference
-    bool add_depdendency(range const& rule_name, rule_t const& grammar_id);
+    // add dependency, throws cycle_error
+    void add_depdendency(range const& rule_name, rule_t const& grammar_id);
 };
 
 } }
