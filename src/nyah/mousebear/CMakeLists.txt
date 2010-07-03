@@ -1,5 +1,4 @@
-add_executable(mousebear mousebear.cpp builder/cpp.cpp
-                         dependency_tracker.cpp options.cpp)
+add_executable(mousebear mousebear.cpp builder/cpp.cpp options.cpp)
 
 install(TARGETS mousebear
         RUNTIME DESTINATION ${BIN_DIR}

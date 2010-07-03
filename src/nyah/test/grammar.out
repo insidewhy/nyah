@@ -1,5 +1,5 @@
 file grammar.nyah
-grammar "grammar": [
+grammar "grammar" = [
     Rule: (
         RuleName: "Spacing"
         Expression: Suffix: (

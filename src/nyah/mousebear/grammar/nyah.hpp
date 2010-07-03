@@ -15,8 +15,13 @@ typedef lexeme<
         char_from<'_','.'>
     > > > MetaIdentifier;
 
-struct Grammar : simple_node<Grammar, sequence<
-    many< char_<'@',g,r,a,m,m,a,r>, MetaIdentifier, grammar::Grammar> > > {};
+typedef sequence<
+    char_<'@',g,r,a,m,m,a,r>, MetaIdentifier,
+    optional<
+        char_<'@',e,x,t,e,n,d,s>, MetaIdentifier>>  GrammarInfo;
+
+struct Grammar : simple_node<
+    Grammar, many< GrammarInfo, grammar::Grammar> > {};
 
 } } } }
 #endif

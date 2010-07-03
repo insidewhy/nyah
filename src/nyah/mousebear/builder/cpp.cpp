@@ -30,13 +30,13 @@ namespace {
     };
 }
 
-void cpp::operator()(char const * const file_path) {
+void cpp::operator()(std::string const& file_path) {
     using grammar::nyah_stream;
     using nyah::Grammar;
 
-    opts_.verbose("parsing file ", file_path);
+    proj_.opts().verbose("parsing file ", file_path);
     nyah_stream stream;
-    if (! stream.load(file_path))
+    if (! stream.load(file_path.c_str()))
         throw cannot_open_file(file_path);
 
     stream.skip_whitespace();
@@ -48,15 +48,24 @@ void cpp::operator()(char const * const file_path) {
         if (! stream.empty())
             throw parsing_error(file_path);
         else
-            opts_.verbose(file_path, ": parsed grammar");
+            proj_.opts().verbose(file_path, ": parsed grammar");
     }
     else throw parsing_error("nothing parsed", file_path);
 
-    if (opts_.print_ast_) {
+    if (proj_.opts().print_ast_) {
         chilon::print("file ", file_path);
 
         for (auto it = ast.value_.begin(); it != ast.value_.end(); ++it) {
-            chilon::print("grammar ", std::get<0>(*it), ": ", std::get<1>(*it));
+            auto extends = std::get<1>(*it);
+            if (extends.empty()) {
+                chilon::print(
+                    "grammar ", std::get<0>(*it), " = ", std::get<2>(*it));
+            }
+            else {
+                chilon::print(
+                    "grammar ", std::get<0>(*it), " extends ",
+                    extends, " = ", std::get<2>(*it));
+            }
         }
     }
 
@@ -104,6 +113,12 @@ void cpp::operator()(char const * const file_path) {
         chilon::variant_apply(*it, rule_apply(*this));
     }
 #endif
+}
+
+void cpp::operator()() {
+    for (auto it = proj_.files().begin(); it != proj_.files().end(); ++it) {
+        (*this)(*it);
+    }
 }
 
 } } }

@@ -2,7 +2,7 @@
 #define NYAH_MOUSEBEAR_BUILDER_CPP_HPP
 
 #include <nyah/mousebear/dependency_tracker.hpp>
-#include <nyah/mousebear/options.hpp>
+#include <nyah/mousebear/project.hpp>
 #include <nyah/mousebear/file_error.hpp>
 
 #include <chilon/getset.hpp>
@@ -12,20 +12,28 @@
 
 namespace nyah { namespace mousebear {
 
+class NodeRule;
+class Rule;
+
 namespace grammar { namespace nyah { class Grammar; } }
 
 namespace builder {
 
 class cpp {
-    dependency_tracker  dependencies_;
-    options const&      opts_;
+    dependency_tracker<
+        chilon::range,
+        chilon::variant<Rule, NodeRule> const *> dependencies_;
+
+    project& proj_;
+
+    void operator()(std::string const& file_path);
 
   public:
-    void operator()(char const * const file_path);
+    void operator()();
 
-    cpp(decltype(opts_)& opts) : opts_(opts) {}
+    cpp(decltype(proj_)& proj) : proj_(proj) {}
 
-    CHILON_GET(opts)
+    CHILON_GET(proj)
 };
 
 } } }

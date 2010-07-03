@@ -1,7 +1,7 @@
 #include <nyah/mousebear/grammar/nyah.hpp>
 #include <nyah/mousebear/grammar/nyah.hpp>
 #include <nyah/mousebear/builder/cpp.hpp>
-#include <nyah/mousebear/options.hpp>
+#include <nyah/mousebear/project.hpp>
 
 #include <chilon/print.hpp>
 
@@ -28,22 +28,24 @@ inline int main(int argc, char *argv[]) {
     if (0 == nPositionals) return 1;
 
     // cplusplus builder
-    builder::cpp build_source(opts);
+    project project(opts);
 
-    for (int i = 1; i <= nPositionals; ++i) {
-        try {
-            build_source(argv[i]);
-        }
-        catch (cannot_open_file const& e) {
-            chilon::print(std::cerr, e.what(), ": ", e.file_path_);
-        }
-        catch (parsing_error const& e) {
-            chilon::print(std::cerr, e.what(), ": ", e.file_path_);
-        }
-        catch (std::runtime_error const& e) {
-            chilon::print(std::cerr, e.what());
-            return 1;
-        }
+    for (int i = 1; i <= nPositionals; ++i)
+        project.add_file(argv[i]);
+
+    try {
+        builder::cpp build_source(project);
+        build_source();
+    }
+    catch (cannot_open_file const& e) {
+        chilon::print(std::cerr, e.what(), ": ", e.file_path_);
+    }
+    catch (parsing_error const& e) {
+        chilon::print(std::cerr, e.what(), ": ", e.file_path_);
+    }
+    catch (std::runtime_error const& e) {
+        chilon::print(std::cerr, e.what());
+        return 1;
     }
 
     return 0;
