@@ -7,10 +7,7 @@ dependency using:
     git submodule update --init
 
 This project is organised like this:
-    doc/
-        evolution1/ - Old version of the language.
-        examples/   - Example grammars.
-        nyah.txt
+    doc/website/    - The nyah website
     src/
         chilon/     - Library used by this project. git submodule
         nyah/
@@ -20,7 +17,7 @@ This project is organised like this:
             std/      - Nyah standard library
             mousebear/        - Bootstrap nyah compiler.
                 builder/          - mousebear AST -> code
-                    cpp.hpp, cpp.cpp   -  cplusplus code generator
+                    cpp.hpp, cpp.cpp   -  C++0x code generator
                 grammar/          - mousebear chilon::parser grammar
-                    grammar.hpp   - meta-grammar
+                    grammar.hpp   - grammar-grammar
                     nyah.hpp      - nyah grammar
