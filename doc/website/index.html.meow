@@ -8,15 +8,15 @@ head {
 
 %h1 Nyah
 
-%p { Nyah is a systems programming language designed to allow code to be written that performs as well or better than traditional systems languages like C and C++. Nyah is typed, but uses type inference so types can often be ommitted. Nyah has strong meta-programming abilities that exceed those of C++0x. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code. }
+%p { Nyah is a systems programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++. Nyah is typed, but uses type inference so types can usually be ommitted. and has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code. }
 
 %h2 Aims
 %p Nyah looks to many other languages for inspiration, especially C++0x, scala and D. It aims to:
 
 %ul {
-    %li Exceed the meta-programming abilities of C++0x whilst simplifying its verbose syntax.
-    %li Exceed the type inference abilities of scala.
-    %li Exceed the runtime performance of D.
+    %li Exceed the meta-programming capabilities of C++0x whilst simplifying its verbose syntax.
+    %li Exceed the type inference and DSL building capabilities of scala.
+    %li Exceed the runtime performance of D and provide a fast and free MIT licensed compiler implementation.
 }
 
 %h2 Nyah syntax can be extended easily.
@@ -71,8 +71,9 @@ EOF
     generic_add(1f, 2f)
 
     // assign_ptr's first arugment can be any type, but must be a
-    // pointer. The second type may be passed from a const or non-const
-    // but is treated as a const within the arugment.
+    // pointer. The second argument may be passed from a const or non-const
+    // expression (unless a more specific non-const overload exists) but 
+    // is treated as a const variable within the function.
     def assign_ptr(a:*, b:const) = a + b.
 
     // Functions can be overloaded, the most specific function always
@@ -93,7 +94,7 @@ EOF
     }
 EOF
 
-%h1 Arrays
+%h2 Arrays
 
 %pre <<EOF
     // create array of 3 integers
@@ -106,3 +107,7 @@ EOF
     b := [[ i ?: 0..3, i ]]
 
 EOF
+
+%h2 Unfortunately
+
+The project is not finished, and the existing compiler implementation only compiles the grammar syntax of nyah. Please check out the | %a(href=http://github.com/tuxjay/nyah) nyah git repository. | Any volunteers or offers of research positions or grants to enable me to work on this full time will be met with enthusiastic dedication.
