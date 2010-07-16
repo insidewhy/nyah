@@ -1,6 +1,6 @@
 @module std
 
-def factorial[uint ?T] ? uint : T * factorial[T - 1]
+def factorial[uint ?T] ?: T * factorial[T - 1]
 def factorial[0u]      ?: 0u
 // factorial[0u] == factorial[uint 0u]
 

@@ -1,12 +1,12 @@
 @module std
 
 class type[T] {
-    sizeof?size_t  = __internal
+    sizeof ?: __internal[size_t]
 
-    def subclass_of[U]          ?bool  : __internal
-    def superclass_of[U]        ?bool  : __internal
-    def direct_subclass_of[U]   ?bool  : __internal
-    def direct_superclass_of[U] ?bool  : __internal
+    def subclass_of[U]          ?: __internal[bool]
+    def superclass_of[U]        ?: __internal[bool]
+    def direct_subclass_of[U]   ?: __internal[bool]
+    def direct_superclass_of[U] ?: __internal[bool]
 }
 
 class not_class {
@@ -19,11 +19,11 @@ class not_class {
 // ? inheritance allows the type meta-function specialisations in
 // not_class to apply to type[:void]
 class type[:void] ? not_class {
-    sizeof?size_t      = 0
+    sizeof ?: 0
 }
 
 // specialisation for functions
-class type[F : (?A...)?R] ? not_class {
+class type[F : def (?A...)?R] ? not_class {
     return_type        ?: R
     arguments_type     ?: A
 }

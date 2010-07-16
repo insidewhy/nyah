@@ -4,7 +4,7 @@ class ptr_array[uint ?N, T] {
     @+const operator()(idx:uint):T& = data_(idx)
 
     indexes ?: 0u .. N-1
-    size    ?: sizeof...(T)
+    size    ?: N
 
     def ~self() {
         for(i, indexes) delete data_(i)

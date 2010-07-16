@@ -1,0 +1,108 @@
+!html
+head {
+    %title nyah
+    link(rel=stylesheet, type=text/css, href="css/global.css")
+}
+
+!body
+
+%h1 Nyah
+
+%p { Nyah is a systems programming language designed to allow code to be written that performs as well or better than traditional systems languages like C and C++. Nyah is typed, but uses type inference so types can often be ommitted. Nyah has strong meta-programming abilities that exceed those of C++0x. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code. }
+
+%h2 Aims
+%p Nyah looks to many other languages for inspiration, especially C++0x, scala and D. It aims to:
+
+%ul {
+    %li Exceed the meta-programming abilities of C++0x whilst simplifying its verbose syntax.
+    %li Exceed the type inference abilities of scala.
+    %li Exceed the runtime performance of D.
+}
+
+%h2 Nyah syntax can be extended easily.
+
+%p New features can be added to the language from within nyah code itself. This not only allows many powerful features to be expressed neatly in the language, but makes nyah an ideal "compiler toolkit". It is conceivable to import the syntax of a pre-existing language into nyah, for example, the nyah grammar module allows PEG parsers to be expressed directly in PEG notation within the compiler.
+
+%h2 Nyah is a meta-compiler.
+
+%p Whilst the goals are ambitious the nyah compiler achieves them neatly by approaching compilation in a unique way. In the first stage the nyah compiler creates a new compiler based on the input source code. This compiler is then run to generate the final source code. Whilst this approach adds another layer of indirection which would make the compilation of traditional code slightly slower, it allows code that takes advantage of meta-programming to be compiled very quickly. It also allows type inference to be more powerful than a language like scala. In nyah even functions that recursively call other meta-functions can benefit from return type inference.
+
+%h2 Variables
+
+%pre <<EOF
+    // Initialisation and assignment.
+    a : uint = 0
+
+    // Type of b is inferred by compiler.
+    b := 0
+
+    // Construct object on stack.
+    v_stack := vector[int]()
+
+    // Construct object on heap.
+    v_heap := new vector[int]()
+EOF
+
+%h2 Functions
+
+%pre <<EOF
+    // A function with a single statement.
+    def add(a:const int, b:const int):int
+        return a + b
+
+    // Return type can always be omitted, in which case it is inferred
+    // by the compiler. A statement "= <expression>" is equivalent to
+    // "return <expression>".
+    def subtract(a:const int, b:const int) = a - b
+
+    // A function containing several statements. The return type can
+    // always be omitted, in which case it is inferred by the compiler.
+    def divide(a:const int, b:const int) {
+        assert(b != 0)
+        return a / b
+    }
+
+    // Argument types may also be omitted.
+    def generic_add(a, b) = a += b
+
+    // A new function is generated for each set of argument types,
+    // so the following two calls created two different functions.
+    generic_add(1, 2)
+    generic_add(1f, 2f)
+
+    // assign_ptr's first arugment can be any type, but must be a
+    // pointer. The second type may be passed from a const or non-const
+    // but is treated as a const within the arugment.
+    def assign_ptr(a:*, b:const) = a + b.
+
+    // Functions can be overloaded, the most specific function always
+    // matches.
+    def end(a) = a.end()
+
+    // +const generates two versions of the function, one for const
+    // char pointers, and one for mutable char pointers. In each case
+    // the return value is different.
+    def end(a:char +const *) {
+        while (*a != '\0') ++a
+        return a
+    }
+
+    def end(a:*) {
+        // create a compile time error if called.
+        @error "Cannot retrieve end of pointer"
+    }
+EOF
+
+%h1 Arrays
+
+%pre <<EOF
+    // create array of 3 integers
+    a := [[ 1, 2, 3 ]]
+
+    // Create array of 3 integers and assign elements in a run-time loop.
+    c := [[ i : 0..3, i ]]
+
+    // As above but create values at compile time.
+    b := [[ i ?: 0..3, i ]]
+
+EOF

@@ -38,7 +38,7 @@ def variant_apply(v:variant[T...], functor:const) = {
     // functor.
     @singleton executors:ptr_array[sizeof...[T], executor_base] =
         [[
-            i ? 0u .. sizeof...(T),
+            i ? 0u .. sizeof...[T],
             lambda functor(T[i])
         ]]
 
