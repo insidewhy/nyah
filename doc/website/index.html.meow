@@ -63,14 +63,14 @@ EOF
     }
 
     // Argument types may also be omitted.
-    def generic_add(a, b) = a += b
+    def generic_add(a, b) = a + b
 
     // A new function is generated for each set of argument types,
     // so the following two calls created two different functions.
     generic_add(1, 2)
     generic_add(1f, 2f)
 
-    // assign_ptr's first arugment can be any type, but must be a
+    // assign_ptr's first argument can be any type, but must be a
     // pointer. The second argument may be passed from a const or non-const
     // expression (unless a more specific non-const overload exists) but 
     // is treated as a const variable within the function.
