@@ -39,7 +39,7 @@ class vector[T] {
         capacity = 0
     }
 
-    def self(a:T const) {
+    def self(a:const T) {
         // if a function has only one type argument or argument then brackets
         // are not needed to call it e.g. new...
         data_ = new T
@@ -55,7 +55,7 @@ class vector[T] {
         a.data_ = 0
     }
 
-    def push_back(a:T const) {
+    def push_back(a:const T) {
         if (size == capacity - 1) {
             reallocate(data_, capacity *= 2)
         }

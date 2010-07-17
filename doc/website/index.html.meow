@@ -1,12 +1,18 @@
 !html
 head {
     %title nyah
-    link(rel=stylesheet, type=text/css, href="css/global.css")
+    link(rel=stylesheet, type=text/css, href=css/global.css)
 }
 
 !body
 
 %h1 Nyah
+
+#links {
+    links:
+    %a(href=http://github.com/tuxjay/nyah) source
+    %a(href=cplusplus.html) nyah vs c++(0x)
+}
 
 %p { Nyah is a systems programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++. Nyah is typed, but uses type inference so types can usually be ommitted. and has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code. }
 
@@ -14,14 +20,15 @@ head {
 %p Nyah looks to many other languages for inspiration, especially C++0x, scala and D. It aims to:
 
 %ul {
-    %li Exceed the meta-programming capabilities of C++0x whilst simplifying its verbose syntax.
+    %li Improve the powerful meta-programming functionalities of C++0x and D whilst simplifying the syntax.
     %li Exceed the type inference and DSL building capabilities of scala.
-    %li Exceed the runtime performance of D and provide a fast and free MIT licensed compiler implementation.
+    %li Exceed the runtime performance of D and provide a fast and free MIT licensed compiler implementation on top of LLVM.
+    %li Provide a powerful and intelligent compiler to allow the compiler to infer more information, saving the developer from repetitive typing.
 }
 
 %h2 Nyah syntax can be extended easily.
 
-%p New features can be added to the language from within nyah code itself. This not only allows many powerful features to be expressed neatly in the language, but makes nyah an ideal "compiler toolkit". It is conceivable to import the syntax of a pre-existing language into nyah, for example, the nyah grammar module allows PEG parsers to be expressed directly in PEG notation within the compiler.
+%p New features can be added to the language and the compiler from within nyah code itself. This not only allows many powerful features to be expressed neatly in the language, but makes nyah an ideal "compiler toolkit". It is conceivable to import the syntax of a pre-existing language into nyah, for example, the nyah grammar module allows PEG parsers to be expressed directly in PEG notation within the compiler.
 
 %h2 Nyah is a meta-compiler.
 
@@ -72,7 +79,7 @@ EOF
 
     // assign_ptr's first argument can be any type, but must be a
     // pointer. The second argument may be passed from a const or non-const
-    // expression (unless a more specific non-const overload exists) but 
+    // expression (unless a more specific non-const overload exists) but
     // is treated as a const variable within the function.
     def assign_ptr(a:*, b:const) = a + b.
 
@@ -106,6 +113,9 @@ EOF
     // As above but create values at compile time.
     b := [[ i ?: 0..3, i ]]
 
+    // Index second element of array. [ and ] are used for type
+    // parameters, so ( and ) are used for arrays in nyah as in scala.
+    print(b(1))
 EOF
 
 %h2 Unfortunately

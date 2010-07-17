@@ -8,12 +8,12 @@ class variant[T...] {
         data_ = new[T](v)
     }
 
-    @+const def at[U] = {
+    def at[U] = {
         @assert (contains[U, T...])
         *reinterpret_cast[U *](data_)
     }
 
-    @+const def at[I:uint] = {
+    def at[I:uint] = {
         @assert (I < sizeof... T)
         *reinterpret_cast[ T[I] *](data_)
     }

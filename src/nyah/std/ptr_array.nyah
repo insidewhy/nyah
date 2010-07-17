@@ -1,7 +1,7 @@
 @module std
 
 class ptr_array[uint ?N, T] {
-    @+const operator()(idx:uint):T& = data_(idx)
+    operator()(idx:uint):T& = data_(idx)
 
     indexes ?: 0u .. N-1
     size    ?: N

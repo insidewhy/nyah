@@ -1,10 +1,10 @@
 @module std
 
 def contains[T, T, U...] ?: true
-def contains[T, O, U...] ?bool : contains[T, U...]
+def contains[T, O, U...] ?: contains[T, U...]
 def contains[T]          ?: false
 
 def index_of[uint ?offset, T]           ?: offset
 def index_of[uint ?offset, T, T, U...]  ?: offset
-def index_of[uint ?offset, T, O, U...]  ?uint : index_of[offset + 1, T, U...]
-def index_of[T, U...]                  ?: index_of[0u, T, U...]
+def index_of[uint ?offset, T, O, U...]  ?: index_of[offset + 1, T, U...]
+def index_of[T, U...]                   ?: index_of[0u, T, U...]

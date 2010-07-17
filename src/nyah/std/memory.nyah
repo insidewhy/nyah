@@ -11,7 +11,7 @@ def reallocate(a?*&, size:size_t) {
     a = realloc(a, size * sizeof a)
 }
 
-def copy(dest?T*, src:T const) {
+def copy(dest?T*, src:const T) {
     memcpy(dest, &src, sizeof T)
 }
 
