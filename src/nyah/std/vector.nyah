@@ -63,7 +63,7 @@ class vector[T] {
         ++size
     }
 
-    @+const def operator()(n:size_t):& = *(data_ + n * sizeof T)
+    def operator()(n:size_t):& = *(data_ + n * sizeof T)
 
     size     :uint
     capacity :size_t

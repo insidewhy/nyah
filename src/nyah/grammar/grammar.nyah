@@ -7,7 +7,7 @@ Escape         <- [\\] ^ [sSnNtTwW."'&!+*\\]
 String         <- '"' ^ (Escape / ! '"')^* ^ '"' /
                   "'" ^ (Escape / ! "'")^* ^ "'"
 RuleName       <= [A-Z] ^ [a-zA-Z0-9_]+
-Primary        <- RuleName ! "<" / "(" Expression ")" /
+Primary        <- RuleName &! "<" / "(" Expression ")" /
                   AnyCharacter / String / Escape / RuleName / CharacterRange
 Suffix         <= Primary ( "^+" / "^*" / [?*+] / "|+" / "|?" )|?
 Prefix         <= ( "&!" / [&!] )|? Suffix

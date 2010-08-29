@@ -23,7 +23,7 @@ class type[:void] ? not_class {
 }
 
 // specialisation for functions
-class type[F : def (?A...)?R] ? not_class {
+class type[F : def (A...)?R] ? not_class {
     return_type        ?: R
     arguments_type     ?: A
 }

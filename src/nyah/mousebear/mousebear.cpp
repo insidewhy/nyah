@@ -38,13 +38,13 @@ inline int main(int argc, char *argv[]) {
         build_source();
     }
     catch (cannot_open_file const& e) {
-        chilon::print(std::cerr, e.what(), ": ", e.file_path_);
+        chilon::println(std::cerr, e.what(), ": ", e.file_path_);
     }
     catch (parsing_error const& e) {
-        chilon::print(std::cerr, e.what(), ": ", e.file_path_);
+        chilon::println(std::cerr, e.what(), ": ", e.file_path_);
     }
     catch (std::runtime_error const& e) {
-        chilon::print(std::cerr, e.what());
+        chilon::println(std::cerr, e.what());
         return 1;
     }
 

@@ -147,7 +147,7 @@ grammar "grammar" = [
             Sequence: [
                 RuleName: "RuleName"
                 Prefix: (
-                    '!'
+                    "&!"
                     "<"
                 )
             ]

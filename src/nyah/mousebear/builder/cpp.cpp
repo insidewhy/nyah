@@ -53,16 +53,16 @@ void cpp::operator()(std::string const& file_path) {
     else throw parsing_error("nothing parsed", file_path);
 
     if (proj_.opts().print_ast_) {
-        chilon::print("file ", file_path);
+        chilon::println("file ", file_path);
 
         for (auto it = ast.value_.begin(); it != ast.value_.end(); ++it) {
             auto extends = std::get<1>(*it);
             if (extends.empty()) {
-                chilon::print(
+                chilon::println(
                     "grammar ", std::get<0>(*it), " = ", std::get<2>(*it));
             }
             else {
-                chilon::print(
+                chilon::println(
                     "grammar ", std::get<0>(*it), " extends ",
                     extends, " = ", std::get<2>(*it));
             }
