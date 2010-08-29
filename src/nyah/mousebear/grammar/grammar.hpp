@@ -61,13 +61,19 @@ typedef choice<
     char_<'\''> >
 > String;
 
-struct RuleName : simple_node<RuleName,
-    lexeme<char_range<A, Z>, many< char_range<a,z, A,Z> > > > {};
+typedef lexeme<char_range<A,Z>, many< char_range<a,z, A,Z> > > RuleIdentifier;
+
+typedef lexeme<char_range<a,z, A,Z>, many< char_range<a,z, A,Z> > > FileIdentifier;
+
+struct RuleName : simple_node<RuleName, RuleIdentifier> {};
+
+struct ScopedRule : simple_node<ScopedRule,
+    sequence< FileIdentifier, char_<':'>, RuleIdentifier > > {};
 
 struct Expression;
 
 typedef choice<
-    String, CharacterRange, Escape, AnyCharacter,
+    String, CharacterRange, Escape, AnyCharacter, ScopedRule,
     sequence< RuleName, not_< char_<'<'> > >,
     sequence< char_<'('>, node<Expression>, char_<')'> >
 > Primary;

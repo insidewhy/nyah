@@ -1,4 +1,4 @@
-file grammar.nyah
+file test/grammar.nyah
 grammar "grammar" = [
     Rule: (
         RuleName: "Spacing"
@@ -114,8 +114,8 @@ grammar "grammar" = [
             ]
         ]
     )
-    NodeRule: (
-        RuleName: "RuleName"
+    Rule: (
+        RuleName: "RuleIdentifier"
         Expression: Joined: [
             CharacterRange: [ (
                 'A'
@@ -142,8 +142,58 @@ grammar "grammar" = [
         ]
     )
     Rule: (
+        RuleName: "GrammarIdentifier"
+        Expression: Joined: [
+            CharacterRange: [
+                (
+                    'a'
+                    'z'
+                )
+                (
+                    'A'
+                    'Z'
+                )
+            ]
+            Suffix: (
+                CharacterRange: [
+                    (
+                        'a'
+                        'z'
+                    )
+                    (
+                        'A'
+                        'Z'
+                    )
+                    (
+                        '0'
+                        '9'
+                    )
+                    '_'
+                ]
+                '+'
+            )
+        ]
+    )
+    NodeRule: (
+        RuleName: "RuleName"
+        Expression: RuleName: "RuleIdentifier"
+    )
+    NodeRule: (
+        RuleName: "ScopedRule"
+        Expression: Sequence: [
+            RuleName: "GrammarIdentifier"
+            ":"
+            RuleName: "RuleIdentifier"
+        ]
+    )
+    Rule: (
         RuleName: "Primary"
         Expression: OrderedChoice: [
+            RuleName: "String"
+            RuleName: "CharacterRange"
+            RuleName: "Escape"
+            RuleName: "AnyCharacter"
+            RuleName: "ScopedRule"
             Sequence: [
                 RuleName: "RuleName"
                 Prefix: (
@@ -156,11 +206,6 @@ grammar "grammar" = [
                 RuleName: "Expression"
                 ")"
             ]
-            RuleName: "AnyCharacter"
-            RuleName: "String"
-            RuleName: "Escape"
-            RuleName: "RuleName"
-            RuleName: "CharacterRange"
         ]
     )
     NodeRule: (

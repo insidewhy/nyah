@@ -1,0 +1,61 @@
+file test/nyah.nyah
+grammar "nyah" extends "grammar" = [
+    Rule: (
+        RuleName: "MetaIdentifier"
+        Expression: Joined: [
+            CharacterRange: [
+                (
+                    'A'
+                    'Z'
+                )
+                (
+                    'a'
+                    'z'
+                )
+                '_'
+            ]
+            Suffix: (
+                CharacterRange: [
+                    (
+                        'A'
+                        'Z'
+                    )
+                    (
+                        'a'
+                        'z'
+                    )
+                    (
+                        '0'
+                        '9'
+                    )
+                    '_'
+                ]
+                '*'
+            )
+        ]
+    )
+    Rule: (
+        RuleName: "GrammarInfo"
+        Expression: Sequence: [
+            "@grammar"
+            RuleName: "MetaIdentifier"
+            Suffix: (
+                Expression: Sequence: [
+                    "@extends"
+                    RuleName: "MetaIdentifier"
+                ]
+                '?'
+            )
+        ]
+    )
+    NodeRule: (
+        RuleName: "Grammar"
+        Expression: Sequence: [
+            RuleName: "GrammarInfo"
+            ScopedRule: (
+                "grammar"
+                "Grammar"
+            )
+        ]
+    )
+]

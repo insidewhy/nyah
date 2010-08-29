@@ -1,6 +1,7 @@
 #include <nyah/mousebear/grammar/nyah.hpp>
 #include <nyah/mousebear/builder/cpp.hpp>
 
+#include <unordered_map>
 #include <cstring>
 #include <stdexcept>
 
@@ -116,8 +117,18 @@ void cpp::operator()(std::string const& file_path) {
 }
 
 void cpp::operator()() {
+    // false = being processed, true = processed, not there = new
+    std::unordered_map<std::string, bool> loaded;
+
     for (auto it = proj_.files().begin(); it != proj_.files().end(); ++it) {
+        if (loaded.count(*it)) continue;
+
+        loaded[*it] = false;
         (*this)(*it);
+
+        // TODO: load include files
+
+        loaded[*it] = true;
     }
 }
 

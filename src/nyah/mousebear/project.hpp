@@ -3,6 +3,8 @@
 
 #include <nyah/mousebear/options.hpp>
 
+#include <chilon/getset.hpp>
+
 #include <vector>
 #include <string>
 
