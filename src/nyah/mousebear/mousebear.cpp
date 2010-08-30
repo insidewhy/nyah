@@ -30,12 +30,9 @@ inline int main(int argc, char *argv[]) {
     // cplusplus builder
     project project(opts);
 
-    for (int i = 1; i <= nPositionals; ++i)
-        project.add_file(argv[i]);
-
     try {
         builder::cpp build_source(project);
-        build_source();
+        for (int i = 1; i <= nPositionals; ++i) build_source(argv[i]);
     }
     catch (cannot_open_file const& e) {
         chilon::println(std::cerr, e.what(), ": ", e.file_path_);

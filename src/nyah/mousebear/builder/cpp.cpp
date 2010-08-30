@@ -1,7 +1,6 @@
 #include <nyah/mousebear/grammar/nyah.hpp>
 #include <nyah/mousebear/builder/cpp.hpp>
 
-#include <unordered_map>
 #include <cstring>
 #include <stdexcept>
 
@@ -35,7 +34,11 @@ void cpp::operator()(std::string const& file_path) {
     using grammar::nyah_stream;
     using nyah::Grammar;
 
+    auto& file = proj_.add_file(file_path);
+    if (file.processed()) return;
+
     proj_.opts().verbose("parsing file ", file_path);
+
     nyah_stream stream;
     if (! stream.load(file_path.c_str()))
         throw cannot_open_file(file_path);
@@ -70,66 +73,13 @@ void cpp::operator()(std::string const& file_path) {
         }
     }
 
-#if 0
-    int length = std::strlen(file_path);
-    if (length < 1) {
-        throw std::runtime_error("file path is empty");
-    }
+    // TODO: process dependencies
 
-    std::unique_ptr<char> outputPath;
+    // this marks the file as processed to remove it from circular dependency
+    // lookup checks
+    file = true;
 
-    if (! opts_.output_dir_.empty()) {
-        auto const& outDir = opts_.output_dir_;
-        if (outDir.size() < 1) {
-            throw std::runtime_error("output directory is empty");
-        }
-
-        if ('/' == outDir[outDir.size() - 1]) {
-            outputPath.reset(new char[length + outDir.size() + 1]);
-            std::copy(
-                outDir.begin(), outDir.begin() + outDir.size(), outputPath.get());
-            std::copy(
-                file_path, file_path + length, outputPath.get() + outDir.size());
-            outputPath.get()[length + outDir.size()] = '\0';
-        }
-        else {
-            outputPath.reset(new char[length + outDir.size() + 2]);
-            std::copy(
-                outDir.begin(), outDir.begin() + outDir.size(), outputPath.get());
-            outputPath.get()[outDir.size()] = '/';
-            std::copy(
-                file_path, file_path + length, outputPath.get() + outDir.size() + 1);
-            outputPath.get()[length + 1 + outDir.size()] = '\0';
-        }
-
-        opts_.verbose("creating file ", outputPath.get());
-    }
-    else {
-        opts_.verbose("creating file ", file_path);
-    }
-
-
-    auto const& rules = std::get<1>(ast.value_);
-    for (auto it = rules.begin(); it != rules.end(); ++it) {
-        chilon::variant_apply(*it, rule_apply(*this));
-    }
-#endif
-}
-
-void cpp::operator()() {
-    // false = being processed, true = processed, not there = new
-    std::unordered_map<std::string, bool> loaded;
-
-    for (auto it = proj_.files().begin(); it != proj_.files().end(); ++it) {
-        if (loaded.count(*it)) continue;
-
-        loaded[*it] = false;
-        (*this)(*it);
-
-        // TODO: load include files
-
-        loaded[*it] = true;
-    }
+    // TODO: output grammar file to opts_.output_dir_
 }
 
 } } }

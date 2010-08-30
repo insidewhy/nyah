@@ -22,11 +22,8 @@ class cpp {
     project& proj_;
 
   public:
-    // process single file without includes
+    // add file to project and process it and its includes
     void operator()(std::string const& file_path);
-
-    // process all files in project
-    void operator()();
 
     cpp(decltype(proj_)& proj) : proj_(proj) {}
 

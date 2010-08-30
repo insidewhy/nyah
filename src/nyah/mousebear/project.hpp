@@ -2,21 +2,24 @@
 #define NYAH_PROJECT_HPP
 
 #include <nyah/mousebear/options.hpp>
+#include <nyah/mousebear/file.hpp>
 
 #include <chilon/getset.hpp>
 
-#include <vector>
+#include <unordered_map>
 #include <string>
 
 namespace nyah { namespace mousebear {
 
 class project {
-    options&                 opts_;
-    std::vector<std::string> files_;
+    options&                              opts_;
+    std::unordered_map<std::string, file> files_;
+    typedef decltype(files_)              files_t;
 
   public:
-    void add_file(char const * const file_path) {
-        files_.push_back(file_path);
+    file& add_file(std::string const& file_path) {
+        return files_.insert(
+            files_t::value_type(file_path, file())).first->second;
     }
 
     project(decltype(opts_)& opts) : opts_(opts) {}

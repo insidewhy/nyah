@@ -1,4 +1,4 @@
-file test/nyah.nyah
+file nyah.nyah
 grammar "nyah" extends "grammar" = [
     Rule: (
         RuleName: "MetaIdentifier"

@@ -1,4 +1,4 @@
-file test/grammar.nyah
+file grammar.nyah
 grammar "grammar" = [
     Rule: (
         RuleName: "Spacing"
