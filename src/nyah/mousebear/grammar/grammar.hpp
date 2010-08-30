@@ -23,16 +23,13 @@ namespace nyah { namespace mousebear { namespace grammar { namespace grammar {
 using namespace chilon::parser;
 using namespace chilon::parser::ascii;
 
-typedef source_code_stream<
-    file_stream,
-    choice<
-        sequence<
-            char_<'/', '/'>,
-            until<any_char, char_<'\n'>>
-        >,
-        whitespace
-    >
-> nyah_stream;
+typedef choice<
+    sequence<
+        char_<'/', '/'>,
+        until<any_char, char_<'\n'>>
+    >,
+    whitespace
+> Spacing;
 
 typedef char_<'.'> AnyCharacter;
 

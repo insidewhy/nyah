@@ -2,7 +2,6 @@
 #define NYAH_MOUSEBEAR_BUILDER_CPP_HPP
 
 #include <nyah/mousebear/project.hpp>
-#include <nyah/mousebear/file_error.hpp>
 
 #include <chilon/getset.hpp>
 

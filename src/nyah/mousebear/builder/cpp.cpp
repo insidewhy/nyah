@@ -1,4 +1,3 @@
-#include <nyah/mousebear/grammar/nyah.hpp>
 #include <nyah/mousebear/builder/cpp.hpp>
 
 #include <cstring>
@@ -6,8 +5,8 @@
 
 namespace nyah { namespace mousebear { namespace builder {
 
+namespace nyah    = grammar::nyah;
 namespace grammar = grammar::grammar;
-namespace nyah    = mousebear::grammar::nyah;
 
 namespace {
     struct applier {
@@ -31,25 +30,13 @@ namespace {
 }
 
 void cpp::operator()(std::string const& file_path) {
-    using grammar::nyah_stream;
-    using nyah::Grammar;
-
     auto& file = proj_.add_file(file_path);
     if (file.processed()) return;
 
     proj_.opts().verbose("parsing file ", file_path);
 
-    nyah_stream stream;
-    if (! stream.load(file_path.c_str()))
-        throw cannot_open_file(file_path);
-
-    stream.skip_whitespace();
-
-    Grammar ast;
-
-    if (chilon::parser::parse<Grammar>::skip(stream, ast)) {
-        stream.skip_whitespace();
-        if (! stream.empty())
+    if (file.parse(file_path.c_str())) {
+        if (file.at_end())
             throw parsing_error(file_path);
         else
             proj_.opts().verbose(file_path, ": parsed grammar");
@@ -59,6 +46,7 @@ void cpp::operator()(std::string const& file_path) {
     if (proj_.opts().print_ast_) {
         chilon::println("file ", file_path);
 
+        auto& ast = file.ast();
         for (auto it = ast.value_.begin(); it != ast.value_.end(); ++it) {
             auto extends = std::get<1>(*it);
             if (extends.empty()) {

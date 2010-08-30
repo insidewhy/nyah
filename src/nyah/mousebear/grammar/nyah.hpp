@@ -8,6 +8,8 @@ namespace nyah { namespace mousebear { namespace grammar { namespace nyah {
 using namespace chilon::parser;
 using namespace chilon::parser::ascii;
 
+using grammar::Spacing;
+
 typedef lexeme<
     choice<char_<'_'>, char_range<a,z, A,Z> >,
     many< choice<
