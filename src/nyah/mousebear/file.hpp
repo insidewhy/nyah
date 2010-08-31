@@ -13,8 +13,8 @@ class file {
     typedef chilon::parser::source_code_stream<
         chilon::parser::file_stream, grammar::nyah::Spacing>   stream_t;
 
+    typename chilon::parser::stored<grammar_t>::type  ast_;
     bool       processed_;
-    grammar_t  ast_;
     stream_t   stream_;
   public:
     CHILON_GET(processed)

@@ -17,13 +17,14 @@ typedef lexeme<
         char_from<'_','.'>
     > > > MetaIdentifier;
 
-typedef sequence<
-    char_<'@',g,r,a,m,m,a,r>, MetaIdentifier,
-    optional<
-        char_<'@',e,x,t,e,n,d,s>, MetaIdentifier>>  GrammarInfo;
+struct MetaGrammar : simple_node<MetaGrammar,
+    sequence<
+        char_<'@',g,r,a,m,m,a,r>, MetaIdentifier,
+        optional<
+            char_<'@',e,x,t,e,n,d,s>, MetaIdentifier>,
+        grammar::Grammar> > {};
 
-struct Grammar : simple_node<
-    Grammar, many< GrammarInfo, grammar::Grammar> > {};
+typedef many<MetaGrammar> Grammar;
 
 } } } }
 #endif

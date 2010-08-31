@@ -10,11 +10,6 @@
 
 namespace nyah { namespace mousebear {
 
-class NodeRule;
-class Rule;
-
-namespace grammar { namespace nyah { class Grammar; } }
-
 namespace builder {
 
 class cpp {

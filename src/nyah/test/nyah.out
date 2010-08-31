@@ -34,8 +34,8 @@ grammar "nyah" extends "grammar" = [
             )
         ]
     )
-    Rule: (
-        RuleName: "GrammarInfo"
+    NodeRule: (
+        RuleName: "MetaGrammar"
         Expression: Sequence: [
             "@grammar"
             RuleName: "MetaIdentifier"
@@ -46,16 +46,17 @@ grammar "nyah" extends "grammar" = [
                 ]
                 '?'
             )
-        ]
-    )
-    NodeRule: (
-        RuleName: "Grammar"
-        Expression: Sequence: [
-            RuleName: "GrammarInfo"
             ScopedRule: (
                 "grammar"
                 "Grammar"
             )
         ]
+    )
+    Rule: (
+        RuleName: "Grammar"
+        Expression: Suffix: (
+            RuleName: "MetaGrammar"
+            '+'
+        )
     )
 ]

@@ -2,7 +2,6 @@
 @extends grammar
 
 MetaIdentifier <- [A-Za-z_] ^ [A-Za-z0-9_]*
-
-GrammarInfo    <- "@grammar" MetaIdentifier ("@extends" MetaIdentifier)?
-
-Grammar        <=  GrammarInfo grammar:Grammar
+MetaGrammar    <= "@grammar" MetaIdentifier ("@extends" MetaIdentifier)?
+                  grammar:Grammar
+Grammar        <-  MetaGrammar+
