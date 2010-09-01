@@ -1,7 +1,5 @@
-#include <nyah/mousedeer/grammar/nyah.hpp>
-#include <nyah/mousedeer/grammar/nyah.hpp>
 #include <nyah/mousedeer/cpp/builder.hpp>
-#include <nyah/mousedeer/project.hpp>
+#include <nyah/mousedeer/options.hpp>
 
 #include <chilon/print.hpp>
 
@@ -27,10 +25,8 @@ inline int main(int argc, char *argv[]) {
 
     if (0 == nPositionals) return 1;
 
-    project project(opts);
-
     try {
-        cpp::builder build_source(project);
+        cpp::builder build_source(opts);
         for (int i = 1; i <= nPositionals; ++i) build_source(argv[i]);
     }
     catch (cannot_open_file const& e) {

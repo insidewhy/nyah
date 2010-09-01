@@ -30,20 +30,20 @@ namespace {
 }
 
 void builder::operator()(std::string const& file_path) {
-    auto& file = proj_.add_file(file_path);
+    auto& file = add_file(file_path);
     if (file.success()) return;
 
-    proj_.opts().verbose("parsing file ", file_path);
+    options_.verbose("parsing file ", file_path);
 
     if (file.parse(file_path.c_str())) {
         if (! file.success())
             throw parsing_error(file_path);
         else
-            proj_.opts().verbose(file_path, ": parsed grammar");
+            options_.verbose(file_path, ": parsed grammar");
     }
     else throw parsing_error("nothing parsed", file_path);
 
-    if (proj_.opts().print_ast_) {
+    if (options_.print_ast_) {
         chilon::println("file ", file_path);
 
         auto& ast = file.ast();
