@@ -12,12 +12,7 @@ This project is organised like this:
         chilon/     - Library used by this project. git submodule
         nyah/
             grammar/  - Nyah grammars
-                grammar.nyah  - Nyah grammar meta-grammar source.
-                nyah.nyah     - Nyah meta-grammar source.
             std/      - Nyah standard library
-            mousebear/        - Bootstrap nyah compiler.
-                builder/          - mousebear AST -> code
-                    cpp.hpp, cpp.cpp   -  C++0x code generator
-                grammar/          - mousebear chilon::parser grammar
-                    grammar.hpp   - grammar-grammar
-                    nyah.hpp      - nyah grammar
+            mousedeer/        - Bootstrap nyah compiler.
+                cpp/          - mousedeer AST -> C++
+                grammar/          - mousedeer chilon::parser grammar
