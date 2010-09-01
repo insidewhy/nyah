@@ -31,12 +31,12 @@ namespace {
 
 void cpp::operator()(std::string const& file_path) {
     auto& file = proj_.add_file(file_path);
-    if (file.processed()) return;
+    if (file.success()) return;
 
     proj_.opts().verbose("parsing file ", file_path);
 
     if (file.parse(file_path.c_str())) {
-        if (file.at_end())
+        if (! file.success())
             throw parsing_error(file_path);
         else
             proj_.opts().verbose(file_path, ": parsed grammar");
@@ -62,10 +62,6 @@ void cpp::operator()(std::string const& file_path) {
     }
 
     // TODO: process dependencies
-
-    // this marks the file as processed to remove it from circular dependency
-    // lookup checks
-    file = true;
 
     // TODO: output grammar file to opts_.output_dir_
 }

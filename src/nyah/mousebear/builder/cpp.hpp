@@ -20,8 +20,6 @@ class cpp {
     void operator()(std::string const& file_path);
 
     cpp(decltype(proj_)& proj) : proj_(proj) {}
-
-    CHILON_GET(proj)
 };
 
 } } }

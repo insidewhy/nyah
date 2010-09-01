@@ -14,19 +14,15 @@ class file {
         chilon::parser::file_stream, grammar::nyah::Spacing>   stream_t;
 
     typename chilon::parser::stored<grammar_t>::type  ast_;
-    bool       processed_;
     stream_t   stream_;
   public:
-    CHILON_GET(processed)
     CHILON_GET_REF_CONST(ast)
 
-    file& operator=(bool const processed) {
-        processed_ = processed;
-        return *this;
-    }
-    file() : processed_(false) {};
+    file() {};
 
-    bool at_end() const { return ! stream_.empty(); }
+    bool success() const {
+        return stream_.file_loaded() && stream_.empty();
+    }
 
     bool parse(char const * const file_path) {
         if (! stream_.load(file_path))

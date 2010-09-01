@@ -27,7 +27,6 @@ inline int main(int argc, char *argv[]) {
 
     if (0 == nPositionals) return 1;
 
-    // cplusplus builder
     project project(opts);
 
     try {
