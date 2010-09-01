@@ -6,14 +6,16 @@
 #include <iostream>
 #include <stdexcept>
 
-// #define MOUSEDEER_VERSION "1000 (just don't get in a car, and stay away from my family)"
-// #define MOUSEDEER_VERSION "999 (she's also known as darwinius)"
-// #define MOUSEDEER_VERSION "998 (grind machine)"
-// #define MOUSEDEER_VERSION "997 (420 mishap)"
-// #define MOUSEDEER_VERSION "996 (super mousedeer 4)"
-// #define MOUSEDEER_VERSION "995 (ibuki mousedeer)"
-// #define MOUSEDEER_VERSION "994 (maryam the butcher)"
-#define MOUSEDEER_VERSION "993 (friendly beard)"
+// #define MOUSEBEAR_VERSION "1000 (just don't get in a car, and stay away from my family)"
+// #define MOUSEBEAR_VERSION "999 (she's also known as darwinius)"
+// #define MOUSEBEAR_VERSION "998 (grind machine)"
+// #define MOUSEBEAR_VERSION "997 (420 mishap)"
+// #define MOUSEBEAR_VERSION "996 (super mousebear 4)"
+// #define MOUSEBEAR_VERSION "995 (ibuki mousebear)"
+// #define MOUSEBEAR_VERSION "994 (maryam the butcher)"
+// #define MOUSEBEAR_VERSION "993 (friendly beard)"
+#define MOUSEDEER_VERSION "992 (rose almost 3000 mousedear)"
+// #define MOUSEDEER_VERSION "991 (raging mousedeer)"
 
 namespace nyah { namespace mousedeer {
 

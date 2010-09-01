@@ -13,6 +13,7 @@ struct options {
     bool                       print_ast_;
     std::string                output_dir_;
     std::vector<chilon::range> output_namespace_;
+    std::vector<std::string>   include_paths_;
 
     // returns number of positionals, 0 for failure, prints errors to
     // stderr

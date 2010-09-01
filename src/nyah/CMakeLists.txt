@@ -8,7 +8,6 @@ project(nyah)
 
 include(C++0x)
 include(Installer)
-# configureFile(config.hpp)
 
 include_directories(..)
 add_subdirectory(mousedeer)

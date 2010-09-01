@@ -1,4 +1,5 @@
 #include <nyah/mousedeer/options.hpp>
+#include <nyah/mousedeer/config.hpp>
 
 #include <chilon/conf/cmd/command_line.hpp>
 #include <chilon/parser/joined.hpp>
@@ -22,10 +23,11 @@ int options::parse_command_line(char const *header, int argc, char *argv[]) {
     options_description opt_parser;
     opt_parser.add_options()
         .help(header)
-        ("p,print",        print_ast_, "print AST of grammar")
-        ("v,verbose",      verbose_, "increase verbosity")
-        ("o,output-dir",   output_dir_, "directory to output code")
-        ("n,namespace",    output_namespace, "namespace to use")
+        ("p,print",      print_ast_, "print AST of grammar")
+        ("v,verbose",    verbose_, "increase verbosity")
+        ("o,output-dir", output_dir_, "directory to output code")
+        ("I,include",    include_paths_, "include paths")
+        ("n,namespace",  output_namespace, "namespace to use")
         ;
 
     try {
@@ -44,6 +46,8 @@ int options::parse_command_line(char const *header, int argc, char *argv[]) {
         std::cout << opt_parser << std::endl;
         return 0;
     }
+
+    include_paths_.push_back(std::string(MOUSEDEER_SYSTEM_INCLUDE_PATH));
 
     if (nPositionals < 1) {
         std::cerr << "please supply at least one grammar to parse\n";
