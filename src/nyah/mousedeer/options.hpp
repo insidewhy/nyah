@@ -6,7 +6,7 @@
 
 #include <chilon/print.hpp>
 
-namespace nyah { namespace mousebear {
+namespace nyah { namespace mousedeer {
 
 struct options {
     bool                       verbose_;

@@ -1,9 +1,9 @@
-#ifndef NYAH_MOUSEBEAR_GRAMMAR_NYAH_HPP
-#define NYAH_MOUSEBEAR_GRAMMAR_NYAH_HPP
+#ifndef NYAH_MOUSEDEER_GRAMMAR_NYAH_HPP
+#define NYAH_MOUSEDEER_GRAMMAR_NYAH_HPP
 
-#include <nyah/mousebear/grammar/grammar.hpp>
+#include <nyah/mousedeer/grammar/grammar.hpp>
 
-namespace nyah { namespace mousebear { namespace grammar { namespace nyah {
+namespace nyah { namespace mousedeer { namespace grammar { namespace nyah {
 
 using namespace chilon::parser;
 using namespace chilon::parser::ascii;

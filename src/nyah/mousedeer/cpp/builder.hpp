@@ -1,14 +1,14 @@
-#ifndef NYAH_MOUSEBEAR_CPP_BUILDER_HPP
-#define NYAH_MOUSEBEAR_CPP_BUILDER_HPP
+#ifndef NYAH_MOUSEDEER_CPP_BUILDER_HPP
+#define NYAH_MOUSEDEER_CPP_BUILDER_HPP
 
-#include <nyah/mousebear/project.hpp>
+#include <nyah/mousedeer/project.hpp>
 
 #include <chilon/getset.hpp>
 
 #include <fstream>
 #include <stdexcept>
 
-namespace nyah { namespace mousebear { namespace cpp {
+namespace nyah { namespace mousedeer { namespace cpp {
 
 class builder {
     project& proj_;

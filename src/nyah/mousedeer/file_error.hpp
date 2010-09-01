@@ -1,9 +1,9 @@
-#ifndef NYAH_MOUSEBEAR_FILE_ERROR_HPP
-#define NYAH_MOUSEBEAR_FILE_ERROR_HPP
+#ifndef NYAH_MOUSEDEER_FILE_ERROR_HPP
+#define NYAH_MOUSEDEER_FILE_ERROR_HPP
 
-#include <nyah/mousebear/grammar/nyah.hpp>
+#include <nyah/mousedeer/grammar/nyah.hpp>
 
-namespace nyah { namespace mousebear {
+namespace nyah { namespace mousedeer {
 
 struct file_error : std::runtime_error {
     file_error(char const * const error, std::string const& file_path)

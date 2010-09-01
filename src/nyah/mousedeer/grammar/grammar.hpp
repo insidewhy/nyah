@@ -1,5 +1,5 @@
-#ifndef NYAH_MOUSEBEAR_GRAMMAR_GRAMMAR_HPP
-#define NYAH_MOUSEBEAR_GRAMMAR_GRAMMAR_HPP
+#ifndef NYAH_MOUSEDEER_GRAMMAR_GRAMMAR_HPP
+#define NYAH_MOUSEDEER_GRAMMAR_GRAMMAR_HPP
 
 #include <chilon/parser/source_code_stream.hpp>
 #include <chilon/parser/sequence.hpp>
@@ -18,7 +18,7 @@
 #include <chilon/parser/tree_joined.hpp>
 #include <chilon/parser/tree_many.hpp>
 
-namespace nyah { namespace mousebear { namespace grammar { namespace grammar {
+namespace nyah { namespace mousedeer { namespace grammar { namespace grammar {
 
 using namespace chilon::parser;
 using namespace chilon::parser::ascii;

@@ -1,9 +1,9 @@
-#include <nyah/mousebear/cpp/builder.hpp>
+#include <nyah/mousedeer/cpp/builder.hpp>
 
 #include <cstring>
 #include <stdexcept>
 
-namespace nyah { namespace mousebear { namespace cpp {
+namespace nyah { namespace mousedeer { namespace cpp {
 
 namespace nyah    = grammar::nyah;
 namespace grammar = grammar::grammar;

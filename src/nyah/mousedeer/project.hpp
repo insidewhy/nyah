@@ -1,15 +1,15 @@
 #ifndef NYAH_PROJECT_HPP
 #define NYAH_PROJECT_HPP
 
-#include <nyah/mousebear/options.hpp>
-#include <nyah/mousebear/file.hpp>
+#include <nyah/mousedeer/options.hpp>
+#include <nyah/mousedeer/file.hpp>
 
 #include <chilon/getset.hpp>
 
 #include <unordered_map>
 #include <string>
 
-namespace nyah { namespace mousebear {
+namespace nyah { namespace mousedeer {
 
 class project {
     options&                              opts_;

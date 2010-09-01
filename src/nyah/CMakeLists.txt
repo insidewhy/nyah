@@ -11,5 +11,5 @@ include(Installer)
 # configureFile(config.hpp)
 
 include_directories(..)
-add_subdirectory(mousebear)
+add_subdirectory(mousedeer)
 add_definitions(-Wall)

@@ -1,15 +1,15 @@
 .PHONY: test accept
 
 outdir = .new.output
-mousebear = ../.obj/mousebear/mousebear
-mousebear_args = -n nyah.mousebear.grammar -o ${outdir}
+mousedeer = ../.obj/mousedeer/mousedeer
+mousedeer_args = -n nyah.mousedeer.grammar -o ${outdir}
 
 test: nyah.out
 
-%.out: %.nyah ${mousebear}
+%.out: %.nyah ${mousedeer}
 	@rm -rf ${outdir}
 	@mkdir -p ${outdir}
-	@${mousebear} ${mousebear_args} -p $< > ${outdir}/$@
+	@${mousedeer} ${mousedeer_args} -p $< > ${outdir}/$@
 	@for f in ${outdir}/*.out ; do diff `basename $$f` $$f || exit 1 ; done
 	@touch *.out
 	@rm ${outdir}/*.out

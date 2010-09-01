@@ -1,12 +1,12 @@
 #ifndef NYAH_FILE_HPP
 #define NYAH_FILE_HPP
 
-#include <nyah/mousebear/grammar/nyah.hpp>
-#include <nyah/mousebear/file_error.hpp>
+#include <nyah/mousedeer/grammar/nyah.hpp>
+#include <nyah/mousedeer/file_error.hpp>
 
 #include <chilon/getset.hpp>
 
-namespace nyah { namespace mousebear {
+namespace nyah { namespace mousedeer {
 
 class file {
     typedef grammar::nyah::Grammar    grammar_t;
