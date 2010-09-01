@@ -1,9 +1,9 @@
-#include <nyah/mousebear/builder/cpp.hpp>
+#include <nyah/mousebear/cpp/builder.hpp>
 
 #include <cstring>
 #include <stdexcept>
 
-namespace nyah { namespace mousebear { namespace builder {
+namespace nyah { namespace mousebear { namespace cpp {
 
 namespace nyah    = grammar::nyah;
 namespace grammar = grammar::grammar;
@@ -11,7 +11,7 @@ namespace grammar = grammar::grammar;
 namespace {
     struct applier {
       protected:
-        cpp& builder_;
+        builder& builder_;
       public:
         applier(decltype(builder_)& builder) : builder_(builder) {}
     };
@@ -25,11 +25,11 @@ namespace {
             auto& rule_name = std::get<0>(rule.value_).value_;
         }
 
-        rule_apply(cpp& builder) : applier(builder) {}
+        rule_apply(builder& builder) : applier(builder) {}
     };
 }
 
-void cpp::operator()(std::string const& file_path) {
+void builder::operator()(std::string const& file_path) {
     auto& file = proj_.add_file(file_path);
     if (file.success()) return;
 

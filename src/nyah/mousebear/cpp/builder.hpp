@@ -1,5 +1,5 @@
-#ifndef NYAH_MOUSEBEAR_BUILDER_CPP_HPP
-#define NYAH_MOUSEBEAR_BUILDER_CPP_HPP
+#ifndef NYAH_MOUSEBEAR_CPP_BUILDER_HPP
+#define NYAH_MOUSEBEAR_CPP_BUILDER_HPP
 
 #include <nyah/mousebear/project.hpp>
 
@@ -8,18 +8,16 @@
 #include <fstream>
 #include <stdexcept>
 
-namespace nyah { namespace mousebear {
+namespace nyah { namespace mousebear { namespace cpp {
 
-namespace builder {
-
-class cpp {
+class builder {
     project& proj_;
 
   public:
     // add file to project and process it and its includes
     void operator()(std::string const& file_path);
 
-    cpp(decltype(proj_)& proj) : proj_(proj) {}
+    builder(decltype(proj_)& proj) : proj_(proj) {}
 };
 
 } } }

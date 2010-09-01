@@ -1,6 +1,6 @@
 #include <nyah/mousebear/grammar/nyah.hpp>
 #include <nyah/mousebear/grammar/nyah.hpp>
-#include <nyah/mousebear/builder/cpp.hpp>
+#include <nyah/mousebear/cpp/builder.hpp>
 #include <nyah/mousebear/project.hpp>
 
 #include <chilon/print.hpp>
@@ -30,7 +30,7 @@ inline int main(int argc, char *argv[]) {
     project project(opts);
 
     try {
-        builder::cpp build_source(project);
+        cpp::builder build_source(project);
         for (int i = 1; i <= nPositionals; ++i) build_source(argv[i]);
     }
     catch (cannot_open_file const& e) {

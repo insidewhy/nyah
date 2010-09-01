@@ -1,15 +1,15 @@
  * 0.5
      * mousebear: grammar @extends
      * mousebear: grammar -> chilon::parser translator
-     * mousebear: grammar/grammar.nyah -> mousebear::grammar::grammar
+     * mousebear: grammar/*.nyah -> mousebear::grammar::*
  * 0.6
-     * Build nyah parser (using grammar/nyah.nyah)
+     * nyah parser (using grammar/nyah.nyah)
      * mousebear: nyah -> C++0x backend.
-     * mousebear: C++ attributes in classes
+     * mousebear: add class style node rules
  * 0.7
      * nyah::std - vector, variant, tuple
      * nyah::parser like chilon::parser
-     * mousebear: grammar should use nyah::parser rather than chilon::parser
+     * mousebear: replace chilon::parser with nyah::parser
  * 0.8
      * nyah::llvm
  * 0.9
