@@ -8,27 +8,6 @@ namespace nyah { namespace mousedeer { namespace cpp {
 namespace nyah    = grammar::nyah;
 namespace grammar = grammar::grammar;
 
-namespace {
-    struct applier {
-      protected:
-        builder& builder_;
-      public:
-        applier(decltype(builder_)& builder) : builder_(builder) {}
-    };
-
-    struct rule_apply : applier {
-        void operator()(grammar::Rule const& rule) const {
-            auto& rule_name = std::get<0>(rule.value_).value_;
-        }
-
-        void operator()(grammar::NodeRule const& rule) const {
-            auto& rule_name = std::get<0>(rule.value_).value_;
-        }
-
-        rule_apply(builder& builder) : applier(builder) {}
-    };
-}
-
 void builder::operator()(std::string const& file_path) {
     auto& file = add_file(file_path);
     if (file.success()) return;

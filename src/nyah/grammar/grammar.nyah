@@ -19,6 +19,5 @@ Joined            <= (Join / Prefix) |% "^"
 Sequence          <= Joined |+
 OrderedChoice     <= Sequence |% "/"
 Expression        <= OrderedChoice
-Rule              <= RuleName "<-" Expression
-NodeRule          <= RuleName "<=" Expression
-Grammar           <- (Rule / NodeRule)+
+Rule              <= RuleName "<" [-=] Expression
+Grammar           <- Rule+

@@ -110,12 +110,9 @@ struct OrderedChoice : simple_node<OrderedChoice,
 struct Expression : simple_node<Expression, OrderedChoice> {};
 
 struct Rule : simple_node<Rule,
-    sequence<RuleName, char_<'<', '-'>, Expression >> {};
+    sequence<RuleName, char_<'<'>, char_from<'=', '-'>, Expression >> {};
 
-struct NodeRule : simple_node<NodeRule,
-    sequence<RuleName, char_<'<', '='>, Expression> > {};
-
-typedef sequence< many< choice<Rule, NodeRule> > > Grammar;
+typedef many<Rule> Grammar;
 
 } } } }
 #endif

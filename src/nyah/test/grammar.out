@@ -2,6 +2,7 @@ file grammar.nyah
 grammar "grammar" = [
     Rule: (
         RuleName: "Spacing"
+        '-'
         Expression: Suffix: (
             Expression: OrderedChoice: [
                 "\s"
@@ -22,10 +23,12 @@ grammar "grammar" = [
     )
     Rule: (
         RuleName: "AnyCharacter"
+        '-'
         Expression: "."
     )
-    NodeRule: (
+    Rule: (
         RuleName: "CharacterRange"
+        '='
         Expression: Joined: [
             "["
             Suffix: (
@@ -59,6 +62,7 @@ grammar "grammar" = [
     )
     Rule: (
         RuleName: "Escape"
+        '-'
         Expression: Joined: [
             CharacterRange: [ "\\" ]
             CharacterRange: [
@@ -83,6 +87,7 @@ grammar "grammar" = [
     )
     Rule: (
         RuleName: "String"
+        '-'
         Expression: OrderedChoice: [
             Joined: [
                 "\""
@@ -116,6 +121,7 @@ grammar "grammar" = [
     )
     Rule: (
         RuleName: "RuleIdentifier"
+        '-'
         Expression: Joined: [
             CharacterRange: [ (
                 'A'
@@ -143,6 +149,7 @@ grammar "grammar" = [
     )
     Rule: (
         RuleName: "GrammarIdentifier"
+        '-'
         Expression: Joined: [
             CharacterRange: [
                 (
@@ -174,12 +181,14 @@ grammar "grammar" = [
             )
         ]
     )
-    NodeRule: (
+    Rule: (
         RuleName: "RuleName"
+        '='
         Expression: RuleName: "RuleIdentifier"
     )
-    NodeRule: (
+    Rule: (
         RuleName: "ScopedRule"
+        '='
         Expression: Sequence: [
             RuleName: "GrammarIdentifier"
             ":"
@@ -188,6 +197,7 @@ grammar "grammar" = [
     )
     Rule: (
         RuleName: "Primary"
+        '-'
         Expression: OrderedChoice: [
             RuleName: "String"
             RuleName: "CharacterRange"
@@ -208,8 +218,9 @@ grammar "grammar" = [
             ]
         ]
     )
-    NodeRule: (
+    Rule: (
         RuleName: "Suffix"
+        '='
         Expression: Sequence: [
             RuleName: "Primary"
             Suffix: (
@@ -228,8 +239,9 @@ grammar "grammar" = [
             )
         ]
     )
-    NodeRule: (
+    Rule: (
         RuleName: "Prefix"
+        '='
         Expression: Sequence: [
             Suffix: (
                 Expression: OrderedChoice: [
@@ -244,8 +256,9 @@ grammar "grammar" = [
             RuleName: "Suffix"
         ]
     )
-    NodeRule: (
+    Rule: (
         RuleName: "Join"
+        '='
         Expression: Sequence: [
             RuleName: "Prefix"
             Expression: OrderedChoice: [
@@ -257,8 +270,9 @@ grammar "grammar" = [
             RuleName: "Prefix"
         ]
     )
-    NodeRule: (
+    Rule: (
         RuleName: "Joined"
+        '='
         Expression: Join: (
             Expression: OrderedChoice: [
                 RuleName: "Join"
@@ -268,48 +282,46 @@ grammar "grammar" = [
             "^"
         )
     )
-    NodeRule: (
+    Rule: (
         RuleName: "Sequence"
+        '='
         Expression: Suffix: (
             RuleName: "Joined"
             "|+"
         )
     )
-    NodeRule: (
+    Rule: (
         RuleName: "OrderedChoice"
+        '='
         Expression: Join: (
             RuleName: "Sequence"
             "|%"
             "/"
         )
     )
-    NodeRule: (
+    Rule: (
         RuleName: "Expression"
+        '='
         Expression: RuleName: "OrderedChoice"
     )
-    NodeRule: (
+    Rule: (
         RuleName: "Rule"
+        '='
         Expression: Sequence: [
             RuleName: "RuleName"
-            "<-"
-            RuleName: "Expression"
-        ]
-    )
-    NodeRule: (
-        RuleName: "NodeRule"
-        Expression: Sequence: [
-            RuleName: "RuleName"
-            "<="
+            "<"
+            CharacterRange: [
+                '-'
+                '='
+            ]
             RuleName: "Expression"
         ]
     )
     Rule: (
         RuleName: "Grammar"
+        '-'
         Expression: Suffix: (
-            Expression: OrderedChoice: [
-                RuleName: "Rule"
-                RuleName: "NodeRule"
-            ]
+            RuleName: "Rule"
             '+'
         )
     )
