@@ -108,9 +108,9 @@ struct OrderedChoice : simple_node<OrderedChoice,
 struct Expression : simple_node<Expression, OrderedChoice> {};
 
 struct Rule : simple_node<Rule,
-    sequence<RuleName, char_<'<'>, char_from<'=', '-'>, Expression >> {};
+    sequence<key<RuleName>, char_<'<'>, char_from<'=', '-'>, Expression >> {};
 
-typedef many<Rule> Grammar;
+typedef many<hash<Rule>> Grammar;
 
 } } } }
 #endif
