@@ -83,7 +83,7 @@ typedef choice<
 struct Suffix
   : simple_node<Suffix, sequence<Primary, tree_optional<Suffixes>>> {};
 
-typedef choice<char_<'&', '!'>, char_from<'&', '!'> > Prefixes;
+typedef choice<char_<'&', '!'>, char_from<'&', '!', '~'> > Prefixes;
 
 struct Prefix
   : simple_node<Prefix, sequence<tree_optional<Prefixes>, Suffix>> {};

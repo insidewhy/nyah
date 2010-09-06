@@ -12,11 +12,11 @@ ScopedRule        <= GrammarIdentifier ":" RuleIdentifier
 Primary           <- String / CharacterRange / Escape / AnyCharacter /
                      ScopedRule / RuleName &! "<" / "(" Expression ")"
 Suffix            <= Primary ( "^+" / "^*" / [?*+] / "|+" / "|?" )|?
-Prefix            <= ( "&!" / [&!] )|? Suffix
+Prefix            <= ( "&!" / [&!~] )|? Suffix
 Join              <= Prefix ("^%" / "%+" / "%" / "|%") Prefix
 Joined            <= (Join / Prefix) |% "^"
 Sequence          <= Joined |+
 OrderedChoice     <= Sequence |% "/"
 Expression        <= OrderedChoice
-Rule              <= RuleName "<" [-=] Expression
+Rule              <= ~RuleName "<" [-=] Expression
 Grammar           <- Rule+

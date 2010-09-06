@@ -66,6 +66,7 @@ grammar "grammar" = [
                     CharacterRange: [
                         '&'
                         '!'
+                        '~'
                     ]
                 ]
                 "|?"
@@ -243,7 +244,10 @@ grammar "grammar" = [
     "Rule": Rule: (
         '='
         Expression: Sequence: [
-            "RuleName"
+            Prefix: (
+                '~'
+                "RuleName"
+            )
             String: "<"
             CharacterRange: [
                 '-'
