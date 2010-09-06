@@ -4,11 +4,10 @@ Spacing           <- (\s / "//" ^ (!\n)* ^ \n)+
 AnyCharacter      <- '.'
 CharacterRange    <= "[" ^ ( [\\] ^ [\\\]sSnNtTwW] / (. ^ "-" ^ .) / .)* ^ "]"
 Escape            <- [\\] ^ [sSnNtTwW."'&!+*\\]
-String            <- '"' ^ (Escape / ! '"')^* ^ '"' /
+String            <= '"' ^ (Escape / ! '"')^* ^ '"' /
                      "'" ^ (Escape / ! "'")^* ^ "'"
-RuleIdentifier    <- [A-Z] ^ [a-zA-Z0-9_]+
+RuleName          <- [A-Z] ^ [a-zA-Z0-9_]+
 GrammarIdentifier <- [a-zA-Z] ^ [a-zA-Z0-9_]+
-RuleName          <= RuleIdentifier
 ScopedRule        <= GrammarIdentifier ":" RuleIdentifier
 Primary           <- String / CharacterRange / Escape / AnyCharacter /
                      ScopedRule / RuleName &! "<" / "(" Expression ")"

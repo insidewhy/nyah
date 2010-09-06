@@ -1,7 +1,7 @@
 file nyah.nyah
 grammar "nyah" extends "grammar" = [
     Rule: (
-        RuleName: "MetaIdentifier"
+        "MetaIdentifier"
         '-'
         Expression: Joined: [
             CharacterRange: [
@@ -36,15 +36,15 @@ grammar "nyah" extends "grammar" = [
         ]
     )
     Rule: (
-        RuleName: "MetaGrammar"
+        "MetaGrammar"
         '='
         Expression: Sequence: [
-            "@grammar"
-            RuleName: "MetaIdentifier"
+            String: "@grammar"
+            "MetaIdentifier"
             Suffix: (
                 Expression: Sequence: [
-                    "@extends"
-                    RuleName: "MetaIdentifier"
+                    String: "@extends"
+                    "MetaIdentifier"
                 ]
                 '?'
             )
@@ -55,10 +55,10 @@ grammar "nyah" extends "grammar" = [
         ]
     )
     Rule: (
-        RuleName: "Grammar"
+        "Grammar"
         '-'
         Expression: Suffix: (
-            RuleName: "MetaGrammar"
+            "MetaGrammar"
             '+'
         )
     )

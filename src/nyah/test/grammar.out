@@ -1,13 +1,13 @@
 file grammar.nyah
 grammar "grammar" = [
     Rule: (
-        RuleName: "Spacing"
+        "Spacing"
         '-'
         Expression: Suffix: (
             Expression: OrderedChoice: [
                 "\s"
                 Joined: [
-                    "//"
+                    String: "//"
                     Suffix: (
                         Expression: Prefix: (
                             '!'
@@ -22,15 +22,15 @@ grammar "grammar" = [
         )
     )
     Rule: (
-        RuleName: "AnyCharacter"
+        "AnyCharacter"
         '-'
-        Expression: "."
+        Expression: String: "."
     )
     Rule: (
-        RuleName: "CharacterRange"
+        "CharacterRange"
         '='
         Expression: Joined: [
-            "["
+            String: "["
             Suffix: (
                 Expression: OrderedChoice: [
                     Joined: [
@@ -50,18 +50,18 @@ grammar "grammar" = [
                     ]
                     Expression: Joined: [
                         '.'
-                        "-"
+                        String: "-"
                         '.'
                     ]
                     '.'
                 ]
                 '*'
             )
-            "]"
+            String: "]"
         ]
     )
     Rule: (
-        RuleName: "Escape"
+        "Escape"
         '-'
         Expression: Joined: [
             CharacterRange: [ "\\" ]
@@ -86,41 +86,41 @@ grammar "grammar" = [
         ]
     )
     Rule: (
-        RuleName: "String"
-        '-'
+        "String"
+        '='
         Expression: OrderedChoice: [
             Joined: [
-                "\""
+                String: "\""
                 Suffix: (
                     Expression: OrderedChoice: [
-                        RuleName: "Escape"
+                        "Escape"
                         Prefix: (
                             '!'
-                            "\""
+                            String: "\""
                         )
                     ]
                     "^*"
                 )
-                "\""
+                String: "\""
             ]
             Joined: [
-                "'"
+                String: "'"
                 Suffix: (
                     Expression: OrderedChoice: [
-                        RuleName: "Escape"
+                        "Escape"
                         Prefix: (
                             '!'
-                            "'"
+                            String: "'"
                         )
                     ]
                     "^*"
                 )
-                "'"
+                String: "'"
             ]
         ]
     )
     Rule: (
-        RuleName: "RuleIdentifier"
+        "RuleName"
         '-'
         Expression: Joined: [
             CharacterRange: [ (
@@ -148,7 +148,7 @@ grammar "grammar" = [
         ]
     )
     Rule: (
-        RuleName: "GrammarIdentifier"
+        "GrammarIdentifier"
         '-'
         Expression: Joined: [
             CharacterRange: [
@@ -182,70 +182,65 @@ grammar "grammar" = [
         ]
     )
     Rule: (
-        RuleName: "RuleName"
-        '='
-        Expression: RuleName: "RuleIdentifier"
-    )
-    Rule: (
-        RuleName: "ScopedRule"
+        "ScopedRule"
         '='
         Expression: Sequence: [
-            RuleName: "GrammarIdentifier"
-            ":"
-            RuleName: "RuleIdentifier"
+            "GrammarIdentifier"
+            String: ":"
+            "RuleIdentifier"
         ]
     )
     Rule: (
-        RuleName: "Primary"
+        "Primary"
         '-'
         Expression: OrderedChoice: [
-            RuleName: "String"
-            RuleName: "CharacterRange"
-            RuleName: "Escape"
-            RuleName: "AnyCharacter"
-            RuleName: "ScopedRule"
+            "String"
+            "CharacterRange"
+            "Escape"
+            "AnyCharacter"
+            "ScopedRule"
             Sequence: [
-                RuleName: "RuleName"
+                "RuleName"
                 Prefix: (
                     "&!"
-                    "<"
+                    String: "<"
                 )
             ]
             Sequence: [
-                "("
-                RuleName: "Expression"
-                ")"
+                String: "("
+                "Expression"
+                String: ")"
             ]
         ]
     )
     Rule: (
-        RuleName: "Suffix"
+        "Suffix"
         '='
         Expression: Sequence: [
-            RuleName: "Primary"
+            "Primary"
             Suffix: (
                 Expression: OrderedChoice: [
-                    "^+"
-                    "^*"
+                    String: "^+"
+                    String: "^*"
                     CharacterRange: [
                         '?'
                         '*'
                         '+'
                     ]
-                    "|+"
-                    "|?"
+                    String: "|+"
+                    String: "|?"
                 ]
                 "|?"
             )
         ]
     )
     Rule: (
-        RuleName: "Prefix"
+        "Prefix"
         '='
         Expression: Sequence: [
             Suffix: (
                 Expression: OrderedChoice: [
-                    "&!"
+                    String: "&!"
                     CharacterRange: [
                         '&'
                         '!'
@@ -253,75 +248,75 @@ grammar "grammar" = [
                 ]
                 "|?"
             )
-            RuleName: "Suffix"
+            "Suffix"
         ]
     )
     Rule: (
-        RuleName: "Join"
+        "Join"
         '='
         Expression: Sequence: [
-            RuleName: "Prefix"
+            "Prefix"
             Expression: OrderedChoice: [
-                "^%"
-                "%+"
-                "%"
-                "|%"
+                String: "^%"
+                String: "%+"
+                String: "%"
+                String: "|%"
             ]
-            RuleName: "Prefix"
+            "Prefix"
         ]
     )
     Rule: (
-        RuleName: "Joined"
+        "Joined"
         '='
         Expression: Join: (
             Expression: OrderedChoice: [
-                RuleName: "Join"
-                RuleName: "Prefix"
+                "Join"
+                "Prefix"
             ]
             "|%"
-            "^"
+            String: "^"
         )
     )
     Rule: (
-        RuleName: "Sequence"
+        "Sequence"
         '='
         Expression: Suffix: (
-            RuleName: "Joined"
+            "Joined"
             "|+"
         )
     )
     Rule: (
-        RuleName: "OrderedChoice"
+        "OrderedChoice"
         '='
         Expression: Join: (
-            RuleName: "Sequence"
+            "Sequence"
             "|%"
-            "/"
+            String: "/"
         )
     )
     Rule: (
-        RuleName: "Expression"
+        "Expression"
         '='
-        Expression: RuleName: "OrderedChoice"
+        Expression: "OrderedChoice"
     )
     Rule: (
-        RuleName: "Rule"
+        "Rule"
         '='
         Expression: Sequence: [
-            RuleName: "RuleName"
-            "<"
+            "RuleName"
+            String: "<"
             CharacterRange: [
                 '-'
                 '='
             ]
-            RuleName: "Expression"
+            "Expression"
         ]
     )
     Rule: (
-        RuleName: "Grammar"
+        "Grammar"
         '-'
         Expression: Suffix: (
-            RuleName: "Rule"
+            "Rule"
             '+'
         )
     )

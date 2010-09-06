@@ -49,23 +49,21 @@ typedef lexeme<
     store<char_<'\\'>>,
     char_from<s,S,n,N,t,T,w,W,'.','"','\'','&','!','+','*','\\'>> Escape;
 
-typedef choice<
+struct String : simple_node<String, choice<
     lexeme< char_<'"'>,
         many_range< choice<Escape, not_char<'"'> > >,
     char_<'"'> >,
     lexeme< char_<'\''>,
         many_range< choice<Escape, not_char<'\''> > >,
     char_<'\''> >
-> String;
+> > {};
 
-typedef lexeme<char_range<A,Z>, many< char_range<a,z, A,Z> > > RuleIdentifier;
+typedef lexeme<char_range<A,Z>, many< char_range<a,z, A,Z> > > RuleName;
 
 typedef lexeme<char_range<a,z, A,Z>, many< char_range<a,z, A,Z> > > FileIdentifier;
 
-struct RuleName : simple_node<RuleName, RuleIdentifier> {};
-
 struct ScopedRule : simple_node<ScopedRule,
-    sequence< FileIdentifier, char_<':'>, RuleIdentifier > > {};
+    sequence< FileIdentifier, char_<':'>, RuleName > > {};
 
 struct Expression;
 
