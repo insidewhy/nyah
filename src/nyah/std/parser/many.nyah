@@ -1,0 +1,5 @@
+@module std.parse
+
+class many_base[H, bool ?SkipWhitespace, bool ?AtLeastOne]
+
+class many_range[H...] : many_range[sequence[H...]]

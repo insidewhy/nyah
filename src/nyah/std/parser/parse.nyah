@@ -1,0 +1,9 @@
+@module std.parse
+
+class parse_base[P] {
+    parser_type ?: P
+}
+
+class parse_forward[P] : parse_base[P], P
+
+class parse[P] : parse[P.parser_type]

@@ -1,0 +1,12 @@
+@module std
+
+def begin(t) = t.begin
+def end(t) = t.end
+
+def begin(t:char *) = t
+
+// ++t becomes the return result, hence the last t
+def end(t:char *) = while (*t != '\0') ++t
+
+class iterator_range[T] {
+}

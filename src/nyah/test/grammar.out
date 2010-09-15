@@ -100,7 +100,7 @@ grammar "grammar" = [
         '='
         Expression: Sequence: [
             "GrammarIdentifier"
-            String: ":"
+            String: "::"
             "RuleIdentifier"
         ]
     )

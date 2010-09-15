@@ -3,5 +3,5 @@
 
 MetaIdentifier <- [A-Za-z_] ^ [A-Za-z0-9_]*
 MetaGrammar    <= "@grammar" MetaIdentifier ("@extends" MetaIdentifier)?
-                  grammar:Grammar
+                  grammar::Grammar
 Grammar        <-  MetaGrammar+

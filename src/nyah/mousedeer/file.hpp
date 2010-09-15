@@ -15,14 +15,19 @@ class file {
 
     typename chilon::parser::stored<grammar_t>::type  ast_;
     stream_t   stream_;
+
+    bool processed_;
   public:
     CHILON_GET_REF_CONST(ast)
 
-    file() {};
+    file() : processed_(false) {};
 
     bool success() const {
         return stream_.file_loaded() && stream_.empty();
     }
+
+    void set_processed()   { processed_ = true; }
+    bool processed() const { return processed_; }
 
     bool parse(char const * const file_path) {
         if (! stream_.load(file_path))

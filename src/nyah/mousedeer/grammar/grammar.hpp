@@ -63,7 +63,7 @@ typedef lexeme<char_range<A,Z>, many< char_range<a,z, A,Z> > > RuleName;
 typedef lexeme<char_range<a,z, A,Z>, many< char_range<a,z, A,Z> > > FileIdentifier;
 
 struct ScopedRule : simple_node<ScopedRule,
-    sequence< FileIdentifier, char_<':'>, RuleName > > {};
+    sequence< FileIdentifier, char_<':', ':'>, RuleName > > {};
 
 struct Expression;
 
@@ -107,8 +107,20 @@ struct OrderedChoice : simple_node<OrderedChoice,
 
 struct Expression : simple_node<Expression, OrderedChoice> {};
 
+enum RuleStatus {
+    STATUS_UNKNOWN,
+    STATUS_NORMAL, // can be a node
+    STATUS_HASHED,
+    STATUS_NODE
+};
+
 struct Rule : simple_node<Rule,
-    sequence<key<RuleName>, char_<'<'>, char_from<'=', '-'>, Expression >> {};
+    sequence<key<RuleName>, char_<'<'>, char_from<'=', '-'>, Expression >>
+{
+
+    Rule() : status_(STATUS_UNKNOWN) {}
+    RuleStatus status_;
+};
 
 typedef many<hash<Rule>> Grammar;
 
