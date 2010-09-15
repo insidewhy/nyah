@@ -12,6 +12,9 @@
 
 namespace nyah { namespace mousedeer { namespace cpp {
 
+// TODO: add nodes involved in cycle to exception.
+class file_dependency_cycle {};
+
 class builder {
     options&                              options_;
     std::unordered_map<std::string, file> files_;

@@ -6,6 +6,8 @@
 
 #include <chilon/print.hpp>
 
+#include <unistd.h>
+
 namespace nyah { namespace mousedeer {
 
 struct options {
@@ -22,6 +24,17 @@ struct options {
     template <class... T>
     void verbose(T const&... t) const {
         if (verbose_) chilon::print(std::cerr, t...);
+    }
+
+    std::string find_module_file(std::string const& module) {
+        for (auto it = include_paths_.begin(); it != include_paths_.end();
+             ++it)
+        {
+            std::string search = *it + "/" + module + ".nyah";
+            if (! access(search.c_str(), R_OK)) return search;
+        }
+
+        return "";
     }
 
     options();

@@ -1,3 +1,312 @@
+file ./grammar.nyah
+grammar "grammar" = [
+    "AnyCharacter": Rule: (
+        '-'
+        Expression: String: "."
+    )
+    "Spacing": Rule: (
+        '-'
+        Expression: Suffix: (
+            Expression: OrderedChoice: [
+                "\s"
+                Joined: [
+                    String: "//"
+                    Suffix: (
+                        Expression: Prefix: (
+                            '!'
+                            "\n"
+                        )
+                        '*'
+                    )
+                    "\n"
+                ]
+            ]
+            '+'
+        )
+    )
+    "String": Rule: (
+        '='
+        Expression: OrderedChoice: [
+            Joined: [
+                String: "\""
+                Suffix: (
+                    Expression: OrderedChoice: [
+                        "Escape"
+                        Prefix: (
+                            '!'
+                            String: "\""
+                        )
+                    ]
+                    "^*"
+                )
+                String: "\""
+            ]
+            Joined: [
+                String: "'"
+                Suffix: (
+                    Expression: OrderedChoice: [
+                        "Escape"
+                        Prefix: (
+                            '!'
+                            String: "'"
+                        )
+                    ]
+                    "^*"
+                )
+                String: "'"
+            ]
+        ]
+    )
+    "Prefix": Rule: (
+        '='
+        Expression: Sequence: [
+            Suffix: (
+                Expression: OrderedChoice: [
+                    String: "&!"
+                    CharacterRange: [
+                        '&'
+                        '!'
+                        '~'
+                    ]
+                ]
+                "|?"
+            )
+            "Suffix"
+        ]
+    )
+    "OrderedChoice": Rule: (
+        '='
+        Expression: Join: (
+            "Sequence"
+            "|%"
+            String: "/"
+        )
+    )
+    "Sequence": Rule: (
+        '='
+        Expression: Suffix: (
+            "Joined"
+            "|+"
+        )
+    )
+    "Grammar": Rule: (
+        '-'
+        Expression: Suffix: (
+            "Rule"
+            '+'
+        )
+    )
+    "ScopedRule": Rule: (
+        '='
+        Expression: Sequence: [
+            "GrammarIdentifier"
+            String: "::"
+            "RuleIdentifier"
+        ]
+    )
+    "GrammarIdentifier": Rule: (
+        '-'
+        Expression: Joined: [
+            CharacterRange: [
+                (
+                    'a'
+                    'z'
+                )
+                (
+                    'A'
+                    'Z'
+                )
+            ]
+            Suffix: (
+                CharacterRange: [
+                    (
+                        'a'
+                        'z'
+                    )
+                    (
+                        'A'
+                        'Z'
+                    )
+                    (
+                        '0'
+                        '9'
+                    )
+                    '_'
+                ]
+                '+'
+            )
+        ]
+    )
+    "Join": Rule: (
+        '='
+        Expression: Sequence: [
+            "Prefix"
+            Expression: OrderedChoice: [
+                String: "^%"
+                String: "%+"
+                String: "%"
+                String: "|%"
+            ]
+            "Prefix"
+        ]
+    )
+    "RuleName": Rule: (
+        '-'
+        Expression: Joined: [
+            CharacterRange: [ (
+                'A'
+                'Z'
+            ) ]
+            Suffix: (
+                CharacterRange: [
+                    (
+                        'a'
+                        'z'
+                    )
+                    (
+                        'A'
+                        'Z'
+                    )
+                    (
+                        '0'
+                        '9'
+                    )
+                    '_'
+                ]
+                '+'
+            )
+        ]
+    )
+    "Suffix": Rule: (
+        '='
+        Expression: Sequence: [
+            "Primary"
+            Suffix: (
+                Expression: OrderedChoice: [
+                    String: "^+"
+                    String: "^*"
+                    CharacterRange: [
+                        '?'
+                        '*'
+                        '+'
+                    ]
+                    String: "|+"
+                    String: "|?"
+                ]
+                "|?"
+            )
+        ]
+    )
+    "Joined": Rule: (
+        '='
+        Expression: Join: (
+            Expression: OrderedChoice: [
+                "Join"
+                "Prefix"
+            ]
+            "|%"
+            String: "^"
+        )
+    )
+    "CharacterRange": Rule: (
+        '='
+        Expression: Joined: [
+            String: "["
+            Suffix: (
+                Expression: OrderedChoice: [
+                    Joined: [
+                        CharacterRange: [ "\\" ]
+                        CharacterRange: [
+                            "\\"
+                            "\]"
+                            's'
+                            'S'
+                            'n'
+                            'N'
+                            't'
+                            'T'
+                            'w'
+                            'W'
+                        ]
+                    ]
+                    Expression: Joined: [
+                        '.'
+                        String: "-"
+                        '.'
+                    ]
+                    '.'
+                ]
+                '*'
+            )
+            String: "]"
+        ]
+    )
+    "Rule": Rule: (
+        '='
+        Expression: Sequence: [
+            Prefix: (
+                '~'
+                "RuleName"
+            )
+            String: "<"
+            CharacterRange: [
+                '-'
+                '='
+            ]
+            "Expression"
+        ]
+    )
+    "Escape": Rule: (
+        '-'
+        Expression: Joined: [
+            CharacterRange: [ "\\" ]
+            CharacterRange: [
+                's'
+                'S'
+                'n'
+                'N'
+                't'
+                'T'
+                'w'
+                'W'
+                '.'
+                '"'
+                '\''
+                '&'
+                '!'
+                '+'
+                '*'
+                "\\"
+            ]
+        ]
+    )
+    "Expression": Rule: (
+        '='
+        Expression: "OrderedChoice"
+    )
+    "Primary": Rule: (
+        '-'
+        Expression: OrderedChoice: [
+            "String"
+            "CharacterRange"
+            "Escape"
+            "AnyCharacter"
+            "ScopedRule"
+            Sequence: [
+                "RuleName"
+                Prefix: (
+                    "&!"
+                    String: "<"
+                )
+            ]
+            Sequence: [
+                String: "("
+                "Expression"
+                String: ")"
+            ]
+        ]
+    )
+]
 file nyah.nyah
 grammar "nyah" extends "grammar" = [
     "Grammar": Rule: (

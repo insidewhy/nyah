@@ -10,22 +10,44 @@ namespace grammar = grammar::grammar;
 
 void builder::operator()(std::string const& file_path) {
     auto& file = add_file(file_path);
-    if (file.success()) return;
+
+    if (file.processed()) return;
+    else if (file.parse_succeeded()) throw file_dependency_cycle();
 
     options_.verbose("parsing file ", file_path);
 
     if (file.parse(file_path.c_str())) {
-        if (! file.success())
+        if (! file.parse_succeeded())
             throw parsing_error(file_path);
         else
             options_.verbose(file_path, ": parsed grammar");
     }
     else throw parsing_error("nothing parsed", file_path);
 
+    auto& ast = file.ast();
+    for (auto it = ast.begin(); it != ast.end(); ++it) {
+        auto extends = std::get<1>(it->value_);
+        if (! extends.empty()) {
+            std::string depFile =
+                options_.find_module_file(extends.at<chilon::range>());
+
+            if (depFile.empty()) {
+                // TODO: replace for better error
+                throw parsing_error(
+                    "could not find depdendency",
+                    extends.at<chilon::range>());
+            }
+            else (*this)(depFile);
+        }
+
+        // TODO: now process the grammar
+    }
+
+    file.set_processed();
+
     if (options_.print_ast_) {
         chilon::println("file ", file_path);
 
-        auto& ast = file.ast();
         for (auto it = ast.begin(); it != ast.end(); ++it) {
             auto extends = std::get<1>(it->value_);
             if (extends.empty()) {
@@ -36,13 +58,11 @@ void builder::operator()(std::string const& file_path) {
                 chilon::println(
                     "grammar ", std::get<0>(it->value_), " extends ",
                     extends, " = ", std::get<2>(it->value_));
+
+
             }
         }
     }
-
-    // TODO: process dependencies
-
-    // TODO: output grammar file to opts_.output_dir_
 }
 
 } } }

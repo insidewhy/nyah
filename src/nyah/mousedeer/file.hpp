@@ -22,7 +22,7 @@ class file {
 
     file() : processed_(false) {};
 
-    bool success() const {
+    bool parse_succeeded() const {
         return stream_.file_loaded() && stream_.empty();
     }
 
