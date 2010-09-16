@@ -1,4 +1,9 @@
 file ./grammar.nyah
+module [
+    "nyah"
+    "mousebear"
+    "grammar"
+]
 grammar "grammar" = [
     "AnyCharacter": Rule: (
         '-'
@@ -308,12 +313,31 @@ grammar "grammar" = [
     )
 ]
 file nyah.nyah
+module [
+    "nyah"
+    "mousebear"
+    "grammar"
+]
 grammar "nyah" extends "grammar" = [
     "Grammar": Rule: (
         '-'
-        Expression: Suffix: (
-            "MetaGrammar"
-            '+'
+        Expression: Sequence: [
+            Suffix: (
+                "ModuleDefinition"
+                '?'
+            )
+            Suffix: (
+                "MetaGrammar"
+                '+'
+            )
+        ]
+    )
+    "ScopedIdentifier": Rule: (
+        '-'
+        Expression: Join: (
+            "MetaIdentifier"
+            '%'
+            String: "."
         )
     )
     "MetaIdentifier": Rule: (
@@ -366,6 +390,13 @@ grammar "nyah" extends "grammar" = [
                 "grammar"
                 "Grammar"
             )
+        ]
+    )
+    "ModuleDefinition": Rule: (
+        '-'
+        Expression: Sequence: [
+            String: "@module"
+            "ScopedIdentifier"
         ]
     )
 ]

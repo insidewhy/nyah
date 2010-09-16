@@ -24,12 +24,14 @@ void builder::operator()(std::string const& file_path) {
     }
     else throw parsing_error("nothing parsed", file_path);
 
-    auto& ast = file.ast();
-    for (auto it = ast.begin(); it != ast.end(); ++it) {
+    auto& grammar = std::get<1>(file.ast());
+    auto& module = std::get<0>(file.ast());
+
+    for (auto it = grammar.begin(); it != grammar.end(); ++it) {
         auto extends = std::get<1>(it->value_);
         if (! extends.empty()) {
             std::string depFile =
-                options_.find_module_file(extends.at<chilon::range>());
+                options_.find_grammar_file(extends.at<chilon::range>());
 
             if (depFile.empty()) {
                 // TODO: replace for better error
@@ -48,7 +50,9 @@ void builder::operator()(std::string const& file_path) {
     if (options_.print_ast_) {
         chilon::println("file ", file_path);
 
-        for (auto it = ast.begin(); it != ast.end(); ++it) {
+        if (! module.empty()) chilon::println("module ", module);
+
+        for (auto it = grammar.begin(); it != grammar.end(); ++it) {
             auto extends = std::get<1>(it->value_);
             if (extends.empty()) {
                 chilon::println(
@@ -58,8 +62,6 @@ void builder::operator()(std::string const& file_path) {
                 chilon::println(
                     "grammar ", std::get<0>(it->value_), " extends ",
                     extends, " = ", std::get<2>(it->value_));
-
-
             }
         }
     }

@@ -1,7 +1,10 @@
+@module nyah.mousebear.grammar
 @grammar nyah
 @extends grammar
 
-MetaIdentifier <- [A-Za-z_] ^ [A-Za-z0-9_]*
-MetaGrammar    <= "@grammar" MetaIdentifier ("@extends" MetaIdentifier)?
-                  grammar::Grammar
-Grammar        <-  MetaGrammar+
+MetaIdentifier   <- [A-Za-z_] ^ [A-Za-z0-9_]*
+ScopedIdentifier <- MetaIdentifier % "."
+ModuleDefinition <- "@module" ScopedIdentifier
+MetaGrammar      <= "@grammar" MetaIdentifier ("@extends" MetaIdentifier)?
+                    grammar::Grammar
+Grammar          <-  ModuleDefinition? MetaGrammar+

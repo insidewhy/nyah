@@ -14,7 +14,6 @@ struct options {
     bool                       verbose_;
     bool                       print_ast_;
     std::string                output_dir_;
-    std::vector<chilon::range> output_namespace_;
     std::vector<std::string>   include_paths_;
 
     // returns number of positionals, 0 for failure, prints errors to
@@ -26,11 +25,11 @@ struct options {
         if (verbose_) chilon::print(std::cerr, t...);
     }
 
-    std::string find_module_file(std::string const& module) {
+    std::string find_grammar_file(chilon::range const& module) {
         for (auto it = include_paths_.begin(); it != include_paths_.end();
              ++it)
         {
-            std::string search = *it + "/" + module + ".nyah";
+            std::string search = *it + "/" + std::string(module) + ".nyah";
             if (! access(search.c_str(), R_OK)) return search;
         }
 

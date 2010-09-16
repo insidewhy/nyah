@@ -14,8 +14,12 @@ typedef lexeme<
     choice<char_<'_'>, char_range<a,z, A,Z> >,
     many< choice<
         char_range<a,z, A,Z, '0','9'>,
-        char_from<'_','.'>
+        char_<'_'>
     > > > MetaIdentifier;
+
+typedef joined<char_<'.'>, MetaIdentifier> ScopedIdentifier;
+
+typedef sequence<char_<'@',m,o,d,u,l,e>, ScopedIdentifier> ModuleDefinition;
 
 struct MetaGrammar : simple_node<MetaGrammar,
     sequence<
@@ -24,7 +28,7 @@ struct MetaGrammar : simple_node<MetaGrammar,
             char_<'@',e,x,t,e,n,d,s>, MetaIdentifier>,
         grammar::Grammar> > {};
 
-typedef many<MetaGrammar> Grammar;
+typedef sequence< optional<ModuleDefinition>, many<MetaGrammar> > Grammar;
 
 } } } }
 #endif
