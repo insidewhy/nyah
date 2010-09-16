@@ -378,7 +378,10 @@ grammar "nyah" extends "grammar" = [
         '='
         Expression: Sequence: [
             String: "@grammar"
-            "MetaIdentifier"
+            Prefix: (
+                '~'
+                "MetaIdentifier"
+            )
             Suffix: (
                 Expression: Sequence: [
                     String: "@extends"

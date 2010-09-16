@@ -23,12 +23,14 @@ typedef sequence<char_<'@',m,o,d,u,l,e>, ScopedIdentifier> ModuleDefinition;
 
 struct MetaGrammar : simple_node<MetaGrammar,
     sequence<
-        char_<'@',g,r,a,m,m,a,r>, MetaIdentifier,
+        char_<'@',g,r,a,m,m,a,r>, key<MetaIdentifier>,
         optional<
             char_<'@',e,x,t,e,n,d,s>, MetaIdentifier>,
         grammar::Grammar> > {};
 
-typedef sequence< optional<ModuleDefinition>, many<MetaGrammar> > Grammar;
+typedef sequence<
+    optional<ModuleDefinition>,
+    many<hash<MetaGrammar>> > Grammar;
 
 } } } }
 #endif

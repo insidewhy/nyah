@@ -28,7 +28,7 @@ void builder::operator()(std::string const& file_path) {
     auto& module = std::get<0>(file.ast());
 
     for (auto it = grammar.begin(); it != grammar.end(); ++it) {
-        auto extends = std::get<1>(it->value_);
+        auto extends = std::get<0>(it->second.value_);
         if (! extends.empty()) {
             std::string depFile =
                 options_.find_grammar_file(extends.at<chilon::range>());
@@ -53,15 +53,15 @@ void builder::operator()(std::string const& file_path) {
         if (! module.empty()) chilon::println("module ", module);
 
         for (auto it = grammar.begin(); it != grammar.end(); ++it) {
-            auto extends = std::get<1>(it->value_);
+            auto extends = std::get<0>(it->second.value_);
             if (extends.empty()) {
                 chilon::println(
-                    "grammar ", std::get<0>(it->value_), " = ", std::get<2>(it->value_));
+                    "grammar ", it->first, " = ", std::get<1>(it->second.value_));
             }
             else {
                 chilon::println(
-                    "grammar ", std::get<0>(it->value_), " extends ",
-                    extends, " = ", std::get<2>(it->value_));
+                    "grammar ", it->first, " extends ",
+                    extends, " = ", std::get<1>(it->second.value_));
             }
         }
     }
