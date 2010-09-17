@@ -5,10 +5,6 @@ file ./grammar.nyah ast = [ [
 ]: Module: [ "grammar": MetaGrammar: (
     empty
     [
-        "AnyCharacter": Rule: (
-            '-'
-            Expression: String: "."
-        )
         "Spacing": Rule: (
             '-'
             Expression: Suffix: (
@@ -28,6 +24,67 @@ file ./grammar.nyah ast = [ [
                 ]
                 '+'
             )
+        )
+        "AnyCharacter": Rule: (
+            '-'
+            Expression: String: "."
+        )
+        "CharacterRange": Rule: (
+            '='
+            Expression: Joined: [
+                String: "["
+                Suffix: (
+                    Expression: OrderedChoice: [
+                        Joined: [
+                            CharacterRange: [ "\\" ]
+                            CharacterRange: [
+                                "\\"
+                                "\]"
+                                's'
+                                'S'
+                                'n'
+                                'N'
+                                't'
+                                'T'
+                                'w'
+                                'W'
+                            ]
+                        ]
+                        Expression: Joined: [
+                            '.'
+                            String: "-"
+                            '.'
+                        ]
+                        '.'
+                    ]
+                    '*'
+                )
+                String: "]"
+            ]
+        )
+        "Escape": Rule: (
+            '-'
+            Expression: Joined: [
+                CharacterRange: [ "\\" ]
+                CharacterRange: [
+                    's'
+                    'S'
+                    'n'
+                    'N'
+                    't'
+                    'T'
+                    'w'
+                    'W'
+                    '.'
+                    '"'
+                    '\''
+                    '&'
+                    '!'
+                    '+'
+                    '*'
+                    "\\"
+                ]
+            ]
         )
         "String": Rule: (
             '='
@@ -62,52 +119,31 @@ file ./grammar.nyah ast = [ [
                 ]
             ]
         )
-        "Prefix": Rule: (
-            '='
-            Expression: Sequence: [
-                Suffix: (
-                    Expression: OrderedChoice: [
-                        String: "&!"
-                        String: "~+"
-                        CharacterRange: [
-                            '&'
-                            '!'
-                            '~'
-                        ]
-                    ]
-                    "|?"
-                )
-                "Suffix"
-            ]
-        )
-        "OrderedChoice": Rule: (
-            '='
-            Expression: Join: (
-                "Sequence"
-                "|%"
-                String: "/"
-            )
-        )
-        "Sequence": Rule: (
-            '='
-            Expression: Suffix: (
-                "Joined"
-                "|+"
-            )
-        )
-        "Grammar": Rule: (
+        "RuleName": Rule: (
             '-'
-            Expression: Suffix: (
-                "Rule"
-                '+'
-            )
-        )
-        "ScopedRule": Rule: (
-            '='
-            Expression: Sequence: [
-                "GrammarIdentifier"
-                String: "::"
-                "RuleIdentifier"
+            Expression: Joined: [
+                CharacterRange: [ (
+                    'A'
+                    'Z'
+                ) ]
+                Suffix: (
+                    CharacterRange: [
+                        (
+                            'a'
+                            'z'
+                        )
+                        (
+                            'A'
+                            'Z'
+                        )
+                        (
+                            '0'
+                            '9'
+                        )
+                        '_'
+                    ]
+                    '+'
+                )
             ]
         )
         "GrammarIdentifier": Rule: (
@@ -143,152 +179,13 @@ file ./grammar.nyah ast = [ [
                 )
             ]
         )
-        "Join": Rule: (
+        "ScopedRule": Rule: (
             '='
             Expression: Sequence: [
-                "Prefix"
-                Expression: OrderedChoice: [
-                    String: "^%"
-                    String: "%+"
-                    String: "%"
-                    String: "|%"
-                ]
-                "Prefix"
+                "GrammarIdentifier"
+                String: "::"
+                "RuleIdentifier"
             ]
-        )
-        "RuleName": Rule: (
-            '-'
-            Expression: Joined: [
-                CharacterRange: [ (
-                    'A'
-                    'Z'
-                ) ]
-                Suffix: (
-                    CharacterRange: [
-                        (
-                            'a'
-                            'z'
-                        )
-                        (
-                            'A'
-                            'Z'
-                        )
-                        (
-                            '0'
-                            '9'
-                        )
-                        '_'
-                    ]
-                    '+'
-                )
-            ]
-        )
-        "Suffix": Rule: (
-            '='
-            Expression: Sequence: [
-                "Primary"
-                Suffix: (
-                    Expression: OrderedChoice: [
-                        String: "^+"
-                        String: "^*"
-                        CharacterRange: [
-                            '?'
-                            '*'
-                            '+'
-                        ]
-                        String: "|+"
-                        String: "|?"
-                    ]
-                    "|?"
-                )
-            ]
-        )
-        "Joined": Rule: (
-            '='
-            Expression: Join: (
-                Expression: OrderedChoice: [
-                    "Join"
-                    "Prefix"
-                ]
-                "|%"
-                String: "^"
-            )
-        )
-        "CharacterRange": Rule: (
-            '='
-            Expression: Joined: [
-                String: "["
-                Suffix: (
-                    Expression: OrderedChoice: [
-                        Joined: [
-                            CharacterRange: [ "\\" ]
-                            CharacterRange: [
-                                "\\"
-                                "\]"
-                                's'
-                                'S'
-                                'n'
-                                'N'
-                                't'
-                                'T'
-                                'w'
-                                'W'
-                            ]
-                        ]
-                        Expression: Joined: [
-                            '.'
-                            String: "-"
-                            '.'
-                        ]
-                        '.'
-                    ]
-                    '*'
-                )
-                String: "]"
-            ]
-        )
-        "Rule": Rule: (
-            '='
-            Expression: Sequence: [
-                Prefix: (
-                    '~'
-                    "RuleName"
-                )
-                String: "<"
-                CharacterRange: [
-                    '-'
-                    '='
-                ]
-                "Expression"
-            ]
-        )
-        "Escape": Rule: (
-            '-'
-            Expression: Joined: [
-                CharacterRange: [ "\\" ]
-                CharacterRange: [
-                    's'
-                    'S'
-                    'n'
-                    'N'
-                    't'
-                    'T'
-                    'w'
-                    'W'
-                    '.'
-                    '"'
-                    '\''
-                    '&'
-                    '!'
-                    '+'
-                    '*'
-                    "\\"
-                ]
-            ]
-        )
-        "Expression": Rule: (
-            '='
-            Expression: "OrderedChoice"
         )
         "Primary": Rule: (
             '-'
@@ -312,6 +209,109 @@ file ./grammar.nyah ast = [ [
                 ]
             ]
         )
+        "Suffix": Rule: (
+            '='
+            Expression: Sequence: [
+                "Primary"
+                Suffix: (
+                    Expression: OrderedChoice: [
+                        String: "^+"
+                        String: "^*"
+                        CharacterRange: [
+                            '?'
+                            '*'
+                            '+'
+                        ]
+                        String: "|+"
+                        String: "|?"
+                    ]
+                    "|?"
+                )
+            ]
+        )
+        "Prefix": Rule: (
+            '='
+            Expression: Sequence: [
+                Suffix: (
+                    Expression: OrderedChoice: [
+                        String: "&!"
+                        String: "~+"
+                        CharacterRange: [
+                            '&'
+                            '!'
+                            '~'
+                        ]
+                    ]
+                    "|?"
+                )
+                "Suffix"
+            ]
+        )
+        "Join": Rule: (
+            '='
+            Expression: Sequence: [
+                "Prefix"
+                Expression: OrderedChoice: [
+                    String: "^%"
+                    String: "%+"
+                    String: "%"
+                    String: "|%"
+                ]
+                "Prefix"
+            ]
+        )
+        "Joined": Rule: (
+            '='
+            Expression: Join: (
+                Expression: OrderedChoice: [
+                    "Join"
+                    "Prefix"
+                ]
+                "|%"
+                String: "^"
+            )
+        )
+        "Sequence": Rule: (
+            '='
+            Expression: Suffix: (
+                "Joined"
+                "|+"
+            )
+        )
+        "OrderedChoice": Rule: (
+            '='
+            Expression: Join: (
+                "Sequence"
+                "|%"
+                String: "/"
+            )
+        )
+        "Expression": Rule: (
+            '='
+            Expression: "OrderedChoice"
+        )
+        "Rule": Rule: (
+            '='
+            Expression: Sequence: [
+                Prefix: (
+                    '~'
+                    "RuleName"
+                )
+                String: "<"
+                CharacterRange: [
+                    '-'
+                    '='
+                ]
+                "Expression"
+            ]
+        )
+        "Grammar": Rule: (
+            '-'
+            Expression: Suffix: (
+                "Rule"
+                '+'
+            )
+        )
     ]
 ) ] ]
 file nyah.nyah ast = [ [
@@ -321,37 +321,6 @@ file nyah.nyah ast = [ [
 ]: Module: [ "nyah": MetaGrammar: (
     "grammar"
     [
-        "Grammar": Rule: (
-            '-'
-            Expression: Suffix: (
-                "Module"
-                '+'
-            )
-        )
-        "Module": Rule: (
-            '='
-            Expression: Sequence: [
-                Prefix: (
-                    '~'
-                    Expression: Suffix: (
-                        "ModuleDefinition"
-                        '?'
-                    )
-                )
-                Suffix: (
-                    "MetaGrammar"
-                    '+'
-                )
-            ]
-        )
-        "ScopedIdentifier": Rule: (
-            '-'
-            Expression: Join: (
-                "MetaIdentifier"
-                '%'
-                String: "."
-            )
-        )
         "MetaIdentifier": Rule: (
             '-'
             Expression: Joined: [
@@ -386,6 +355,21 @@ file nyah.nyah ast = [ [
                 )
             ]
         )
+        "ScopedIdentifier": Rule: (
+            '-'
+            Expression: Join: (
+                "MetaIdentifier"
+                '%'
+                String: "."
+            )
+        )
+        "ModuleDefinition": Rule: (
+            '-'
+            Expression: Sequence: [
+                String: "@module"
+                "ScopedIdentifier"
+            ]
+        )
         "MetaGrammar": Rule: (
             '='
             Expression: Sequence: [
@@ -407,12 +391,28 @@ file nyah.nyah ast = [ [
                 )
             ]
         )
-        "ModuleDefinition": Rule: (
-            '-'
+        "Module": Rule: (
+            '='
             Expression: Sequence: [
-                String: "@module"
-                "ScopedIdentifier"
+                Prefix: (
+                    '~'
+                    Expression: Suffix: (
+                        "ModuleDefinition"
+                        '?'
+                    )
+                )
+                Suffix: (
+                    "MetaGrammar"
+                    '+'
+                )
             ]
+        )
+        "Grammar": Rule: (
+            '-'
+            Expression: Suffix: (
+                "Module"
+                '+'
+            )
         )
     ]
 ) ] ]
