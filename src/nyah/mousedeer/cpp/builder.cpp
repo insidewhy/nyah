@@ -24,8 +24,19 @@ void builder::operator()(std::string const& file_path) {
     }
     else throw parsing_error("nothing parsed", file_path);
 
-    auto& grammar = std::get<1>(file.ast());
-    auto& module = std::get<0>(file.ast());
+    for (auto it = file.ast().begin(); it != file.ast().end(); ++it) {
+        (*this)(*it);
+    }
+
+    file.set_processed();
+
+    if (options_.print_ast_)
+        chilon::println("file ", file_path, " ast = ", file.ast());
+}
+
+void builder::operator()(module_type const& module) {
+    auto& moduleId = module.first;
+    auto& grammar = module.second.value_;
 
     for (auto it = grammar.begin(); it != grammar.end(); ++it) {
         auto extends = std::get<0>(it->second.value_);
@@ -43,27 +54,6 @@ void builder::operator()(std::string const& file_path) {
         }
 
         // TODO: now process the grammar
-    }
-
-    file.set_processed();
-
-    if (options_.print_ast_) {
-        chilon::println("file ", file_path);
-
-        if (! module.empty()) chilon::println("module ", module);
-
-        for (auto it = grammar.begin(); it != grammar.end(); ++it) {
-            auto extends = std::get<0>(it->second.value_);
-            if (extends.empty()) {
-                chilon::println(
-                    "grammar ", it->first, " = ", std::get<1>(it->second.value_));
-            }
-            else {
-                chilon::println(
-                    "grammar ", it->first, " extends ",
-                    extends, " = ", std::get<1>(it->second.value_));
-            }
-        }
     }
 }
 

@@ -26,7 +26,7 @@ using namespace chilon::parser::ascii;
 typedef choice<
     sequence<
         char_<'/', '/'>,
-        until<any_char, char_<'\n'>>
+        until<char_<'\n'>, any_char>
     >,
     whitespace
 > Spacing;
@@ -83,7 +83,8 @@ typedef choice<
 struct Suffix
   : simple_node<Suffix, sequence<Primary, tree_optional<Suffixes>>> {};
 
-typedef choice<char_<'&', '!'>, char_from<'&', '!', '~'> > Prefixes;
+typedef choice<
+    char_<'&', '!'>, char_<'~', '+'>, char_from<'&', '!', '~'> > Prefixes;
 
 struct Prefix
   : simple_node<Prefix, sequence<tree_optional<Prefixes>, Suffix>> {};

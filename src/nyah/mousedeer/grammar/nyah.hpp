@@ -28,9 +28,12 @@ struct MetaGrammar : simple_node<MetaGrammar,
             char_<'@',e,x,t,e,n,d,s>, MetaIdentifier>,
         grammar::Grammar> > {};
 
-typedef sequence<
-    optional<ModuleDefinition>,
-    many<hash<MetaGrammar>> > Grammar;
+struct Module : simple_node<Module,
+    sequence<
+        key< optional<ModuleDefinition> >,
+        many_plus<hash<MetaGrammar>> > > {};
+
+typedef many_plus<hash<Module>> Grammar;
 
 } } } }
 #endif

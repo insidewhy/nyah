@@ -7,4 +7,5 @@ ScopedIdentifier <- MetaIdentifier % "."
 ModuleDefinition <- "@module" ScopedIdentifier
 MetaGrammar      <= "@grammar" ~MetaIdentifier ("@extends" MetaIdentifier)?
                     grammar::Grammar
-Grammar          <-  ModuleDefinition? MetaGrammar+
+Module           <= ~(ModuleDefinition?) MetaGrammar+
+Grammar          <- Module+
