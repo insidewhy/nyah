@@ -395,7 +395,7 @@ file nyah.nyah ast = [ [
             '='
             Expression: Sequence: [
                 Prefix: (
-                    '~'
+                    "~+"
                     Expression: Suffix: (
                         "ModuleDefinition"
                         '?'

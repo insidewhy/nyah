@@ -30,7 +30,7 @@ struct MetaGrammar : simple_node<MetaGrammar,
 
 struct Module : simple_node<Module,
     sequence<
-        key< optional<ModuleDefinition> >,
+        key_plus< optional<ModuleDefinition> >,
         many_plus<vector_hash<MetaGrammar>> > > {};
 
 typedef many_plus<vector_hash<Module>> Grammar;
