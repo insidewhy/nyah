@@ -31,9 +31,9 @@ struct MetaGrammar : simple_node<MetaGrammar,
 struct Module : simple_node<Module,
     sequence<
         key< optional<ModuleDefinition> >,
-        many_plus<hash<MetaGrammar>> > > {};
+        many_plus<vector_hash<MetaGrammar>> > > {};
 
-typedef many_plus<hash<Module>> Grammar;
+typedef many_plus<vector_hash<Module>> Grammar;
 
 } } } }
 #endif

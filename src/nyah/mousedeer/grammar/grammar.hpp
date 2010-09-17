@@ -123,7 +123,7 @@ struct Rule : simple_node<Rule,
     RuleStatus status_;
 };
 
-typedef many<hash<Rule>> Grammar;
+typedef many<vector_hash<Rule>> Grammar;
 
 } } } }
 #endif
