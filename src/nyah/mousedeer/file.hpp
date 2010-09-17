@@ -25,9 +25,6 @@ class file {
         return stream_.file_loaded() && stream_.empty();
     }
 
-    void set_processed()   { processed_ = true; }
-    bool processed() const { return processed_; }
-
     bool parse(char const * const file_path, ast_type& ast) {
         if (! stream_.load(file_path))
             throw cannot_open_file(file_path);

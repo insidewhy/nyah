@@ -35,8 +35,10 @@ class builder {
 
 
   public:
-    // add file to project and process it and its includes
-    void operator()(std::string const& file_path);
+    // parse file, return true if parsed, false if already parsed,
+    // throw error on parse failure
+    bool parse_file(std::string const& file_path);
+
     void operator()(module_type const& module);
     void print_ast() const;
 

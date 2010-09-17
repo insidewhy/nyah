@@ -29,7 +29,7 @@ inline int main(int argc, char *argv[]) {
 
     try {
         cpp::builder build_source(opts);
-        for (int i = 1; i <= nPositionals; ++i) build_source(argv[i]);
+        for (int i = 1; i <= nPositionals; ++i) build_source.parse_file(argv[i]);
 
         build_source.generate_code();
         if (opts.print_ast_) build_source.print_ast();
