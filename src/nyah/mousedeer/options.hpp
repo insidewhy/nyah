@@ -22,7 +22,7 @@ struct options {
 
     template <class... T>
     void verbose(T const&... t) const {
-        if (verbose_) chilon::print(std::cerr, t...);
+        if (verbose_) chilon::println(std::cerr, t...);
     }
 
     std::string find_grammar_file(chilon::range const& module) {

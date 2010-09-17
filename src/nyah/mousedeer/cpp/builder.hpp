@@ -16,11 +16,12 @@ namespace nyah { namespace mousedeer { namespace cpp {
 class file_dependency_cycle {};
 
 class builder {
-    options&                              options_;
-    std::unordered_map<std::string, file> files_;
+    typedef grammar::nyah::Grammar                    grammar_t;
+    typename chilon::parser::stored<grammar_t>::type  ast_;
+    options&                                          options_;
+    std::unordered_map<std::string, file>             files_;
 
-
-    typedef decltype(files_)              files_t;
+    typedef decltype(files_) files_t;
 
     typedef typename chilon::parser::stored<
         grammar::nyah::Grammar>::type::value_type  module_type;
@@ -37,6 +38,9 @@ class builder {
     // add file to project and process it and its includes
     void operator()(std::string const& file_path);
     void operator()(module_type const& module);
+    void print_ast() const;
+
+    void generate_code();
 
     builder(decltype(options_)& options) : options_(options) {}
 };

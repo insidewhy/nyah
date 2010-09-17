@@ -16,7 +16,7 @@ void builder::operator()(std::string const& file_path) {
 
     options_.verbose("parsing file ", file_path);
 
-    if (file.parse(file_path.c_str())) {
+    if (file.parse(file_path.c_str(), ast_)) {
         if (! file.parse_succeeded())
             throw parsing_error(file_path);
         else
@@ -24,21 +24,14 @@ void builder::operator()(std::string const& file_path) {
     }
     else throw parsing_error("nothing parsed", file_path);
 
-    for (auto it = file.ast().begin(); it != file.ast().end(); ++it) {
-        (*this)(*it);
-    }
-
     file.set_processed();
-
-    if (options_.print_ast_)
-        chilon::println("file ", file_path, " ast = ", file.ast());
 }
 
 void builder::operator()(module_type const& module) {
     auto& moduleId = module.first;
     auto& grammar = module.second.value_;
 
-    for (auto it = grammar.begin(); it != grammar.end(); ++it) {
+    for (auto it = grammar.safe_ordered_begin(); ! it.at_end(); ++it) {
         auto extends = std::get<0>(it->second.value_);
         if (! extends.empty()) {
             std::string depFile =
@@ -54,6 +47,16 @@ void builder::operator()(module_type const& module) {
         }
 
         // TODO: now process the grammar
+    }
+}
+
+void builder::print_ast() const {
+    chilon::println(ast_);
+}
+
+void builder::generate_code() {
+    for (auto it = ast_.safe_ordered_begin(); ! it.at_end(); ++it) {
+        (*this)(*it);
     }
 }
 

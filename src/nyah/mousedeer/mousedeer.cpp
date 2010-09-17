@@ -14,8 +14,8 @@
 // #define MOUSEBEAR_VERSION "995 (ibuki mousebear)"
 // #define MOUSEBEAR_VERSION "994 (maryam the butcher)"
 // #define MOUSEBEAR_VERSION "993 (friendly beard)"
-#define MOUSEDEER_VERSION "992 (rose almost 3000 mousedear)"
-// #define MOUSEDEER_VERSION "991 (raging mousedeer)"
+// #define MOUSEDEER_VERSION "992 (rose almost 3000 mousedear)"
+#define MOUSEDEER_VERSION "991 (raging mousedeer)"
 
 namespace nyah { namespace mousedeer {
 
@@ -30,6 +30,9 @@ inline int main(int argc, char *argv[]) {
     try {
         cpp::builder build_source(opts);
         for (int i = 1; i <= nPositionals; ++i) build_source(argv[i]);
+
+        build_source.generate_code();
+        if (opts.print_ast_) build_source.print_ast();
     }
     catch (cannot_open_file const& e) {
         chilon::println(std::cerr, e.what(), ": ", e.file_path_);
