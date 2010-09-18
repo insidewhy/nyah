@@ -3,7 +3,6 @@
 
 #include <nyah/mousedeer/options.hpp>
 #include <nyah/mousedeer/file.hpp>
-#include <nyah/mousedeer/not_found_error.hpp>
 
 #include <chilon/getset.hpp>
 
@@ -48,11 +47,6 @@ class builder {
 
     void print_ast() const;
     void generate_code();
-
-    template <class T>
-    void throw_not_found(std::string const& msg, T const& t) {
-        throw not_found_error<T>(msg, t);
-    }
 
     builder(decltype(options_)& options) : options_(options) {}
 };

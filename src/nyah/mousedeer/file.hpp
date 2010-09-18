@@ -2,7 +2,7 @@
 #define NYAH_FILE_HPP
 
 #include <nyah/mousedeer/grammar/nyah.hpp>
-#include <nyah/mousedeer/file_error.hpp>
+#include <nyah/mousedeer/error/file.hpp>
 
 #include <chilon/getset.hpp>
 
@@ -27,7 +27,7 @@ class file {
 
     bool parse(char const * const file_path, ast_type& ast) {
         if (! stream_.load(file_path))
-            throw cannot_open_file(file_path);
+            throw error::cannot_open_file(file_path);
 
         stream_.skip_whitespace();
 

@@ -34,10 +34,10 @@ inline int main(int argc, char *argv[]) {
         build_source.generate_code();
         if (opts.print_ast_) build_source.print_ast();
     }
-    catch (cannot_open_file const& e) {
+    catch (error::cannot_open_file const& e) {
         chilon::println(std::cerr, e.what(), ": ", e.file_path_);
     }
-    catch (parsing_error const& e) {
+    catch (error::parsing const& e) {
         chilon::println(std::cerr, e.what(), ": ", e.file_path_);
     }
     catch (std::runtime_error const& e) {

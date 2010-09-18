@@ -1,4 +1,5 @@
 #include <nyah/mousedeer/cpp/builder.hpp>
+#include <nyah/mousedeer/error/not_found.hpp>
 
 #include <cstring>
 #include <stdexcept>
@@ -23,11 +24,11 @@ bool builder::parse_file(std::string const& file_path) {
 
     if (file.parse(file_path.c_str(), ast_)) {
         if (! file.parse_succeeded())
-            throw parsing_error(file_path);
+            throw error::parsing(file_path);
         else
             options_.verbose(file_path, ": parsed grammar");
     }
-    else throw parsing_error("nothing parsed", file_path);
+    else throw error::parsing("nothing parsed", file_path);
 
     return true;
 }
@@ -55,11 +56,11 @@ void builder::grammar_dep(module_type const& module, grammar_identifier const& i
 
     if (depFile.empty())
         // TODO: replace for better error
-        throw_not_found("could not find parent grammar", id);
+        error::throw_not_found("could not find parent grammar", id);
     else if (parse_file(depFile)) {
         // TODO: look for dependency again after pulling in file
     }
-    else throw_not_found("could not find parent grammar", id);
+    else error::throw_not_found("could not find parent grammar", id);
 }
 
 void builder::print_ast() const {
