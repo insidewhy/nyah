@@ -63,7 +63,7 @@ typedef lexeme<char_range<A,Z>, many< char_range<a,z, A,Z> > > RuleName;
 typedef lexeme<char_range<a,z, A,Z>, many< char_range<a,z, A,Z> > > FileIdentifier;
 
 struct ScopedRule : simple_node<ScopedRule,
-    sequence< FileIdentifier, char_<':', ':'>, RuleName > > {};
+    FileIdentifier, char_<':', ':'>, RuleName > {};
 
 struct Expression;
 
@@ -81,22 +81,22 @@ typedef choice<
     char_<'|', '?'> > Suffixes;
 
 struct Suffix
-  : simple_node<Suffix, sequence<Primary, tree_optional<Suffixes>>> {};
+  : simple_node<Suffix, Primary, tree_optional<Suffixes>> {};
 
 typedef choice<
     char_<'&', '!'>, char_<'~', '+'>, char_from<'&', '!', '~'> > Prefixes;
 
 struct Prefix
-  : simple_node<Prefix, sequence<tree_optional<Prefixes>, Suffix>> {};
+  : simple_node<Prefix, tree_optional<Prefixes>, Suffix> {};
 
-struct Join : simple_node<Join, sequence<
+struct Join : simple_node<Join,
     Prefix,
     choice<
         char_<'^', '%'>,
         char_<'%', '+'>,
         char_<'%'>,
         char_<'|', '%'> >,
-    Prefix> > {};
+    Prefix> {};
 
 struct Joined : simple_node<Joined,
     tree_joined<char_<'^'>, choice<Join, Prefix> > > {};
@@ -109,7 +109,7 @@ struct OrderedChoice : simple_node<OrderedChoice,
 struct Expression : simple_node<Expression, OrderedChoice> {};
 
 struct Rule : simple_node<Rule,
-    sequence<key<RuleName>, char_<'<'>, char_from<'=', '-'>, Expression >>
+    key<RuleName>, char_<'<'>, char_from<'=', '-'>, Expression >
 {
     enum Status {
         STATUS_UNKNOWN,
