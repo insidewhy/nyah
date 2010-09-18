@@ -65,7 +65,12 @@ void builder::grammar_dep(module_type const& module, grammar_identifier const& i
 
 void builder::print_ast() const {
     chilon::println("include ", std::get<0>(ast_));
-    chilon::println("ast ", std::get<1>(ast_));
+    for (auto it = std::get<1>(ast_).begin();
+         it != std::get<1>(ast_).end(); ++it)
+    {
+        chilon::println("module id ", it->first);
+        chilon::println("module ", it->second.value_);
+    }
 }
 
 } } }

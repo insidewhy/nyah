@@ -1,9 +1,10 @@
 include [ [ "grammar" ] ]
-ast [ [
+module id [
     "nyah"
     "mousebear"
     "grammar"
-]: Module: [
+]
+module [
     "nyah": MetaGrammar: (
         [ "grammar" ]
         [
@@ -427,4 +428,4 @@ ast [ [
             )
         ]
     )
-] ]
+]
