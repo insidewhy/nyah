@@ -10,6 +10,13 @@ namespace nyah    = grammar::nyah;
 namespace grammar = grammar::grammar;
 
 void builder::generate_code() {
+    for (auto it = chilon::make_safe_iterator(std::get<0>(ast_));
+         ! it.at_end(); ++it)
+    {
+        std::string depFile = options_.include(*it);
+        parse_file(depFile);
+    }
+
     for (auto it = std::get<1>(ast_).safe_ordered_begin(); ! it.at_end(); ++it) {
         (*this)(*it);
     }
@@ -49,18 +56,6 @@ void builder::operator()(module_type const& module) {
 void builder::grammar_dep(module_type const& module, grammar_identifier const& id) {
     auto& grammar = module.second.value_;
     // TODO: search for grammar in current module, then all parent modules
-
-    // TODO: find_grammar_file should take vector of ranges
-    std::string depFile =
-        options_.find_grammar_file(*(id.end() - 1));
-
-    if (depFile.empty())
-        // TODO: replace for better error
-        error::throw_not_found("could not find parent grammar", id);
-    else if (parse_file(depFile)) {
-        // TODO: look for dependency again after pulling in file
-    }
-    else error::throw_not_found("could not find parent grammar", id);
 }
 
 void builder::print_ast() const {

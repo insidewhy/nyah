@@ -7,6 +7,8 @@
 #include <chilon/parser/char.hpp>
 #include <chilon/parser/many.hpp>
 
+#include <sstream>
+
 namespace nyah { namespace mousedeer {
 
 namespace cmd_line = chilon::conf::cmd;
@@ -54,6 +56,21 @@ int options::parse_command_line(char const *header, int argc, char *argv[]) {
     }
 
     return nPositionals;
+}
+
+std::string options::include(std::vector<chilon::range> const& path) {
+    std::stringstream s;
+    s << '/';
+    chilon::print_join(s, '/', path);
+    s << ".nyah";
+    for (auto it = include_paths_.begin(); it != include_paths_.end();
+         ++it)
+    {
+        std::string search = *it + s.str();
+        if (! access(search.c_str(), R_OK)) return search;
+    }
+
+    return "";
 }
 
 } }

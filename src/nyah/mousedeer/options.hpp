@@ -1,10 +1,10 @@
 #ifndef NYAH_OPTIONS_HPP
 #define NYAH_OPTIONS_HPP
 
+#include <chilon/print.hpp>
+
 #include <string>
 #include <vector>
-
-#include <chilon/print.hpp>
 
 #include <unistd.h>
 
@@ -25,16 +25,7 @@ struct options {
         if (verbose_) chilon::println(std::cerr, t...);
     }
 
-    std::string find_grammar_file(chilon::range const& module) {
-        for (auto it = include_paths_.begin(); it != include_paths_.end();
-             ++it)
-        {
-            std::string search = *it + "/" + std::string(module) + ".nyah";
-            if (! access(search.c_str(), R_OK)) return search;
-        }
-
-        return "";
-    }
+    std::string include(std::vector<chilon::range> const& path);
 
     options();
 };
