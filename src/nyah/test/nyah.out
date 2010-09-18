@@ -10,37 +10,10 @@ module [
         [
             "MetaIdentifier": Rule: (
                 '-'
-                Expression: Joined: [
-                    CharacterRange: [
-                        (
-                            'A'
-                            'Z'
-                        )
-                        (
-                            'a'
-                            'z'
-                        )
-                        '_'
-                    ]
-                    Suffix: (
-                        CharacterRange: [
-                            (
-                                'A'
-                                'Z'
-                            )
-                            (
-                                'a'
-                                'z'
-                            )
-                            (
-                                '0'
-                                '9'
-                            )
-                            '_'
-                        ]
-                        '*'
-                    )
-                ]
+                Expression: ScopedRule: (
+                    "grammar"
+                    "Identifier"
+                )
             )
             "ScopedIdentifier": Rule: (
                 '-'
@@ -233,34 +206,7 @@ module [
                     ]
                 ]
             )
-            "RuleName": Rule: (
-                '-'
-                Expression: Joined: [
-                    CharacterRange: [ (
-                        'A'
-                        'Z'
-                    ) ]
-                    Suffix: (
-                        CharacterRange: [
-                            (
-                                'a'
-                                'z'
-                            )
-                            (
-                                'A'
-                                'Z'
-                            )
-                            (
-                                '0'
-                                '9'
-                            )
-                            '_'
-                        ]
-                        '+'
-                    )
-                ]
-            )
-            "GrammarIdentifier": Rule: (
+            "Identifier": Rule: (
                 '-'
                 Expression: Joined: [
                     CharacterRange: [
@@ -272,6 +218,7 @@ module [
                             'A'
                             'Z'
                         )
+                        '_'
                     ]
                     Suffix: (
                         CharacterRange: [
@@ -296,9 +243,9 @@ module [
             "ScopedRule": Rule: (
                 '='
                 Expression: Sequence: [
-                    "GrammarIdentifier"
+                    "Identifier"
                     String: "::"
-                    "RuleIdentifier"
+                    "Identifier"
                 ]
             )
             "Primary": Rule: (
@@ -310,7 +257,7 @@ module [
                     "AnyCharacter"
                     "ScopedRule"
                     Sequence: [
-                        "RuleName"
+                        "Identifier"
                         Prefix: (
                             "&!"
                             String: "<"
@@ -409,7 +356,7 @@ module [
                 Expression: Sequence: [
                     Prefix: (
                         '~'
-                        "RuleName"
+                        "Identifier"
                     )
                     String: "<"
                     CharacterRange: [

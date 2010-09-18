@@ -58,18 +58,21 @@ struct String : simple_node<String, choice<
     char_<'\''> >
 > > {};
 
-typedef lexeme<char_range<A,Z>, many< char_range<a,z, A,Z> > > RuleName;
-
-typedef lexeme<char_range<a,z, A,Z>, many< char_range<a,z, A,Z> > > FileIdentifier;
+typedef lexeme<
+    choice<char_<'_'>, char_range<a,z, A,Z> >,
+    many< choice<
+        char_range<a,z, A,Z, '0','9'>,
+        char_<'_'>
+    > > > Identifier;
 
 struct ScopedRule : simple_node<ScopedRule,
-    FileIdentifier, char_<':', ':'>, RuleName > {};
+    Identifier, char_<':', ':'>, Identifier > {};
 
 struct Expression;
 
 typedef choice<
     String, CharacterRange, Escape, AnyCharacter, ScopedRule,
-    sequence< RuleName, not_< char_<'<'> > >,
+    sequence< Identifier, not_< char_<'<'> > >,
     sequence< char_<'('>, node<Expression>, char_<')'> >
 > Primary;
 
@@ -109,7 +112,7 @@ struct OrderedChoice : simple_node<OrderedChoice,
 struct Expression : simple_node<Expression, OrderedChoice> {};
 
 struct Rule : simple_node<Rule,
-    key<RuleName>, char_<'<'>, char_from<'=', '-'>, Expression >
+    key<Identifier>, char_<'<'>, char_from<'=', '-'>, Expression >
 {
     enum Status {
         STATUS_UNKNOWN,

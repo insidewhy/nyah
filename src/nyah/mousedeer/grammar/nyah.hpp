@@ -10,12 +10,7 @@ using namespace chilon::parser::ascii;
 
 using grammar::Spacing;
 
-typedef lexeme<
-    choice<char_<'_'>, char_range<a,z, A,Z> >,
-    many< choice<
-        char_range<a,z, A,Z, '0','9'>,
-        char_<'_'>
-    > > > MetaIdentifier;
+typedef grammar::Identifier MetaIdentifier;
 
 typedef joined_plus<char_<'.'>, MetaIdentifier> ScopedIdentifier;
 
