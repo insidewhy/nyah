@@ -23,8 +23,12 @@ class builder {
 
     typedef decltype(files_) files_t;
 
-    typedef typename chilon::parser::stored<
-        grammar::nyah::Grammar>::type::value_type  module_type;
+    typedef typename
+        chilon::meta::at_expand<1,
+            typename
+                chilon::parser::stored<grammar::nyah::Grammar>::type
+        >::type
+    ::value_type  module_type;
 
     typedef typename chilon::parser::stored<
         grammar::nyah::ScopedIdentifier>::type  grammar_identifier;

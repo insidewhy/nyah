@@ -17,7 +17,7 @@ typedef lexeme<
         char_<'_'>
     > > > MetaIdentifier;
 
-typedef joined<char_<'.'>, MetaIdentifier> ScopedIdentifier;
+typedef joined_plus<char_<'.'>, MetaIdentifier> ScopedIdentifier;
 
 typedef sequence<char_<'@',m,o,d,u,l,e>, ScopedIdentifier> ModuleDefinition;
 
@@ -30,7 +30,10 @@ struct Module : simple_node<Module,
     key_plus< optional<ModuleDefinition> >,
     many_plus<vector_hash<MetaGrammar>> > {};
 
-typedef many_plus<vector_hash<Module>> Grammar;
+typedef sequence< char_<'@',i,n,c,l,u,d,e>, ScopedIdentifier > Include;
+
+typedef sequence<
+    many<Include>, many_plus<vector_hash<Module> > > Grammar;
 
 } } } }
 #endif

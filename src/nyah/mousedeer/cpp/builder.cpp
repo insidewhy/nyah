@@ -10,7 +10,7 @@ namespace nyah    = grammar::nyah;
 namespace grammar = grammar::grammar;
 
 void builder::generate_code() {
-    for (auto it = ast_.safe_ordered_begin(); ! it.at_end(); ++it) {
+    for (auto it = std::get<1>(ast_).safe_ordered_begin(); ! it.at_end(); ++it) {
         (*this)(*it);
     }
 }
@@ -64,7 +64,8 @@ void builder::grammar_dep(module_type const& module, grammar_identifier const& i
 }
 
 void builder::print_ast() const {
-    chilon::println(ast_);
+    chilon::println("include ", std::get<0>(ast_));
+    chilon::println("ast ", std::get<1>(ast_));
 }
 
 } } }
