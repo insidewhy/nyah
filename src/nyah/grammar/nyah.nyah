@@ -1,11 +1,12 @@
 @module nyah.mousebear.grammar
-@grammar nyah
-@extends grammar
+
+// nyah extends grammar, which causes it to also inherit grammar::Spacing
+@grammar nyah : grammar
 
 MetaIdentifier   <- [A-Za-z_] ^ [A-Za-z0-9_]*
 ScopedIdentifier <- MetaIdentifier % "."
 ModuleDefinition <- "@module" ScopedIdentifier
-MetaGrammar      <= "@grammar" ~MetaIdentifier ("@extends" ScopedIdentifier)?
+MetaGrammar      <= "@grammar" ~MetaIdentifier (":" ScopedIdentifier)?
                     grammar::Grammar
 Module           <= ~+(ModuleDefinition?) MetaGrammar+
 Grammar          <- Module+

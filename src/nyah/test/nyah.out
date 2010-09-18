@@ -65,7 +65,7 @@
                     )
                     Suffix: (
                         Expression: Sequence: [
-                            String: "@extends"
+                            String: ":"
                             "ScopedIdentifier"
                         ]
                         '?'
