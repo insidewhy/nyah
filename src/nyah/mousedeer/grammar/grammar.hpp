@@ -108,19 +108,19 @@ struct OrderedChoice : simple_node<OrderedChoice,
 
 struct Expression : simple_node<Expression, OrderedChoice> {};
 
-enum RuleStatus {
-    STATUS_UNKNOWN,
-    STATUS_NORMAL, // can be a node
-    STATUS_HASHED,
-    STATUS_NODE
-};
-
 struct Rule : simple_node<Rule,
     sequence<key<RuleName>, char_<'<'>, char_from<'=', '-'>, Expression >>
 {
+    enum Status {
+        STATUS_UNKNOWN,
+        STATUS_NORMAL, // can be a node
+        STATUS_HASHED,
+        STATUS_NODE   // set while processing dependencies of node
+    };
+
 
     Rule() : status_(STATUS_UNKNOWN) {}
-    RuleStatus status_;
+    Status status_;
 };
 
 typedef many<vector_hash<Rule>> Grammar;

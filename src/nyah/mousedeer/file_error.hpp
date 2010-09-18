@@ -1,7 +1,7 @@
 #ifndef NYAH_MOUSEDEER_FILE_ERROR_HPP
 #define NYAH_MOUSEDEER_FILE_ERROR_HPP
 
-#include <nyah/mousedeer/grammar/nyah.hpp>
+#include <stdexcept>
 
 namespace nyah { namespace mousedeer {
 

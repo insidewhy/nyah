@@ -25,7 +25,7 @@ struct MetaGrammar : simple_node<MetaGrammar,
     sequence<
         char_<'@',g,r,a,m,m,a,r>, key<MetaIdentifier>,
         optional<
-            char_<'@',e,x,t,e,n,d,s>, MetaIdentifier>,
+            char_<'@',e,x,t,e,n,d,s>, ScopedIdentifier>,
         grammar::Grammar> > {};
 
 struct Module : simple_node<Module,

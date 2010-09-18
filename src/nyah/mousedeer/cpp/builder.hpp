@@ -3,6 +3,7 @@
 
 #include <nyah/mousedeer/options.hpp>
 #include <nyah/mousedeer/file.hpp>
+#include <nyah/mousedeer/not_found_error.hpp>
 
 #include <chilon/getset.hpp>
 
@@ -26,6 +27,9 @@ class builder {
     typedef typename chilon::parser::stored<
         grammar::nyah::Grammar>::type::value_type  module_type;
 
+    typedef typename chilon::parser::stored<
+        grammar::nyah::ScopedIdentifier>::type  grammar_identifier;
+
     // if file doesn't exist in project, add it and return reference to it
     // otherwise return a reference to the existing file.
     file& add_file(std::string const& file_path) {
@@ -40,9 +44,15 @@ class builder {
     bool parse_file(std::string const& file_path);
 
     void operator()(module_type const& module);
-    void print_ast() const;
+    void grammar_dep(module_type const& module, grammar_identifier const& id);
 
+    void print_ast() const;
     void generate_code();
+
+    template <class T>
+    void throw_not_found(std::string const& msg, T const& t) {
+        throw not_found_error<T>(msg, t);
+    }
 
     builder(decltype(options_)& options) : options_(options) {}
 };
