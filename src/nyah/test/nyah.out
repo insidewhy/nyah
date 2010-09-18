@@ -19,7 +19,7 @@ module [
                 '-'
                 Expression: Join: (
                     "MetaIdentifier"
-                    '%'
+                    "%+"
                     String: "."
                 )
             )
@@ -71,7 +71,11 @@ module [
                 '-'
                 Expression: Sequence: [
                     String: "@include"
-                    "ScopedIdentifier"
+                    Join: (
+                        "MetaIdentifier"
+                        "%+"
+                        String: "/"
+                    )
                 ]
             )
             "Grammar": Rule: (

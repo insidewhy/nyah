@@ -5,10 +5,10 @@
 @grammar nyah : grammar
 
 MetaIdentifier   <- grammar::Identifier
-ScopedIdentifier <- MetaIdentifier % "."
+ScopedIdentifier <- MetaIdentifier %+ "."
 ModuleDefinition <- "@module" ScopedIdentifier
 MetaGrammar      <= "@grammar" ~MetaIdentifier (":" ScopedIdentifier)?
                     grammar::Grammar
 Module           <= ~+(ModuleDefinition?) MetaGrammar+
-Include          <- "@include" ScopedIdentifier
+Include          <- "@include" MetaIdentifier %+ "/"
 Grammar          <- Include* Module+
