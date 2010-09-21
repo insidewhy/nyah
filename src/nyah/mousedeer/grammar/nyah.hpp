@@ -23,14 +23,14 @@ struct MetaGrammar : simple_node<MetaGrammar,
 
 struct Module : simple_node<Module,
     key_plus< optional<ModuleDefinition> >,
-    many_plus<vector_hash<MetaGrammar>> > {};
+    many_plus<hash<MetaGrammar>> > {};
 
 typedef sequence<
     char_<'@',i,n,c,l,u,d,e>,
     joined_plus<char_<'/'>, MetaIdentifier> > Include;
 
 typedef sequence<
-    many<Include>, many_plus<vector_hash<Module> > > Grammar;
+    many<Include>, many_plus<hash<Module>> > Grammar;
 
 } } } }
 #endif

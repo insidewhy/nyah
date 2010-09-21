@@ -18,7 +18,21 @@
 #include <chilon/parser/tree_joined.hpp>
 #include <chilon/parser/tree_many.hpp>
 
-namespace nyah { namespace mousedeer { namespace grammar { namespace grammar {
+namespace nyah { namespace mousedeer { namespace grammar {
+
+struct Rule {
+    enum Status {
+        UNKNOWN,
+        NORMAL, // can be a node
+        HASHED,
+        NODE   // set while processing dependencies of node
+    };
+
+    Rule() : status_(UNKNOWN) {}
+    Status status_;
+};
+
+namespace grammar {
 
 using namespace chilon::parser;
 using namespace chilon::parser::ascii;
@@ -111,22 +125,11 @@ struct OrderedChoice : simple_node<OrderedChoice,
 
 struct Expression : simple_node<Expression, OrderedChoice> {};
 
-struct Rule : simple_node<Rule,
+struct Rule : nyah::mousedeer::grammar::Rule, simple_node<Rule,
     key<Identifier>, char_<'<'>, char_from<'=', '-'>, Expression >
-{
-    enum Status {
-        STATUS_UNKNOWN,
-        STATUS_NORMAL, // can be a node
-        STATUS_HASHED,
-        STATUS_NODE   // set while processing dependencies of node
-    };
+{};
 
-
-    Rule() : status_(STATUS_UNKNOWN) {}
-    Status status_;
-};
-
-typedef many<vector_hash<Rule>> Grammar;
+typedef many<hash<Rule>> Grammar;
 
 } } } }
 #endif

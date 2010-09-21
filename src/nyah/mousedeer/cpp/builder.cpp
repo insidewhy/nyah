@@ -27,13 +27,13 @@ bool builder::parse_file(std::string const& file_path) {
 
     if (file.parse_succeeded()) return false;
 
-    options_.verbose("parsing file ", file_path);
+    options_.verbose(file_path, ": parsing");
 
     if (file.parse(file_path.c_str(), ast_)) {
         if (! file.parse_succeeded())
             throw error::parsing(file_path);
         else
-            options_.verbose(file_path, ": parsed grammar");
+            options_.verbose(file_path, ": parsed");
     }
     else throw error::parsing("nothing parsed", file_path);
 
