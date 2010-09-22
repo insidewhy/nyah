@@ -18,5 +18,5 @@ Joined            <= (Join / Prefix) |% "^"
 Sequence          <= Joined |+
 OrderedChoice     <= Sequence |% "/"
 Expression        <= OrderedChoice
-Rule              <= ~Identifier "<" [-=] Expression
+Rule              <= ~Identifier "<" ^ [-=] Expression
 Grammar           <- Rule+

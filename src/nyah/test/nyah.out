@@ -362,10 +362,12 @@ module [
                         '~'
                         "Identifier"
                     )
-                    String: "<"
-                    CharacterRange: [
-                        '-'
-                        '='
+                    Joined: [
+                        String: "<"
+                        CharacterRange: [
+                            '-'
+                            '='
+                        ]
                     ]
                     "Expression"
                 ]
