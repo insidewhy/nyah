@@ -129,7 +129,7 @@ struct Rule : nyah::mousedeer::grammar::Rule, simple_node<Rule,
     key<Identifier>, char_<'<'>, char_from<'=', '-'>, Expression >
 {};
 
-typedef many<hash<Rule>> Grammar;
+typedef many<Rule> Grammar;
 
 } } } }
 #endif
