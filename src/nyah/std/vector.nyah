@@ -1,5 +1,5 @@
+@include std/memory
 @module std
-@import std.memory
 
 class vector[T] {
     value_type    ?: T

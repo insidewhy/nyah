@@ -25,7 +25,7 @@ head {
     %li Provide a fast and free MIT licensed compiler implementation.
     %li Provide a powerful and intelligent compiler which will infer information to save developers from repetitive typing when safe to do so.
     %li Optional garbage collection. Nyah should target both vmkit and LLVM to allow it to be used both with and without a garbage collector.
-    %li Object orientation (including multiple inheritance), functional and declarative programming styles are supported.
+    %li Object orientated (including multiple inheritance), meta, functional and declarative programming styles are supported.
 }
 
 %h2 Syntax can be extended/modified at compile time.
@@ -111,8 +111,7 @@ EOF
     // by the compiler.
     def subtract(a:const int, b:const int) = a - b
 
-    // A function containing several statements. The return type can
-    // always be omitted, in which case it is inferred by the compiler.
+    // A function containing several statements.
     def divide(a:const int, b:const int) {
         assert(b != 0)
         return a / b

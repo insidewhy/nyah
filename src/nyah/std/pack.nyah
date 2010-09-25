@@ -8,3 +8,6 @@ def index_of[uint ?offset, T]           ?: offset
 def index_of[uint ?offset, T, T, U...]  ?: offset
 def index_of[uint ?offset, T, O, U...]  ?: index_of[offset + 1, T, U...]
 def index_of[T, U...]                   ?: index_of[0u, T, U...]
+
+def at[uint ?offset, H, T...] ?: at[offset - 1, T...]
+def at[0u, H, T...] ?: H

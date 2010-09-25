@@ -1,22 +1,39 @@
+@include std/pack
 @module std
-@import std.pack
 
 class variant[T...] {
+  @private:
+    class deleter {
+        def operator()(t) delete &t
+        def operator()() {}
+    }
+
+  @public:
     def operator=(v:const) {
         @assert contains[v, T...]
+        delete_data()
         idx_  = index_of[v, T...]
         data_ = new[T](v)
     }
 
-    def at[U] = {
+    def at[U] {
         @assert contains[U, T...]
-        *reinterpret_cast[U *](data_)
+        = *reinterpret_cast[U *](data_)
     }
 
-    def at[I:uint] = {
+    def at[I:uint] {
         @assert I < sizeof... T
-        *reinterpret_cast[ T[I] *](data_)
+        = *reinterpret_cast[ std::at[I, T] *](data_)
     }
+
+    def set_empty {
+        if (! empty()) {
+            variant_apply(this, deleter())
+            data_ = null
+        }
+    }
+
+    def empty = ! data_
 
     def self(v:const) {
         @assert contains[v, T...]
@@ -24,23 +41,25 @@ class variant[T...] {
         data_ = new[T](v)
     }
 
-    def self() {}
   @private:
+    def delete_data {
+        if (! empty()) variant_apply(this, deleter())
+    }
+
     data_:void * = null
     idx_ = 0u
 }
 
-def variant_apply(v:variant[T...], functor:const) = {
-    return_type ?: type_of[functor(T[0])]
+def variant_apply(v:variant[T...], functor:const) {
+    return_type ?: decltype[functor(at[0, T...])]
 
     // @singleton within a function will create a new singleton for each
-    // set of type parameters. lambda in singleton always copies the
-    // functor.
+    // set of type parameters.
     @singleton executors:ptr_array[sizeof...[T], executor_base] =
         [[
             i ? 0u .. sizeof...[T],
-            lambda functor(T[i])
+            new lambda(v_) { functor(v_.at[i]) }
         ]]
 
-    return executors(v.type_index)()
+    return executors(v.type_index)(v)
 }
