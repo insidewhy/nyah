@@ -17,7 +17,7 @@ head {
 %p { Nyah is a systems programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++. Nyah is typed, but uses type inference so types can usually be ommitted. and has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code and | %a(href=http://vmkit.llvm.org/) VMKit | to generate object code if garbage collection is turned on. }
 
 %h2 Aims
-%p Nyah looks to many other languages for inspiration, especially C++0x, scala and D. It aims to:
+%p Nyah looks to many other languages for inspiration, especially C++0x, scala and D.
 
 %ul {
     %li Improve the powerful meta-programming functionalities of C++0x and D whilst simplifying the syntax.
@@ -25,6 +25,7 @@ head {
     %li Provide a fast and free MIT licensed compiler implementation.
     %li Provide a powerful and intelligent compiler which will infer information to save developers from repetitive typing when safe to do so.
     %li Optional garbage collection. Nyah should target both vmkit and LLVM to allow it to be used both with and without a garbage collector.
+    %li Object orientation (including multiple inheritance), functional and declarative programming styles are supported.
 }
 
 %h2 Syntax can be extended/modified at compile time.
@@ -71,14 +72,14 @@ EOF
 %h2 Control structures
 
 %pre <<EOF
+    // (= value) is equivalent to (return value) at function scope.
+    def bread() { = "bread" }
+    def uncle() { return "uncle" }
+
     // if/else can return values.
     a := false
     b := if (a) =1; else =2
     c := a ? 1 : 2
-
-    // (= value) is equivalent to (return value) at function scope.
-    def bread() { = "bread" }
-    def uncle() { return "uncle" }
 
     // while can return a value if it has a return statement. In which
     // case the result of the value on the last iteration will be used.
