@@ -188,7 +188,7 @@ EOF
 %h3 First compiler (written in C++0x) to be used for bootstrapping
 %ul {
     %li { .inprogress IN PROGRESS | mousebear: full nyah language parser using parser generator. }
-    %li { .yettostart YET TO START | Write code generator using LLVM. }
+    %li { .yettostart YET TO START | Code generator using LLVM. }
 }
 
 %h3 Nyah standard library
@@ -201,10 +201,13 @@ EOF
 
 %h3 Second compiler (written in nyah)
 %ul {
-    %li { .yettostart YET TO START | Rewrite chilon::parser as nyah::parser. }
-    %li { .yettostart YET TO START | Rewrite mousebear in nyah as nyah compiler. }
-    %li { .yettostart YET TO START | Write code generator using LLVM. }
-    %li { .yettostart YET TO START | Write code generator for garbage collected nyah using vmkit. }
+    %li { .yettostart YET TO START | nyah::parser based on chilon::parser. }
+    %li { .yettostart YET TO START | TBPEG nyah syntax which will internally be based on nyah::parser. }
+    %li { .yettostart YET TO START | Use nyah syntax from bootstrap compiler to produce full parser. }
+    %li { .yettostart YET TO START | LLVM library for nyah based on LLVM C bindings. }
+    %li { .yettostart YET TO START | Code generator using llvm library. }
+    %li { .yettostart YET TO START | vmkit library for nyah. }
+    %li { .yettostart YET TO START | Code generator for garbage collected nyah using vmkit library. }
 }
 
 %h2 Help wanted
