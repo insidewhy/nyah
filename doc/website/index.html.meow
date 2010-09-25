@@ -130,7 +130,7 @@ EOF
     // pointer. The second argument may be passed from a const or non-const
     // expression (unless a more specific non-const overload exists) but
     // is treated as a const variable within the function.
-    def assign_ptr(a:*, b:const) = a + b.
+    def assign_ptr(a:*, b:const) *a = b
 
     // Functions can be overloaded, the most specific function always
     // matches.
