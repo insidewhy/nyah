@@ -174,10 +174,56 @@ EOF
     print(b(1))
 EOF
 
+%h2 Classes and type parameters
+%pre <<EOF
+    // type parameter T
+    class scoped_ptr[T] {
+        // no initialiser list needed, nyah automatically initialises class
+        // data with results of all member assignments at the beginning of
+        // a constructor
+        def self(ptr:T *) {
+            ptr_ = ptr
+        }
+
+        // destructor
+        def ~self() delete ptr_
+
+        // default constructor provided unless:
+        delete self()
+
+      @private:
+        ptr_:T *
+    }
+EOF
+
+%h2 Variadic type parameters
+%pre <<EOF
+    class tuple[T...] : tuple_helper[T...] {
+        // super always refers to first parent class (super[n] for nth)
+        // this inherit's the tuple_helper's constructors
+        using super::self
+    }
+
+    class tuple_helper[] {}
+
+    class tuple_helper[H, T...] : tuple_helper[T...] {
+        def self(h:H, u...) {
+            // call parent class constructor
+            super(u...)
+            element_ = h
+        }
+
+        def operator=(h:H) element_ = h
+
+      @private:
+        H element_
+    }
+EOF
+
 %h2 Status
 
 %h3 Parser generator
-%ul {
+%ul.status {
     %li { .completed COMPLETED | Research new notation to extend PEG to include &ldquo;AST-building&rdquo; parsers. Read paper | a(href=http://chilon.net/papers/tbpeg.pdf) TBPEGs }
     %li { .completed COMPLETED | chilon::parser, a C++0x implementation of TBPEGs, to be used in the bootstrap compiler. Project website | a(href=http://chilon.net/library.html) chilon::parser }
     %li { .completed COMPLETED | TBPEG parser in chilon::parser to be used for Nyah's grammar DSL. }
@@ -185,13 +231,13 @@ EOF
 }
 
 %h3 First compiler (written in C++0x) to be used for bootstrapping
-%ul {
+%ul.status {
     %li { .inprogress IN PROGRESS | mousebear: full nyah language parser using parser generator. }
     %li { .yettostart YET TO START | Code generator using LLVM. }
 }
 
 %h3 Nyah standard library
-%ul {
+%ul.status {
     %li { .inprogress IN PROGRESS | std::variant and std::tuple. }
     %li { .inprogress IN PROGRESS | containers: vector, vector_hash_map, hash_map, hash_set, set, map. }
     %li { .inprogress IN PROGRESS | nyah meta-programming library. }
@@ -199,7 +245,7 @@ EOF
 }
 
 %h3 Second compiler (written in nyah)
-%ul {
+%ul.status {
     %li { .yettostart YET TO START | nyah::parser based on chilon::parser. }
     %li { .yettostart YET TO START | TBPEG nyah syntax which will internally be based on nyah::parser. }
     %li { .yettostart YET TO START | Use nyah syntax from bootstrap compiler to produce full parser. }
@@ -212,5 +258,12 @@ EOF
 %h2 Help wanted
 
 %p Help is appreciated from anyone with research, implementation or art.
+%p {
+    People with ideas for how best to add the following features or possible implementors would be great:
+    %ul {
+        %li Coroutines
+        %li Internationalisation
+    }
+}
 %div E-mail: nyah (@) chilon.net.
-%div { IRC Channel: #nyah on | %a(href=irc://irc.freenode.net) "irc.freenode.net" }
+%div { IRC Channel: #nyah on | %a(href=irc://irc.freenode.net/nyah) "irc.freenode.net" }
