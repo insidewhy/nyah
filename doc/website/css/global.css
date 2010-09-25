@@ -14,6 +14,11 @@ h2 {
     font-size: 140%;
 }
 
+h3 {
+    margin: 0;
+    padding: 5px 0px;
+}
+
 a:link {
     color: #cc0000;
     text-decoration: none;
@@ -56,7 +61,7 @@ p {
 
 ul {
     margin: 0 0 0 10px;
-    padding: 0 0 0 10px;
+    padding: 0 0 20px 20px;
 }
 
 pre {
@@ -65,4 +70,19 @@ pre {
     padding: 25px;
     margin: 5px;
     width: 52em;
+}
+
+.completed {
+    color: #00aa00;
+    display: inline;
+}
+
+.inprogress {
+    color: #0000aa;
+    display: inline;
+}
+
+.yettostart {
+    color: #8888aa;
+    display: inline;
 }

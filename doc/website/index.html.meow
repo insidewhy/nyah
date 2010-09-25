@@ -14,7 +14,7 @@ head {
     %a(href=cplusplus.html) nyah vs c++(0x)
 }
 
-%p { Nyah is a systems programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++. Nyah is typed, but uses type inference so types can usually be ommitted. and has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code. }
+%p { Nyah is a systems programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++. Nyah is typed, but uses type inference so types can usually be ommitted. and has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code and | %a(href=http://vmkit.llvm.org/) VMKit | to generate object code if garbage collection is turned on. }
 
 %h2 Aims
 %p Nyah looks to many other languages for inspiration, especially C++0x, scala and D. It aims to:
@@ -22,17 +22,18 @@ head {
 %ul {
     %li Improve the powerful meta-programming functionalities of C++0x and D whilst simplifying the syntax.
     %li Exceed the type inference and DSL building capabilities of scala.
-    %li Exceed the runtime performance of D and provide a fast and free MIT licensed compiler implementation on top of LLVM.
-    %li Provide a powerful and intelligent compiler to allow the compiler to infer more information, saving the developer from repetitive typing.
+    %li Provide a fast and free MIT licensed compiler implementation.
+    %li Provide a powerful and intelligent compiler which will infer information to save developers from repetitive typing when safe to do so.
+    %li Optional garbage collection. Nyah should target both vmkit and LLVM to allow it to be used both with and without a garbage collector.
 }
 
-%h2 Nyah syntax can be extended easily.
+%h2 Syntax can be extended/modified at compile time.
 
-%p New features can be added to the language and the compiler from within nyah code itself. This not only allows many powerful features to be expressed neatly in the language, but makes nyah an ideal "compiler toolkit". It is conceivable to import the syntax of a pre-existing language into nyah, for example, the nyah grammar module allows PEG parsers to be expressed directly in PEG notation within the compiler.
+%p New features can be added to the language and the compiler from within nyah code itself. This not only allows many powerful features to be expressed neatly in the language, but makes nyah an ideal "compiler toolkit". It is conceivable to import the syntax of a pre-existing language into nyah, for example, the nyah grammar module allows PEG parsers to be expressed directly in PEG notation within the language. The nyah parser itself is implemented with this module.
 
-%h2 Nyah is a meta-compiler.
+%h2 Fast, powerful, non-verbose meta-programming
 
-%p Whilst the goals are ambitious the nyah compiler achieves them neatly by approaching compilation in a unique way. In the first stage the nyah compiler creates a new compiler based on the input source code. This compiler is then run to generate the final source code. Whilst this approach adds another layer of indirection which would make the compilation of traditional code slightly slower, it allows code that takes advantage of meta-programming to be compiled very quickly. It also allows type inference to be more powerful than a language like scala. In nyah even functions that recursively call other meta-functions can benefit from return type inference.
+%p Whilst the goals are ambitious the nyah compiler achieves them neatly by approaching compilation in a unique way. The compiler outputs assembly code to allow it to interpret meta-programs quickly. Whilst this approach adds another layer of indirection which would make the compilation of traditional code slightly slower, it allows code that takes advantage of meta-programming to be compiled very quickly. It also allows type inference to be more powerful than a language like scala. In nyah even functions that recursively call other meta-functions can benefit from return type inference.
 
 %h2 Variables
 
@@ -48,6 +49,54 @@ head {
 
     // Construct object on heap.
     v_heap := new vector[int]()
+
+    // Make a reference.
+    v_heap_ref :& = v_heap
+EOF
+
+%h2 Semicolons
+
+%p Semicolons are only needed where necessary to resolve ambiguity. In order for this to work, binary operators should not appear at the beginning of a new line.
+
+%pre <<EOF
+    // This is fine.
+    a := 1 + 2 +
+        3
+
+    // This is two statements: (b := 1 + 2) and (+3)
+    b := 1 + 2
+        + 3
+EOF
+
+%h2 Control structures
+
+%pre <<EOF
+    // if/else can return values.
+    a := false
+    b := if (a) =1; else =2
+    c := a ? 1 : 2
+
+    // (= value) is equivalent to (return value) at function scope.
+    def bread() { = "bread" }
+    def uncle() { return "uncle" }
+
+    // while can return a value if it has a return statement. In which
+    // case the result of the value on the last iteration will be used.
+    // This can also be used for foreach and for loops. "return" should
+    // be used in order to return data from a function within a loop.
+    str  := "pumpo"
+    iter := str.begin
+    first_m :=  while (*iter != "m") = ++iter
+
+    // for loop.
+    for (i := 0; i < 10; ++i) println(i)
+
+    // Range based for loop.
+    v := vector(1, 2, 3, 4)
+    foreach (i ; v) println(i)
+
+    // Use two values at a time in loop.
+    foreach (i1, i2 ; v) println(i1, ", ", i2)
 EOF
 
 %h2 Functions
@@ -58,8 +107,7 @@ EOF
         return a + b
 
     // Return type can always be omitted, in which case it is inferred
-    // by the compiler. A statement "= <expression>" is equivalent to
-    // "return <expression>".
+    // by the compiler.
     def subtract(a:const int, b:const int) = a - b
 
     // A function containing several statements. The return type can
@@ -87,10 +135,7 @@ EOF
     // matches.
     def end(a) = a.end()
 
-    // +const generates two versions of the function, one for const
-    // char pointers, and one for mutable char pointers. In each case
-    // the return value is different.
-    def end(a:char +const *) {
+    def end(a:char *) {
         while (*a != '\0') ++a
         return a
     }
@@ -99,6 +144,17 @@ EOF
         // create a compile time error if called.
         @error "Cannot retrieve end of pointer"
     }
+
+    // A function containing return types with different statements can
+    // be made to return a "variant[T...]" where T... is the set of types
+    // of all possible return types. T... is deduced by the compiler.
+    // variant is implemented as a set of types and meta-programs within
+    // nyah itself with no special compiler support necessary.
+    def item_or_false(v, i):variant {
+        it := v.find(i)
+        return it == v.end ? false : it
+    }
+
 EOF
 
 %h2 Arrays
@@ -118,6 +174,40 @@ EOF
     print(b(1))
 EOF
 
-%h2 Unfortunately
+%h2 Status
 
-The project is not finished, and the existing compiler implementation only compiles the grammar syntax of nyah. Please check out the | %a(href=http://github.com/tuxjay/nyah) nyah git repository. | Any volunteers or offers of research positions or grants to enable me to work on this full time will be met with enthusiastic dedication.
+%h3 Parser generator
+%ul {
+    %li { .completed COMPLETED | Research new notation to extend PEG to include &ldquo;AST-building&rdquo; parsers. Read paper | a(href=http://chilon.net/papers/tbpeg.pdf) TBPEGs }
+    %li { .completed COMPLETED | chilon::parser, a C++0x implementation of TBPEGs, to be used in the bootstrap compiler. Project website | a(href=http://chilon.net/library.html) chilon::parser }
+    %li { .completed COMPLETED | TBPEG parser in chilon::parser to be used for Nyah's grammar DSL. }
+    %li { .inprogress IN PROGRESS | Code generator for TBPEG parser to output chilon::parser parsers. }
+}
+
+%h3 First compiler (written in C++0x) to be used for bootstrapping
+%ul {
+    %li { .inprogress IN PROGRESS | mousebear: full nyah language parser using parser generator. }
+    %li { .yettostart YET TO START | Write code generator using LLVM. }
+}
+
+%h3 Nyah standard library
+%ul {
+    %li { .inprogress IN PROGRESS | std::variant and std::tuple. }
+    %li { .inprogress IN PROGRESS | containers: vector, vector_hash_map, hash_map, hash_set, set, map. }
+    %li { .inprogress IN PROGRESS | nyah meta-programming library. }
+    %li { .yettostart YET TO START | std::config argument parser. }
+}
+
+%h3 Second compiler (written in nyah)
+%ul {
+    %li { .yettostart YET TO START | Rewrite chilon::parser as nyah::parser. }
+    %li { .yettostart YET TO START | Rewrite mousebear in nyah as nyah compiler. }
+    %li { .yettostart YET TO START | Write code generator using LLVM. }
+    %li { .yettostart YET TO START | Write code generator for garbage collected nyah using vmkit. }
+}
+
+%h2 Help wanted
+
+%p Help is appreciated from anyone with research, implementation or art.
+%div E-mail: nyah (@) chilon.net.
+%div { IRC Channel: #nyah on | %a(href=irc://irc.freenode.net) "irc.freenode.net" }

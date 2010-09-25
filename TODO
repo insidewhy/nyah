@@ -1,5 +1,4 @@
  * 0.5
-     * mousedeer: grammar @extends
      * mousedeer: grammar -> chilon::parser translator
      * mousedeer: grammar/*.nyah -> mousedeer::grammar::*
  * 0.6

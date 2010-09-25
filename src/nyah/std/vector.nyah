@@ -5,9 +5,6 @@ class vector[T] {
     value_type    ?: T
     iterator_type ?: T*
 
-    // @+const generates both a mutable and a const version of all
-    // functions
-  @+const:
     def begin() = data_
     def end()   = data_ + size - 1
 
@@ -15,8 +12,6 @@ class vector[T] {
     def front():& = *begin()
     def back():&  = *end()
 
-    // clears @+const
-  @mutable:
     def resize(newSize:size_t) {
         if (newSize < capacity * 2) {
             do {
