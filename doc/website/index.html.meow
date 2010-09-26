@@ -12,9 +12,10 @@ head {
     links:
     %a(href=http://github.com/tuxjay/nyah) source
     %a(href=cplusplus.html) nyah vs c++(0x)
+    %a(href=#status) status
 }
 
-%p { Nyah is a systems programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++. Nyah is typed, but uses type inference so types can usually be ommitted. Nyah has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code and | %a(href=http://vmkit.llvm.org/) VMKit | to generate bytecode if garbage collection is turned on. }
+%p { Nyah is a systems programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++. Nyah is typed, but uses type inference so types can usually be ommitted. Nyah has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code and JVM bytecode output if garbage collection is turned on. }
 
 %h2 Aims
 %p Nyah looks to many other languages for inspiration, especially C++0x, scala and D.
@@ -24,7 +25,7 @@ head {
     %li Exceed the type inference and DSL building capabilities of scala.
     %li Provide a fast and free MIT licensed compiler implementation.
     %li Provide a powerful and intelligent compiler which will infer information to save developers from repetitive typing when safe to do so.
-    %li Optional garbage collection. Nyah should target both vmkit and LLVM to allow it to be used both with and without a garbage collector.
+    %li Optional garbage collection. Nyah should target both the JVM and the LLVM to allow it to be used both with and without a garbage collector.
     %li Object orientated (including multiple inheritance), meta, functional and declarative programming styles are supported.
 }
 
@@ -221,7 +222,53 @@ EOF
     }
 EOF
 
-%h2 Status
+%h2 Meta functions
+%pre <<EOF
+
+meta if[C, T, U] : T
+
+// Unliked C++ meta-functions have access to all primitive types e.g.
+//    bool[false], bool[true], int[1], float[1.0]
+// When use in type context, 1 = int[1], true = bool[true] etc.
+
+// :false is used to specialise the first argument of `if' on :false
+meta if[:false, T, U]      : U
+
+// Classes with no bodies are good to pass compile-time data between
+// meta-functions.
+class set[T...]
+
+// If a metafunction with the same name as a class is created, then the
+// metafunction becomes a companion function of the class, and type[...] can be
+// used within the metafunction to reference the companion class. In this case
+// the companion meta-function ensures whenever a set is created that
+// duplicates are removed from its parameter list.
+meta set[type[R...]] : type[R...]
+
+meta set[type[R...], H, T...] :
+    set[
+        if[ std.contains[H, R...], type[R...], type[R..., H] ],
+        T...
+    ]
+
+meta set[H, T...] : set[type[H], T...]
+
+// ?: creates a type alias at compile time, like a typedef in c++
+a_set ?: set[bool, int, float, int]
+
+// sizeof... calculates the size of a template pack, or the number of template
+// arguments in a class if no pack is given. In this case this_is_3 will alias
+// uint[3].
+this_is_3 ?: sizeof...[a_set]
+
+// ... can be used to expand the types in a template pack, but expands the type
+// arguments of a type if no pack is given. In this case a_list will alias
+// list[bool, int, float, float].
+a_list ?: list[a_set..., float]
+
+EOF
+
+%h2#status Status
 
 %h3 Parser generator
 %ul.status {
@@ -252,18 +299,21 @@ EOF
     %li { .yettostart YET TO START | Use nyah syntax from bootstrap compiler to produce full parser. }
     %li { .yettostart YET TO START | LLVM library for nyah based on LLVM C bindings. }
     %li { .yettostart YET TO START | Code generator using llvm library. }
-    %li { .yettostart YET TO START | vmkit library for nyah. }
-    %li { .yettostart YET TO START | Code generator for garbage collected nyah using vmkit library. }
+    %li { .yettostart YET TO START | Java bytecode output library for nyah. }
+    %li { .yettostart YET TO START | Code generator for garbage collected nyah using java bytecode library. }
 }
 
 %h2 Help wanted
 
-%p Help is appreciated from anyone with research, implementation or art.
+%p Help is appreciated from anyone with research, implementation or art. Criticisms and suggestions for how to improve or modify the language will be welcomed.
 %p {
     People with ideas for how best to add the following features or possible implementors would be great:
     %ul {
         %li Coroutines
         %li Internationalisation
+        %li Optimised hashed standard containers
+        %li Multi-index container meta-function library
+        %li Asynchronous IO library
     }
 }
 %div E-mail: nyah (@) chilon.net.

@@ -1,10 +1,9 @@
 @module std
 
-def factorial[uint ?T] ?: T * factorial[T - 1]
-def factorial[0u]      ?: 0u
-// factorial[0u] == factorial[uint 0u]
+meta factorial[uint ?T] : T * factorial[T - 1]
+meta factorial[0u]      : 0u
 
 // an alternate way of writing this:
-// factorial[uint ?T] ?:
-//    @if(T == 0) 0u
-//    @else T * factorial[T - 1]
+// meta factorial[uint ?T] ?
+//    if[T == 0] 0u
+//    else T * factorial[T - 1]

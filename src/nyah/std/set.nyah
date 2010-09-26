@@ -1,0 +1,13 @@
+@module std
+
+class set[T...]
+
+meta set[type[R...]] : type[R...]
+
+meta set[type[R...], H, T...] :
+    set[ 
+        if[ std.contains[H, R...], type[R...], type[R..., H] ],
+        T... 
+    ]
+
+meta set[H, T...] : set[type[H], T...]
