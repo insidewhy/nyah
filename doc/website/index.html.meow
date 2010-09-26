@@ -160,13 +160,14 @@ EOF
 %h2 Arrays
 
 %pre <<EOF
-    // create array of 3 integers
+    // Create array of 3 integers.
     a := [[ 1, 2, 3 ]]
 
     // Create array of 3 integers and assign elements in a run-time loop.
     c := [[ i : 0..3, i ]]
 
-    // As above but create values at compile time.
+    // As above but create values in a loop unrolled at compile time.
+    // This allows the loop variable to be used as a compile time constant.
     b := [[ i ?: 0..3, i ]]
 
     // Index second element of array. [ and ] are used for type
@@ -178,17 +179,17 @@ EOF
 %pre <<EOF
     // type parameter T
     class scoped_ptr[T] {
-        // no initialiser list needed, nyah automatically initialises class
+        // No initialiser list needed, nyah automatically initialises class
         // data with results of all member assignments at the beginning of
-        // a constructor
+        // a constructor.
         def self(ptr:T *) {
             ptr_ = ptr
         }
 
-        // destructor
+        // Destructor.
         def ~self() delete ptr_
 
-        // default constructor provided unless:
+        // Default constructor provided unless:
         delete self()
 
       @private:
@@ -200,7 +201,7 @@ EOF
 %pre <<EOF
     class tuple[T...] : tuple_helper[T...] {
         // super always refers to first parent class (super[n] for nth)
-        // this inherit's the tuple_helper's constructors
+        // This inherits all constructors from tuple_helper.
         using super::self
     }
 
@@ -208,7 +209,7 @@ EOF
 
     class tuple_helper[H, T...] : tuple_helper[T...] {
         def self(h:H, u...) {
-            // call parent class constructor
+            // Call parent class constructor.
             super(u...)
             element_ = h
         }
