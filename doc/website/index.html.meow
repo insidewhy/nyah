@@ -1,6 +1,6 @@
 !html
 head {
-    %title nyah
+    %title nyah - open source community language
     link(rel=stylesheet, type=text/css, href=css/global.css)
 }
 
@@ -15,7 +15,7 @@ head {
     %a(href=#status) status
 }
 
-%p { Nyah is a systems programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++. Nyah is typed, but uses type inference so types can usually be ommitted. Nyah has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code and JVM bytecode output if garbage collection is turned on. }
+%p { Nyah is a programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++ but with the expressiveness of a scripting language like python or ruby. Nyah is typed, but uses type inference so types can usually be omitted. Nyah has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code and will generate JVM bytecode if garbage collection is turned on. The main goal for Nyah is to be a community language designed with input from a large group of people. The grammar of nyah can be modified at compile time to allow diverging opinions to be expressed within the same language. Features that offend and please a group of programmers can be removed and added to taste when a project is begun. }
 
 %h2 Aims
 %p Nyah looks to many other languages for inspiration, especially C++0x, scala and D.
@@ -31,11 +31,11 @@ head {
 
 %h2 Syntax can be extended/modified at compile time.
 
-%p New features can be added to the language and the compiler from within nyah code itself. This not only allows many powerful features to be expressed neatly in the language, but makes nyah an ideal "compiler toolkit". It is conceivable to import the syntax of a pre-existing language into nyah, for example, the nyah grammar module allows PEG based parsers to be expressed directly in a PEG based notation within the language. This variant of PEGs allows AST building capabilities to be expressed with the parsing grammar. This allows powerful modifications and extensions to be expressed neatly and simply. The nyah parser itself is implemented with this module.
+%p New features can be added to the language and the compiler from within nyah code itself. This not only allows many powerful features to be expressed neatly in the language, but makes nyah an ideal "compiler toolkit". It is conceivable to import the syntax of a pre-existing language into nyah, for example, the nyah grammar module allows PEG based parsers to be expressed directly in a PEG based notation within the language. This variant of PEGs allows AST building capabilities to be expressed with the parsing grammar. This allows powerful modifications and extensions to be expressed neatly and simply. The nyah parser itself is implemented with this module which allows extensions and modifications to the core language to be made with reasonable ease and flexibility.
 
 %h2 Fast, powerful, non-verbose meta-programming
 
-%p Whilst the goals are ambitious the nyah compiler achieves them neatly by approaching compilation in a unique way. The compiler outputs assembly code during the compilation process to allow it to run meta-programs quickly. Whilst this approach adds another layer of indirection which would make the compilation of traditional code slightly slower, it allows code that takes advantage of meta-programming to be compiled very quickly. It also allows type inference to be more powerful than a language like scala. In nyah even functions that recursively call other meta-functions can benefit from return type inference.
+%p Whilst the goals are ambitious the nyah compiler achieves them neatly by approaching compilation in a unique way. The compiler outputs assembly code during the compilation process to allow it to run meta-functions and interpret grammar modifications quickly. Whilst this approach adds another layer of indirection which would make the compilation of traditional code slightly slower, it allows code that takes advantage of meta-programming to be compiled very quickly. It also allows type inference to be more powerful than a language like scala. In nyah even functions that recursively call other meta-functions can benefit from return type inference.
 
 %h2 Variables
 
@@ -200,6 +200,7 @@ EOF
 
 %h2 Variadic type parameters
 %pre <<EOF
+    // Inheritance.
     class tuple[T...] : tuple_helper[T...] {
         // super always refers to first parent class (super[n] for nth)
         // This inherits all constructors from tuple_helper.
@@ -307,12 +308,13 @@ EOF
 
 %p Help is appreciated from anyone with research, implementation or art. Criticisms and suggestions for how to improve or modify the language will be welcomed.
 %p {
-    People with ideas for how best to add the following features or possible implementors would be great:
+    Here are some ideas for things to contribute:
     %ul {
         %li Coroutines
         %li Internationalisation
         %li Optimised hashed standard containers
-        %li Multi-index container meta-function library
+        %li Red-black tree maps
+        %li Multi-index container library
         %li Asynchronous IO library
     }
 }
