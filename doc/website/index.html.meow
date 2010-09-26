@@ -207,7 +207,7 @@ EOF
         using super::self
     }
 
-    class tuple_helper[] {}
+    class tuple_helper[]
 
     class tuple_helper[H, T...] : tuple_helper[T...] {
         def self(h:H, u...) {
