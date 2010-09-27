@@ -316,7 +316,7 @@ EOF
 
 %h3 Nyah standard library
 %ul.status {
-    %li { .inprogress IN PROGRESS | std.variant and std.tuple. }
+    %li { .inprogress IN PROGRESS | "std.variant and std.tuple." }
     %li { .inprogress IN PROGRESS | containers: vector, vector_hash_map, hash_map, hash_set, set, map. }
     %li { .inprogress IN PROGRESS | nyah meta-programming library. }
     %li { .yettostart YET TO START | std.config argument parser. }
@@ -324,7 +324,7 @@ EOF
 
 %h3 Second compiler (written in nyah)
 %ul.status {
-    %li { .yettostart YET TO START | nyah.parser based on chilon::parser. }
+    %li { .yettostart YET TO START | "nyah.parser based on chilon::parser." }
     %li { .yettostart YET TO START | TBPEG nyah syntax which will internally be based on nyah.parser. }
     %li { .yettostart YET TO START | Use nyah syntax from bootstrap compiler to produce full parser. }
     %li { .yettostart YET TO START | LLVM library for nyah based on LLVM C bindings. }
