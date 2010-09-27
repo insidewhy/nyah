@@ -262,9 +262,9 @@ a_set ?: set[bool, int, float, int]
 // uint[3].
 this_is_3 ?: sizeof...[a_set]
 
-// ... can be used to expand the types in a template pack, but expands the type
-// arguments of a type if no pack is given. In this case a_list will alias
-// list[bool, int, float, float].
+// ... expands types in a template pack or the type arguments of a given
+// template parameter In this case a_list will alias
+//     list[bool, int, float, float].
 a_list ?: list[a_set..., float]
 
 EOF
