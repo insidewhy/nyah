@@ -204,7 +204,7 @@ EOF
     class tuple[T...] : tuple_helper[T...] {
         // super always refers to first parent class (super[n] for nth)
         // This inherits all constructors from tuple_helper.
-        using super::self
+        using super.self
     }
 
     class tuple_helper[]
@@ -275,10 +275,10 @@ EOF
 Spacing    <- \s
 Identifier <- [a-zA-Z_] ^ [0-9a-zA-Z_]*
 Grammar    <- '[' (Identifier % ',') ']'
-// this stores: std::vector[std::string]
+// this stores: std.vector[std.string]
 // example
 //    string:  [ hello, king ]
-//    stores: std::vector[string]("hello", "king")
+//    stores: std.vector[string]("hello", "king")
 
 @grammar mathematics
 Spacing        <- \s
@@ -288,9 +288,14 @@ Addition       <= Multiplication |% "+"
 Grammar        <- Addition+
 
 // this stores:
-// std::vector[ std::variant[int, Multiplication, Addition] ]
-// Where Multiplication stores  std::vector[int]
-// and   Addition       stores  std::vector[std::variant[Number, Multiplication]]
+// std.vector[ std.variant[int, Multiplication, Addition] ]
+// And creates:
+// class Multiplication {
+//      value_: std.vector[int]
+// }
+// class Addition {
+//      value_: std.vector[std.variant[Number, Multiplication]]
+// }
 EOF
 
 %h2#status Status
@@ -311,16 +316,16 @@ EOF
 
 %h3 Nyah standard library
 %ul.status {
-    %li { .inprogress IN PROGRESS | std::variant and std::tuple. }
+    %li { .inprogress IN PROGRESS | std.variant and std.tuple. }
     %li { .inprogress IN PROGRESS | containers: vector, vector_hash_map, hash_map, hash_set, set, map. }
     %li { .inprogress IN PROGRESS | nyah meta-programming library. }
-    %li { .yettostart YET TO START | std::config argument parser. }
+    %li { .yettostart YET TO START | std.config argument parser. }
 }
 
 %h3 Second compiler (written in nyah)
 %ul.status {
-    %li { .yettostart YET TO START | nyah::parser based on chilon::parser. }
-    %li { .yettostart YET TO START | TBPEG nyah syntax which will internally be based on nyah::parser. }
+    %li { .yettostart YET TO START | nyah.parser based on chilon::parser. }
+    %li { .yettostart YET TO START | TBPEG nyah syntax which will internally be based on nyah.parser. }
     %li { .yettostart YET TO START | Use nyah syntax from bootstrap compiler to produce full parser. }
     %li { .yettostart YET TO START | LLVM library for nyah based on LLVM C bindings. }
     %li { .yettostart YET TO START | Code generator using llvm library. }
