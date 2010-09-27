@@ -281,7 +281,7 @@ EOF
 
 %h3 First compiler (written in C++0x) to be used for bootstrapping
 %ul.status {
-    %li { .inprogress IN PROGRESS | mousebear: full nyah language parser using parser generator. }
+    %li { .inprogress IN PROGRESS | mousedeer: full nyah language parser using parser generator. }
     %li { .yettostart YET TO START | Code generator using LLVM. }
 }
 
