@@ -216,10 +216,10 @@ EOF
             element_ = h
         }
 
-        def operator=(h:H) element_ = h
+        def =(h:H) element_ = h
 
       @private:
-        H element_
+        element_:H
     }
 EOF
 
@@ -233,7 +233,7 @@ meta if[C, T, U] : T
 // When use in type context, 1 = int[1], true = bool[true] etc.
 
 // :false is used to specialise the first argument of `if' on :false
-meta if[:false, T, U]      : U
+meta if[:false, T, U] : U
 
 // Classes with no bodies are good to pass compile-time data between
 // meta-functions.
