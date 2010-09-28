@@ -18,7 +18,7 @@ head {
 %p { Nyah is a programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++ but with the expressiveness of a scripting language like python or ruby. Nyah is typed, but uses type inference so types can usually be omitted. Nyah has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code and will generate JVM bytecode if garbage collection is turned on. The main goal for Nyah is to be a community language designed with input from a large group of people. The grammar of nyah can be modified at compile time to allow diverging opinions to be expressed within the same language. Features that offend and please a group of programmers can be removed and added to taste when a project is begun. }
 
 %h2 Aims
-%p Nyah looks to many other languages for inspiration, especially C++0x, scala and D.
+%p Nyah borrows and improves upon features found in other languages, especially C++0x, scala and D. It also adds concepts not found in any other language.
 
 %ul {
     %li Improve the powerful meta-programming functionalities of C++0x and D whilst simplifying the syntax.
@@ -73,9 +73,10 @@ EOF
 %h2 Control structures
 
 %pre <<EOF
+    // Declare two functions.
     // (= value) is equivalent to (return value) at function scope.
-    def bread() { = "bread" }
-    def uncle() { return "uncle" }
+    def bread { = "bread" }
+    def uncle { return "uncle" }
 
     // if/else can return values.
     a := false
@@ -294,7 +295,7 @@ Grammar        <- Addition+
 //      value_: std.vector[int]
 // }
 // class Addition {
-//      value_: std.vector[std.variant[Number, Multiplication]]
+//      value_: std.vector[std.variant[int, Multiplication]]
 // }
 EOF
 
