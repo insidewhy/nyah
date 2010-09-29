@@ -1,3 +1,3 @@
-[submodule "chilon"]
-	path = src/chilon
-	url = git://gitorious.org/chilon/chilon.git
+[submodule "src/nyu"]
+	path = src/nyu
+	url = git://github.com/tuxjay/nyu.git

@@ -2,17 +2,10 @@ This project needs gcc 4.4 minimum to compile. It has been tested with
 gcc 4.4.2, 4.4.3 and gcc 4.5. Lately it compiles slowly with any
 version of gcc below 4.5
 
-If you have checked nyah out from git, please fetch the chilon library
-dependency using:
+If you have checked nyah out from git, please fetch the library
+dependencies using:
     git submodule update --init
 
 This project is organised like this:
     doc/website/    - The nyah website
-    src/
-        chilon/     - Library used by this project. git submodule
-        nyah/
-            grammar/  - Nyah grammars
-            std/      - Nyah standard library
-            mousedeer/        - Bootstrap nyah compiler.
-                cpp/          - mousedeer AST -> C++
-                grammar/          - mousedeer chilon::parser grammar
+    src/nyu/        - parser generator used by this project.
