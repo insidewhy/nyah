@@ -101,7 +101,7 @@ struct Suffix
   : simple_node<Suffix, Primary, tree_optional<Suffixes>> {};
 
 typedef choice<
-    char_<'&', '!'>, char_<'~', '+'>, char_from<'&', '!', '~'> > Prefixes;
+    char_<'&', '!'>, char_<'#', '+'>, char_from<'&', '!', '#'> > Prefixes;
 
 struct Prefix
   : simple_node<Prefix, tree_optional<Prefixes>, Suffix> {};
@@ -112,7 +112,8 @@ struct Join : simple_node<Join,
         char_<'^', '%'>,
         char_<'%', '+'>,
         char_<'%'>,
-        char_<'|', '%'> >,
+        char_<'|', '%'>,
+        char_<'|', '^', '%'> >,
     Prefix> {};
 
 struct Joined : simple_node<Joined,

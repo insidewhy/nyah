@@ -35,7 +35,7 @@ module [
                 Expression: Sequence: [
                     String: "@grammar"
                     Prefix: (
-                        '~'
+                        '#'
                         "MetaIdentifier"
                     )
                     Suffix: (
@@ -55,7 +55,7 @@ module [
                 '='
                 Expression: Sequence: [
                     Prefix: (
-                        "~+"
+                        "#+"
                         Expression: Suffix: (
                             "ModuleDefinition"
                             '?'
@@ -300,11 +300,11 @@ module [
                     Suffix: (
                         Expression: OrderedChoice: [
                             String: "&!"
-                            String: "~+"
+                            String: "#+"
                             CharacterRange: [
                                 '&'
                                 '!'
-                                '~'
+                                '#'
                             ]
                         ]
                         "|?"
@@ -321,6 +321,7 @@ module [
                         String: "%+"
                         String: "%"
                         String: "|%"
+                        String: "|^%"
                     ]
                     "Prefix"
                 ]
@@ -359,7 +360,7 @@ module [
                 '='
                 Expression: Sequence: [
                     Prefix: (
-                        '~'
+                        '#'
                         "Identifier"
                     )
                     Joined: [
