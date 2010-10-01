@@ -1,16 +1,13 @@
 @module std
 
-// module private
-@private class list[T...]
-
 meta contains[T, :T, U...] : true
 meta contains[T, O, U...]  : contains[T, U...]
 meta contains[T]           : false
 
-meta index_of[uint ?offset, T]           : offset
-meta index_of[uint ?offset, T, :T, U...]  : offset
-meta index_of[uint ?offset, T, O, U...]  : index_of[offset + 1, T, U...]
-meta index_of[T, U...]                   : index_of[0u, T, U...]
+meta index_of_from[uint ?offset, T]           : offset
+meta index_of_from[uint ?offset, T, :T, U...] : offset
+meta index_of_from[uint ?offset, T, O, U...]  : index_of[offset + 1, T, U...]
+meta index_of[T, U...]                   : index_of_from[0u, T, U...]
 
 meta at[uint ?offset, H, T...] : at[offset - 1, T...]
 meta at[0u, H, T...] : H

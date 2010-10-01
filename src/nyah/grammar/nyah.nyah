@@ -1,5 +1,5 @@
 @include grammar
-@module nyah.mousebear.grammar
+@module nyah.grammar
 
 // nyah extends grammar, which causes it to also inherit grammar::Spacing
 @grammar nyah : grammar

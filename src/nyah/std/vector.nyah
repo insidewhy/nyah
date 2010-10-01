@@ -12,7 +12,7 @@ class vector[T] {
     def front():& = *begin()
     def back():&  = *end()
 
-    def resize(newSize:size_t) {
+    def resize(newSize:const size_t) {
         if (newSize < capacity * 2) {
             do {
                 capacity /= 2
@@ -58,7 +58,7 @@ class vector[T] {
         ++size
     }
 
-    def operator()(n:size_t):& = *(data_ + n * sizeof T)
+    def operator()(n:const size_t):& = *(data_ + n * sizeof T)
 
     size     :uint
     capacity :size_t

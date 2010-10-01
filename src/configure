@@ -1,10 +1,10 @@
 #!/bin/sh
 
-chilon_dir=../chilon
+chilon_dir=nyu/src/chilon
 
 if [ ! -f $chilon_dir/cmake/configure.sh ] ; then
     (while [ $PWD != / -a ! -d .git ] ; do cd .. ; done ; test -d .git && (git submodule update --init))
 fi
 
-dependencies=$chilon_dir
+dependencies=nyu/src/nyu
 . $chilon_dir/cmake/configure.sh

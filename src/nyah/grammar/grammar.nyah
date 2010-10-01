@@ -1,4 +1,4 @@
-@module nyah.mousebear.grammar
+@module nyah.grammar
 @grammar grammar
 
 Spacing           <- (\s / "//" ^ (!\n)* ^ \n)+

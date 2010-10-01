@@ -1,3 +1,5 @@
+src/.obj
+src/Makefile
 src/nyah/.obj
 src/nyah/Makefile
 doc/website/*.html
