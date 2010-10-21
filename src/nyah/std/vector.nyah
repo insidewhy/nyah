@@ -8,6 +8,10 @@ class vector[T] {
     def begin() = data_
     def end()   = data_ + size - 1
 
+    // force return type to be constant
+    def cbegin():const = data_
+    def cend():const   = data_ + size - 1
+
     // & forces the return type to be a reference
     def front():& = *begin()
     def back():&  = *end()
@@ -28,7 +32,7 @@ class vector[T] {
         reallocate(data_, capacity)
     }
 
-    def self() {
+    def self {
         data_ = null
         size = 0
         capacity = 0

@@ -15,7 +15,7 @@ head {
     %a(href=#status) status
 }
 
-%p { Nyah is a programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++ but with the expressiveness of a scripting language like python or ruby. Nyah is typed, but uses type inference so types can usually be omitted. Nyah has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code and will generate JVM bytecode if garbage collection is turned on. The main goal for Nyah is to be a community language designed with input from a large group of people. The grammar of nyah can be modified at compile time to allow diverging opinions to be expressed within the same language. Features that offend and please a group of programmers can be removed and added to taste when a project is begun. }
+%p { Nyah is a programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++ but with the expressiveness of a scripting language like python or ruby. Nyah is typed, but uses type inference so types can usually be omitted. Nyah has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code and will generate JVM bytecode if garbage collection is turned on. The grammar of nyah can be modified at compile time to allow diverging opinions to be expressed within the same language. Features that offend and please a group of programmers can be removed and added to taste when a project is begun. }
 
 %h2 Aims
 %p Nyah borrows and improves upon features found in other languages, especially C++0x, scala and D. It also adds concepts not found in any other language.
@@ -31,7 +31,7 @@ head {
 
 %h2 Syntax can be extended/modified at compile time.
 
-%p New features can be added to the language and the compiler from within nyah code itself. This not only allows many powerful features to be expressed neatly in the language, but makes nyah an ideal "compiler toolkit". It is conceivable to import the syntax of a pre-existing language into nyah, for example, the nyah grammar module allows PEG based parsers to be expressed directly in a PEG based notation within the language. This variant of PEGs allows AST building capabilities to be expressed with the parsing grammar. This allows powerful modifications and extensions to be expressed neatly and simply. The nyah parser itself is implemented with this module which allows extensions and modifications to the core language to be made with reasonable ease and flexibility.
+%p New features can be added to the language and the compiler from within nyah code itself. This not only allows many powerful features to be expressed neatly in the language, but makes nyah an ideal "compiler toolkit". It is conceivable to import the syntax of a pre-existing language into nyah, for example, the nyah grammar module allows PEG based parsers to be expressed directly in a PEG based notation within the language. This variant of PEGs allows AST building capabilities to be expressed with the parsing grammar. This allows powerful modifications and extensions to be expressed in a concise way. The nyah parser itself is implemented with this module which allows extensions and modifications to the core language to be made with reasonable ease and flexibility.
 
 %h2 Fast, powerful, non-verbose meta-programming
 
@@ -50,7 +50,10 @@ head {
     v_stack := vector[int]()
 
     // Construct object on heap.
-    v_heap := new vector[int]()
+    v_heap := new vector[int]
+
+    // Construct object on heap with initialiser list
+    v_initialised := vector[int] [1, 2, 3]
 
     // Make a reference.
     v_heap_ref :& = v_heap
@@ -76,6 +79,7 @@ EOF
     // Declare two functions.
     // (= value) is equivalent to (return value) at function scope.
     def bread { = "bread" }
+    // equivalent: def bread = "bread"
     def uncle { return "uncle" }
 
     // if/else can return values.
@@ -89,7 +93,7 @@ EOF
     // be used in order to return data from a function within a loop.
     str  := "pumpo"
     iter := str.begin
-    first_m :=  while (*iter != "m") = ++iter
+    first_m :=  while (*iter != 'm') = ++iter
 
     // for loop.
     for (i := 0; i < 10; ++i) println(i)
@@ -109,7 +113,7 @@ EOF
     def add(a:const int, b:const int):int
         return a + b
 
-    // Return type can always be omitted, in which case it is inferred
+    // Return types can always be omitted, in which case they are inferred
     // by the compiler.
     def subtract(a:const int, b:const int) = a - b
 
@@ -174,13 +178,15 @@ EOF
 
     // Index second element of array. [ and ] are used for type
     // parameters, so ( and ) are used for arrays in nyah as in scala.
-    print(b(1))
+    println(b(1))
 EOF
 
 %h2 Classes and type parameters
 %pre <<EOF
     // type parameter T
+    // default access level for a class is "public"
     class scoped_ptr[T] {
+        // "def self" is used to created constructors.
         // No initialiser list needed, nyah automatically initialises class
         // data with results of all member assignments at the beginning of
         // a constructor.
@@ -189,17 +195,40 @@ EOF
         }
 
         // Destructor.
-        def ~self() delete ptr_
+        def ~self delete ptr_
 
         // Default constructor provided unless:
         delete self()
 
-      @private:
-        ptr_:T *
+      private:
+        // can assign attributes to variables in class
+        ptr_:T * = null
+    }
+
+    // constructor shorthand.. because a and b do not have types.. pair
+    // gets two type parameters automatically. The default constructor
+    // is also created as it is not deleted (or deleted by any base).
+    // A constructor for a single argument is not created.
+    class simple_pair(a, b) {
+        first  := a
+        second := b
+    }
+
+    // shorthand for the above
+    class simplest_pair(public first, public second)
+
+    // allow either argument to be specified
+    class pair[T, U] {
+        def self(public first:T) {}
+        // constructors can call other constructors
+        def self(first:T, public second:U) { self(first) }
     }
 EOF
 
 %h2 Variadic type parameters
+
+%p Variadic type parameters allow a class, function or meta-function to be supplied iwth a variable number of arguments or type arguments.
+
 %pre <<EOF
     // Inheritance.
     class tuple[T...] : tuple_helper[T...] {
@@ -219,12 +248,15 @@ EOF
 
         def =(h:H) element_ = h
 
-      @private:
+      private:
         element_:H
     }
 EOF
 
 %h2 Meta functions
+
+%p Meta functions allow compile time modifications of types. All meta functions take one or more type arguments and return a new type (which could possibly be one of the argument types). Nyah classes can have &ldquo;companion meta-functions&rdquo; which can be used to filter the types passed to a class. The following block of code demonstrates how to ensure the types in a &ldquo;set&rdquo; are unique by using a companion meta-function.
+
 %pre <<EOF
 
 meta if[C, T, U] : T
@@ -236,7 +268,7 @@ meta if[C, T, U] : T
 // :false is used to specialise the first argument of `if' on :false
 meta if[:false, T, U] : U
 
-// Classes with no bodies are good to pass compile-time data between
+// A class with no body is great for passing compile-time data between
 // meta-functions.
 class set[T...]
 
@@ -267,6 +299,51 @@ this_is_3 ?: sizeof...[a_set]
 // template parameter In this case a_list will alias
 //     list[bool, int, float, float].
 a_list ?: list[a_set..., float]
+
+EOF
+
+%h2 Match objects
+
+%p Match objects are useful for testing an object against a set of types and acting differently depending on the type. Match objects use the most specific match rather than testing the matches in order and resolve the lookup at compile time into a single fast call.
+
+%pre <<EOF
+match printer(a) {
+    // _ matches anything
+    _          ->  println("something: " + a)
+    void       ->  println("nothing")
+    vector[_]  ->  {
+        print("vector(")
+        foreach(v ; a.tail()) print(v)
+        println(")")
+    }
+    // each _ could be a different type
+    pair[_, _] ->  println("pair (", a.first, ", ", a.second, ")")
+}
+
+// can assign matcher to a variable
+p := printer
+p()
+p(14)
+p(vector[string] [ "joined", "fun", "kittens" ])
+
+// can also use match objects anonymously, and anonymous match objects have
+// access to the enclosing scope.
+def string_suffix(prefix:string, a) = match(a) {
+    string -> println(prefix ~ a)
+    _      -> {}
+}
+
+string_suffix("friend-", "hello")
+string_suffix("friend-", 4)
+
+// matches can return data
+def timestwo(a) = match(a) {
+    _         a + a
+    string    a ~ a  // ~ is used for concatenation
+}
+
+println(timestwo("twice"))
+println(timestwo(4))
 
 EOF
 
@@ -303,35 +380,34 @@ EOF
 
 %h3 Parser generator
 %ul.status {
-    %li { .completed COMPLETED | Research new notation to extend PEG to include &ldquo;AST-building&rdquo; parsers. Read paper | a(href=http://chilon.net/papers/tbpeg.pdf) TBPEGs }
-    %li { .completed COMPLETED | chilon::parser, a C++0x implementation of TBPEGs, to be used in the bootstrap compiler. Project website | a(href=http://chilon.net/library.html) chilon::parser }
-    %li { .completed COMPLETED | TBPEG parser in chilon::parser to be used for Nyah's grammar DSL. }
-    %li { .inprogress IN PROGRESS | Code generator for TBPEG parser to output chilon::parser parsers. }
+    %li { .completed completed | Research new notation to extend PEG to include &ldquo;AST-building&rdquo; parsers. Read paper | a(href=http://chilon.net/papers/tbpeg.pdf) TBPEGs }
+    %li { .completed completed | chilon::parser, a C++0x implementation of TBPEGs, to be used in the bootstrap compiler. Project website | a(href=http://chilon.net/library.html) chilon::parser }
+    %li { .inprogress in progress | a(href=http://chilon.net/nyu)nyu parser generator | which implements the nyah grammar syntax and will be used to boostrap nyah. }
 }
 
 %h3 First compiler (written in C++0x) to be used for bootstrapping
 %ul.status {
-    %li { .inprogress IN PROGRESS | mousedeer: full nyah language parser using parser generator. }
-    %li { .yettostart YET TO START | Code generator using LLVM. }
+    %li { .inprogress in progress | mousedeer: full nyah language parser using parser generator. }
+    %li { .yettostart yet to start | Code generator using LLVM. }
 }
 
 %h3 Nyah standard library
 %ul.status {
-    %li { .inprogress IN PROGRESS | "std.variant and std.tuple." }
-    %li { .inprogress IN PROGRESS | containers: vector, vector_hash_map, hash_map, hash_set, set, map. }
-    %li { .inprogress IN PROGRESS | nyah meta-programming library. }
-    %li { .yettostart YET TO START | std.config argument parser. }
+    %li { .inprogress in progress | "std.variant and std.tuple." }
+    %li { .inprogress in progress | containers: vector, vector_hash_map, hash_map, hash_set, set, map. }
+    %li { .inprogress in progress | nyah meta-programming library. }
+    %li { .yettostart yet to start | std.config argument parser. }
 }
 
 %h3 Second compiler (written in nyah)
 %ul.status {
-    %li { .yettostart YET TO START | "nyah.parser based on chilon::parser." }
-    %li { .yettostart YET TO START | TBPEG nyah syntax which will internally be based on nyah.parser. }
-    %li { .yettostart YET TO START | Use nyah syntax from bootstrap compiler to produce full parser. }
-    %li { .yettostart YET TO START | LLVM library for nyah based on LLVM C bindings. }
-    %li { .yettostart YET TO START | Code generator using llvm library. }
-    %li { .yettostart YET TO START | Java bytecode output library for nyah. }
-    %li { .yettostart YET TO START | Code generator for garbage collected nyah using java bytecode library. }
+    %li { .yettostart yet to start | "nyah.parser based on chilon::parser." }
+    %li { .yettostart yet to start | TBPEG nyah syntax which will internally be based on nyah.parser. }
+    %li { .yettostart yet to start | Use nyah syntax from bootstrap compiler to produce full parser. }
+    %li { .yettostart yet to start | LLVM library for nyah based on LLVM C bindings. }
+    %li { .yettostart yet to start | Code generator using llvm library. }
+    %li { .yettostart yet to start | Java bytecode output library for nyah. }
+    %li { .yettostart yet to start | Code generator for garbage collected nyah using java bytecode library. }
 }
 
 %h2 Help wanted
