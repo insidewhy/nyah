@@ -227,7 +227,7 @@ EOF
 
 %h2 Variadic type parameters
 
-%p Variadic type parameters allow a class, function or meta-function to be supplied iwth a variable number of arguments or type arguments.
+%p Variadic type parameters allow a class, function or meta-function to be supplied with a variable number of arguments or type arguments.
 
 %pre <<EOF
     // Inheritance.
@@ -328,7 +328,7 @@ p(vector[string] [ "joined", "fun", "kittens" ])
 
 // can also use match objects anonymously, and anonymous match objects have
 // access to the enclosing scope.
-def string_suffix(prefix:string, a) = match(a) {
+def string_suffix(prefix:string, a) match(a) {
     string -> println(prefix ~ a)
     _      -> {}
 }
@@ -338,8 +338,8 @@ string_suffix("friend-", 4)
 
 // matches can return data
 def timestwo(a) = match(a) {
-    _         a + a
-    string    a ~ a  // ~ is used for concatenation
+    _      -> a + a
+    string -> a ~ a  // ~ is used for concatenation
 }
 
 println(timestwo("twice"))
