@@ -382,7 +382,7 @@ EOF
 %ul.status {
     %li { .completed completed | Research new notation to extend PEG to include &ldquo;AST-building&rdquo; parsers. Read paper | a(href=http://chilon.net/papers/tbpeg.pdf) TBPEGs }
     %li { .completed completed | chilon::parser, a C++0x implementation of TBPEGs, to be used in the bootstrap compiler. Project website | a(href=http://chilon.net/library.html) chilon::parser }
-    %li { .inprogress in progress | a(href=http://chilon.net/nyu)nyu parser generator | which implements the nyah grammar syntax and will be used to boostrap nyah. }
+    %li { .completed completed | a(href=http://chilon.net/nyu)nyu parser generator | which implements the nyah grammar syntax and will be used to boostrap nyah. Note that the nyu language is a subset of the nyah language, and is already capable of bootstrapping itself. }
 }
 
 %h3 First compiler (written in C++0x) to be used for bootstrapping
