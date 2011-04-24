@@ -15,18 +15,16 @@ head {
     %a(href=#status) status
 }
 
-%p { Nyah is a programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++ but with the expressiveness of a scripting language like python or ruby. Nyah is typed, but uses type inference so types can usually be omitted. Nyah has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code and will generate JVM bytecode if garbage collection is turned on. The grammar of nyah can be modified at compile time to allow diverging opinions to be expressed within the same language. Features that offend and please a group of programmers can be removed and added to taste when a project is begun. }
+%p { Nyah is a programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++ but with the expressiveness of a scripting language like python or ruby. Nyah is typed, but uses type inference so types can usually be omitted. Nyah has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code.   The grammar of nyah can be modified at compile time to allow diverging opinions to be expressed within the same language and to take DSL building capabilities to the next level. }
 
-%h2 Aims
-%p Nyah borrows and improves upon features found in other languages, especially C++0x, scala and D. It also adds concepts not found in any other language.
-
+%h2 Goals
 %ul {
-    %li Improve the powerful meta-programming functionalities of C++0x and D whilst simplifying the syntax.
-    %li Exceed the type inference and DSL building capabilities of scala.
+    %li Improve the meta-programming capabilities of C++0x/D/Nemerle whilst simplifying the syntax.
+    %li { Type inference on par with | a(href=http://nemerle.org) "Nemerle." }
     %li Provide a fast and free MIT licensed compiler implementation.
     %li Provide a powerful and intelligent compiler which will infer information to save developers from repetitive typing when safe to do so.
-    %li Optional garbage collection. Nyah should target both the JVM and the LLVM to allow it to be used both with and without a garbage collector.
-    %li Object orientated (including multiple inheritance), meta, functional and declarative programming styles are supported.
+    %li Optional garbage collection. Nyah should target both the JVM (and/or the CLR) and the LLVM to allow it to be used both with and without a garbage collector. Currently only an LLVM implementation is being worked on.
+    %li Support object orientated (including multiple inheritance), meta, functional and declarative programming styles.
 }
 
 %h2 Syntax can be extended/modified at compile time.
@@ -47,7 +45,7 @@ head {
     b := 0
 
     // Construct object on stack.
-    v_stack := vector[int]()
+    v_stack := vector[int]
 
     // Construct object on heap.
     v_heap := new vector[int]
@@ -160,7 +158,6 @@ EOF
         it := v.find(i)
         return it == v.end ? false : it
     }
-
 EOF
 
 %h2 Arrays
@@ -190,12 +187,10 @@ EOF
         // No initialiser list needed, nyah automatically initialises class
         // data with results of all member assignments at the beginning of
         // a constructor.
-        def self(ptr:T *) {
-            ptr_ = ptr
-        }
+        def self(ptr:T *) { ptr_ = ptr }
 
-        // Destructor.
-        def ~self delete ptr_
+        // Destructor is a method called delete.
+        def delete { delete ptr_ }
 
         // Default constructor provided unless:
         delete self()
@@ -290,24 +285,23 @@ meta set[H, T...] : set[type[H], T...]
 // ?: creates a type alias at compile time, like a typedef in c++
 a_set ?: set[bool, int, float, int]
 
-// sizeof... calculates the size of a template pack, or the number of template
-// arguments in a class if no pack is given. In this case this_is_3 will alias
-// uint[3].
-this_is_3 ?: sizeof...[a_set]
+// sizeof... calculates the size of a template pack, sizeof* calculates the
+// number of template arguments belonging to a type. In this case this_is_3
+// will alias uint[3].
+this_is_3 ?: sizeof*[a_set]
 
-// ... expands types in a template pack or the type arguments of a given
-// template parameter In this case a_list will alias
+// ... expands types in a template pack, ..* expands the arguments of a template
+// parameter.In this case a_list will alias
 //     list[bool, int, float, float].
-a_list ?: list[a_set..., float]
-
+a_list ?: list[a_set..*, float]
 EOF
 
-%h2 Match objects
+%h2 Type matching.
 
-%p Match objects are useful for testing an object against a set of types and acting differently depending on the type. Match objects use the most specific match rather than testing the matches in order and resolve the lookup at compile time into a single fast call.
+%p Type match control structures are useful for testing an object against a set of types and acting differently depending on the type. Type matches match the most specific match rather than testing the matches in order and resolve the lookup at compile time into a single fast call.
 
 %pre <<EOF
-match printer(a) {
+printer := ~[a] {
     // _ matches anything
     _          ->  println("something: " + a)
     void       ->  println("nothing")
@@ -320,31 +314,38 @@ match printer(a) {
     pair[_, _] ->  println("pair (", a.first, ", ", a.second, ")")
 }
 
-// can assign matcher to a variable
+// can assign matcher to another variable.
 p := printer
 p()
 p(14)
 p(vector[string] [ "joined", "fun", "kittens" ])
 
-// can also use match objects anonymously, and anonymous match objects have
-// access to the enclosing scope.
-def string_suffix(prefix:string, a) match(a) {
-    string -> println(prefix ~ a)
+// Can also use match objects in place of function overloading to acheive
+// the same result.
+def prefix_print(prefix:string, a) ~[a] {
+    string -> println(prefix .. a)
     _      -> {}
 }
 
-string_suffix("friend-", "hello")
-string_suffix("friend-", 4)
+prefix_print("friend-", "hello")
+prefix_print("friend-", 4)
 
-// matches can return data
-def timestwo(a) = match(a) {
-    _      -> a + a
-    string -> a ~ a  // ~ is used for concatenation
+// This is a shorthand for when the match relates to all function parameters.
+def ~type_print(a, b) {
+    string -> "string"
+    int    -> "int"
 }
 
-println(timestwo("twice"))
-println(timestwo(4))
+// Match objects can handle multiple arities and return data.
+m := ~[a...] {
+    _    -> = "1"
+    _, _ -> = "2"
+    _... -> = ">2"
+}
 
+prinln(m(1, false)) // print "2"
+prinln(m(1, 1, 1, 1)) // print ">2"
+// prinln(m()) // no matches.. compiler error
 EOF
 
 %h2 Parsing

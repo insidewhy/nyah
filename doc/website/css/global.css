@@ -1,6 +1,7 @@
 body {
     font-family: verdana;
-    margin: 10px 50px;
+    margin: 0px auto;
+    width: 50em;
 }
 
 h1 {
@@ -73,7 +74,7 @@ pre {
     border: 1px black dashed;
     padding: 25px;
     margin: 5px;
-    width: 52em;
+    width: 50em;
 }
 
 .completed {

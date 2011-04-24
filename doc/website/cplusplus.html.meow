@@ -19,8 +19,8 @@ A const prefix is only necessary after a method to restrict the method to be val
             value_ = new_value
         }
 
-        scoped_ptr(value = 0) { value_ = value }
-        ~scoped_ptr() { if (value_) delete value_ }
+        def this(value = 0) { value_ = value }
+        def delete { if (value_) delete value_ }
 
         private value_:T*
     }
