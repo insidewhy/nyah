@@ -21,7 +21,7 @@ head {
 %h2 Goals
 %ul {
     %li Improve the meta-programming capabilities of C++0x/D/Nemerle whilst simplifying the syntax.
-    %li { Type inference on par with | a(href=http://nemerle.org) "Nemerle." }
+    %li Better type inference than Scala/D.
     %li Provide a fast and free MIT licensed compiler implementation.
     %li Provide a powerful and intelligent compiler which will infer information to save developers from repetitive typing when safe to do so.
     %li Optional garbage collection. Nyah should target both the JVM (and/or the CLR) and the LLVM to allow it to be used both with and without a garbage collector. Currently only an LLVM implementation is being worked on.
