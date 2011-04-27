@@ -1,0 +1,38 @@
+!html
+head {
+    %title nyah - introduction
+    link(rel=stylesheet, type=text/css, href=../css/global.css)
+}
+
+!body
+
+%h1 Parsing
+
+%pre <<EOF
+@grammar list
+Spacing    <- \s
+Identifier <- [a-zA-Z_] ^ [0-9a-zA-Z_]*
+Grammar    <- '[' (Identifier % ',') ']'
+// this stores: std.vector[std.string]
+// example
+//    string:  [ hello, king ]
+//    stores: std.vector[string]("hello", "king")
+
+@grammar mathematics
+Spacing        <- \s
+Number         < int - [0-9]+
+Multiplication <= Number |% "*"
+Addition       <= Multiplication |% "+"
+Grammar        <- Addition+
+
+// this stores:
+// std.vector[ std.variant[int, Multiplication, Addition] ]
+// And creates:
+// class Multiplication {
+//      value_: std.vector[int]
+// }
+// class Addition {
+//      value_: std.vector[std.variant[int, Multiplication]]
+// }
+EOF
+

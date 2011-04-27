@@ -1,0 +1,49 @@
+!html
+head {
+    %title nyah - introduction
+    link(rel=stylesheet, type=text/css, href=../css/global.css)
+}
+
+!body
+
+%h1 Classes and type parameters
+%pre <<EOF
+    // type parameter T
+    // default access level for a class is "public"
+    class scoped_ptr[T] {
+        // "def self" is used to created constructors.
+        // No initialiser list needed, nyah automatically initialises class
+        // data with results of all member assignments at the beginning of
+        // a constructor.
+        def self(ptr:T *) { ptr_ = ptr }
+
+        // Destructor is a method called delete.
+        def delete { delete ptr_ }
+
+        // Default constructor provided unless:
+        delete self()
+
+      private:
+        // can assign attributes to variables in class
+        ptr_:T * = null
+    }
+
+    // constructor shorthand.. because a and b do not have types.. pair
+    // gets two type parameters automatically. The default constructor
+    // is also created as it is not deleted (or deleted by any base).
+    // A constructor for a single argument is not created.
+    class simple_pair(a, b) {
+        first  := a
+        second := b
+    }
+
+    // shorthand for the above
+    class simplest_pair(public first, public second)
+
+    // allow either argument to be specified
+    class pair[T, U] {
+        def self(public first:T) {}
+        // constructors can call other constructors
+        def self(first:T, public second:U) { self(first) }
+    }
+EOF

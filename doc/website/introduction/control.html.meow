@@ -1,0 +1,40 @@
+!html
+head {
+    %title nyah - introduction
+    link(rel=stylesheet, type=text/css, href=../css/global.css)
+}
+
+!body
+
+%h1 Control structures
+
+%pre <<EOF
+    // Declare two functions.
+    // (= value) is equivalent to (return value) at function scope.
+    def bread { = "bread" }
+    // equivalent: def bread = "bread"
+    def uncle { return "uncle" }
+
+    // if/else can return values.
+    a := false
+    b := if (a) =1; else =2
+    c := a ? 1 : 2
+
+    // while can return a value if it has a return statement. In which
+    // case the result of the value on the last iteration will be used.
+    // This can also be used for foreach and for loops. "return" should
+    // be used in order to return data from a function within a loop.
+    str  := "pumpo"
+    iter := str.begin
+    first_m :=  while (*iter != 'm') = ++iter
+
+    // for loop.
+    for (i := 0; i < 10; ++i) println(i)
+
+    // Range based for loop.
+    v := vector[uint][1, 2, 3, 4]
+    foreach (i ; v) println(i)
+
+    // Use two values at a time in loop.
+    foreach (i1, i2 ; v) println(i1, ", ", i2)
+EOF

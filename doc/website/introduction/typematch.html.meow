@@ -1,0 +1,80 @@
+!html
+head {
+    %title nyah - introduction
+    link(rel=stylesheet, type=text/css, href=../css/global.css)
+}
+
+!body
+
+%h2 Type matching.
+
+%p Type match control structures are useful for testing an object against a set of types and acting differently depending on the type. Type matches match the most specific match rather than testing the matches in order and resolve the lookup at compile time into a single fast call.
+
+%pre <<EOF
+printer := ~(a) {
+    // _ matches anything
+    _          ->  println("something: " + a)
+    void       ->  println("nothing")
+    vector[_]  ->  {
+        print("vector(")
+        foreach(v ; a.tail()) print(v)
+        println(")")
+    }
+    // each _ could be a different type
+    pair[_, _] ->  println("pair (", a.first, ", ", a.second, ")")
+}
+
+// can assign matcher to another variable.
+p := printer
+p()
+p(14)
+p(vector[string] [ "joined", "fun", "kittens" ])
+
+// Can also use match objects in place of function overloading to acheive
+// the same result.
+def prefix_print(prefix:string, a) ~(a) {
+    string -> println(prefix .. a)
+    _      -> {}
+}
+
+prefix_print("friend-", "hello")
+prefix_print("friend-", 4)
+
+// Can use match variables instead of function overloading. _<number> matches
+// any unknown type, but unlike _, when _<number> is used again it matches the
+// type it previously matched.
+merge_to_string := ~(a, b) {
+    // The code to build $"..." strings is created at compile time and is
+    // equivalent to using a string builder to create the string with $a
+    // and $b coming from variables in the surrounding scope.
+    _1, _1 -> $"same: $a $b"
+    _...   -> $"mixed: $a $b"
+}
+
+// Match objects can handle multiple arities and return data.
+// => is a shorthand for "-> ="
+m := ~(...a) {
+    _      => "1"
+    _1, _1 => "2 same"
+    _1, _2 => "2 different"
+    _...   => ">2 different"
+    _1...  => ">2 same"
+}
+
+prinln(m(1, false)) // print "2"
+prinln(m(1, 1, 1, 1)) // print ">2"
+// prinln(m()) // no matches.. compiler error
+
+// You can specify the return types of matches if you want:
+m2 := ~(...a):string {
+    _    => "single"
+    _, _ => 1  // error: type does not match return type.
+}
+
+// Match objects can work as meta-functions that accept types rather than
+// actual variables using the ~[...] form. In this case the type is always
+// returned at compile time in place of the match, and the match expressions
+// use the same syntax as for type argument matching.
+meta if[C, T, F] : ~[C] { :true => T ; _ => F }
+
+EOF

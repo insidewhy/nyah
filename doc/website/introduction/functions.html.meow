@@ -1,0 +1,63 @@
+!html
+head {
+    %title nyah - introduction
+    link(rel=stylesheet, type=text/css, href=../css/global.css)
+}
+
+!body
+
+%h2 Functions
+
+%pre <<EOF
+    // A function with a single statement.
+    def add(a:const int, b:const int):int
+        return a + b
+
+    // Return types can always be omitted, in which case they are inferred
+    // by the compiler.
+    def subtract(a:const int, b:const int) = a - b
+
+    // A function containing several statements.
+    def divide(a:const int, b:const int) {
+        assert(b != 0)
+        return a / b
+    }
+
+    // Argument types may also be omitted.
+    def generic_add(a, b) = a + b
+
+    // A new function is generated for each set of argument types,
+    // so the following two calls created two different functions.
+    generic_add(1, 2)
+    generic_add(1f, 2f)
+
+    // assign_ptr's first argument can be any type, but must be a
+    // pointer. The second argument may be passed from a const or non-const
+    // expression (unless a more specific non-const overload exists) but
+    // is treated as a const variable within the function.
+    def assign_ptr(a:*, b:const) *a = b
+
+    // Functions can be overloaded, the most specific function always
+    // matches.
+    def end(a) = a.end()
+
+    def end(a:char *) {
+        while (*a != '\0') ++a
+        return a
+    }
+
+    def end(a:*) {
+        // create a compile time error if called.
+        @error "Cannot retrieve end of pointer"
+    }
+
+    // A function containing return types with different statements can
+    // be made to return a "variant[...T]" where ...T is the set of types
+    // of all possible return types. ...T is deduced by the compiler.
+    // variant is implemented as a set of types and meta-programs within
+    // nyah itself with no special compiler support necessary.
+    def item_or_false(v, i):variant {
+        it := v.find(i)
+        return it == v.end ? false : it
+    }
+EOF

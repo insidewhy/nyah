@@ -1,0 +1,25 @@
+!html
+head {
+    %title nyah - introduction
+    link(rel=stylesheet, type=text/css, href=../css/global.css)
+}
+
+!body
+
+%h1 Arrays
+
+%pre <<EOF
+    // Create array of 3 integers.
+    a := [ 1, 2, 3 ]
+
+    // Create array of 3 integers and assign elements in a run-time loop.
+    c := [ i : 0..3, i ]
+
+    // As above but create values in a loop unrolled at compile time.
+    // This allows the loop variable to be used as a compile time constant.
+    b := [ i ?: 0..3, i ]
+
+    // Index second element of array. [ and ] are used for type
+    // parameters, so ( and ) are used for arrays in nyah as in scala.
+    println(b(1))
+EOF

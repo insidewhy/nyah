@@ -1,0 +1,22 @@
+!html
+head {
+    %title nyah - introduction
+    link(rel=stylesheet, type=text/css, href=../css/global.css)
+}
+
+!body
+
+%h1 Introduction to Nyah
+
+%ol {
+    %li %a(href=variables.html) Variables
+    %li %a(href=semicolons.html) Semicolons
+    %li %a(href=control.html) Control Structures
+    %li %a(href=functions.html) Functions
+    %li %a(href=arrays.html) Arrays
+    %li %a(href=classes.html) Classes and Type Parameters
+    %li %a(href=variadic.html) Variadic Type Parameters
+    %li %a(href=metafunc.html) Metafunctions
+    %li %a(href=typematch.html) Type matching
+    %li %a(href=parsing.html) Parsing
+}

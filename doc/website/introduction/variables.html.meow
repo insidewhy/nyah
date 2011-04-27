@@ -1,0 +1,30 @@
+!html
+head {
+    %title nyah - introduction
+    link(rel=stylesheet, type=text/css, href=../css/global.css)
+}
+
+!body
+
+%h1 Variables
+
+%pre <<EOF
+    // Initialisation and assignment.
+    a : uint = 0
+
+    // Type of b is inferred by compiler.
+    b := 0
+
+    // Construct object on stack.
+    v_stack := vector[int]
+
+    // Construct object on heap.
+    v_heap := new vector[int]
+
+    // Construct object on heap with initialiser list
+    v_initialised := vector[int] [1, 2, 3]
+
+    // Make a reference.
+    v_heap_ref :& = v_heap
+EOF
+

@@ -1,0 +1,21 @@
+!html
+head {
+    %title nyah - introduction
+    link(rel=stylesheet, type=text/css, href=../css/global.css)
+}
+
+!body
+
+%h1 Semicolons
+
+%p Semicolons are only needed where necessary to resolve ambiguity. In order for this to work, binary operators should not appear at the beginning of a new line.
+
+%pre <<EOF
+    // This is fine.
+    a := 1 + 2 +
+        3
+
+    // This is two statements: (b := 1 + 2) and (+3)
+    b := 1 + 2
+        + 3
+EOF

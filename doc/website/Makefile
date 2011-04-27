@@ -1,2 +1,2 @@
 default:
-	meow *.meow
+	meow *.meow introduction/*.meow
