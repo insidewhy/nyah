@@ -6,7 +6,7 @@ def end(t) = t.end
 def begin(t:char *) = t
 
 // ++t becomes the return result, hence the last t
-def end(t:char *) = while (*t != '\0') ++t
+def end(t:char *) = while (*t != '\0') =++t
 
-class iterator_range[T] {
+class iterator_range[T](public begin_, public end_ = T()) {
 }

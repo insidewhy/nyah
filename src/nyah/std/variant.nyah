@@ -1,7 +1,7 @@
 @include std/pack
 @module std
 
-class variant[T...] {
+class variant[...T] {
   @private:
     class deleter {
         def operator()(t) delete &t
@@ -50,7 +50,7 @@ class variant[T...] {
     idx_ = 0u
 }
 
-def variant_apply(v:variant[T...], functor:const) {
+def variant_apply(v:variant[...T], functor:const) {
     return_type ?: decltype(functor(at[0, T...]))
 
     // @singleton within a function will create a new singleton for each

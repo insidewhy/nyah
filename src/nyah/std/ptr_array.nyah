@@ -1,6 +1,6 @@
 @module std
 
-class ptr_array[uint ?N, T] {
+class ptr_array[uint N, T] {
     operator()(idx:uint):T& = data_(idx)
 
     indexes ?: 0u .. N-1
