@@ -150,8 +150,8 @@ EOF
     }
 
     // A function containing return types with different statements can
-    // be made to return a "variant[T...]" where T... is the set of types
-    // of all possible return types. T... is deduced by the compiler.
+    // be made to return a "variant[...T]" where ...T is the set of types
+    // of all possible return types. ...T is deduced by the compiler.
     // variant is implemented as a set of types and meta-programs within
     // nyah itself with no special compiler support necessary.
     def item_or_false(v, i):variant {
@@ -226,7 +226,7 @@ EOF
 
 %pre <<EOF
     // Inheritance.
-    class tuple[T...] : tuple_helper[T...] {
+    class tuple[...T] : tuple_helper[T...] {
         // super always refers to first parent class (super[n] for nth)
         // This inherits all constructors from tuple_helper.
         using super.self
@@ -234,8 +234,8 @@ EOF
 
     class tuple_helper[]
 
-    class tuple_helper[H, T...] : tuple_helper[T...] {
-        def self(h:H, u...) {
+    class tuple_helper[H, ...T] : tuple_helper[T...] {
+        def self(h:H, ...u) {
             // Call parent class constructor.
             super(u...)
             element_ = h
@@ -265,22 +265,22 @@ meta if[:false, T, U] : U
 
 // A class with no body is great for passing compile-time data between
 // meta-functions.
-class set[T...]
+class set[...T]
 
 // If a metafunction with the same name as a class is created, then the
 // metafunction becomes a companion function of the class, and type[...] can be
 // used within the metafunction to reference the companion class. In this case
 // the companion meta-function ensures whenever a set is created that
 // duplicates are removed from its parameter list.
-meta set[type[R...]] : type[R...]
+meta set[type[...R]] : type[R...]
 
-meta set[type[R...], H, T...] :
+meta set[type[...R], H, ...T] :
     set[
         if[ std.contains[H, R...], type[R...], type[R..., H] ],
         T...
     ]
 
-meta set[H, T...] : set[type[H], T...]
+meta set[H, ...T] : set[type[H], T...]
 
 // ?: creates a type alias at compile time, like a typedef in c++
 a_set ?: set[bool, int, float, int]
@@ -301,7 +301,7 @@ EOF
 %p Type match control structures are useful for testing an object against a set of types and acting differently depending on the type. Type matches match the most specific match rather than testing the matches in order and resolve the lookup at compile time into a single fast call.
 
 %pre <<EOF
-printer := ~[a] {
+printer := ~(a) {
     // _ matches anything
     _          ->  println("something: " + a)
     void       ->  println("nothing")
@@ -322,7 +322,7 @@ p(vector[string] [ "joined", "fun", "kittens" ])
 
 // Can also use match objects in place of function overloading to acheive
 // the same result.
-def prefix_print(prefix:string, a) ~[a] {
+def prefix_print(prefix:string, a) ~(a) {
     string -> println(prefix .. a)
     _      -> {}
 }
@@ -330,22 +330,43 @@ def prefix_print(prefix:string, a) ~[a] {
 prefix_print("friend-", "hello")
 prefix_print("friend-", 4)
 
-// This is a shorthand for when the match relates to all function parameters.
-def ~type_print(a, b) {
-    string -> "string"
-    int    -> "int"
+// Can use match variables instead of function overloading. _<number> matches
+// any unknown type, but unlike _, when _<number> is used again it matches the
+// type it previously matched.
+merge_to_string := ~(a, b) {
+    // The code to build $"..." strings is created at compile time and is
+    // equivalent to using a string builder to create the string with $a
+    // and $b coming from variables in the surrounding scope.
+    _1, _1 -> $"same: $a $b"
+    _...   -> $"mixed: $a $b"
 }
 
 // Match objects can handle multiple arities and return data.
-m := ~[a...] {
-    _    -> = "1"
-    _, _ -> = "2"
-    _... -> = ">2"
+// => is a shorthand for "-> ="
+m := ~(...a) {
+    _      => "1"
+    _1, _1 => "2 same"
+    _1, _2 => "2 different"
+    _...   => ">2 different"
+    _1...  => ">2 same"
 }
 
 prinln(m(1, false)) // print "2"
 prinln(m(1, 1, 1, 1)) // print ">2"
 // prinln(m()) // no matches.. compiler error
+
+// You can specify the return types of matches if you want:
+m2 := ~(...a):string {
+    _    => "single"
+    _, _ => 1  // error: type does not match return type.
+}
+
+// Match objects can work as meta-functions that accept types rather than
+// actual variables using the ~[...] form. In this case the type is always
+// returned at compile time in place of the match, and the match expressions
+// use the same syntax as for type argument matching.
+meta if[C, T, F] : ~[C] { :true => T ; _ => F }
+
 EOF
 
 %h2 Parsing
