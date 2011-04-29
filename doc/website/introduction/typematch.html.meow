@@ -18,7 +18,7 @@ printer := ~(a) {
     void       ->  println("nothing")
     vector[?]  ->  {
         print("vector ")
-        foreach(v ; a.tail()) print(v)
+        for(v ; a.tail()) print(v)
         println()
     }
     // each ? could be a different type
