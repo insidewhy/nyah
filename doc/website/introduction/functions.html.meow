@@ -8,7 +8,7 @@ head {
 
 %h2 Functions
 
-%pre <<EOF
+%code(source=scala) <<EOF
     // A function with a single statement.
     def add(a:const int, b:const int):int
         return a + b

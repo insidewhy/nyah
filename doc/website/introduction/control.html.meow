@@ -8,7 +8,7 @@ head {
 
 %h2 Control structures
 
-%pre <<EOF
+%code(source=scala) <<EOF
     // Declare two functions.
     // (= value) is equivalent to (return value) at function scope.
     def bread { = "bread" }

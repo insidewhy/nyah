@@ -8,7 +8,7 @@ head {
 
 %h2 Arrays
 
-%pre <<EOF
+%code(source=scala) <<EOF
     // Create array of 3 integers.
     a := [ 1, 2, 3 ]
 

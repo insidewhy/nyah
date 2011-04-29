@@ -8,7 +8,7 @@ head {
 
 %h2 Variables
 
-%pre <<EOF
+%code(source=scala) <<EOF
     // Initialisation and assignment.
     a : uint = 0
 

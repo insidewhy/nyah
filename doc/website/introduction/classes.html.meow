@@ -8,7 +8,7 @@ head {
 
 %h2 Classes and type parameters
 
-%pre <<EOF
+%code(source=scala) <<EOF
     // type parameter T
     // default access level for a class is "public"
     class scoped_ptr[T] {

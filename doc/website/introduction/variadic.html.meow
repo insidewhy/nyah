@@ -10,7 +10,7 @@ head {
 
 %p Variadic type parameters allow a class, function or meta-function to be supplied with a variable number of arguments or type arguments.
 
-%pre <<EOF
+%code(source=scala) <<EOF
     // Inheritance.
     class tuple[...T] : tuple_helper[T...] {
         // super always refers to first parent class (super[n] for nth)
