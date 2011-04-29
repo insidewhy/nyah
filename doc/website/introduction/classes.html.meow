@@ -6,7 +6,41 @@ head {
 
 !body
 
-%h2 Classes and type parameters
+%h2 Simple classes
+
+%code(source=scala) <<EOF
+    class animal {
+        // pure virtual method, must be overridden for a class to be concrete
+        pure speak()
+
+        // "impure" virtual method.
+        virtual def friendly = "no"
+    }
+
+    // descend from animal
+    class cat : animal {
+        // def! overrides a virtual method, and will issue a compiler error
+        // if no such virtual method exists in a base class.
+        def! speak { println("mew") }
+    }
+
+    class dog : animal {
+        def bark { println("woof") } // a normal method
+        def friendly = "yes"  // a rare animal
+
+        def! speak { bark() }
+    }
+
+    c:animal * = new cat
+    c.speak() // print "meow"
+    println(c.friendly()) // print "no"
+
+    d:animal * = new dog
+    d.speak() // print "woof"
+    println(d.friendly()) // print "yes"
+EOF
+
+%h2 Classes with type parameters
 
 %code(source=scala) <<EOF
     // type parameter T
@@ -41,12 +75,8 @@ head {
     // shorthand for the above
     class simplest_pair(public first, public second)
 
-    // allow either argument to be specified
-    class pair[T, U] {
-        def self(public first:T) {}
-        // constructors can call other constructors
-        def self(first:T, public second:U) { self(first) }
-    }
+    // Allow 0, 1 or 2 arguments to be specified in the constructor.
+    class simple_pair2[T1, T2](public first:T1 = T1(), public second:T2 = T2())
 EOF
 
 %a(href=arrays.html) previous | " | " | %a(href=variadic.html) next
