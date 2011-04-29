@@ -1,6 +1,6 @@
 !html
 head {
-    %title nyah - open source community language
+    %title nyah - programming language
     link(rel=stylesheet, type=text/css, href=css/global.css)
 }
 
@@ -31,10 +31,6 @@ head {
 %h2 Syntax can be extended/modified at compile time.
 
 %p New features can be added to the language and the compiler from within nyah code itself. This not only allows many powerful features to be expressed neatly in the language, but makes nyah an ideal "compiler toolkit". It is conceivable to import the syntax of a pre-existing language into nyah, for example, the nyah grammar module allows PEG based parsers to be expressed directly in a PEG based notation within the language. This variant of PEGs allows AST building capabilities to be expressed with the parsing grammar. This allows powerful modifications and extensions to be expressed in a concise way. The nyah parser itself is implemented with this module which allows extensions and modifications to the core language to be made with reasonable ease and flexibility.
-
-%h2 Fast, powerful, non-verbose meta-programming
-
-%p Whilst the goals are ambitious the nyah compiler achieves them neatly by approaching compilation in a unique way. The compiler outputs assembly code during the compilation process to allow it to run meta-functions and interpret grammar modifications quickly. Whilst this approach adds another layer of indirection which would make the compilation of traditional code slightly slower, it allows code that takes advantage of meta-programming to be compiled very quickly. It also allows type inference to be more powerful than a language like scala. In nyah even functions that recursively call other meta-functions can benefit from return type inference.
 
 %p { Please read the | a(href=introduction/index.html) "introduction." }
 

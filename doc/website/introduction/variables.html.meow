@@ -1,12 +1,12 @@
 !html
 head {
-    %title nyah - introduction
+    %title nyah - introduction - variables
     link(rel=stylesheet, type=text/css, href=../css/global.css)
 }
 
 !body
 
-%h1 Variables
+%h2 Variables
 
 %pre <<EOF
     // Initialisation and assignment.
@@ -28,3 +28,4 @@ head {
     v_heap_ref :& = v_heap
 EOF
 
+%a(href=index.html) previous | " | " | %a(href=semicolons.html) next

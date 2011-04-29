@@ -1,12 +1,13 @@
 !html
 head {
-    %title nyah - introduction
+    %title nyah - introduction - classes and type parameters
     link(rel=stylesheet, type=text/css, href=../css/global.css)
 }
 
 !body
 
-%h1 Classes and type parameters
+%h2 Classes and type parameters
+
 %pre <<EOF
     // type parameter T
     // default access level for a class is "public"
@@ -47,3 +48,5 @@ head {
         def self(first:T, public second:U) { self(first) }
     }
 EOF
+
+%a(href=arrays.html) previous | " | " | %a(href=variadic.html) next

@@ -1,12 +1,12 @@
 !html
 head {
-    %title nyah - introduction
+    %title nyah - introduction - control structures
     link(rel=stylesheet, type=text/css, href=../css/global.css)
 }
 
 !body
 
-%h1 Control structures
+%h2 Control structures
 
 %pre <<EOF
     // Declare two functions.
@@ -38,3 +38,5 @@ head {
     // Use two values at a time in loop.
     foreach (i1, i2 ; v) println(i1, ", ", i2)
 EOF
+
+%a(href=semicolons.html) previous | " | " | %a(href=functions.html) next

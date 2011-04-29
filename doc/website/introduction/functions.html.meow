@@ -1,6 +1,6 @@
 !html
 head {
-    %title nyah - introduction
+    %title nyah - introduction - functions
     link(rel=stylesheet, type=text/css, href=../css/global.css)
 }
 
@@ -61,3 +61,5 @@ head {
         return it == v.end ? false : it
     }
 EOF
+
+%a(href=control.html) previous | " | " | %a(href=arrays.html) next

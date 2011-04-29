@@ -1,14 +1,14 @@
 !html
 head {
-    %title nyah - introduction
+    %title nyah - introduction - metafunctions
     link(rel=stylesheet, type=text/css, href=../css/global.css)
 }
 
 !body
 
-%h2 Meta functions
+%h2 Metafunctions
 
-%p Meta functions allow compile time modifications of types. All meta functions take one or more type arguments and return a new type (which could possibly be one of the argument types). Nyah classes can have &ldquo;companion meta-functions&rdquo; which can be used to filter the types passed to a class. The following block of code demonstrates how to ensure the types in a &ldquo;set&rdquo; are unique by using a companion meta-function.
+%p Metafunctions allow compile time modifications of types. All metafunctions take one or more type arguments and return a new type (which could possibly be one of the argument types). Nyah classes can have &ldquo;companion meta-functions&rdquo; which can be used to filter the types passed to a class. The following block of code demonstrates how to ensure the types in a &ldquo;set&rdquo; are unique by using a companion meta-function.
 
 %pre <<EOF
 
@@ -54,3 +54,4 @@ this_is_3 ?: sizeof*[a_set]
 a_list ?: list[a_set..*, float]
 EOF
 
+%a(href=variadic.html) previous | " | " | %a(href=typematch.html) next

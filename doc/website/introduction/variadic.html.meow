@@ -1,12 +1,12 @@
 !html
 head {
-    %title nyah - introduction
+    %title nyah - introduction - variadic type parameters
     link(rel=stylesheet, type=text/css, href=../css/global.css)
 }
 
 !body
 
-%h1 Variadic type parameters
+%h2 Variadic type parameters
 
 %p Variadic type parameters allow a class, function or meta-function to be supplied with a variable number of arguments or type arguments.
 
@@ -33,3 +33,5 @@ head {
         element_:H
     }
 EOF
+
+%a(href=classes.html) previous | " | " | %a(href=metafunc.html) next

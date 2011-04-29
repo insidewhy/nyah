@@ -1,12 +1,12 @@
 !html
 head {
-    %title nyah - introduction
+    %title nyah - introduction - arrays
     link(rel=stylesheet, type=text/css, href=../css/global.css)
 }
 
 !body
 
-%h1 Arrays
+%h2 Arrays
 
 %pre <<EOF
     // Create array of 3 integers.
@@ -23,3 +23,5 @@ head {
     // parameters, so ( and ) are used for arrays in nyah as in scala.
     println(b(1))
 EOF
+
+%a(href=functions.html) previous | " | " | %a(href=classes.html) next

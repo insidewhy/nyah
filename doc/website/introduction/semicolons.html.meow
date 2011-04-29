@@ -1,12 +1,12 @@
 !html
 head {
-    %title nyah - introduction
+    %title nyah - introduction - semicolons
     link(rel=stylesheet, type=text/css, href=../css/global.css)
 }
 
 !body
 
-%h1 Semicolons
+%h2 Semicolons
 
 %p Semicolons are only needed where necessary to resolve ambiguity. In order for this to work, binary operators should not appear at the beginning of a new line.
 
@@ -19,3 +19,5 @@ head {
     b := 1 + 2
         + 3
 EOF
+
+%a(href=variables.html) previous | " | " | %a(href=control.html) next

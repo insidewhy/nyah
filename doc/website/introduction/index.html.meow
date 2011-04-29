@@ -20,3 +20,5 @@ head {
     %li %a(href=typematch.html) Type matching
     %li %a(href=parsing.html) Parsing
 }
+
+%a(href=../index.html) previous | " | " | %a(href=variables.html) next

@@ -1,6 +1,6 @@
 !html
 head {
-    %title nyah - introduction
+    %title nyah - introduction - type matching
     link(rel=stylesheet, type=text/css, href=../css/global.css)
 }
 
@@ -78,3 +78,5 @@ m2 := ~(...a):string {
 meta if[C, T, F] : ~[C] { :true => T ; _ => F }
 
 EOF
+
+%a(href=metafunc.html) previous | " | " | %a(href=parsing.html) next

@@ -1,12 +1,12 @@
 !html
 head {
-    %title nyah - introduction
+    %title nyah - introduction - parsing
     link(rel=stylesheet, type=text/css, href=../css/global.css)
 }
 
 !body
 
-%h1 Parsing
+%h2 Parsing
 
 %pre <<EOF
 @grammar list
@@ -36,3 +36,4 @@ Grammar        <- Addition+
 // }
 EOF
 
+%a(href=typematch.html) previous
