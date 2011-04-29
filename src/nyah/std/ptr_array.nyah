@@ -6,7 +6,7 @@ class ptr_array[uint N, T] {
     indexes ?: 0u .. N-1
     size    ?: N
 
-    def ~self() {
+    def destruct {
         for(i, indexes) delete data_(i)
     }
 

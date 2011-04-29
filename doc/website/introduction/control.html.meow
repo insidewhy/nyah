@@ -9,12 +9,6 @@ head {
 %h2 Control structures
 
 %code(source=scala) <<EOF
-    // Declare two functions.
-    // (= value) is equivalent to (return value) at function scope.
-    def bread { = "bread" }
-    // equivalent: def bread = "bread"
-    def uncle { return "uncle" }
-
     // if/else can return values.
     a := false
     b := if (a) =1; else =2

@@ -15,6 +15,7 @@ head {
 
     // Return types can always be omitted, in which case they are inferred
     // by the compiler.
+    // (= value) is equivalent to (return value) at function scope.
     def subtract(a:const int, b:const int) = a - b
 
     // A function containing several statements.

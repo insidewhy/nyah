@@ -18,8 +18,8 @@ head {
         // a constructor.
         def self(ptr:T *) { ptr_ = ptr }
 
-        // Destructor is a method called delete.
-        def delete { delete ptr_ }
+        // Destructor is a method called destruct.
+        def destruct { delete ptr_ }
 
         // Default constructor provided unless:
         delete self()
