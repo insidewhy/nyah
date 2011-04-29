@@ -14,7 +14,7 @@ A const prefix is only necessary after a method to restrict the method to be val
     class scoped_ptr[T] {
         def get() = value_
 
-        def reset(T *new_value) {
+        def reset(new_value: T*) {
             if (value_) delete value_
             value_ = new_value
         }
