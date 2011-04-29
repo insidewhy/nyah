@@ -16,7 +16,8 @@ printer := ~(a) {
     ?          ->  println("something: " + a)
     // void is matched when a is not supplied.
     void       ->  println("nothing")
-    vector[?]  ->  {
+    // -> is optional before {
+    vector[?]  {
         print("vector ")
         for(v ; a.tail()) print(v)
         println()
@@ -34,7 +35,7 @@ p()
 p(14)
 p(vector[string] [ "joined", "fun", "kittens" ])
 
-// Can also use match objects in place of function overloading to acheive
+// Can also use match objects in place of function overloading to achieve
 // the same result.
 def prefix_print(prefix:string, a) ~(a) {
     string -> println(prefix .. a)
@@ -48,7 +49,7 @@ prefix_print("friend-", 4)
 // any unknown type, but unlike ?, creates a name that can be used later
 // to refer to the same type.
 merge_to_string := ~(a, b) {
-    ?A, A -> $"same: $a $b"
+    ?A, A  -> $"same: $a $b"
     ...?   -> $"mixed: $a $b"
 }
 
