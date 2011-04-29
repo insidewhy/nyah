@@ -24,20 +24,20 @@ head {
         def! speak { println("mew") }
     }
 
-    class dog : animal {
-        def bark { println("woof") } // a normal method
+    class kiwi : animal {
+        def be_quiet { println("...") } // a normal method
         def friendly = "yes"  // a rare animal
 
-        def! speak { bark() }
+        def! speak { be_quiet() }
     }
 
     c:animal * = new cat
     c.speak() // print "meow"
     println(c.friendly()) // print "no"
 
-    d:animal * = new dog
-    d.speak() // print "woof"
-    println(d.friendly()) // print "yes"
+    k:animal * = new kiwi
+    k.speak() // print "..."
+    println(k.friendly()) // print "yes"
 EOF
 
 %h2 Classes with type parameters
