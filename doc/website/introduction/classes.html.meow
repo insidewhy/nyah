@@ -11,7 +11,7 @@ head {
 %code(source=scala) <<EOF
     class animal {
         // pure virtual method, must be overridden for a class to be concrete
-        pure speak()
+        pure speak
 
         // "impure" virtual method.
         virtual def friendly = "no"
@@ -21,23 +21,24 @@ head {
     class cat : animal {
         // def! overrides a virtual method, and will issue a compiler error
         // if no such virtual method exists in a base class.
-        def! speak { println("mew") }
+        def! speak -> println("mew")
     }
 
     class kiwi : animal {
-        def be_quiet { println("...") } // a normal method
-        def friendly = "yes"  // a rare animal
+        def be_quiet -> println("...") // a normal method
+        def! friendly = "yes"  // a rare animal
 
-        def! speak { be_quiet() }
+        // an alternative way of writing def!
+        override def speak -> be_quiet
     }
 
     c:animal * = new cat
-    c.speak() // print "meow"
-    println(c.friendly()) // print "no"
+    c.speak // prints "mew"
+    println(c.friendly) // prints "no"
 
     k:animal * = new kiwi
-    k.speak() // print "..."
-    println(k.friendly()) // print "yes"
+    k.speak // prints "..."
+    println(k.friendly) // prints "yes"
 EOF
 
 %h2 Classes with type parameters
@@ -46,17 +47,17 @@ EOF
     // type parameter T
     // default access level for a class is "public"
     class scoped_ptr[T] {
-        // "def self" is used to created constructors.
+        // "def this" is used to created constructors.
         // No initialiser list needed, nyah automatically initialises class
         // data with results of all member assignments at the beginning of
         // a constructor.
-        def self(ptr:T *) { ptr_ = ptr }
+        def this(ptr:T *) -> ptr_ = ptr
 
         // Destructor is a method called destruct.
-        def destruct { delete ptr_ }
+        def destruct -> delete ptr_
 
         // Default constructor provided unless:
-        delete self()
+        delete this()
 
       private:
         // can assign attributes to variables in class

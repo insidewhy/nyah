@@ -15,19 +15,19 @@ head {
     class tuple[...T] : tuple_helper[T...] {
         // super always refers to first parent class (super[n] for nth)
         // This inherits all constructors from tuple_helper.
-        using super.self
+        using super.this
     }
 
     class tuple_helper[]
 
     class tuple_helper[H, ...T] : tuple_helper[T...] {
-        def self(h:H, ...u) {
+        def this(h:H, ...u) {
             // Call parent class constructor.
             super(u...)
             element_ = h
         }
 
-        def =(h:H) element_ = h
+        def =(h:H) -> element_ = h
 
       private:
         element_:H

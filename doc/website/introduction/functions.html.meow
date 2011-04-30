@@ -9,14 +9,16 @@ head {
 %h2 Functions
 
 %code(source=scala) <<EOF
-    // A function with a single statement.
-    def add(a:const int, b:const int):int
-        return a + b
+    // A function with a single statement. The "->" is optional.
+    def add(a:const int, b:const int):int -> return a + b
 
     // Return types can always be omitted, in which case they are inferred
     // by the compiler.
     // (= value) is equivalent to (return value) at function scope.
     def subtract(a:const int, b:const int) = a - b
+
+    // When a function body is a single return statement or a { block }
+    // I prefer to omit the ->
 
     // A function containing several statements.
     def divide(a:const int, b:const int) {
@@ -37,7 +39,7 @@ head {
     // pointer. The second argument may be passed from a const or non-const
     // expression (unless a more specific non-const overload exists) but
     // is treated as a const variable within the function.
-    def assign_ptr(a ?*, b:const ?) *a = b
+    def assign_ptr(a ?*, b:const ?) -> *a = b
 
     // Functions can be overloaded, the most specific function always
     // matches.

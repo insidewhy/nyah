@@ -12,12 +12,12 @@ head {
 
 %code(source=scala) <<EOF
 printer := ~(a) {
-    // ? matches anything
+    // ? matches anything but void
     ?          ->  println("something: " + a)
-    // void is matched when a is not supplied.
+    // void is matched when a is not supplied
     void       ->  println("nothing")
-    // -> is optional before {
-    vector[?]  {
+    // ... matches 0 to many types, -> is optional before {
+    vector[...]  {
         print("vector ")
         for(v ; a.tail()) print(v)
         println()
@@ -50,7 +50,7 @@ prefix_print("friend-", 4)
 // to refer to the same type.
 merge_to_string := ~(a, b) {
     ?A, A  -> $"same: $a $b"
-    ...?   -> $"mixed: $a $b"
+    ...    -> $"mixed: $a $b"
 }
 
 // Match objects can handle multiple arities and return data.
@@ -59,8 +59,8 @@ m := ~(...a) {
     ?      => "1"
     ?A, A  => "2 same"
     ?, ?   => "2 different"
-    ...?   => ">2 different"
-    ...?A  => ">2 same"
+    ...    => ">2 different"
+    ..:?A  => ">2 same"  // ..:RHS is like ... but all the types are RHS
 }
 
 prinln(m(1, false)) // print "2 different"
