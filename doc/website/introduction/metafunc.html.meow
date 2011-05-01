@@ -66,7 +66,7 @@ EOF
     meta is_snake[:python] : true
 EOF
 
-%p When &ldquo;:&rdquo; is not used before a type parameter, then whether it and its possible arguments are placeholders depends on whether each of them has arguments or not. A type parameter with no arguments becomes a placeholder (unless prefixed with &ldquo;:&rdquo;) and a type parameter with arguments becomes a type name (unless prefixed with &ldquo;?&rdquo;). The following are equivalent:
+%p When &ldquo;:&rdquo; is not used before a type parameter, then whether it and its possible arguments are placeholders depends on whether each of them has arguments or not. A type parameter with no arguments becomes a placeholder (unless prefixed with &ldquo;:&rdquo;) and a type parameter with arguments becomes a type name (unless prefixed with &ldquo;?&rdquo;). The following meta-functions are identical to each other:
 
 %code(source=scala) <<EOF
     // ":" is used before "python" so it and all arguments are type names
@@ -83,7 +83,7 @@ EOF
     meta is_snake[python A] : true
 EOF
 
-%p When a type parameter refers to a previously named type parameter, the &ldquo;:&rdquo; prefix is optional and the parameter has the effect of restricting that parameter's type rather than creating a new placeholder. The following meta-functions are identical to each other:
+%p When a type parameter refers to a previously named type parameter, the &ldquo;:&rdquo; prefix is optional and the parameter has the effect of restricting that parameter's type rather than creating a new placeholder. The following are equivalent:
 
 %code(source=scala) <<EOF
     // Specify it very clearly.
