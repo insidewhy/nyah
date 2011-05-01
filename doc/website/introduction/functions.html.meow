@@ -34,12 +34,11 @@ head {
     generic_add(1, 2)
     generic_add(1f, 2f)
 
-    // ? matches any type, ":" is not mandatory before a "?"
     // assign_ptr's first argument can be any type, but must be a
     // pointer. The second argument may be passed from a const or non-const
     // expression (unless a more specific non-const overload exists) but
     // is treated as a const variable within the function.
-    def assign_ptr(a ?*, b:const ?) -> *a = b
+    def assign_ptr(a:*, b:const) -> *a = b
 
     // Functions can be overloaded, the most specific function always
     // matches.
@@ -50,7 +49,7 @@ head {
         return a
     }
 
-    def end(a ?*) {
+    def end(a:*) {
         // create a compile time error if called.
         @error "Cannot retrieve end of pointer"
     }

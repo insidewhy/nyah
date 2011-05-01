@@ -43,15 +43,60 @@ meta set[H, ...T] : set[type[H], T...]
 // ?: creates a type alias at compile time, like a typedef in c++
 a_set ?: set[bool, int, float, int]
 
-// sizeof... calculates the size of a template pack, sizeof* calculates the
+// sizeof... calculates the size of a template pack, sizeof..* calculates the
 // number of template arguments belonging to a type. In this case this_is_3
 // will alias uint[3].
-this_is_3 ?: sizeof*[a_set]
+this_is_3 ?: sizeof..*[a_set]
 
 // ... expands types in a template pack, ..* expands the arguments of a template
 // parameter.In this case a_list will alias
 //     list[bool, int, float, float].
 a_list ?: list[a_set..*, float]
+EOF
+
+%p In type matching syntax &ldquo;:&rdquo; prefix means that all types and types of arguments are names of types rather than placeholders. The following are equivalent:
+
+%code(source=scala) <<EOF
+    class python[T]
+
+    meta is_snake[:python[?]] : true
+
+    // :T also fills in missing template parameters for T if they are
+    // not specified.
+    meta is_snake[:python] : true
+EOF
+
+%p When &ldquo;:&rdquo; is not used before a type parameter, then whether it and its possible arguments are placeholders depends on whether each of them has arguments or not. A type parameter with no arguments becomes a placeholder (unless prefixed with &ldquo;:&rdquo;) and a type parameter with arguments becomes a type name (unless prefixed with &ldquo;?&rdquo;). The following are equivalent:
+
+%code(source=scala) <<EOF
+    // ":" is used before "python" so it and all arguments are type names
+    // rather than placeholders unless prefixed with ?.
+    meta is_snake[:python[?]] : true  // as before
+
+    // "python" has arguments so is equivalent to ":python"
+    meta is_snake[python[?A]] : true
+
+    // A has no arguments so is equivalent to ?A.
+    meta is_snake[python[A]] : true
+
+    // "T U" is a shorthand for "T[U]"
+    meta is_snake[python A] : true
+EOF
+
+%p When a type parameter refers to a previously named type parameter, the &ldquo;:&rdquo; prefix is optional and the parameter has the effect of restricting that parameter's type rather than creating a new placeholder. The following meta-functions are identical to each other:
+
+%code(source=scala) <<EOF
+    // Specify it very clearly.
+    meta same[?A, :A] : true
+
+    // A is same as A in ?A so second : is not necessary.
+    meta same[?A, A] : true
+
+    // A has no arguments so is equivalent to ?A by default the firt time it is used.
+    meta same[A, A] : true
+
+    // Be a bit more clear than above.
+    meta same[A, :A] : true
 EOF
 
 %a(href=variadic.html) previous | " | " | %a(href=typematch.html) next
