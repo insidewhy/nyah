@@ -8,7 +8,7 @@ head {
 
 %h2 Control structures
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     // if/else can return values.
     a := false
     b := if (a) =1; else =2

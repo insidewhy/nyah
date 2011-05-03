@@ -1,0 +1,32 @@
+# James Pike modified scala template written by Dean Wampler to create this
+# file
+
+preproc = "import","package"
+
+include "c_comment.lang"
+
+include "number.lang"
+
+include "c_string.lang"
+
+(keyword,normal,classname) = `(\<(?:class|trait))([[:blank:]]+)([$[:alnum:]_]+)`
+
+keyword = "abstract|case|catch|class|def|meta",
+          "do|else|extends|false|final",
+          "finally|for|forSome|if|implicit",
+          "import|lazy|match|new|null",
+          "object|override|package|private|protected",
+          "requires|return|sealed|super|this",
+          "throw|trait|try|true|type",
+          "while|with|yield",
+          "_|:|=>|=|<-|<:|<%|>:|#|@"
+
+type = "int|byte|boolean|char|long|float|double|short|void|string|variant"
+
+include "symbols.lang"
+
+cbracket = "{|}"
+
+vardef FUNCTION = '([[:alpha:]]|_|[[:punct:]])([[:word:]]|[[:punct:]])*(?=[[:blank:]]*\()'
+function = $FUNCTION
+

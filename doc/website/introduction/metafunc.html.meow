@@ -10,7 +10,7 @@ head {
 
 %p Metafunctions allow compile time modifications of types. All metafunctions take one or more type arguments and return a new type (which could possibly be one of the argument types). Nyah classes can have &ldquo;companion meta-functions&rdquo; which can be used to filter the types passed to a class. The following block of code demonstrates how to ensure the types in a &ldquo;set&rdquo; are unique by using a companion meta-function.
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 
 meta if[C, T, U] : T
 
@@ -54,9 +54,9 @@ this_is_3 ?: sizeof..*[a_set]
 a_list ?: list[a_set..*, float]
 EOF
 
-%p In type matching syntax &ldquo;:&rdquo; prefix means that all types and types of arguments are names of types rather than placeholders. The following are equivalent:
+%p In type matching syntax &ldquo;:&rdquo; prefix means that all types and types of arguments are names of types rather than placeholders. Essentially it causes the matching mechanism to be identical to the one used for argument type matching in functions. The following are equivalent:
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     class python[T]
 
     meta is_snake[:python[?]] : true
@@ -68,7 +68,7 @@ EOF
 
 %p When &ldquo;:&rdquo; is not used before a type parameter, then whether it and its possible arguments are placeholders depends on whether each of them has arguments or not. A type parameter with no arguments becomes a placeholder (unless prefixed with &ldquo;:&rdquo;) and a type parameter with arguments becomes a type name (unless prefixed with &ldquo;?&rdquo;). The following meta-functions are identical to each other:
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     // ":" is used before "python" so it and all arguments are type names
     // rather than placeholders unless prefixed with ?.
     meta is_snake[:python[?]] : true  // as before
@@ -85,7 +85,7 @@ EOF
 
 %p When a type parameter refers to a previously named type parameter, the &ldquo;:&rdquo; prefix is optional and the parameter has the effect of restricting that parameter's type rather than creating a new placeholder. The following are equivalent:
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     // Specify it very clearly.
     meta same[?A, :A] : true
 

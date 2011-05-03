@@ -10,7 +10,7 @@ head {
 
 %p Semicolons are only needed where necessary to resolve ambiguity. In order for this to work, binary operators should not appear at the beginning of a new line.
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     // This is fine.
     a := 1 + 2 +
         3

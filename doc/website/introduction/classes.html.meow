@@ -8,7 +8,7 @@ head {
 
 %h2 Simple classes
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     class animal {
         // pure virtual method, must be overridden for a class to be concrete
         pure speak
@@ -43,7 +43,7 @@ EOF
 
 %h2 Classes with type parameters
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     // type parameter T
     // default access level for a class is "public"
     class scoped_ptr[T] {
@@ -78,6 +78,9 @@ EOF
 
     // Allow 0, 1 or 2 arguments to be specified in the constructor.
     class simple_pair2[T1, T2](public first:T1 = T1(), public second:T2 = T2())
+
+    // Simpler
+    class simplest_pair2(public first:?T1 = T1(), public second:?T2 = T2())
 EOF
 
 %a(href=arrays.html) previous | " | " | %a(href=variadic.html) next

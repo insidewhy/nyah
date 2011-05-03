@@ -10,7 +10,7 @@ head {
 
 %p Type match control structures are useful for testing an object against a set of types and acting differently depending on the type. Type matches match the most specific match rather than testing the matches in order and resolve the lookup at compile time into a single fast call. In type matches &ldquo;?&rdquo; can match any type.
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 printer := ~(a) {
     // ? matches anything but void
     ?          ->  println("something: " + a)

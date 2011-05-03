@@ -8,7 +8,7 @@ head {
 
 %h2 Variables
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     // Initialisation and assignment.
     a : uint = 0
 

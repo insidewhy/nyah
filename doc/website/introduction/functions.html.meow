@@ -8,7 +8,7 @@ head {
 
 %h2 Functions
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     // A function with a single statement. The "->" is optional.
     def add(a:const int, b:const int):int -> return a + b
 
@@ -63,6 +63,30 @@ head {
         it := v.find(i)
         return if(it == v.end; false ; it)
     }
+EOF
+
+%p &ldquo;?&rdquo; can be used as a placeholder for an unknown type, and &ldquo;?name&rdquo; gives the unknown type a name it can be referred to by later. When calling a function the most specific function match is called.
+
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
+    def end(v: vector[?]) = v.end
+
+    // : is optional before ?
+    def identical(a ?T, b:T) = (a == b)
+
+    identical(1, 2)       // returns false
+    identical(1, "hello") // compile time error
+EOF
+
+%p &ldquo;...&rdquo; can be used as a placeholder for a sequence of zero, one or more unknown types, and &ldquo;...name&rdquo; can be used to give those types a name.
+
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
+    // this version of end accepts vector that have more than one template
+    // parameter
+    def end(v: vector[...]) = v.end
+
+    // When no type parameters are specified for a class with type arguments
+    // after a ":", then the "..." is implicit.
+    def end_simple(v: vector) = v.end
 EOF
 
 %a(href=control.html) previous | " | " | %a(href=arrays.html) next

@@ -8,7 +8,7 @@ head {
 
 %h2 Arrays
 
-%code(source=scala) <<EOF
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     // Create array of 3 integers.
     a := [ 1, 2, 3 ]
 
