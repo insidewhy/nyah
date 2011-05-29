@@ -8,7 +8,7 @@ head {
 
 %h2 Metafunctions
 
-%p Metafunctions allow compile time modifications of types. All metafunctions take one or more type arguments and return a new type (which could possibly be one of the argument types). Nyah classes can have &ldquo;companion meta-functions&rdquo; which can be used to filter the types passed to a class. The following block of code demonstrates how to ensure the types in a &ldquo;set&rdquo; are unique by using a companion meta-function.
+%p Metafunctions allow types to be derived from other types at compile time. All metafunctions take one or more type arguments and return a new type. Nyah classes can have &ldquo;companion meta-functions&rdquo; which can be used to filter the types passed to a class. The following block of code demonstrates how to ensure the types in a &ldquo;set&rdquo; are unique by using a companion meta-function.
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 
@@ -66,7 +66,7 @@ EOF
     meta is_snake[:python] : true
 EOF
 
-%p When &ldquo;:&rdquo; is not used before a type parameter, then whether it and its possible arguments are placeholders depends on whether each of them has arguments or not. A type parameter with no arguments becomes a placeholder (unless prefixed with &ldquo;:&rdquo;) and a type parameter with arguments becomes a type name (unless prefixed with &ldquo;?&rdquo;). The following meta-functions are identical to each other:
+%p When &ldquo;:&rdquo; is not used before a type parameter then whether a type (or its possible arguments) is a placeholder depends on whether it has arguments or not. A type parameter with no arguments becomes a placeholder (unless prefixed with &ldquo;:&rdquo;) and a type parameter with arguments becomes a type name (unless prefixed with &ldquo;?&rdquo;). The following meta-functions are identical to each other:
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     // ":" is used before "python" so it and all arguments are type names
@@ -92,11 +92,15 @@ EOF
     // A is same as A in ?A so second : is not necessary.
     meta same[?A, A] : true
 
-    // A has no arguments so is equivalent to ?A by default the firt time it is used.
+    // A has no arguments so is equivalent to ?A the first time it is used.
     meta same[A, A] : true
 
     // Be a bit more clear than above.
     meta same[A, :A] : true
+
+    // Compiler error attempting to introduce placeholder with same name as
+    // prior placeholder.
+    meta same[?A, ?A] : true
 EOF
 
 %a(href=variadic.html) previous | " | " | %a(href=typematch.html) next

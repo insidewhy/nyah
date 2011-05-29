@@ -89,4 +89,13 @@ EOF
     def end_simple(v: vector) = v.end
 EOF
 
+%p Single argument functions can be called without using brackets:
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
+    end_c := end c
+    end_c(end_c == end(c))
+
+    fun_ptr := end(?)  // store function pointer to `end' in variable fun_ptr.
+    assert(fun_ptr c == fun_ptr(c))
+EOF
+
 %a(href=control.html) previous | " | " | %a(href=arrays.html) next
