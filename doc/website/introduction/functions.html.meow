@@ -39,9 +39,11 @@ head {
     // expression (unless a more specific non-const overload exists) but
     // is treated as a const variable within the function.
     def assign_ptr(a:*, b:const) -> *a = b
+EOF
 
-    // Functions can be overloaded, the most specific function always
-    // matches.
+%p Functions can be overloaded, in which case the most specific function always matches.
+
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     def end(a) = a.end()
 
     def end(a:char *) {
@@ -65,7 +67,7 @@ head {
     }
 EOF
 
-%p &ldquo;?&rdquo; can be used as a placeholder for an unknown type, and &ldquo;?name&rdquo; gives the unknown type a name it can be referred to by later. When calling a function the most specific function match is called.
+%p &ldquo;?&rdquo; can be used as a placeholder for an unknown type, and &ldquo;?name&rdquo; gives the unknown type a name it can be referred to by later.
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     def end(v: vector[?]) = v.end
@@ -92,7 +94,7 @@ EOF
 %p Single argument functions can be called without using brackets:
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     end_c := end c
-    end_c(end_c == end(c))
+    assert(end_c == end(c))
 
     fun_ptr := end(?)  // store function pointer to `end' in variable fun_ptr.
     assert(fun_ptr c == fun_ptr(c))

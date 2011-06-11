@@ -18,7 +18,7 @@ keyword = "abstract|case|catch|class|def|meta",
           "object|override|package|private|protected",
           "requires|return|sealed|super|this",
           "throw|trait|try|true|type",
-          "while|with|yield",
+          "while|with|yield|virtual|pure",
           "_|:|=>|=|<-|<:|<%|>:|#|@"
 
 type = "int|byte|boolean|char|long|float|double|short|void|string|variant"

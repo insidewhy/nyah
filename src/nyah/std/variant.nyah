@@ -51,16 +51,14 @@ class variant[...T] {
 }
 
 def variant_apply(v:variant[...T], functor:const) {
-    return_type ?: decltype(functor(at[0, T...]))
-
     // @singleton within a function will create a new singleton for each
     // set of type parameters. new lambda = virtual function call lambda
     // allocated with new
     @singleton executors:ptr_array[sizeof...[T], executor_base] =
-        [[
+        [
             i ? 0u .. sizeof...[T],
             new lambda(v_) { functor(v_.at[i]) }
-        ]]
+        ]
 
     return executors(v.type_index)(v)
 }

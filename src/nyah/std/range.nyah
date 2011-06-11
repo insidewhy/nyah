@@ -1,0 +1,13 @@
+@module std
+
+def begin(t) = t.begin
+def end(t) = t.end
+
+def begin(t:*) = t
+def end(t:char *) = while (*t != '\0') =++t
+
+def end(t:*) -> @error "cannot find end of pointer"
+
+class range(public begin_ ?T, public end_ :T) {
+    this(c) -> this(begin(c), end(c))
+}
