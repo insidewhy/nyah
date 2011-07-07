@@ -162,10 +162,9 @@ bd := i2 + 6 + 7 // INVALID: In (i2 + 6), + has operator precedence -2
                  //          In (6 + 7), + has operator precedence -3
 
 bd := (i2 + 6) + 7 // Fine, used parentheses to resolve ambiguity.
-gd := i2 * 6 * 7   // Fine, in both (i2 * 6) and (6 * 7), * has precedence -3.
-                   // NOTE: If the type of (i2 * 6) was a different type to i2
-                   //       and 6, say T1, then (T2 * int) would also have to have
-                   //       a precedence of -3.
+gd := i2 * 6 * 7
+// Fine, in all possible valid LHS * RHS pairs in the above expression, * has
+// a precedence of -3.
 
 g2 := i2 add 6 add 7
 // Fine, (6 add 7) is invalid. i2 add 6 has a return type of MyInt which is a
