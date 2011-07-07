@@ -1,6 +1,6 @@
 !html
 head {
-    %title nyah - introduction - type matching
+    %title nyah - introduction - operators and operator overloading
     link(rel=stylesheet, type=text/css, href=../css/global.css)
 }
 
