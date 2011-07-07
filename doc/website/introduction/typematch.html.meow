@@ -6,7 +6,7 @@ head {
 
 !body
 
-%h2 Type matching.
+%h2 Type matching
 
 %p Type match control structures are useful for testing an object against a set of types and acting differently depending on the type. Type matches match the most specific match rather than testing the matches in order and resolve the lookup at compile time into a single fast call. In type matches &ldquo;?&rdquo; can match any type.
 
