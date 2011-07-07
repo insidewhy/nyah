@@ -1,0 +1,172 @@
+!html
+head {
+    %title nyah - introduction - type matching
+    link(rel=stylesheet, type=text/css, href=../css/global.css)
+}
+
+!body
+
+%h2 Operators and Operator Overloading
+
+%p In nyah operator overloading isn't strictly necessary. Instead method and function names can be composed of symbols. Functions with single arguments and methods with zero arguments can be used as prefix operators. Functions with two arguments and methods with a single argument can be used as infix operators. Readers familiar with Scala will notice many similarities.
+
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
+class IntCopy(public value:int = 0) {
+    def -(o:const IntCopy)   = IntCopy(value - o.value)
+    def +(o:const IntCopy)   = IntCopy(value + o.value)
+    def ! : bool           = ! value
+
+    // alternates in words
+    def plus(o:const IntCopy)  = this + o
+    def minus(o:const IntCopy) = this - o
+    def not = ! this
+}
+
+i4 := IntCopy(4)
+i7 := i4 + IntCopy(3)
+i0 := i7 minus IntCopy(7)
+assert(! (! i7))
+assert(not i0)
+EOF
+
+%h2 Operator Precedence
+
+%p Standard operators (+, -, +=, == etc.) maintain the same precedence as C++. The precedence of any newly defined operator is equivalent to the precedence of the operator composed from the first symbol in the new operator's name. If the first symbol does not constitute a valid operator then the precedence is &ldquo;infinity&rdquo;. Sequential operators with equivalent precedence are evaluated right to left, unless the precedence is &ldquo;negative infinity&rdquo;.
+
+Examples of operators with equivalent precedence:
+%table {
+    %tr {
+        %td a +++ b
+        %td a + b
+    }
+    %tr {
+        %td a +&gt; b
+        %td a + b
+    }
+    %tr {
+        %td a ** b
+        %td a * b
+    }
+    %tr {
+        %td +&gt;a
+        %td +a
+    }
+    %tr {
+        %td ---a
+        %td "-a  // not --a"
+    }
+}
+
+Examples of operators with infinite precedence:
+%table {
+    %tr %td a cmp b
+    %tr %td a begins_without_symbol b
+    %tr %td a \ b
+    %tr %td a \= b
+    %tr %td definitely_not a
+}
+
+Default operator precedences:
+%table {
+    %tr {
+        %td 0
+        %td ++(postfix) --(postfix) -&gt;
+    }
+    %tr {
+        %td -1
+        %td ++(prefix) --(prefix) +(prefix) -(prefix) *(prefix) &amp;(infix) sizeof new delete
+    }
+    %tr {
+        %td -2
+        %td * / %
+    }
+    %tr {
+        %td -3
+        %td +(infix) -(infix)
+    }
+    %tr {
+        %td -4
+        %td &lt;&lt; &gt;&gt;
+    }
+    %tr {
+        %td -5
+        %td &lt; &lt;= &gt; &gt;=
+    }
+    %tr {
+        %td -6
+        %td == !=
+    }
+    %tr {
+        %td -7
+        %td &amp;(infix)
+    }
+    %tr {
+        %td -8
+        %td ^
+    }
+    %tr {
+        %td -9
+        %td &amp;&amp;
+    }
+    %tr {
+        %td -10
+        %td "||"
+    }
+    %tr {
+        %td -11
+        %td "+= -= *= /= %= &lt;&lt;= &gt;&gt;= &amp;= ^= |="
+    }
+}
+
+%h2 Overriding Operator Precedence
+
+%p Operator precedence can be modified from the default for a particular set of arguments by putting an integer between -2<sup>16</sup> and 2<sup>16</sup> in between the &ldquo;def&rdquo; and the method name. -infinity and +infinity may also be used.
+
+%p The following example shows how to make an integer class where &ldquo;+&rdquo; has the same precedence as &ldquo;*&rdquo;:
+
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
+class MyInt(public value:int = 0) : int(value) {
+
+    // readjust priority of infix + from -3 to -2
+    def -2 +(o:const MyInt) = MyInt(super + o.value)
+
+    // also adjust priority when adding to standard int
+    def -2 +(o:const int) = MyInt(super + o)
+}
+
+i2 := MyInt(2)
+i5 := MyInt(5)
+i7 := MyInt(7)
+
+// Affects bracketing of MyInt types.
+assert( (i2 + i5 * i7) == ((i2 + i5) * i7) )
+EOF
+
+%h2 Preventing Ambiguous Operator Precedence
+
+%p Allowing any operators to have varying precedence without restriction would create ambiguities that the compiler may not always be able to resolve. For example in the expression (a + b * c / d), the result of (a + b) may not have the same type as either &ldquo;a&rdquo; or &ldquo;b&rdquo;. The right-hand side type of &ldquo;+&rdquo; itself relies on the types and precedences of all succeeding expressions which in turn rely on the precedence and types of all preceding expressions. In many cases cyclic precedence dependencies would occur which the compiler cannot resolve, and the large amount of work the compiler would have to do to resolve unambiguous graphs would unlikely be worth the potential ambiguities unrestricted operator precedences may cause.
+
+%p To prevent this in any sequence of un-bracketed operators, each occurrence of the same operator must have the same precedence, or be invalid.
+
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
+class MyInt(public value:int = 0) : int(value) {
+
+    // same as previous MyInt with a new method
+    def -2 +(o:const MyInt) = MyInt(super + o.value)
+    def -2 +(o:const int) = MyInt(super + o)
+
+    def add(o:const int) = MyInt(super + o)
+}
+i2 := MyInt(2)
+bd := i2 + 6 + 7 // INVALID: In (i2 + 6), + has operator precedence -2
+                 //          In (6 + 7), + has operator precedence -3
+
+bd := (i2 + 6) + 7 // Fine, used parentheses to resolve ambiguity.
+gd := i2 * 6 * 7   // Fine, in both (i2 * 6) and (6 * 7), * has precedence -3.
+
+g2 := i2 add 6 add 7
+// Fine, (6 add 7) is invalid. i2 add 6 has a return type of MyInt which is a
+// valid left-hand side for (LHS add 7).
+EOF
+
+%a(href=typematch.html) previous | " | " | %a(href=parsing.html) next

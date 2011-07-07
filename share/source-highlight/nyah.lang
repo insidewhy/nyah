@@ -21,7 +21,7 @@ keyword = "abstract|case|catch|class|def|meta",
           "while|with|yield|virtual|pure",
           "_|:|=>|=|<-|<:|<%|>:|#|@"
 
-type = "int|byte|boolean|char|long|float|double|short|void|string|variant"
+type = "int|byte|bool|const|char|long|float|double|short|void|string|variant"
 
 include "symbols.lang"
 

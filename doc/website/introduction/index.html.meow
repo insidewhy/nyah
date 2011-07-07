@@ -18,6 +18,7 @@ head {
     %li %a(href=variadic.html) Variadic Type Parameters
     %li %a(href=metafunc.html) Metafunctions
     %li %a(href=typematch.html) Type matching
+    %li %a(href=operators.html) Operators and Operator Overloading
     %li %a(href=parsing.html) Parsing
 }
 
