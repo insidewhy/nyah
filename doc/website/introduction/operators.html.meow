@@ -151,7 +151,13 @@ EOF
 %p For example for the compilation of an expression (a op1 b op2 c) to succeed either:
 
 %ul {
-    %li "precedence of ((a op1 b) <strong>op2</strong> c) == precedence of (b <strong>op2</strong> c)"
+    %li {
+        The following precedences must be identical:
+        %ul {
+            %li "((a op1 b) <strong>op2</strong> c) == (b <strong>op2</strong> c)"
+            %li "(a <strong>op1</strong> b) == (a <strong>op1</strong> (b op2 c))"
+        }
+    }
     %li a op1 b is undefined, in which case (a op1 (b op2 c)) must be defined.
     %li b op2 c is undefined, in which case ((a op1 b) op2 c)) must be defined.
 }
