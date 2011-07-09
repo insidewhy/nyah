@@ -125,10 +125,10 @@ Default operator precedences:
 %p The following example shows how to make an integer class where &ldquo;+&rdquo; has the same precedence as &ldquo;*&rdquo;:
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
-class MyInt(public value:int = 0) : int(value) {
+class MyInt(value:int = 0) : int(value) {
 
     // readjust priority of infix + from -3 to -2
-    def -2 +(o:const MyInt) = MyInt(super + o.value)
+    def -2 +(o:const MyInt) = MyInt(super + o)
 
     // also adjust priority when adding to standard int
     def -2 +(o:const int) = MyInt(super + o)
@@ -144,7 +144,7 @@ EOF
 
 %h2 Preventing Ambiguous Operator Precedence
 
-%p Allowing any operators to have varying precedence without restriction would create ambiguities that the compiler may not always be able to resolve. For example in the expression (a + b * c / d), the result of (a + b) may not have the same type as either &ldquo;a&rdquo; or &ldquo;b&rdquo;. The right-hand side type of &ldquo;+&rdquo; itself relies on the types and precedences of all succeeding expressions which in turn rely on the precedence and types of all preceding expressions. In many cases cyclic precedence dependencies would occur which the compiler cannot resolve, and the large amount of work the compiler would have to do to resolve unambiguous graphs would unlikely be worth the potential ambiguities unrestricted operator precedences may cause.
+%p Allowing any operators to have varying precedence without restriction would create ambiguities that the compiler may not always be able to resolve. For example in the expression (a + b * c / d), the result of (a + b) may not have the same type as either &ldquo;a&rdquo; or &ldquo;b&rdquo;. The right-hand side type of &ldquo;+&rdquo; itself relies on the types and precedences of all succeeding expressions which in turn rely on the precedence and types of all preceding expressions. In many cases cyclic precedence dependencies would occur which the compiler cannot resolve, and the large amount of work the compiler would have to do to resolve unambiguous graphs would unlikely be worth the potential ambiguities that allowing unrestricted operator precedences may cause.
 
 %p To prevent this in any sequence of un-bracketed operators the precedence for each operator must be the same for all reachable left-hand side and right-hand side types for which the operator is valid.
 
@@ -165,14 +165,15 @@ EOF
 %p The following example shows how to declare and use modified precedence operators correctly.
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
-class MyInt(public value:int = 0) : int(value) {
+class MyInt(value:int = 0) : int(value) {
 
     // same as previous MyInt with a new method
-    def -2 +(o:const MyInt) = MyInt(super + o.value)
+    def -2 +(o:const MyInt) = MyInt(super + o)
     def -2 +(o:const int) = MyInt(super + o)
 
     def add(o:const int) = MyInt(super + o)
 }
+
 i2 := MyInt(2)
 bd := i2 + 6 + 7 // INVALID: In (i2 + 6) + 7, + has operator precedence -2
                  //          In 6 + 7, + has operator precedence -3
