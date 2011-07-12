@@ -16,7 +16,7 @@ head {
     %a(href=#status) status
 }
 
-%p { Nyah is a programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++ but with the expressiveness of a scripting language like python or ruby. Nyah is typed, but uses type inference so types can usually be omitted. Nyah has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code.   The grammar of nyah can be modified at compile time to allow diverging opinions to be expressed within the same language and to take DSL building capabilities to the next level. }
+%p { Nyah is a programming language designed to allow code to be written that performs as well as or better than traditional systems languages like C and C++. Equally as important as performance is the expressiveness of the language which should allow features to be expressed as concisely as in modern scripting languages such as | %a(href=http://ruby-lang.org) Ruby | or modern virtual machine languages such as | %a(href=http://nemerle.org) Nemerle | and | %a(href=http://scala.org) "Scala." | Nyah is typed, but uses type inference so types can usually be omitted. Nyah has strong meta-programming capabilities. It uses the | %a(href=http://llvm.org) LLVM | compiler infrastructure to generate object code. The grammar of nyah can be modified at compile time to allow diverging opinions to be expressed within the same language and to provide DSL building capabilities far superior to current languages. }
 
 %h2 Goals
 %ul {
