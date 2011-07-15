@@ -2,6 +2,7 @@
 head {
     %title nyah - introduction - operators and operator overloading
     link(rel=stylesheet, type=text/css, href=../css/global.css)
+    link(rel=stylesheet, type=text/css, href=../css/operators.css)
 }
 
 !body
@@ -31,7 +32,7 @@ EOF
 
 %h2 Operator Precedence
 
-%p Standard operators (+, -, +=, == etc.) maintain the same precedence as C++. The precedence of any newly defined operator is equivalent to the precedence of the operator composed from the first symbol in the new operator's name. If the first symbol does not constitute a valid operator then the precedence is &ldquo;infinity&rdquo;. Sequential operators with equivalent precedence are evaluated right to left, unless the precedence is &ldquo;negative infinity&rdquo;.
+%p Standard operators (+, -, +=, == etc.) maintain the same precedence as C++. The precedence of any newly defined operator is equivalent to the precedence of the operator composed from the first symbol in the new operator's name. If the first symbol does not constitute a valid operator then the precedence is &ldquo;0&rdquo;. In the case of multiple operators in a row with the same precedence, even precedences are evaluated left-to-right and odd precedences are evaluated right-to-left.
 
 Examples of operators with equivalent precedence:
 %table {
@@ -57,7 +58,7 @@ Examples of operators with equivalent precedence:
     }
 }
 
-Examples of operators with infinite precedence:
+Examples of operators with precedence of 0:
 %table {
     %tr %td a cmp b
     %tr %td a begins_without_symbol b
@@ -67,71 +68,121 @@ Examples of operators with infinite precedence:
 }
 
 Default operator precedences:
-%table {
+%table#op-precedence {
     %tr {
-        %td 0
-        %td ++(postfix) --(postfix) -&gt;
-    }
-    %tr {
-        %td -1
-        %td ++(prefix) --(prefix) +(prefix) -(prefix) *(prefix) &amp;(infix) sizeof new delete
+        %td infinite
+        %td {
+            %span ::
+        }
     }
     %tr {
         %td -2
-        %td * / %
+        %td {
+            %span x++
+            %span x--
+            %span -&gt;
+            %span "."
+        }
     }
     %tr {
         %td -3
-        %td +(infix) -(infix)
+        %td {
+            %span ++x
+            %span --x
+            %span +x
+            %span -x
+            %span *x
+            %span &amp;x
+            %span sizeof
+            %span new
+            %span delete
+        }
     }
     %tr {
         %td -4
-        %td &lt;&lt; &gt;&gt;
-    }
-    %tr {
-        %td -5
-        %td &lt; &lt;= &gt; &gt;=
+        %td {
+            %span *
+            %span /
+            %span "%"
+        }
     }
     %tr {
         %td -6
-        %td == !=
-    }
-    %tr {
-        %td -7
-        %td &amp;(infix)
+        %td {
+            %span x+y
+            %span x-y
+        }
     }
     %tr {
         %td -8
-        %td ^
-    }
-    %tr {
-        %td -9
-        %td &amp;&amp;
+        %td {
+            %span &lt;&lt;
+            %span &gt;&gt;
+        }
     }
     %tr {
         %td -10
-        %td "||"
+        %td {
+            %span &lt;
+            %span &lt;=
+            %span &gt;
+            %span &gt;=
+        }
     }
     %tr {
-        %td -11
-        %td "+= -= *= /= %= &lt;&lt;= &gt;&gt;= &amp;= ^= |="
+        %td -12
+        %td {
+            %span ==
+            %span "!="
+        }
+    }
+    %tr {
+        %td -14
+        %td %span x&amp;y
+    }
+    %tr {
+        %td -16
+        %td %span ^
+    }
+    %tr {
+        %td -18
+        %td %span &amp;&amp;
+    }
+    %tr {
+        %td -20
+        %td %span "||"
+    }
+    %tr {
+        %td -21
+        %td {
+            %span +=
+            %span -=
+            %span *=
+            %span /=
+            %span "%="
+            %span &lt;&lt;=
+            %span &gt;&gt;=
+            %span &amp;=
+            %span ^=
+            %span "|="
+        }
     }
 }
 
 %h2 Overriding Operator Precedence
 
-%p Operator precedence can be modified from the default for a particular set of arguments by putting an integer between -2<sup>16</sup> and 2<sup>16</sup> in between the &ldquo;def&rdquo; and the method name. -infinity and +infinity may also be used.
+%p Operator precedence can be modified from the default for a particular set of arguments by putting an integer between -2<sup>16</sup> and 2<sup>16</sup> in between the &ldquo;def&rdquo; and the method name.
 
 %p The following example shows how to make an integer class where &ldquo;+&rdquo; has the same precedence as &ldquo;*&rdquo;:
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 class MyInt(value:int = 0) : int(value) {
 
-    // readjust priority of infix + from -3 to -2
-    def -2 +(o:const MyInt) = MyInt(super + o)
+    // increase priority of infix + from -6 to -4
+    def -4 +(o:const MyInt) = MyInt(super + o)
 
-    // also adjust priority when adding to standard int
-    def -2 +(o:const int) = MyInt(super + o)
+    // also increase priority when adding to standard int
+    def -4 +(o:const int) = MyInt(super + o)
 }
 
 i2 := MyInt(2)
@@ -168,8 +219,8 @@ EOF
 class MyInt(value:int = 0) : int(value) {
 
     // same as previous MyInt with a new method
-    def -2 +(o:const MyInt) = MyInt(super + o)
-    def -2 +(o:const int) = MyInt(super + o)
+    def -4 +(o:const MyInt) = MyInt(super + o)
+    def -4 +(o:const int) = MyInt(super + o)
 
     def add(o:const int) = MyInt(super + o)
 }
