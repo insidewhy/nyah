@@ -103,4 +103,19 @@ EOF
     meta same[?A, ?A] : true
 EOF
 
+%p Meta-functions can be defined inside a class. This is identical to defining the meta-function outside of a class with a first argument &ldquo;this&rdquo; which matches the type of the class.
+
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
+    class animal {
+        meta is_friendly : true
+        meta is_same[:this] : true
+        meta is_same[T] : false
+    }
+
+    // the following meta-functions are equivalent to the above.
+    meta is_friendly[:animal] : true
+    meta is_same[:animal, animal] : true
+    meta is_same[:animal, T] : false
+EOF
+
 %a(href=variadic.html) previous | " | " | %a(href=typematch.html) next
