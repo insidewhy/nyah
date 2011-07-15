@@ -184,7 +184,7 @@ Default operator precedences:
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 class MyInt(value:int = 0) : int(value) {
-    // increase priority of infix + from -6 to -4
+    // increase priority of infix + to that of infix *
     def 5 +(o:const int) = MyInt(super + o)
 }
 
