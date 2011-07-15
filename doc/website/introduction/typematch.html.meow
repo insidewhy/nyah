@@ -11,32 +11,33 @@ head {
 %p Type match control structures are useful for testing an object against a set of types and acting differently depending on the type. Type matches match the most specific match rather than testing the matches in order and resolve the lookup at compile time into a single fast call. In type matches &ldquo;?&rdquo; can match any type.
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
-printer := ~(a) {
-    // ? matches anything but void
-    ?          ->  println("something: " + a)
-    // void is matched when a is not supplied
-    void       ->  println("nothing")
-    // ... matches 0 to many types, -> is optional before {
-    vector[...]  {
-        print("vector ")
-        for(v ; a.tail()) print(v)
-        println()
+def funprint(a) {
+    std.print("{ ")
+    ~(a) {
+        // ? matches anything but void
+        ?          ->  println("something: " + a)
+        // void is matched when a is not supplied
+        void       ->  println("nothing")
+        // ... matches 0 to many types, -> is optional before {
+        vector[...]  {
+            std.print("vector ")
+            for(v ; a.tail()) std.print(v)
+            println()
+        }
+        // each ? could be a different type
+        // The code to build $"..." strings is created at compile time and is
+        // equivalent to using a string builder to create the string with $a.first
+        // and $a.second coming from the surrounding scope.
+        pair[?, ?] ->  println($"pair ${a.first}, ${a.second}")
     }
-    // each ? could be a different type
-    // The code to build $"..." strings is created at compile time and is
-    // equivalent to using a string builder to create the string with $a.first
-    // and $a.second coming from the surrounding scope.
-    pair[?, ?] ->  println($"pair ${a.first}, ${a.second}")
+    std.print(" }")
 }
 
-// can assign matcher to another variable.
-p := printer
-p()
-p(14)
-p(vector[string] [ "joined", "fun", "kittens" ])
+funprint()
+funprint(14)
+funprint(vector[string] [ "joined", "fun", "kittens" ])
 
-// Can also use match objects in place of function overloading to achieve
-// the same result.
+// Variables from surrounding scope can be used in expressions.
 def prefix_print(prefix:string, a) ~(a) {
     string -> println(prefix .. a)
     ?      -> {}
@@ -45,17 +46,15 @@ def prefix_print(prefix:string, a) ~(a) {
 prefix_print("friend-", "hello")
 prefix_print("friend-", 4)
 
-// Can use match variables instead of function overloading. ?name matches
-// any unknown type, but unlike ?, creates a name that can be used later
-// to refer to the same type.
-merge_to_string := ~(a, b) {
+// def~ can be used to create a function that matches on all of its arguments.
+def~ merge_to_string(a, b) {
     ?A, A  -> $"same: $a $b"
     ...    -> $"mixed: $a $b"
 }
 
 // Match objects can handle multiple arities and return data.
 // => is a shorthand for "-> ="
-m := ~(...a) {
+def~ string_desc(...a) {
     ?      => "1"
     ?A, A  => "2 same"
     ?, ?   => "2 different"
@@ -63,12 +62,12 @@ m := ~(...a) {
     ..:?A  => ">2 same"  // ..:RHS is like ... but all the types are RHS
 }
 
-prinln(m(1, false)) // print "2 different"
-prinln(m(1, 1, 1, 1)) // print ">2 same"
-// prinln(m()) // no matches.. compiler error
+prinln(string_desc(1, false)) // print "2 different"
+prinln(string_desc(1, 1, 1, 1)) // print ">2 same"
+// prinln(string_desc()) // no matches.. compiler error
 
 // You can specify the return types of matches if you want:
-m2 := ~(...a):string {
+def~ simple_desc(...a):string {
     ?    => "single"
     ?, ? => 1  // error: type does not match return type.
 }
