@@ -32,7 +32,7 @@ EOF
 
 %h2 Operator Precedence
 
-%p Standard operators (+, -, +=, == etc.) maintain the same precedence as C++. The precedence of any newly defined operator is equivalent to the precedence of the operator composed from the first symbol in the new operator's name. If the first symbol does not constitute a valid operator then the precedence is &ldquo;0&rdquo;. In the case of multiple operators in a row with the same precedence, even precedences are evaluated left-to-right and odd precedences are evaluated right-to-left.
+%p Standard operators (+, -, +=, == etc.) maintain the same precedence as C++. The precedence of any newly defined operator is equivalent to the precedence of the operator composed from the first symbol in the new operator's name. If the first symbol does not constitute a valid operator then the precedence is &ldquo;0&rdquo;. In the case of multiple operators in a row with the same precedence, odd precedences are evaluated left-to-right and even precedences are evaluated right-to-left.
 
 Examples of operators with equivalent precedence:
 %table {
@@ -76,7 +76,7 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -2
+        %td 7
         %td {
             %span x++
             %span x--
@@ -85,7 +85,7 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -3
+        %td 6
         %td {
             %span ++x
             %span --x
@@ -99,7 +99,7 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -4
+        %td 5
         %td {
             %span *
             %span /
@@ -107,21 +107,28 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -6
+        %td 3
         %td {
             %span x+y
             %span x-y
         }
     }
     %tr {
-        %td -8
+        %td 1
         %td {
             %span &lt;&lt;
             %span &gt;&gt;
         }
     }
     %tr {
-        %td -10
+        %td 0
+        %td {
+            %span fn x
+            %span x fn y
+        }
+    }
+    %tr {
+        %td -1
         %td {
             %span &lt;
             %span &lt;=
@@ -130,30 +137,30 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -12
+        %td -3
         %td {
             %span ==
             %span "!="
         }
     }
     %tr {
-        %td -14
+        %td -5
         %td %span x&amp;y
     }
     %tr {
-        %td -16
+        %td -7
         %td %span ^
     }
     %tr {
-        %td -18
+        %td -9
         %td %span &amp;&amp;
     }
     %tr {
-        %td -20
+        %td -11
         %td %span "||"
     }
     %tr {
-        %td -21
+        %td -12
         %td {
             %span +=
             %span -=
@@ -178,7 +185,7 @@ Default operator precedences:
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 class MyInt(value:int = 0) : int(value) {
     // increase priority of infix + from -6 to -4
-    def -4 +(o:const int) = MyInt(super + o)
+    def 5 +(o:const int) = MyInt(super + o)
 }
 
 i2 := MyInt(2)
@@ -213,7 +220,7 @@ EOF
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 class MyInt(value:int = 0) : int(value) {
-    def -4 +(o:const int) = MyInt(super + o)
+    def 5 +(o:const int) = MyInt(super + o)
     def add(o:const int) = MyInt(super + o)
 }
 
