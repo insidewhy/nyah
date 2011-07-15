@@ -171,17 +171,13 @@ Default operator precedences:
 
 %h2 Overriding Operator Precedence
 
-%p Operator precedence can be modified from the default for a particular set of arguments by putting an integer between -2<sup>16</sup> and 2<sup>16</sup> in between the &ldquo;def&rdquo; and the method name.
+%p Operator precedence can be modified from the default by putting an integer between -2<sup>16</sup> and 2<sup>16</sup> in between the &ldquo;def&rdquo; and the method name. For any binary operator the precedence must be the same for all possible overloaded methods.
 
 %p The following example shows how to make an integer class where &ldquo;+&rdquo; has the same precedence as &ldquo;*&rdquo;:
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 class MyInt(value:int = 0) : int(value) {
-
     // increase priority of infix + from -6 to -4
-    def -4 +(o:const MyInt) = MyInt(super + o)
-
-    // also increase priority when adding to standard int
     def -4 +(o:const int) = MyInt(super + o)
 }
 
@@ -217,11 +213,7 @@ EOF
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 class MyInt(value:int = 0) : int(value) {
-
-    // same as previous MyInt with a new method
-    def -4 +(o:const MyInt) = MyInt(super + o)
     def -4 +(o:const int) = MyInt(super + o)
-
     def add(o:const int) = MyInt(super + o)
 }
 
