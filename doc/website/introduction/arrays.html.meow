@@ -24,4 +24,4 @@ head {
     println(b(1))
 EOF
 
-%a(href=functions.html) previous | " | " | %a(href=classes.html) next
+%a(href=functions.html) previous | " | " | %a(href=index.html) up | " | " | %a(href=classes.html) next

@@ -82,5 +82,6 @@ head {
         %li Asynchronous IO library
     }
 }
-%div E-mail: nyah (@) chilon.net.
+%div E-mail: nyah<span style="display: none;">super face</span>@chilon.net.
 %div { IRC Channel: #nyah on | %a(href=irc://irc.freenode.net/nyah) "irc.freenode.net" }
+%a(href=introduction/index.html) next

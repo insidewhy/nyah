@@ -37,4 +37,4 @@ head {
     for (i1, i2 ; v) println(i1, ", ", i2)
 EOF
 
-%a(href=semicolons.html) previous | " | " | %a(href=functions.html) next
+%a(href=semicolons.html) previous | " | " | %a(href=index.html) up | " | " | %a(href=functions.html) next

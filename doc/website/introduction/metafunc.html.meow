@@ -48,8 +48,8 @@ a_set ?: set[bool, int, float, int]
 // will alias uint[3].
 this_is_3 ?: sizeof..*[a_set]
 
-// ... expands types in a template pack, ..* expands the arguments of a template
-// parameter.In this case a_list will alias
+// ... expands types in a template pack, ..* expands the arguments of a
+// template parameter. In this case a_list will alias
 //     list[bool, int, float, float].
 a_list ?: list[a_set..*, float]
 EOF
@@ -118,4 +118,4 @@ EOF
     meta is_same[:animal, T] : false
 EOF
 
-%a(href=variadic.html) previous | " | " | %a(href=typematch.html) next
+%a(href=variadic.html) previous | " | " | %a(href=index.html) up | " | " | %a(href=typematch.html) next

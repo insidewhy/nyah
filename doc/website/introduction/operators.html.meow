@@ -231,4 +231,4 @@ g2 := i2 add 6 add 7
 // valid left-hand side for (LHS add 7).
 EOF
 
-%a(href=typematch.html) previous | " | " | %a(href=parsing.html) next
+%a(href=typematch.html) previous | " | " | %a(href=index.html) up | " | " | %a(href=parsing.html) next

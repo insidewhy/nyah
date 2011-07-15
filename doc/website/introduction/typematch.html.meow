@@ -80,4 +80,4 @@ meta if[C, T, F] : ~[C] { true => T ; ? => F }
 
 EOF
 
-%a(href=metafunc.html) previous | " | " | %a(href=operators.html) next
+%a(href=metafunc.html) previous | " | " | %a(href=index.html) up | " | " | %a(href=operators.html) next

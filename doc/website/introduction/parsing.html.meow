@@ -36,4 +36,4 @@ Grammar        <- Addition+
 // }
 EOF
 
-%a(href=operators.html) previous
+%a(href=operators.html) previous | " | " | %a(href=index.html) up 

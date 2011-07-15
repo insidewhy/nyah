@@ -34,4 +34,4 @@ head {
     }
 EOF
 
-%a(href=classes.html) previous | " | " | %a(href=metafunc.html) next
+%a(href=classes.html) previous | " | " | %a(href=index.html) up | " | " | %a(href=metafunc.html) next

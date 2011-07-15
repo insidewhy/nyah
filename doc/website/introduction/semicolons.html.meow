@@ -20,4 +20,4 @@ head {
         + 3
 EOF
 
-%a(href=variables.html) previous | " | " | %a(href=control.html) next
+%a(href=variables.html) previous | " | " | %a(href=index.html) up | " | " | %a(href=control.html) next

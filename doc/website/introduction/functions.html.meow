@@ -100,4 +100,4 @@ EOF
     assert(fun_ptr c == fun_ptr(c))
 EOF
 
-%a(href=control.html) previous | " | " | %a(href=arrays.html) next
+%a(href=control.html) previous | " | " | %a(href=index.html) up | " | " | %a(href=arrays.html) next
