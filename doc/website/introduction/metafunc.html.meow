@@ -114,7 +114,7 @@ EOF
 
     // the following meta-functions are equivalent to the above.
     meta is_friendly[:animal] : true
-    meta is_same[:animal, animal] : true
+    meta is_same[:animal, :animal] : true
     meta is_same[:animal, T] : false
 EOF
 
