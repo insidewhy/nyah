@@ -103,7 +103,7 @@ EOF
     meta same[?A, ?A] : true
 EOF
 
-%p Meta-functions can be defined inside a class. This is identical to defining the meta-function outside of a class with a first argument &ldquo;this&rdquo; which matches the type of the class.
+%p Meta-functions can be defined inside a class. This is identical to defining the meta-function outside of a class with a first type argument which matches the type of the class. Inside the meta-function argument list &ldquo;:this&rdquo; can be used to refer to the type of the class.
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     class animal {
