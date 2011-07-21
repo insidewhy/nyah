@@ -225,8 +225,8 @@ class MyInt(value:int = 0) : int(value) {
 }
 
 i2 := MyInt(2)
-bd := i2 + 6 + 7 // INVALID: In (i2 + 6) + 7, + has operator precedence -2
-                 //          In 6 + 7, + has operator precedence -3
+bd := i2 + 6 + 7 // INVALID: In (i2 + 6) + 7, + has operator precedence 5
+                 //          In 6 + 7, + has operator precedence 3
 
 bd := (i2 + 6) + 7 // Fine, used parentheses to resolve ambiguity.
 gd := i2 * 6 * 7

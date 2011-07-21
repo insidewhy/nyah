@@ -66,17 +66,23 @@ prinln(string_desc(1, false)) // print "2 different"
 prinln(string_desc(1, 1, 1, 1)) // print ">2 same"
 // prinln(string_desc()) // no matches.. compiler error
 
-// You can specify the return types of matches if you want:
+// Return types of matches and match functions can be specified.
 def~ simple_desc(...a):string {
     ?    => "single"
     ?, ? => 1  // error: type does not match return type.
+}
+
+def voidstr(a):string {
+    return ~(a):string {
+        void => "void"
+        ?    => "non-void"
+    }
 }
 
 // Match objects can work as meta-functions that accept types rather than
 // actual variables using the ~[...] form. In this case the type is always
 // returned at compile time in place of the match.
 meta if[C, T, F] : ~[C] { true => T ; ? => F }
-
 EOF
 
 %a(href=metafunc.html) previous | " | " | %a(href=index.html) up | " | " | %a(href=operators.html) next

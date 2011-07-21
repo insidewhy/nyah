@@ -11,7 +11,7 @@ include "c_string.lang"
 
 (keyword,normal,classname) = `(\<(?:class|trait))([[:blank:]]+)([$[:alnum:]_]+)`
 
-keyword = "abstract|case|catch|class|def|meta",
+keyword = "abstract|case|catch|class|default|def|meta",
           "do|else|extends|false|final",
           "finally|for|forSome|if|implicit",
           "import|lazy|match|new|null",
@@ -21,7 +21,7 @@ keyword = "abstract|case|catch|class|def|meta",
           "while|with|yield|virtual|pure",
           "_|:|=>|=|<-|<:|<%|>:|#|@"
 
-type = "int|byte|bool|const|char|long|float|double|short|void|string|variant"
+type = "int|uint|byte|bool|const|char|long|float|double|short|void|string|variant"
 
 include "symbols.lang"
 

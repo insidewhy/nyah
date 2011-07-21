@@ -28,4 +28,17 @@ head {
     v_heap_ref :& = v_heap
 EOF
 
+%p &ldquo;default&rdquo; is a keyword in nyah. When used on the right-hand side of an expression it is equivalent to default constructing the type on the left-hand side unless this type is numeric in which case it is equivalent to 0.
+
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
+    // v = 0
+    v:int = default
+
+    // v2 = false
+    v2:bool = default
+
+    // same as vec := vector[int]
+    vec:vector[int] = default
+EOF
+
 %a(href=index.html) previous | " | " | %a(href=semicolons.html) next

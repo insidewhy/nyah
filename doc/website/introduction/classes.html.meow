@@ -75,12 +75,42 @@ EOF
 
     // shorthand for the above
     class simplest_pair(public first, public second)
+EOF
 
+%p Before introducing further meta-programming concepts a useful property of void variables will be discussed. In nyah a variable may be given type &ldquo;void&rdquo;. Such variables can only be assigned to from void itself or another void variable. Variables with void type will not be stored at all within output programs; they are present to serve useful meta-programming idioms.
+
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
+    empty := void
+
+    // can re-assign from void
+    empty = void
+
+    // this is identical to writing nonexistant := void
+    nonexistant : void
+
+    // can assign to void from other void variables.
+    nonexistant = empty
+
+    // this is permitted
+    nollo:void = default
+EOF
+
+%p void types can be used together with default arguments to allow specification of a pair which can store 0, 1 or 2 attributes.
+
+%code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     // Allow 0, 1 or 2 arguments to be specified in the constructor.
-    class simple_pair2[T1, T2](public first:T1 = T1(), public second:T2 = T2())
+    class simple_pair2[T1 = void, T2 = void](
+        public first:T1 = T1(), public second:T2 = T2())
 
-    // Simpler
-    class simplest_pair2(public first:?T1 = T1(), public second:?T2 = T2())
+    // Simpler still.
+    class simplest_pair2(public first = default, public second = default)
+
+    // p1 will not be stored at all within the output binary as it only has
+    // void members. Can't do much with it.
+    p1 := simplest_pair2()
+
+    p2 := simplest_pair2(1)
+    p3 := simplest_pair2(1, "hey")
 EOF
 
 %a(href=arrays.html) previous | " | " | %a(href=index.html) up | " | " | %a(href=variadic.html) next
