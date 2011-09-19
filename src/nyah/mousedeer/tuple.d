@@ -7,11 +7,13 @@ private template Attributes(E...) {
 class is_tuple {}
 
 class tuple(T...) : is_tuple {
-    Attributes!(T) value;
+    alias Attributes!(T) values_t;
 
     this(T t) {
         value = t;
     }
+
+    values_t value;
 }
 
 auto ref get(int I, T : is_tuple)(T tup) {

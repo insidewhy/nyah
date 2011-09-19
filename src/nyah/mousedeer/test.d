@@ -1,4 +1,4 @@
-module mousedeer.parser;
+module mousedeer.test;
 
 import mousedeer.tuple;
 import mousedeer.io;
@@ -11,7 +11,13 @@ void test() {
     println(t1, "baby");
     println(make_tuple("congo"), "baby");
 
-    int[] v;
+    vector!(int) v;
     v.push_back(2).push_back(3);
     println(v);
+}
+
+import teg.stream;
+
+void testParser() {
+    auto s = new stream("baby kitten");
 }

@@ -5,59 +5,64 @@ import std.stdio;
 
 immutable INDENT_STR = "    ";
 
-private void print_indent(int indent) {
-    for (int i = 0; i < indent; ++i) write(INDENT_STR);
+private void print_indent(S)(S stream, int indent) {
+    for (int i = 0; i < indent; ++i) stream.write(INDENT_STR);
 }
 
-private void _print(H)(int indent, H h) {
+private void _print(S, H)(S stream, int indent, H h) {
     static if (is(H : is_tuple)) {
-        write("(\n");
-        print_indent(indent + 1);
-        print_indented(indent + 1, h.value[0]);
+        stream.write("(\n");
+        print_indent(stream, indent + 1);
+        print_indented(stream, indent + 1, h.value[0]);
         foreach(value; h.value[1..$]) {
-            write(",\n");
-            print_indent(indent + 1);
-            print_indented(indent + 1, value);
+            stream.write(",\n");
+            print_indent(stream, indent + 1);
+            print_indented(stream, indent + 1, value);
         }
-        writeln();
-        print_indent(indent);
-        write(')');
+        stream.writeln();
+        print_indent(stream, indent);
+        stream.write(')');
     }
     else static if (is(H : string)) {
-        write(h);
+        stream.write(h);
     }
     else static if (std.traits.isArray!(H)) {
-        write("[\n");
-        print_indent(indent + 1);
-        print_indented(indent + 1, h[0]);
+        stream.write("[\n");
+        print_indent(stream, indent + 1);
+        print_indented(stream, indent + 1, h[0]);
         foreach(value; h[1..$]) {
-            write(",\n");
-            print_indent(indent + 1);
-            print_indented(indent + 1, value);
+            stream.write(",\n");
+            print_indent(stream, indent + 1);
+            print_indented(stream, indent + 1, value);
         }
 
-        writeln();
-        print_indent(indent);
-        write(']');
+        stream.writeln();
+        print_indent(stream, indent);
+        stream.write(']');
     }
-    else write(h);
+    else stream.write(h);
 }
 
-private void print_tail(H, T...)(int indent, H h, T t) {
-    write(' ');
-    _print(indent, h);
-    print_tail(indent, t);
+private void print_tail(S, H, T...)(S stream, int indent, H h, T t) {
+    stream.write(' ');
+    _print(stream, indent, h);
+    print_tail(stream, indent, t);
 }
 
-private void print_tail()(int indent) {}
+private void print_tail(S)(S stream, int indent) {}
 
-void print_indented(H, T...)(int indent, H h, T t) {
-    _print(indent, h);
-    print_tail(indent, t);
+void print_indented(S, H, T...)(S stream, int indent, H h, T t) {
+    _print(stream, indent, h);
+    print_tail(stream, indent, t);
 }
 
+void print_indented(H...)(int indent, H h) {
+    print_indented(stdout, h);
+}
+
+// todo: check if first argument is stream or not
 void print(T...)(T t) {
-    print_indented(0, t);
+    print_indented(stdout, 0, t);
 }
 
 void println(T...)(T t) {
