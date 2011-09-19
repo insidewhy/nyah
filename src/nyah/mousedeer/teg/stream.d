@@ -4,7 +4,9 @@ import std.stream;
 
 class stream {
     void set_data(string data) { data_ = data; }
-    char current() const { return data_[idx_]; }
+    char front() const { return data_[idx_]; }
+    size_t length() const { return data_.length - idx_; }
+    char opIndex(size_t idx) const { return data_[idx_ + idx]; }
 
     void advance() {
         if (++idx_ >= data_.length) idx_ = data_.length;

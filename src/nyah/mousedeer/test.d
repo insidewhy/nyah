@@ -17,7 +17,12 @@ void test() {
 }
 
 import teg.stream;
+import teg.char_;
 
 void testParser() {
     auto s = new stream("baby kitten");
+
+    alias char_!("baby") babystr;
+    println(babystr.skip(s));
+    println(s.front());
 }
