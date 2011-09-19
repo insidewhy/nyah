@@ -1,0 +1,30 @@
+namespace org.nyah.mousedeer {
+
+using SC = System.Console;
+
+variant Bum {
+    | Node { b: Bum }
+    | Null
+
+    override public ToString():string {
+        "bum bum"
+    }
+}
+
+class MouseDeer {
+    public static Main() : void {
+        def conk['a](a:'a) : void {
+            def res = match (a) {
+              | _ => "double tuple"
+            }
+            SC.WriteLine($"conk $a $res")
+        }
+
+        conk(14);
+        conk("hey baby");
+
+        System.Console.WriteLine("oh baby")
+    }
+}
+
+} // end namespace

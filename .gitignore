@@ -1,6 +1,7 @@
 src/.obj
 src/Makefile
-src/nyah/.obj
+src/nyah/mousedeer/mousedeer
+.obj
 src/nyah/Makefile
 doc/website/*.html
 doc/website/*/*.html
