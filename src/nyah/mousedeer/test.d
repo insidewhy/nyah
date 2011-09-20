@@ -16,13 +16,16 @@ void test() {
     println(v);
 }
 
-import teg.stream;
-import teg.char_;
+import teg.all;
 
 void testParser() {
-    auto s = new stream("baby kitten");
+    alias many_range!(char_from!"\n\t ") whitespace;
+    auto s = new stream!(whitespace)("baby kitten friend");
 
-    alias char_!("baby") babystr;
-    println(babystr.skip(s));
+    alias sequence!(char_!"baby", char_!"kitten") seq;
+
+    println(seq.skip(s));
+    println(s.front());
+    s.skip_whitespace();
     println(s.front());
 }

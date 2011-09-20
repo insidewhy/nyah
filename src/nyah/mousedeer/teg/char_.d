@@ -1,9 +1,9 @@
 module teg.char_;
 
-import teg.stream;
+class char_(string T) {
+    alias void store_t;
 
-template char_(string T) {
-    static bool match(stream s) {
+    static bool match(S)(S s) {
         if (s.length() < T.length) return false;
 
         for (auto i = 0u; i < T.length; ++i)
@@ -12,7 +12,7 @@ template char_(string T) {
         return true;
     }
 
-    static bool skip(stream s) {
+    static bool skip(S)(S s) {
         if (match(s)) {
             s.advance(T.length);
             return true;
