@@ -5,7 +5,6 @@ import std.stream;
 class basic_stream {
     bool empty() const { return idx_ >= data_.length; }
     void reset() { idx_ = 0u; }
-    void set_data(string data) { reset(); data_ = data; }
     char front() const { return data_[idx_]; }
     size_t length() const { return data_.length - idx_; }
     char opIndex(size_t idx) const { return data_[idx_ + idx]; }
@@ -21,16 +20,22 @@ class basic_stream {
         if (idx_ > data_.length) idx_ = data_.length;
     }
 
+    auto opAssign(string data) {
+        reset();
+        data_ = data;
+        return this;
+    }
+
     size_t idx() const { return idx_; }
     size_t save() const { return idx_; }
     void restore(size_t idx) { idx_ = idx; }
 
-    this(string data) { set_data(data); }
+    this(string data) { this = data; }
     this() {}
 
   protected:
     string data_;
-    size_t idx_ = 0;
+    size_t idx_;
 }
 
 class basic_file_stream : basic_stream {

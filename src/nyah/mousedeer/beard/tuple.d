@@ -1,4 +1,4 @@
-module mousedeer.tuple;
+module beard.tuple;
 
 private template Attributes(E...) {
     alias E Attributes;

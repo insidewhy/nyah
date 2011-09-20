@@ -1,6 +1,6 @@
 module mousedeer.io;
 
-import mousedeer.tuple;
+import beard.tuple;
 import std.stdio;
 
 immutable INDENT_STR = "    ";

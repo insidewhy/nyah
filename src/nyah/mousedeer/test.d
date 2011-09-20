@@ -1,6 +1,6 @@
 module mousedeer.test;
 
-import mousedeer.tuple;
+import beard.tuple;
 import mousedeer.io;
 
 import std.stdio;
@@ -30,15 +30,23 @@ void parseTest(P, S)(string name, S s) {
 }
 
 void testParser() {
+    alias char_not_from!"\n\t " non_whitespace;
     alias many!(char_from!"\n\t ") whitespace;
     auto s = new stream!whitespace("baby kitten friend");
 
     alias sequence!(char_!"baby", char_!"kitten") seq;
     println(seq.skip(s));
 
-    alias many_plus!(char_not_from!" ") word;
+    alias many_plus!non_whitespace word;
     parseTest!(word)("word", s);
 
     alias many_plus!word words;
     parseTest!(words)("words", s);
+
+    alias sequence!(char_!"var", word) vardef1;
+    s = "var friend";
+
+    auto pars = new vardef1();
+    // pars.value_type blah;
+    // parseTest!(vardef1)("sequence", s);
 }
