@@ -4,20 +4,26 @@ import teg.detail.parser;
 import teg.stores;
 
 import beard.meta;
+import beard.tuple;
 
 import std.typetuple;
 
-private template combineStorage(T, U) {
-    static if (is(U:void))
-        alias T combineStorage;
-    else static if (is(T:void))
-        alias U combineStorage;
+private template flattenAppend(alias T, U) {
+    static if (is(U : void))
+        alias T flattenAppend;
+    else static if (is(U : is_tuple))
+        alias TL!(T.values_t, U.values_t) flattenAppend;
     else
-        alias void combineStorage;
+        alias TL!(T.values_t, U) flattenAppend;
 }
 
 private template sequenceStorage(T...) {
-    alias foldLeft!(combineStorage, void, T)  sequenceStorage;
+    static if (T.length == 0)
+        alias void sequenceStorage;
+    else static if (T.length == 1)
+        alias T[0] sequenceStorage;
+    else
+        alias tuple!T sequenceStorage;
 }
 
 // This sequence accepts an arguments on whether to skip whitespace between
@@ -26,7 +32,14 @@ class sequence(bool SkipWs, T...) {
     mixin whitespace_skipper;
     mixin storing_parser;
 
-    alias sequenceStorage!(staticMap!(stores, T))  value_type;
+    private alias sequenceStorage!(
+        foldLeft!(
+            flattenAppend, TL!(), staticMap!(stores, T)).values_t)
+    value_type;
+
+    // private alias
+    //     foldLeft2!(makeIdxStorer, idxContext!(-1, void), T).parser  storers;
+
     static if (! is(value_type : void))
         value_type value_;
 
@@ -47,6 +60,11 @@ class sequence(bool SkipWs, T...) {
     }
 
     static bool skip(S, O)(S s, ref O o) {
+        // todo: store that mother fucker
+        foreach (p, idx; T) {
+        }
+
+        return false;
     }
 }
 

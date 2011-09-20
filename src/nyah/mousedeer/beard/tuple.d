@@ -1,13 +1,12 @@
 module beard.tuple;
 
-private template Attributes(E...) {
-    alias E Attributes;
-}
+import beard.meta;
+import std.typetuple;
 
 class is_tuple {}
 
 class tuple(T...) : is_tuple {
-    alias Attributes!(T) values_t;
+    alias TypeTuple!(T) values_t;
 
     this(T t) {
         value = t;
