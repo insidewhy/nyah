@@ -5,7 +5,7 @@ import std.typetuple;
 
 // like TupleList but packs everything into one type
 template TL(T...) {
-    alias TypeTuple!(T) values_t;
+    alias TypeTuple!(T) types;
 }
 
 private template foldLeft(alias F, alias A) {

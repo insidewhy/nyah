@@ -12,9 +12,9 @@ private template flattenAppend(alias T, U) {
     static if (is(U : void))
         alias T flattenAppend;
     else static if (is(U : is_tuple))
-        alias TL!(T.values_t, U.values_t) flattenAppend;
+        alias TL!(T.types, U.types) flattenAppend;
     else
-        alias TL!(T.values_t, U) flattenAppend;
+        alias TL!(T.types, U) flattenAppend;
 }
 
 private template sequenceStorage(T...) {
@@ -33,7 +33,7 @@ private template makeIdxStorer(alias T, U) {
     static if (is(U : void))
         alias T makeIdxStorer;
     else
-        alias TL!( T.values_t[0], T.values_t[1] + 1 ) makeIdxStorer;
+        alias TL!( T.types[0], T.types[1] + 1 ) makeIdxStorer;
 }
 
 // This sequence accepts an arguments on whether to skip whitespace between
@@ -45,10 +45,10 @@ class sequence(bool SkipWs, T...) {
     private alias staticMap!(stores, T)  substores;
 
     private alias sequenceStorage!(
-        foldLeft!(flattenAppend, TL!(), substores).values_t) value_type;
+        foldLeft!(flattenAppend, TL!(), substores).types) value_type;
 
     alias foldLeft!(
-        makeIdxStorer, TL!(string, -1), substores).values_t[0] subparsers;
+        makeIdxStorer, TL!(string, 0), substores).types[0] subparsers;
 
     static if (! is(value_type : void))
         value_type value_;

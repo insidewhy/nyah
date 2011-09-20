@@ -6,13 +6,13 @@ import std.typetuple;
 class is_tuple {}
 
 class tuple(T...) : is_tuple {
-    alias TypeTuple!(T) values_t;
+    alias TypeTuple!(T) types;
 
     this(T t) {
         value = t;
     }
 
-    values_t value;
+    types value;
 }
 
 auto ref get(int I, T : is_tuple)(T tup) {
