@@ -2,7 +2,16 @@ module teg.detail.parser;
 
 import teg.sequence;
 
+template whitespace_skipper(T...) {
+    // optionally skip whitespace depending on available template parameter
+    static void skip_whitespace(S)(S s) {
+        static if (SkipWs) s.skip_whitespace();
+    }
+}
+
 template parser(T...) {
+    mixin whitespace_skipper!(T);
+
     static if (T.length > 1)
         alias sequence!T subparser;
     else

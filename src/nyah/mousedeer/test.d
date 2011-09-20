@@ -30,15 +30,15 @@ void parseTest(P, S)(string name, S s) {
 }
 
 void testParser() {
-    alias many_range!(char_from!"\n\t ") whitespace;
+    alias many!(char_from!"\n\t ") whitespace;
     auto s = new stream!whitespace("baby kitten friend");
 
     alias sequence!(char_!"baby", char_!"kitten") seq;
     println(seq.skip(s));
 
-    alias many_plus_range!(char_not_from!" ") word;
+    alias many_plus!(char_not_from!" ") word;
     parseTest!(word)("word", s);
 
-    alias many_plus_list!word words;
+    alias many_plus!word words;
     parseTest!(words)("words", s);
 }

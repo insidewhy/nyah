@@ -1,12 +1,16 @@
 module teg.sequence;
 
+import teg.detail.parser;
+
 private class _sequence(bool SkipWs, T...) {
+    mixin whitespace_skipper!(T);
+
     static bool skip(S)(S s) {
         if (! T[0].skip(s)) return false;
 
         auto save = s.save();
         foreach (p; T[1..$]) {
-            s.skip_whitespace();
+            skip_whitespace(s);
 
             if (s.empty() || ! p.skip(s)) {
                 s.restore(save);

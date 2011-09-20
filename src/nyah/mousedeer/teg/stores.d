@@ -23,3 +23,10 @@ template stores(T) {
 template stores(T...) if (T.length > 1) {
     mixin stores!(sequence!T);
 }
+
+template stores_char(T...) {
+    static if (is(stores!(T) : char))
+        immutable stores_char = true;
+    else
+        immutable stores_char = false;
+}

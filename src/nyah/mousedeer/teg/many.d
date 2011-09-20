@@ -5,27 +5,25 @@ import teg.range;
 import teg.detail.parser;
 import teg.stores;
 
-import std.stdio;
+import std.traits : Select;
 
 private class _many(bool SkipWs, bool AtLeastOne, T...) {
     mixin parser!T;
 
-    static if (SkipWs) {
+    static if (SkipWs)
         vector!(stores!subparser) value_;
-    }
-    else {
+    else
         range value_;
-    }
 
     static bool skip(S)(S s) {
         if (AtLeastOne) {
             if (! subparser.skip(s)) return false;
-            if (SkipWs) s.skip_whitespace();
+            skip_whitespace(s);
             if (s.empty()) return true;
         }
 
         while (subparser.skip(s)) {
-            if (SkipWs) s.skip_whitespace();
+            skip_whitespace(s);
             if (s.empty()) break;
         };
         return true;
@@ -36,12 +34,12 @@ private class _many(bool SkipWs, bool AtLeastOne, T...) {
 
         if (AtLeastOne) {
             _skip(s, o);
-            static if (SkipWs) s.skip_whitespace();
+            skip_whitespace(s);
             if (s.empty()) return true;
         }
 
         while (_skip(s, o)) {
-            static if (SkipWs) s.skip_whitespace();
+            skip_whitespace(s);
             if (s.empty()) break;
         };
 
@@ -68,10 +66,7 @@ class many_list(T...)  : _many!(true, false, T) {}
 class many_plus_range(T...) : _many!(false, true, T) {}
 class many_plus_list(T...)  : _many!(true, true, T) {}
 
-class many(T...) {
-    // if subparser stores char then range else list
-}
+class many(T...) : Select!(stores_char!T, many_range!T, many_list!T) {}
 
-class many_plus(T...) {
-    // if subparser stores char then range else list
-}
+class many_plus(T...)
+    : Select!(stores_char!T, many_plus_range!T, many_plus_list!T) {}
