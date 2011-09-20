@@ -6,5 +6,5 @@ public import teg.char_from;
 public import teg.sequence;
 public import teg.parse;
 public import teg.range;
-public import teg.store;
 public import teg.many;
+public import teg.stores;
