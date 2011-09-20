@@ -4,15 +4,15 @@ import teg.detail.parser;
 import teg.stores;
 
 import beard.meta;
-import beard.tuple;
 
 import std.typetuple;
+import std.typecons;
 
 private template flattenAppend(alias T, U) {
     static if (is(U : void))
         alias T flattenAppend;
-    else static if (is(U : is_tuple))
-        alias TL!(T.types, U.types) flattenAppend;
+    else static if (isTuple!(U))
+        alias TL!(T.types, U.Types) flattenAppend;
     else
         alias TL!(T.types, U) flattenAppend;
 }
@@ -23,7 +23,7 @@ private template sequenceStorage(T...) {
     else static if (T.length == 1)
         alias T[0] sequenceStorage;
     else
-        alias tuple!T sequenceStorage;
+        alias Tuple!T sequenceStorage;
 }
 
 private template storeAtIdx(int idx, S) {

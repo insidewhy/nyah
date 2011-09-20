@@ -1,6 +1,5 @@
 module beard.meta;
 
-import beard.tuple;
 import std.typetuple;
 
 // like TupleList but packs everything into one type

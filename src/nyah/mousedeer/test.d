@@ -1,18 +1,16 @@
 module mousedeer.test;
 
-import beard.tuple;
 import mousedeer.io;
-
+import teg.all;
+import std.typecons;
 import std.stdio;
 
-import teg.all;
-
 void testTupleAndVector() {
-    auto t1 = make_tuple(1, "congo", false);
-    get!(1)(t1) = "sando";
+    auto t1 = tuple(1, "congo", false);
+    t1[1] = "sando";
 
     println(t1, "baby");
-    println(make_tuple("congo"), "baby");
+    println(tuple("congo"), "baby");
 
     vector!(int) v;
     v.push_back(2).push_back(3);
@@ -46,7 +44,7 @@ void testParser() {
     // new data
     s = "var friend";
 
-    alias sequence!(char_!"var", word) vardef1;
+    alias sequence!(char_!"var", word, word) vardef1;
     parseTest!(vardef1)("sequence", s);
 
     // auto v = new sequence!(vardef1, vardef1)();

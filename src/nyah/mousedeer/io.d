@@ -1,7 +1,7 @@
 module mousedeer.io;
 
-import beard.tuple;
 import std.stdio;
+import std.typecons;
 
 immutable INDENT_STR = "    ";
 
@@ -10,11 +10,11 @@ private void print_indent(S)(S stream, int indent) {
 }
 
 private void _print(S, H)(S stream, int indent, H h) {
-    static if (is(H : is_tuple)) {
+    static if (isTuple!(H)) {
         stream.write("(\n");
         print_indent(stream, indent + 1);
-        print_indented(stream, indent + 1, h.value[0]);
-        foreach(value; h.value[1..$]) {
+        print_indented(stream, indent + 1, h[0]);
+        foreach(value; h[1..$]) {
             stream.write(",\n");
             print_indent(stream, indent + 1);
             print_indented(stream, indent + 1, value);
