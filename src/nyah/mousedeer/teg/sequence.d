@@ -2,7 +2,9 @@ module teg.sequence;
 
 import teg.detail.parser;
 
-private class _sequence(bool SkipWs, T...) {
+// This sequence accepts an arguments on whether to skip whitespace between
+// parsers in the sequence.
+class sequence(bool SkipWs, T...) {
     mixin whitespace_skipper!(T);
 
     static bool skip(S)(S s) {
@@ -22,6 +24,6 @@ private class _sequence(bool SkipWs, T...) {
     }
 }
 
-class sequence(T...) if (T.length > 1) : _sequence!(true, T) {}
+class sequence(T...) if (T.length > 1) : sequence!(true, T) {}
 
 class sequence(T) : T {}
