@@ -9,7 +9,9 @@ template parser(T...) {
         alias T[0] subparser;
 
     bool parse(S)(S s) {
-        value_ = new typeof(value_);
+        static if (__traits(compiles, new typeof(value_)))
+            value_ = new typeof(value_);
+
         return skip(s, value_);
     }
 }

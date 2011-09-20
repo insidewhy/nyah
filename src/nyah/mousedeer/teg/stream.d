@@ -13,12 +13,12 @@ class basic_stream {
     string sub(size_t beg, size_t end) { return data_[beg..end]; }
 
     void advance() {
-        if (++idx_ >= data_.length) idx_ = data_.length;
+        if (++idx_ > data_.length) idx_ = data_.length;
     }
 
     void advance(size_t offset) {
         idx_ += offset;
-        if (idx_ >= data_.length) idx_ = data_.length;
+        if (idx_ > data_.length) idx_ = data_.length;
     }
 
     size_t idx() const { return idx_; }
@@ -47,7 +47,7 @@ class basic_file_stream : basic_stream {
 
 private class _stream(W, P) : P {
     void skip_whitespace() {
-        W.skip(this);
+        if (! empty()) W.skip(this);
     }
 
     this(string str) { super(str); }

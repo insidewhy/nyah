@@ -1,6 +1,6 @@
 module teg.sequence;
 
-class sequence(T...) if (T.length > 1) {
+private class _sequence(bool SkipWs, T...) {
     static bool skip(S)(S s) {
         if (! T[0].skip(s)) return false;
 
@@ -17,5 +17,7 @@ class sequence(T...) if (T.length > 1) {
         return true;
     }
 }
+
+class sequence(T...) if (T.length > 1) : _sequence!(true, T) {}
 
 class sequence(T) : T {}

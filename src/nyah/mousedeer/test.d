@@ -19,23 +19,26 @@ void testTupleAndVector() {
     println(v);
 }
 
+void parseTest(P, S)(string name, S s) {
+    s.reset();
+    auto parser = new P();
+    write(name, ": ");
+    if (parser.parse(s))
+        println(parser.value_);
+    else
+        println("failed to store");
+}
 
 void testParser() {
     alias many_range!(char_from!"\n\t ") whitespace;
     auto s = new stream!whitespace("baby kitten friend");
 
     alias sequence!(char_!"baby", char_!"kitten") seq;
-
     println(seq.skip(s));
-    println(s.front());
-    s.skip_whitespace();
-    println(s.front());
 
-    s.reset();
-    alias many_range!(char_not_from!" ") word;
-    auto store_word = new word();
-    if (store_word.parse(s))
-        writefln("stored '%s'", store_word.value_);
-    else
-        println("failed to store word");
+    alias many_plus_range!(char_not_from!" ") word;
+    parseTest!(word)("word", s);
+
+    alias many_plus_list!word words;
+    parseTest!(words)("words", s);
 }

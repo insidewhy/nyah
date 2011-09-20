@@ -32,22 +32,34 @@ private class _many(bool SkipWs, bool AtLeastOne, T...) {
     }
 
     static bool skip(S, O)(S s, ref O o) {
-        static if (! SkipWs) {
-            o.begin(s);
+        static if (! SkipWs) o.parsing(s);
 
-            if (AtLeastOne) {
-                if (! subparser.skip(s)) return false;
-                if (s.empty()) return true;
-            }
-
-            while (subparser.skip(s)) {
-                if (s.empty()) break;
-            };
-
-            o.end();
-            return true;
+        if (AtLeastOne) {
+            _skip(s, o);
+            static if (SkipWs) s.skip_whitespace();
+            if (s.empty()) return true;
         }
-        return false;
+
+        while (_skip(s, o)) {
+            static if (SkipWs) s.skip_whitespace();
+            if (s.empty()) break;
+        };
+
+        static if (! SkipWs) o.parsed();
+        return true;
+    }
+
+    private static bool _skip(S, O)(S s, ref O o) {
+        static if (SkipWs) {
+            subparser sub = new subparser();
+            if (! sub.parse(s)) return false;
+            o.push_back(sub.value_);
+        }
+        else {
+            if (! subparser.skip(s)) return false;
+        }
+
+        return true;
     }
 }
 
