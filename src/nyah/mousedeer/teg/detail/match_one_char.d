@@ -9,3 +9,9 @@ template match_one_char() {
         else return false;
     }
 }
+
+template store_one_char() {
+    mixin match_one_char;
+
+    char value_;
+}

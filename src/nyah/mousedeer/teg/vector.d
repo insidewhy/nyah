@@ -1,4 +1,4 @@
-module mousedeer.vector;
+module teg.vector;
 
 template vector(T) {
     alias T[] vector;

@@ -8,3 +8,4 @@ public import teg.parse;
 public import teg.range;
 public import teg.many;
 public import teg.stores;
+public import teg.vector;

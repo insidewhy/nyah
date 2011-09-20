@@ -2,9 +2,12 @@ module mousedeer.test;
 
 import mousedeer.tuple;
 import mousedeer.io;
-import mousedeer.vector;
 
-void test() {
+import std.stdio;
+
+import teg.all;
+
+void testTupleAndVector() {
     auto t1 = make_tuple(1, "congo", false);
     get!(1)(t1) = "sando";
 
@@ -16,11 +19,10 @@ void test() {
     println(v);
 }
 
-import teg.all;
 
 void testParser() {
     alias many_range!(char_from!"\n\t ") whitespace;
-    auto s = new stream!(whitespace)("baby kitten friend");
+    auto s = new stream!whitespace("baby kitten friend");
 
     alias sequence!(char_!"baby", char_!"kitten") seq;
 
@@ -28,4 +30,12 @@ void testParser() {
     println(s.front());
     s.skip_whitespace();
     println(s.front());
+
+    s.reset();
+    alias many_range!(char_not_from!" ") word;
+    auto store_word = new word();
+    if (store_word.parse(s))
+        writefln("stored '%s'", store_word.value_);
+    else
+        println("failed to store word");
 }

@@ -4,7 +4,7 @@ class sequence(T...) if (T.length > 1) {
     static bool skip(S)(S s) {
         if (! T[0].skip(s)) return false;
 
-        auto save = s.backup();
+        auto save = s.save();
         foreach (p; T[1..$]) {
             s.skip_whitespace();
 
