@@ -26,19 +26,29 @@ private template sequenceStorage(T...) {
         alias tuple!T sequenceStorage;
 }
 
+private template storeAtIdx(int idx, S) {
+}
+
+private template makeIdxStorer(alias T, U) {
+    static if (is(U : void))
+        alias T makeIdxStorer;
+    else
+        alias TL!( T.values_t[0], T.values_t[1] + 1 ) makeIdxStorer;
+}
+
 // This sequence accepts an arguments on whether to skip whitespace between
 // parsers in the sequence.
 class sequence(bool SkipWs, T...) {
     mixin whitespace_skipper;
     mixin storing_parser;
 
-    private alias sequenceStorage!(
-        foldLeft!(
-            flattenAppend, TL!(), staticMap!(stores, T)).values_t)
-    value_type;
+    private alias staticMap!(stores, T)  substores;
 
-    // private alias
-    //     foldLeft2!(makeIdxStorer, idxContext!(-1, void), T).parser  storers;
+    private alias sequenceStorage!(
+        foldLeft!(flattenAppend, TL!(), substores).values_t) value_type;
+
+    alias foldLeft!(
+        makeIdxStorer, TL!(string, -1), substores).values_t[0] subparsers;
 
     static if (! is(value_type : void))
         value_type value_;
