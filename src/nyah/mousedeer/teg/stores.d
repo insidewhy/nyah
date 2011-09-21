@@ -25,8 +25,5 @@ template stores(T...) if (T.length > 1) {
 }
 
 template stores_char(T...) {
-    static if (is(stores!(T) : char))
-        immutable stores_char = true;
-    else
-        immutable stores_char = false;
+    immutable stores_char = is(stores!(T) : char);
 }

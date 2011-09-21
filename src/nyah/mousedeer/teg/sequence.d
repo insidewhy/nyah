@@ -11,10 +11,10 @@ import std.typecons;
 private template flattenAppend(alias T, U) {
     static if (is(U : void))
         alias T flattenAppend;
-    else static if (isTuple!(U))
-        alias TL!(T.types, U.Types) flattenAppend;
+    else static if (isTuple!U)
+        alias T.append!(U.Types) flattenAppend;
     else
-        alias TL!(T.types, U) flattenAppend;
+        alias T.append!U flattenAppend;
 }
 
 private template sequenceStorage(T...) {
@@ -26,12 +26,16 @@ private template sequenceStorage(T...) {
         alias Tuple!T sequenceStorage;
 }
 
-private template storeAtIdx(int idx, S) {
+private template storeAtIdx(int idx) {
+    bool exec(S)(S s) {
+    }
 }
 
 private template makeIdxStorer(alias T, U) {
-    static if (is(U : void))
+    static if (is(stores!U : void))
         alias T makeIdxStorer;
+    else static if (isTuple!(stores!U))
+        alias T makeIdxStorer; // todo: fix
     else
         alias TL!( T.types[0], T.types[1] + 1 ) makeIdxStorer;
 }
@@ -48,7 +52,7 @@ class sequence(bool SkipWs, T...) {
         foldLeft!(flattenAppend, TL!(), substores).types) value_type;
 
     alias foldLeft!(
-        makeIdxStorer, TL!(string, 0), substores).types[0] subparsers;
+        makeIdxStorer, TL!(TL!(), 0), T).types[0] subparsers;
 
     static if (! is(value_type : void))
         value_type value_;

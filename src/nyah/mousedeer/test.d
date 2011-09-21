@@ -44,9 +44,10 @@ void testParser() {
     // new data
     s = "var friend";
 
-    alias sequence!(char_!"var", word, word) vardef1;
+    alias sequence!(char_!"var", word) vardef1;
     parseTest!(vardef1)("sequence", s);
 
     // auto v = new sequence!(vardef1, vardef1)();
     // println(typeid(v.value_type).name);
+    // println(v.value_);
 }
