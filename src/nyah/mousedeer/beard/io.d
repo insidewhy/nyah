@@ -1,4 +1,4 @@
-module mousedeer.io;
+module beard.io;
 
 import std.stdio;
 import std.typecons;

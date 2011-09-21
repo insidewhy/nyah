@@ -2,6 +2,7 @@ module teg.sequence;
 
 import teg.detail.parser;
 import teg.stores;
+import teg.skip;
 
 import beard.meta;
 
@@ -26,18 +27,29 @@ private template sequenceStorage(T...) {
         alias Tuple!T sequenceStorage;
 }
 
-private template storeAtIdx(int idx) {
-    bool exec(S)(S s) {
+private template storeAtIdx(size_t idx) {
+    bool exec(O, V)(O o, V v) if (isTuple!O) {
+        o[idx] = v;
+    }
+
+    bool exec(O, V)(O o, V v) if (! isTuple!O) {
+        o = v;
     }
 }
 
 private template makeIdxStorer(alias T, U) {
     static if (is(stores!U : void))
-        alias T makeIdxStorer;
+        alias TL!(
+            TL!(T.types[0], skip_!U),
+            T.types[1] )                     makeIdxStorer;
     else static if (isTuple!(stores!U))
-        alias T makeIdxStorer; // todo: fix
+        alias TL!(
+            T.types[0],
+            T.types[1] + (stores!U).length ) makeIdxStorer;
     else
-        alias TL!( T.types[0], T.types[1] + 1 ) makeIdxStorer;
+        alias TL!(
+            TL!(T.types[0], storeAtIdx!(T.types[1])),
+            T.types[1] + 1 )                 makeIdxStorer;
 }
 
 // This sequence accepts an arguments on whether to skip whitespace between
@@ -52,7 +64,7 @@ class sequence(bool SkipWs, T...) {
         foldLeft!(flattenAppend, TL!(), substores).types) value_type;
 
     alias foldLeft!(
-        makeIdxStorer, TL!(TL!(), 0), T).types[0] subparsers;
+        makeIdxStorer, TL!(TL!(), 0u), T).types[0] subparsers;
 
     static if (! is(value_type : void))
         value_type value_;
@@ -75,8 +87,8 @@ class sequence(bool SkipWs, T...) {
 
     static bool skip(S, O)(S s, ref O o) {
         // todo: store that mother fucker
-        foreach (p, idx; T) {
-        }
+        // foreach (p; subparsers) {
+        // }
 
         return false;
     }

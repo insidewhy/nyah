@@ -1,7 +1,7 @@
 module mousedeer.test;
 
-import mousedeer.io;
 import teg.all;
+import beard.io;
 import std.typecons;
 import std.stdio;
 
