@@ -42,7 +42,7 @@ void testParser() {
     parseTest!(words)("words", s);
 
     // new data
-    s = "var friend";
+    s = "var friend baby";
 
     alias sequence!(char_!"var", word) vardef1;
     parseTest!(vardef1)("sequence", s);

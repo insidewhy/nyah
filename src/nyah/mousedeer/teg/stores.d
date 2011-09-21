@@ -3,10 +3,7 @@ module teg.stores;
 import teg.sequence;
 
 template stores_something(T) {
-    static if (is(typeof(T.value_)))
-        immutable stores_something = true;
-    else
-        immutable stores_something = false;
+    immutable stores_something = is(typeof(T.value_));
 }
 
 template stores_something(T...) if (T.length > 1) {

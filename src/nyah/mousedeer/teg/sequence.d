@@ -28,19 +28,21 @@ private template sequenceStorage(T...) {
 }
 
 private template storeAtIdx(size_t idx) {
-    bool exec(O, V)(O o, V v) if (isTuple!O) {
-        o[idx] = v;
+    bool skip(S, O)(S s, O o) if (isTuple!O) {
+        // o[idx] = v;
+        return true;
     }
 
-    bool exec(O, V)(O o, V v) if (! isTuple!O) {
-        o = v;
+    bool skip(S, O)(S s, O o) if (! isTuple!O) {
+        // o = v;
+        return true;
     }
 }
 
 private template makeIdxStorer(alias T, U) {
-    static if (is(stores!U : void))
+    static if (! stores_something!U)
         alias TL!(
-            TL!(T.types[0], skip_!U),
+            TL!(T.types[0].types, skip_!(U)),
             T.types[1] )                     makeIdxStorer;
     else static if (isTuple!(stores!U))
         alias TL!(
@@ -48,7 +50,7 @@ private template makeIdxStorer(alias T, U) {
             T.types[1] + (stores!U).length ) makeIdxStorer;
     else
         alias TL!(
-            TL!(T.types[0], storeAtIdx!(T.types[1])),
+            TL!(T.types[0].types, storeAtIdx!(T.types[1])),
             T.types[1] + 1 )                 makeIdxStorer;
 }
 
@@ -86,11 +88,23 @@ class sequence(bool SkipWs, T...) {
     }
 
     static bool skip(S, O)(S s, ref O o) {
-        // todo: store that mother fucker
-        // foreach (p; subparsers) {
-        // }
+        bool help(size_t pidx)() {
+            if (! subparsers.types[pidx].skip(s, o))
+                return false;
 
-        return false;
+            static if (pidx < subparsers.types.length - 1) {
+                skip_whitespace(s);
+                return help!(pidx + 1);
+            }
+            else return true;
+        }
+
+        auto save = s.save();
+        if (! help!(0)) {
+            s.restore(save);
+            return false;
+        }
+        return true;
     }
 }
 
