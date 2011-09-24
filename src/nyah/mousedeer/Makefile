@@ -1,8 +1,13 @@
-subdirs := . teg teg/detail beard
+subdirs := teg teg/detail beard
 
-mousedeer: $(foreach d,${subdirs},$(wildcard ${d}/*.d))
+libfiles := $(foreach d,${subdirs},$(wildcard ${d}/*.d))
+
+mousedeer: main.d ${libfiles}
 	dmd -debug -g -od.obj -of$@ $^
 
 .PHONY: test
-test: mousedeer
-	./mousedeer
+.obj/test: test.d ${libfiles}
+	dmd -debug -g -od.obj -of$@ $^
+
+test: .obj/test
+	./$<

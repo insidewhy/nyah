@@ -36,13 +36,12 @@ private template sequenceStorage(T...) {
         alias Tuple!T sequenceStorage;
 }
 
-private template parseSeqIdx(size_t idx, P) {
-    bool skip(S, O)(S s, ref O o) if (isTuple!O) {
-        return P.parse(s, o[idx]);
-    }
-
-    bool skip(S, O)(S s, ref O o) if (! isTuple!O) {
-        return P.parse(s, o);
+private struct parseSeqIdx(size_t idx, P) {
+    static bool skip(S, O)(S s, ref O o) {
+        static if (isTuple!O)
+            return P.parse(s, o[idx]);
+        else
+            return P.parse(s, o);
     }
 }
 
