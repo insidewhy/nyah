@@ -25,9 +25,7 @@ void testParser() {
     auto s = new stream!whitespace("var friend = baby");
 
     alias char_not_from!"\n\t " non_whitespace;
-
     alias many_plus!non_whitespace word1;
-
     alias sequence!(char_!"var", word1) vardef1;
 
     parseTest!(vardef1)("sequence", s);
@@ -37,9 +35,6 @@ void testParser() {
 
     s = "var v1\nvar v2";
     parseTest!(many!vardef1)("many list", s);
-    // auto v = new sequence!(vardef1, vardef1)();
-    // println(typeid(v.value_type).name);
-    // println(v.value_);
 }
 
 int main() {

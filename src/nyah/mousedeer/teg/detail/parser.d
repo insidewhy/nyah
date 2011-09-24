@@ -11,7 +11,7 @@ template whitespace_skipper() {
 
 template storing_parser() {
     static bool parse(S, O)(S s, ref O o) {
-        static if (__traits(compiles, new O))
+        static if (is(O : Object))
             o = new O;
 
         return skip(s, o);

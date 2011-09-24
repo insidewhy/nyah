@@ -45,21 +45,18 @@ private struct parseSeqIdx(size_t idx, P) {
     }
 }
 
-// dmd bug on accessing types through [] variadic indexer makes this
-// nasty
-private template makeIdxStorer(alias T, U) {
-    static if (! stores_something!U)
-        alias TL!(
-            TL!(T.types[0].types, skip_!(U)),
-            T.types[1] )                     makeIdxStorer;
-    else static if (isTuple!(stores!U))
-        alias TL!(
-            T.types[0], // not like this
-            T.types[1] + (stores!U).length ) makeIdxStorer;
-    else
-        alias TL!(
-            TL!(T.types[0].types, parseSeqIdx!(T.types[1], U)),
-            T.types[1] + 1 )                 makeIdxStorer;
+template makeIdxStorer(size_t _idx, T...) {
+    enum idx = _idx;
+    alias T types;
+
+    template add(U) {
+        static if (! stores_something!U)
+            alias makeIdxStorer!(idx, types, skip_!(U))                 add;
+        else static if (isTuple!(stores!U))
+            alias makeIdxStorer!(idx + (stores!U).length, types)        add;
+        else
+            alias makeIdxStorer!(idx + 1, types, parseSeqIdx!(idx, U))  add;
+    }
 }
 
 // This sequence accepts an arguments on whether to skip whitespace between
@@ -73,8 +70,7 @@ class sequence(bool SkipWs, T...) {
     private alias sequenceStorage!(
         foldLeft!(flattenAppend, TL!(), substores).types) value_type;
 
-    alias foldLeft!(
-        makeIdxStorer, TL!(TL!(), 0u), T).types[0] subparsers;
+    alias foldLeft2!(makeIdxStorer!0u, T).types subparsers;
 
     static if (! is(value_type : void))
         value_type value_;
@@ -97,10 +93,10 @@ class sequence(bool SkipWs, T...) {
 
     static bool skip(S, O)(S s, ref O o) {
         bool help(size_t pidx)() {
-            if (! subparsers.types[pidx].skip(s, o))
+            if (! subparsers[pidx].skip(s, o))
                 return false;
 
-            static if (pidx < subparsers.types.length - 1) {
+            static if (pidx < subparsers.length - 1) {
                 skip_whitespace(s);
                 return help!(pidx + 1);
             }
