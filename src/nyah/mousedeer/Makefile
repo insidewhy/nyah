@@ -1,7 +1,7 @@
 .PHONY: test clean default
 
 O := .obj
-compile_with_gdc := 1
+# compile_with_gdc := 1
 debug := 1
 
 subdirs := teg teg/detail beard

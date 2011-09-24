@@ -44,21 +44,14 @@ void testParser() {
     parseTest!(store_range!(variable1))("store range", s);
 
     s = "hey-baby - boy";
-    parseTest!(joined!(char_!"-", identifier1))("joined", s);
+    parseTest!(joined_plus_lexeme!(char_!"-", identifier1))("joined", s);
 
-    s = "function add(a, b) { var a\nvar b } \n function pump(b) { }";
-    // parseTest!(many!(
-    parseTest!(sequence!(
-        char_!"function",
-        identifier1,
-        char_!"(",
-        joined!(char_!",", identifier1),
-        char_!")",
-        char_!"{",
-        many_plus!variable1,
-        identifier1,
-        // char_!"}"
-    ))("joined", s);
+    s = "function add(a, b) { var a1\nvar b1 }\nfunction pump(b) {}";
+    parseTest!(many!(
+        char_!"function", identifier1,
+        char_!"(", joined!(char_!",", identifier1), char_!")",
+        char_!"{", many!variable1, char_!"}"
+    ))("joined 2", s);
 
 }
 
