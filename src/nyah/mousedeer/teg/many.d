@@ -39,16 +39,17 @@ class many(bool SkipWs, bool AtLeastOne, T...) {
                 o.clear();
                 return false;
             }
+            static if (! SkipWs) o.parsed();
             skip_whitespace(s);
             if (s.empty()) return true;
         }
 
         while (_skip(s, o)) {
+            static if (! SkipWs) o.parsed();
             skip_whitespace(s);
             if (s.empty()) break;
         };
 
-        static if (! SkipWs) o.parsed();
         return true;
     }
 

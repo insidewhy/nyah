@@ -33,16 +33,33 @@ void testParser() {
     parseTest!(
         sequence!(char_!"var", word1, char_!"=", word1))("sequence2", s);
 
-    s = "var v1\nvar v2 ";
+    s = "var v1\nvar v2";
     parseTest!(many!vardef1)("many list", s);
 
     alias lexeme!(char_range!"azAZ", many!(char_range!"azAZ09")) identifier1;
 
-    alias sequence!(char_!"var", identifier1) var1;
-    parseTest!(many_plus!var1)("lexeme", s);
+    alias sequence!(char_!"var", identifier1) variable1;
+    parseTest!(many_plus!variable1)("lexeme", s);
 
-    parseTest!(store_range!(var1))("store_range", s);
-    // parseTest!(many_plus!identifier1)("lexeme", s);
+    parseTest!(store_range!(variable1))("store range", s);
+
+    s = "hey-baby - boy";
+    parseTest!(joined!(char_!"-", identifier1))("joined", s);
+
+    s = "function add(a, b) { var a\nvar b } \n function pump(b) { }";
+    // parseTest!(many!(
+    parseTest!(sequence!(
+        char_!"function",
+        identifier1,
+        char_!"(",
+        joined!(char_!",", identifier1),
+        char_!")",
+        char_!"{",
+        many_plus!variable1,
+        identifier1,
+        // char_!"}"
+    ))("joined", s);
+
 }
 
 int main() {
