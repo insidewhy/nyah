@@ -45,8 +45,7 @@ private struct parseSeqIdx(size_t idx, P) {
     }
 }
 
-private template makeIdxStorer(size_t _idx, T...) {
-    enum idx = _idx;
+private template makeIdxStorer(size_t idx, T...) {
     alias T types;
 
     template add(U) {

@@ -4,16 +4,27 @@ import teg.sequence;
 import beard.meta;
 
 import teg.store_range;
+import teg.stores;
 
-private template collapseTextInRange(T...) {
+private template collapseTextInRange(R, T...) {
+    alias TL!(T, R).types types;
+
+    template add(U) {
+        static if (stores_char_or_range!U)
+            alias collapseTextInRange!(R.add!U, T) add;
+        else
+            alias collapseText!(T, R, U) add;
+    }
 }
 
 private template collapseText(T...) {
-    // todo: collapse adjacent char/range parsers
     alias T types;
 
     template add(U) {
-        alias collapseText!(T, U) add;
+        static if (stores_char_or_range!U)
+            alias collapseTextInRange!(store_range!U, T) add;
+        else
+            alias collapseText!(T, U) add;
     }
 }
 

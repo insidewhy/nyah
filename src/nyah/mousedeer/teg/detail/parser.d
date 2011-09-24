@@ -1,6 +1,6 @@
 module teg.detail.parser;
 
-import teg.sequence;
+import teg.sequence : sequence;
 
 template whitespace_skipper() {
     // optionally skip whitespace depending on available template parameter
