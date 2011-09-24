@@ -1,7 +1,6 @@
 module teg.all;
 
 public import teg.stream;
-public import teg.parse;
 public import teg.range;
 public import teg.stores;
 public import teg.vector;
