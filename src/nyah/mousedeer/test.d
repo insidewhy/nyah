@@ -38,7 +38,10 @@ void testParser() {
 
     alias lexeme!(char_range!"azAZ", many!(char_range!"azAZ09")) identifier1;
 
-    parseTest!(many_plus!(sequence!(char_!"var", identifier1)))("lexeme", s);
+    alias sequence!(char_!"var", identifier1) var1;
+    parseTest!(many_plus!var1)("lexeme", s);
+
+    parseTest!(store_range!(var1))("store_range", s);
     // parseTest!(many_plus!identifier1)("lexeme", s);
 }
 

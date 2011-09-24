@@ -3,19 +3,7 @@ module teg.lexeme;
 import teg.sequence;
 import beard.meta;
 
-private class storeRange(T...) {
-    mixin parser!T;
-
-    static bool skip(S, O)(S s, ref O o) {
-        o.parsing(s);
-        if (! subparser.skip(s, o)) {
-            o.reset();
-            return false;
-        }
-        o.parsed();
-        return true;
-    }
-}
+import teg.store_range;
 
 private template collapseTextInRange(T...) {
 }
