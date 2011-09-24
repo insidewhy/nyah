@@ -51,9 +51,14 @@ private template makeIdxStorer(size_t _idx, T...) {
 
     template add(U) {
         static if (! stores_something!U)
-            alias makeIdxStorer!(idx, types, skip_!(U))                 add;
-        else static if (isTuple!(stores!U))
-            alias makeIdxStorer!(idx + (stores!U).length, types)        add;
+            alias makeIdxStorer!(idx, types, skip_!U)                   add;
+        else static if (isTuple!(stores!U)) {
+            static if (idx == 0)
+                alias makeIdxStorer!(idx + (stores!U).length, types, U) add;
+            else
+                // todo: make parser at offset idx
+                alias makeIdxStorer!(idx + (stores!U).length, types)    add;
+        }
         else
             alias makeIdxStorer!(idx + 1, types, parseSeqIdx!(idx, U))  add;
     }
