@@ -10,12 +10,14 @@ template whitespace_skipper() {
 }
 
 template storing_parser() {
-    bool parse(S)(S s) {
-        static if (__traits(compiles, new typeof(value_)))
-            value_ = new typeof(value_);
+    static bool parse(S, O)(S s, ref O o) {
+        static if (__traits(compiles, new O))
+            o = new O;
 
-        return skip(s, value_);
+        return skip(s, o);
     }
+
+    bool parse(S)(S s) { return parse(s, value_); }
 }
 
 template parser(T...) {

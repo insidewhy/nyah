@@ -9,6 +9,15 @@ import beard.meta;
 import std.typetuple;
 import std.typecons;
 
+// used for sequences storing tuples within sequences.
+// if there is a way I can pass variadic alias parameters this can be
+// done more optimally.
+private struct OffsetView(size_t _offset, T) {
+    enum offset = _offset;
+    this(T tup) { tuple_ = &tup; }
+    T *tuple_;
+}
+
 private template flattenAppend(alias T, U) {
     static if (is(U : void))
         alias T flattenAppend;
@@ -27,18 +36,18 @@ private template sequenceStorage(T...) {
         alias Tuple!T sequenceStorage;
 }
 
-private template storeAtIdx(size_t idx) {
-    bool skip(S, O)(S s, O o) if (isTuple!O) {
-        // o[idx] = v;
-        return true;
+private template parseSeqIdx(size_t idx, P) {
+    bool skip(S, O)(S s, ref O o) if (isTuple!O) {
+        return P.parse(s, o[idx]);
     }
 
-    bool skip(S, O)(S s, O o) if (! isTuple!O) {
-        // o = v;
-        return true;
+    bool skip(S, O)(S s, ref O o) if (! isTuple!O) {
+        return P.parse(s, o);
     }
 }
 
+// dmd bug on accessing types through [] variadic indexer makes this
+// nasty
 private template makeIdxStorer(alias T, U) {
     static if (! stores_something!U)
         alias TL!(
@@ -46,11 +55,11 @@ private template makeIdxStorer(alias T, U) {
             T.types[1] )                     makeIdxStorer;
     else static if (isTuple!(stores!U))
         alias TL!(
-            T.types[0],
+            T.types[0], // not like this
             T.types[1] + (stores!U).length ) makeIdxStorer;
     else
         alias TL!(
-            TL!(T.types[0].types, storeAtIdx!(T.types[1])),
+            TL!(T.types[0].types, parseSeqIdx!(T.types[1], U)),
             T.types[1] + 1 )                 makeIdxStorer;
 }
 

@@ -3,7 +3,7 @@ module teg.stores;
 import teg.sequence;
 
 template stores_something(T) {
-    immutable stores_something = is(typeof(T.value_));
+    enum stores_something = is(typeof(T.value_));
 }
 
 template stores_something(T...) if (T.length > 1) {
@@ -22,5 +22,5 @@ template stores(T...) if (T.length > 1) {
 }
 
 template stores_char(T...) {
-    immutable stores_char = is(stores!(T) : char);
+    enum stores_char = is(stores!(T) : char);
 }
