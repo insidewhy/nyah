@@ -33,8 +33,13 @@ void testParser() {
     parseTest!(
         sequence!(char_!"var", word1, char_!"=", word1))("sequence2", s);
 
-    s = "var v1\nvar v2";
+    s = "var v1\nvar v2 ";
     parseTest!(many!vardef1)("many list", s);
+
+    alias lexeme!(char_range!"azAZ", many!(char_range!"azAZ09")) identifier1;
+
+    // parseTest!(many_plus!(sequence!(char_!"var", identifier1)))("lexeme", s);
+    parseTest!(many_plus!identifier1)("lexeme", s);
 }
 
 int main() {

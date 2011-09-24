@@ -45,7 +45,7 @@ private struct parseSeqIdx(size_t idx, P) {
     }
 }
 
-template makeIdxStorer(size_t _idx, T...) {
+private template makeIdxStorer(size_t _idx, T...) {
     enum idx = _idx;
     alias T types;
 

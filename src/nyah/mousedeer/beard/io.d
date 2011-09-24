@@ -27,6 +27,11 @@ private void _print(S, H)(S stream, int indent, H h) {
         stream.write(h);
     }
     else static if (std.traits.isArray!(H)) {
+        if (h.length < 1) {
+            stream.write("[]");
+            return;
+        }
+
         stream.write("[\n");
         print_indent(stream, indent + 1);
         print_indented(stream, indent + 1, h[0]);

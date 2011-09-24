@@ -15,9 +15,9 @@ private template foldLeft(alias F, alias A) {
     alias A foldLeft;
 }
 
+// like foldLeft but calls an inner template "add" on the first alias
+// as template argument
 template foldLeft2(alias F, T...) {
-    // like foldLeft but calls an inner template "add" on the first alias
-    // to get each new value
     alias foldLeft!(innerFold, F, T) foldLeft2;
 }
 
