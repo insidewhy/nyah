@@ -71,7 +71,7 @@ class many_list(T...)  : many!(true, false, T) {}
 class many_plus_range(T...) : many!(false, true, T) {}
 class many_plus_list(T...)  : many!(true, true, T) {}
 
-// many_range is subparser stores char, else many_list
+// many_range if subparser stores char, else many_list
 class many(T...) : Select!(stores_char!T, many_range!T, many_list!T) {}
 
 // many_plus_range is subparser stores char, else many_plus_list

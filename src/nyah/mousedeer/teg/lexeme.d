@@ -5,9 +5,10 @@ import beard.meta;
 
 import teg.store_range;
 import teg.stores;
+import std.typetuple;
 
 private template collapseTextInRange(R, T...) {
-    alias TL!(T, R).types types;
+    alias TypeTuple!(T, R) types;
 
     template add(U) {
         static if (stores_char_or_range!U)
