@@ -35,7 +35,10 @@ class many(bool SkipWs, bool AtLeastOne, T...) {
         static if (! SkipWs) o.parsing(s);
 
         if (AtLeastOne) {
-            _skip(s, o);
+            if (! _skip(s, o)) {
+                o.clear();
+                return false;
+            }
             skip_whitespace(s);
             if (s.empty()) return true;
         }
