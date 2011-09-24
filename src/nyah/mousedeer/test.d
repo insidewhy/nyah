@@ -27,7 +27,21 @@ void parseTest(P, S)(string name, S s) {
         println("failed to store");
 }
 
+struct OffsetView(size_t offset, T) {
+    // auto opIndex(size_t idx) { return (*tuple_)[idx + offset]; }
+    this(T tup) { tuple_ = &tup; }
+
+    private T *tuple_;
+}
+
 void testParser() {
+    auto t = tuple(1, "baby", false);
+    auto v = OffsetView!(1, typeof(t))(t);
+    println(v.tuple_[0]);
+    println(t[1]);
+
+    return;
+
     alias char_not_from!"\n\t " non_whitespace;
     alias many!(char_from!"\n\t ") whitespace;
     auto s = new stream!whitespace("baby kitten friend");

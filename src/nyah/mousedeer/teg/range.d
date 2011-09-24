@@ -10,7 +10,10 @@ class range {
     void parsed() { end_ = sourceStream_.idx(); }
 
     string toString() {
-        return '"' ~ sourceStream_.sub(begin_, end_) ~ '"';
+        if (sourceStream_)
+            return '"' ~ sourceStream_.sub(begin_, end_) ~ '"';
+        else
+            return "<unset>";
     }
 
     this() {}
