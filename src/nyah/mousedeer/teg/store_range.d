@@ -13,14 +13,18 @@ class store_range(T...) {
     static bool skip(S)(S s) { return subparser.skip(s); }
 
     static if (stores_char!subparser) {
-        static bool skip(S, O)(S s, ref O o) { subparser.skip(s, o); }
+        static bool skip(S, O)(S s, ref O o) {
+            foreach(P; T)
+                if (! P.skip(s)) return false;
+            return true;
+        }
 
         char value_;
     }
     else {
         static bool skip(S, O)(S s, ref O o) {
             o.parsing(s);
-            if (! subparser.skip(s)) {
+            foreach(P; T) if (! P.skip(s)) {
                 o.clear();
                 return false;
             }

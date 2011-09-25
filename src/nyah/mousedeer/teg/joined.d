@@ -34,10 +34,7 @@ class joined(bool SkipWs, bool AtLeastOne, J, T...) {
 
     static bool skip(S, O)(S s, ref O o) {
         if (AtLeastOne) {
-            if (! _skip(s, o)) {
-                o.clear();
-                return false;
-            }
+            if (! _skip(s, o)) return false;
             skip_whitespace(s);
             if (s.empty() || ! J.skip(s)) return true;
             skip_whitespace(s);

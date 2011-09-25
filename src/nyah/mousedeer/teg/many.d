@@ -36,7 +36,7 @@ class many(bool SkipWs, bool AtLeastOne, T...) {
 
         if (AtLeastOne) {
             if (! _skip(s, o)) {
-                o.clear();
+                static if (! SkipWs) o.clear();
                 return false;
             }
             static if (! SkipWs) o.parsed();

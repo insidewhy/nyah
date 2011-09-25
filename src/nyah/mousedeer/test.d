@@ -46,8 +46,9 @@ void testParser() {
     s = "hey-baby - boy";
     parseTest!(joined_plus_lexeme!(char_!"-", identifier1))("joined", s);
 
-    s = "function add(a, b) { var a1\nvar b1 }\nfunction pump(b) {}";
-    parseTest!(many!(
+    // can't make function arguments empty..
+    s = "function add(a, b ,c) { var a1\nvar b1 }\nfunction pump(a) {}";
+    parseTest!(many_plus!(
         char_!"function", identifier1,
         char_!"(", joined!(char_!",", identifier1), char_!")",
         char_!"{", many!variable1, char_!"}"
