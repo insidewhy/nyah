@@ -20,7 +20,7 @@ class basic_stream {
         if (idx_ > data_.length) idx_ = data_.length;
     }
 
-    auto opAssign(string data) {
+    auto set(string data) {
         reset();
         data_ = data;
         return this;
@@ -30,7 +30,7 @@ class basic_stream {
     size_t save() const { return idx_; }
     void restore(size_t idx) { idx_ = idx; }
 
-    this(string data) { this = data; }
+    this(string data) { this.set(data); }
     this() {}
 
   protected:

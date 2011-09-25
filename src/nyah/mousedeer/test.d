@@ -33,7 +33,7 @@ void testParser() {
     parseTest!(
         sequence!(char_!"var", word1, char_!"=", word1))("sequence2", s);
 
-    s = "var v1\nvar v2";
+    s.set("var v1\nvar v2");
     parseTest!(many!vardef1)("many list", s);
 
     alias lexeme!(char_range!"azAZ", many!(char_range!"azAZ09")) identifier1;
@@ -43,11 +43,11 @@ void testParser() {
 
     parseTest!(store_range!(variable1))("store range", s);
 
-    s = "hey-baby - boy";
+    s.set("hey-baby - boy");
     parseTest!(joined_plus_lexeme!(char_!"-", identifier1))("joined", s);
 
     // can't make function arguments empty..
-    s = "function add(a, b ,c) { var a1\nvar b1 }\nfunction pump(a) {}";
+    s.set("function add(a, b ,c) { var a1\nvar b1 }\nfunction pump() {}");
     parseTest!(many_plus!(
         char_!"function", identifier1,
         char_!"(", joined!(char_!",", identifier1), char_!")",
