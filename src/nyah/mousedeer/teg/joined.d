@@ -6,6 +6,7 @@ import teg.detail.parser;
 import teg.stores;
 
 import std.traits : Select;
+import std.stdio : writeln;
 
 // this version of joined accepts SkipWs/AtLeastOne as the first two arguments
 // and is used internally by all of the named versions
@@ -15,40 +16,25 @@ class joined(bool SkipWs, bool AtLeastOne, J, T...) {
     vector!(stores!subparser) value_;
 
     static bool skip(S)(S s) {
-        if (AtLeastOne) {
-            if (! subparser.skip(s)) return false;
-            skip_whitespace(s);
-            if (s.empty() || ! J.skip(s)) return true;
-            skip_whitespace(s);
-            if (s.empty()) return false;
-        }
+        if (! subparser.skip(s)) return ! AtLeastOne;
 
-        while (subparser.skip(s)) {
+        for (;;) {
             skip_whitespace(s);
             if (s.empty() || ! J.skip(s)) return true;
             skip_whitespace(s);
-            if (s.empty()) return false;
+            if (s.empty() || ! subparser.skip(s)) return false;
         };
-        return false;
     }
 
     static bool skip(S, O)(S s, ref O o) {
-        if (AtLeastOne) {
-            if (! _skip(s, o)) return false;
-            skip_whitespace(s);
-            if (s.empty() || ! J.skip(s)) return true;
-            skip_whitespace(s);
-            if (s.empty()) return false;
-        }
+        if (! _skip(s, o)) return ! AtLeastOne;
 
-        while (_skip(s, o)) {
+        for (;;) {
             skip_whitespace(s);
             if (s.empty() || ! J.skip(s)) return true;
             skip_whitespace(s);
-            if (s.empty()) return false;
+            if (s.empty() || ! _skip(s, o)) return false;
         };
-
-        return false;
     }
 
     private static bool _skip(S, O)(S s, ref O o) {
