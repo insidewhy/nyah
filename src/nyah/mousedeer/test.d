@@ -70,7 +70,6 @@ void testVariant() {
     auto v1 = var1_t(123);
     auto v2 = var1_t("booby");
     auto v3 = var1_t(new S("11!", "2 friend"));
-    v1.printTo(0, stdout);
     println(v1);
     println(v2);
     println(v3);
