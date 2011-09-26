@@ -24,14 +24,11 @@ private struct VariantApplier(T, F) {
     }
 
     static string makeFwd(uint idx)() {
-        static if (idx < T.types.length) {
-            static if (0 == idx)
-                string ret = "[ ";
-            else
-                string ret = ", ";
-            return ret ~ "&fwd!" ~ idx.stringof ~ makeFwd!(idx + 1);
-        }
-        else return " ]";
+        static if (idx < T.types.length)
+            return (idx ? "," : "[") ~
+                    "&fwd!" ~ idx.stringof ~ makeFwd!(idx + 1);
+        else
+            return "]";
     }
 
     static return_type function(ref T, F)[T.types.length] forwarders =
@@ -52,6 +49,7 @@ struct variant(T...) {
 
     void opAssign(U)(U rhs) {
         static if (contains!(U, T)) {
+            // copying object references like this is okay
             static if (is(T == class) && is(T == shared))
                 memcpy(&value_, cast(const(void*)) &rhs, rhs.sizeof);
             else
@@ -80,7 +78,7 @@ struct variant(T...) {
 
     union {
         ubyte[size] value_;
-        // mark the region as a point to stop objects being garbage collected
+        // mark the region as a pointer to stop objects being garbage collected
         static if (size >= (void*).sizeof)
             void* p[size / (void*).sizeof];
     }
