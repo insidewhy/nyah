@@ -1,5 +1,6 @@
 module beard.io;
 
+import beard.variant : variant;
 import std.stdio;
 import std.typecons;
 
@@ -44,6 +45,11 @@ private void _print(S, H)(S stream, int indent, H h) {
         stream.writeln();
         print_indent(stream, indent);
         stream.write(']');
+    }
+    else static if (__traits(hasMember, H, "printTo")) {
+        // better than compiles check in case user messes up a templated
+        // printTo and then wonders why it isn't called
+        h.printTo(indent, stream);
     }
     else stream.write(h);
 }

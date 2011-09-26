@@ -2,7 +2,7 @@ module mousedeer.test;
 
 import teg.all;
 import beard.io;
-import std.typecons;
+import beard.variant;
 import std.stdio;
 
 auto nFailures = 0u;
@@ -44,9 +44,8 @@ void testParser() {
     parseTest!(store_range!(variable1))("store range", s);
 
     s.set("hey-baby - boy");
-    parseTest!(joined_plus_lexeme!(char_!"-", identifier1))("joined", s);
+    parseTest!(joined_plus_tight!(char_!"-", identifier1))("joined", s);
 
-    // can't make function arguments empty..
     s.set("function add(a, b ,c) { var a1\nvar b1 }\nfunction pump() {}");
     parseTest!(many_plus!(
         char_!"function", identifier1,
@@ -56,7 +55,29 @@ void testParser() {
 
 }
 
+class S {
+    string x, y;
+
+    this(string _x, string _y) { x = _x; y = _y; }
+
+    string toString() {
+        return "" ~ x ~ ", " ~ y;
+    }
+}
+
+void testVariant() {
+    alias variant!(float, int, string, S) var1_t;
+    auto v1 = var1_t(123);
+    auto v2 = var1_t("booby");
+    auto v3 = var1_t(new S("11!", "2 friend"));
+    v1.printTo(0, stdout);
+    println(v1);
+    println(v2);
+    println(v3);
+}
+
 int main() {
-    testParser();
+    // testParser();
+    testVariant();
     return nFailures;
 }

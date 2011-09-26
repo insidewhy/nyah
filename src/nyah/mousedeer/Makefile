@@ -7,7 +7,9 @@ debug := 1
 subdirs := teg teg/detail beard
 libfiles := $(foreach d,${subdirs},$(wildcard ${d}/*.d))
 
-default: mousedeer
+# too early for anything but testing
+default: test
+# default: mousedeer
 
 test: ${O}/test
 	./$<

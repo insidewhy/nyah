@@ -11,6 +11,10 @@ template TL(T...) {
     }
 }
 
+template contains(N, T...) {
+    enum contains = staticIndexOf!(N, T) != -1;
+}
+
 private template foldLeft(alias F, alias A) {
     alias A foldLeft;
 }

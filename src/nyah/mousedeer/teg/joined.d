@@ -46,8 +46,10 @@ class joined(bool SkipWs, bool AtLeastOne, J, T...) {
     }
 }
 
-class joined_lexeme(J, T...) : joined!(false, false, J, T) {}
 class joined(J, T...)  : joined!(true, false, J, T) {}
-
-class joined_plus_lexeme(J, T...) : joined!(false, true, J, T) {}
+// at least one T must be matched
 class joined_plus(J, T...)  : joined!(true, true, J, T) {}
+
+// tight versions do not allow whitespace around join strings
+class joined_tight(J, T...) : joined!(false, false, J, T) {}
+class joined_plus_tight(J, T...) : joined!(false, true, J, T) {}
