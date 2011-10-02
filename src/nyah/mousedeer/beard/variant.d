@@ -13,35 +13,10 @@ private template maxSize(size_t _size) {
     }
 }
 
-private struct VariantApplier(T, F) {
-    alias typeof(F.opCall(T.types[0])) return_type;
-    static return_type fwd(uint i)(ref T t, F f) {
-        return f.opCall(t.as!(T.types[i])());
-    }
-
-    static return_type run(ref T t, F f) {
-        return forwarders[t.idx_](t, f);
-    }
-
-    static string makeFwd(uint idx)() {
-        static if (idx < T.types.length)
-            return (idx ? "," : "[") ~
-                    "&fwd!" ~ idx.stringof ~ makeFwd!(idx + 1);
-        else
-            return "]";
-    }
-
-    static return_type function(ref T, F)[T.types.length] forwarders =
-        mixin(makeFwd!0());
-}
-
-// forward to a struct to give the mixin a scope to inject the static members
-// into. this calls directly through a compile time constructed vtable.
-auto variant_apply(T, F)(ref T t, F f) {
-    return VariantApplier!(T, F).run(t, f);
-}
-
-// may store any of T, or empty also if void is in T
+// may store any of T or be empty.
+// I would prefer only allowing empty if void is in T and creating an object
+// of the first type when default initialising.
+// Unfortunately D does not allow default constructors for structs :(
 struct variant(T...) {
     alias T          types;
     enum size =      foldLeft2!(maxSize!0u, T).size;
@@ -64,18 +39,52 @@ struct variant(T...) {
     }
 
     void printTo(S)(int indent, S stream) {
-        variant_apply(this, variantPrint!(S)(indent, stream));
+        struct variantPrint {
+            void opCall(T)(T t) { print_indented(stream_, indent_, t); }
+            void empty() { print_indented(stream_, indent_, "<empty>"); }
+
+            this(S s, int indent) { stream_ = s; indent_ = indent; }
+            S stream_;
+            int indent_;
+        }
+
+        apply(variantPrint(stream, indent));
     }
 
-    T as(T)() {
-        return * cast(T*) &value_;
+    // forward to a struct to give the mixin a scope to inject the static members
+    // into. this calls directly through a compile time constructed vtable.
+    auto apply(F)(ref F f) {
+        alias typeof(F.opCall(T[0])) return_type;
+
+        static return_type fwd(uint i)(ref variant t, ref F f) {
+            static if (i < T.length)
+                return f.opCall(t.as!(T[i])());
+            else
+                return f.empty();
+        }
+
+        static string makeFwd(uint idx)() {
+            static if (idx < T.length + 1)
+                return (idx ? "," : "[") ~
+                        "&fwd!" ~ idx.stringof ~ makeFwd!(idx + 1);
+            else
+                return "]";
+        }
+
+        static return_type function(ref variant, ref F)[T.length + 1] forwarders =
+            mixin(makeFwd!0());
+
+        return forwarders[this.idx_](this, f);
     }
+
+    T as(T)() { return * cast(T*) &value_; }
+
+    bool empty() const { return idx_ >= T.length; }
 
     ////////////////////////////////////////////////////////////////////////
-    this(U)(U rhs) {
-        this = rhs;
-    }
+    this(U)(U rhs) { this = rhs; }
 
+  private:
     union {
         ubyte[size] value_;
         // mark the region as a pointer to stop objects being garbage collected
@@ -83,13 +92,5 @@ struct variant(T...) {
             void* p[size / (void*).sizeof];
     }
 
-    uint idx_ = 0;
-}
-
-private struct variantPrint(S) {
-    void opCall(T)(T t) { print_indented(stream_, indent_, t); }
-
-    this(int indent, S s) { indent_ = indent; stream_ = s; }
-    S stream_;
-    int indent_;
+    uint idx_ = T.length;
 }

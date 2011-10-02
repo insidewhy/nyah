@@ -67,12 +67,18 @@ class S {
 
 void testVariant() {
     alias variant!(float, int, string, S) var1_t;
+    auto def = var1_t();
     auto v1 = var1_t(123);
     auto v2 = var1_t("booby");
     auto v3 = var1_t(new S("11!", "2 friend"));
+
+    println(def);
     println(v1);
     println(v2);
     println(v3);
+
+    // alias variant!(void, float, int, string, S) var2_t;
+    // var2_t ov1;
 }
 
 int main() {
