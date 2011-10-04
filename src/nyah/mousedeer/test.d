@@ -39,10 +39,10 @@ void testParser() {
 
     alias Lexeme!(CharRange!"azAZ", Many!(CharRange!"azAZ09")) Identifier1;
 
-    alias Sequence!(Char!"var", Identifier1) variable1;
-    parseTest!(ManyPlus!variable1)("lexeme", s);
+    alias Sequence!(Char!"var", Identifier1) Variable1;
+    parseTest!(ManyPlus!Variable1)("lexeme", s);
 
-    parseTest!(StoreRange!(variable1))("store range", s);
+    parseTest!(StoreRange!(Variable1))("store range", s);
 
     s.set("hey-baby - boy");
     parseTest!(JoinedPlusTight!(Char!"-", Identifier1))("joined", s);
@@ -51,7 +51,7 @@ void testParser() {
     parseTest!(ManyPlus!(
         Char!"function", Identifier1,
         Char!"(", Joined!(Char!",", Identifier1), Char!")",
-        Char!"{", Many!variable1, Char!"}"
+        Char!"{", Many!Variable1, Char!"}"
     ))("joined 2", s);
 
     ////////////////////////////////////////////////////////////////////////////
