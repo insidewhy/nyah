@@ -10,7 +10,7 @@ private template choiceParser(alias S, P...) {
     static if (1 == S.types.length)
         alias S.types[0]         value_type;
     else
-        alias variant!(S.types)  value_type;
+        alias Variant!(S.types)  value_type;
 
     alias P parsers;
 
@@ -27,18 +27,18 @@ private template choiceParser(alias S, P...) {
     }
 
     template add(U) {
-        static if (! stores_something!U)
+        static if (! storesSomething!U)
             alias choiceParser!(S, P, parseAs!U) add;
-        // static if (stores_char_or_range!U) {
-        //     // TODO: if char or range also in variant then merge to range
+        // static if (storesCharOrRange!U) {
+        //     // TODO: if char or range also in Variant then merge to range
         //     alias choiceParser!(S, P, U) add;
         // }
         else alias choiceParser!(S.append!(stores!U), P, parseAs!U) add;
     }
 }
 
-class choice(T...) if (T.length > 1) {
-    mixin storing_parser;
+class Choice(T...) if (T.length > 1) {
+    mixin storingParser;
 
     private alias foldLeft2!(choiceParser!(TSet!()), T)  choiceFold;
 
@@ -62,4 +62,4 @@ class choice(T...) if (T.length > 1) {
     choiceFold.value_type value_;
 }
 
-class choice(T) : T {}
+class Choice(T) : T {}

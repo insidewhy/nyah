@@ -6,13 +6,13 @@ import teg.stores;
 
 // force parsers to store a range but preserve storage of char if that is
 // all the subparser stores.
-class store_range(T...) {
+class StoreRange(T...) {
     mixin parser!T;
 
-    template add(U) { alias store_range!(T, U) add; }
+    template add(U) { alias StoreRange!(T, U) add; }
     static bool skip(S)(S s) { return subparser.skip(s); }
 
-    static if (stores_char!subparser) {
+    static if (storesChar!subparser) {
         static bool skip(S, O)(S s, ref O o) {
             foreach(P; T)
                 if (! P.skip(s)) return false;
@@ -32,7 +32,7 @@ class store_range(T...) {
             return true;
         }
 
-        range value_;
+        Range value_;
     }
 }
 

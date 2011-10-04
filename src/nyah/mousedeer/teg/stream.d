@@ -2,7 +2,7 @@ module teg.stream;
 
 import std.stream;
 
-class basic_stream {
+class BasicStream {
     bool empty() const { return idx_ >= data_.length; }
     void reset() { idx_ = 0u; }
     char front() const { return data_[idx_]; }
@@ -38,7 +38,7 @@ class basic_stream {
     size_t idx_;
 }
 
-class basic_file_stream : basic_stream {
+class BasicFileStream : BasicStream {
     void open(string filepath) {
         filepath_ = filepath;
     }
@@ -50,7 +50,7 @@ class basic_file_stream : basic_stream {
     string filepath_;
 }
 
-private class _stream(W, P) : P {
+private class _Stream(W, P) : P {
     void skip_whitespace() {
         if (! empty()) W.skip(this);
     }
@@ -59,12 +59,12 @@ private class _stream(W, P) : P {
     this() {}
 }
 
-class stream(W) : _stream!(W, basic_stream) {
+class Stream(W) : _Stream!(W, BasicStream) {
     this(string str) { super(str); }
     this() {}
 }
 
-class file_stream(W) : _stream!(W, basic_file_stream) {
+class FileStream(W) : _Stream!(W, BasicFileStream) {
     this(string str) { super(str); }
     this() {}
 }

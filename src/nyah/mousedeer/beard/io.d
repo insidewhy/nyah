@@ -1,6 +1,5 @@
 module beard.io;
 
-import beard.variant : variant;
 import std.stdio;
 import std.typecons;
 

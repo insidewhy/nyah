@@ -1,6 +1,6 @@
 module teg.char_;
 
-class char_(string T) {
+class Char(string T) {
     alias void store_t;
 
     static bool match(S)(S s) {

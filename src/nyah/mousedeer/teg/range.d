@@ -2,8 +2,8 @@ module teg.range;
 
 import teg.stream;
 
-class range {
-    void parsing(basic_stream src) {
+class Range {
+    void parsing(BasicStream src) {
         sourceStream_ = src;
         begin_ = src.idx();
     }
@@ -21,9 +21,9 @@ class range {
     }
 
     this() {}
-    this(basic_stream src) { parsing(src); }
+    this(BasicStream src) { parsing(src); }
 
-    basic_stream  sourceStream_;
-    size_t        begin_;
-    size_t        end_;
+    BasicStream  sourceStream_;
+    size_t       begin_;
+    size_t       end_;
 }

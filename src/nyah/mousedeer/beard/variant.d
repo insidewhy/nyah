@@ -18,7 +18,7 @@ private template maxSize(size_t _size) {
 // I would prefer only allowing empty if void is in T and creating an object
 // of the first type when default initialising.
 // Unfortunately D does not allow default constructors for structs :(
-struct variant(T...) {
+struct Variant(T...) {
     alias T          types;
     enum size =      foldLeft2!(maxSize!0u, T).size;
     enum n_types =   T.length;
@@ -32,7 +32,7 @@ struct variant(T...) {
                 memcpy(&value_, &rhs, rhs.sizeof);
             idx_ = staticIndexOf!(U, T);
         }
-        else static if (is(U == variant)) {
+        else static if (is(U == Variant)) {
             this.value_ = rhs.value_;
             this.idx_ = rhs.idx_;
         }
@@ -57,7 +57,7 @@ struct variant(T...) {
     auto apply(F)(ref F f) {
         alias typeof(F.opCall(T[0])) return_type;
 
-        static return_type fwd(uint i)(ref variant t, ref F f) {
+        static return_type fwd(uint i)(ref Variant t, ref F f) {
             static if (i < T.length)
                 return f.opCall(t.as!(T[i])());
             else
@@ -72,7 +72,7 @@ struct variant(T...) {
                 return "]";
         }
 
-        static return_type function(ref variant, ref F)[T.length + 1] forwarders =
+        static return_type function(ref Variant, ref F)[T.length + 1] forwarders =
             mixin(makeFwd!0());
 
         return forwarders[this.idx_](this, f);
@@ -98,7 +98,7 @@ struct variant(T...) {
 
 template isVariant(T) {
     // d won't allow enum isVariant = is(...);
-    static if (is(Unqual!T Unused : variant!U, U...))
+    static if (is(Unqual!T Unused : Variant!U, U...))
         enum isVariant = true;
     else
         enum isVariant = false;

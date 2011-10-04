@@ -1,7 +1,7 @@
 module teg.vector;
 
-template vector(T) {
-    alias T[] vector;
+template Vector(T) {
+    alias T[] Vector;
 }
 
 auto ref push_back(T, U)(ref T[] t, U u) {

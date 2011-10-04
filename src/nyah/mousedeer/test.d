@@ -21,47 +21,47 @@ void parseTest(P, S)(string name, S s) {
 }
 
 void testParser() {
-    alias many!(char_from!"\n\t ") whitespace;
+    alias Many!(CharFrom!"\n\t ") Whitespace;
 
-    auto s = new stream!whitespace("var friend = baby");
+    auto s = new Stream!Whitespace("var friend = baby");
 
-    alias char_not_from!"\n\t " non_whitespace;
-    alias many_plus!non_whitespace word;
-    alias sequence!(char_!"var", word) vardef;
+    alias CharNotFrom!"\n\t " NonWhitespace;
+    alias ManyPlus!NonWhitespace Word;
+    alias Sequence!(Char!"var", Word) Vardef;
 
-    parseTest!(vardef)("sequence", s);
+    parseTest!(Vardef)("sequence", s);
 
     parseTest!(
-        sequence!(char_!"var", word, char_!"=", word))("sequence2", s);
+        Sequence!(Char!"var", Word, Char!"=", Word))("sequence2", s);
 
     s.set("var v1\nvar v2");
-    parseTest!(many!vardef)("many list", s);
+    parseTest!(Many!Vardef)("many list", s);
 
-    alias lexeme!(char_range!"azAZ", many!(char_range!"azAZ09")) identifier1;
+    alias Lexeme!(CharRange!"azAZ", Many!(CharRange!"azAZ09")) Identifier1;
 
-    alias sequence!(char_!"var", identifier1) variable1;
-    parseTest!(many_plus!variable1)("lexeme", s);
+    alias Sequence!(Char!"var", Identifier1) variable1;
+    parseTest!(ManyPlus!variable1)("lexeme", s);
 
-    parseTest!(store_range!(variable1))("store range", s);
+    parseTest!(StoreRange!(variable1))("store range", s);
 
     s.set("hey-baby - boy");
-    parseTest!(joined_plus_tight!(char_!"-", identifier1))("joined", s);
+    parseTest!(JoinedPlusTight!(Char!"-", Identifier1))("joined", s);
 
     s.set("function add(a, b ,c) { var a1\nvar b1 }\nfunction pump() {}");
-    parseTest!(many_plus!(
-        char_!"function", identifier1,
-        char_!"(", joined!(char_!",", identifier1), char_!")",
-        char_!"{", many!variable1, char_!"}"
+    parseTest!(ManyPlus!(
+        Char!"function", Identifier1,
+        Char!"(", Joined!(Char!",", Identifier1), Char!")",
+        Char!"{", Many!variable1, Char!"}"
     ))("joined 2", s);
 
     ////////////////////////////////////////////////////////////////////////////
     // here begin more useful definitions
-    alias lexeme!(
-        choice!(char_!"_",
-                char_range!"azAZ"),
-        many!(choice!(char_range!"azAZ09", char_!"_")))     identifier;
+    alias Lexeme!(
+        Choice!(Char!"_",
+                CharRange!"azAZ"),
+        Many!(Choice!(CharRange!"azAZ09", Char!"_")))     Identifier;
 
-    alias sequence!(char_!"var", identifier) variable;
+    alias Sequence!(Char!"var", Identifier) Variable;
 
     ///////////////////////////////////////////////////////////////////////////
     s.set(" var outer
@@ -73,17 +73,17 @@ void testParser() {
                 var _t
             }");
 
-    alias many_plus!(
-        choice!(
-            variable,
-            sequence!(
-                char_!"function", identifier,
-                char_!"(", joined!(char_!",", identifier), char_!")",
-                char_!"{", many!variable, char_!"}")))
-    jsparser1;
+    alias ManyPlus!(
+        Choice!(
+            Variable,
+            Sequence!(
+                Char!"function", Identifier,
+                Char!"(", Joined!(Char!",", Identifier), Char!")",
+                Char!"{", Many!Variable, Char!"}")))
+    JsParser1;
 
-    parseTest!(jsparser1)("joined 3", s);
-    println(typeid(stores!jsparser1));
+    parseTest!(JsParser1)("joined 3", s);
+    println(typeid(stores!JsParser1));
 }
 
 class S {
@@ -97,7 +97,7 @@ class S {
 }
 
 void testVariant() {
-    alias variant!(float, int, string, S) var1_t;
+    alias Variant!(float, int, string, S) var1_t;
     auto def = var1_t();
     auto v1 = var1_t(123);
     auto v2 = var1_t("booby");
@@ -108,7 +108,7 @@ void testVariant() {
     println(v2);
     println(v3);
 
-    // alias variant!(void, float, int, string, S) var2_t;
+    // alias Variant!(void, float, int, string, S) var2_t;
     // var2_t ov1;
 }
 

@@ -49,7 +49,7 @@ private template makeIdxStorer(size_t idx, T...) {
     alias T types;
 
     template add(U) {
-        static if (! stores_something!U)
+        static if (! storesSomething!U)
             alias makeIdxStorer!(idx, types, skip_!U)                   add;
         else static if (isTuple!(stores!U)) {
             static if (idx == 0)
@@ -63,11 +63,11 @@ private template makeIdxStorer(size_t idx, T...) {
     }
 }
 
-// This sequence accepts an arguments on whether to skip whitespace between
+// This Sequence accepts an arguments on whether to skip whitespace between
 // parsers in the sequence.
-class sequence(bool SkipWs, T...) {
-    mixin whitespace_skipper;
-    mixin storing_parser;
+class Sequence(bool SkipWs, T...) {
+    mixin whitespaceSkipper;
+    mixin storingParser;
 
     private alias staticMap!(stores, T)  substores;
 
@@ -118,6 +118,6 @@ class sequence(bool SkipWs, T...) {
     }
 }
 
-class sequence(T...) if (T.length > 1) : sequence!(true, T) {}
+class Sequence(T...) if (T.length > 1) : Sequence!(true, T) {}
 
-class sequence(T) : T {}
+class Sequence(T) : T {}

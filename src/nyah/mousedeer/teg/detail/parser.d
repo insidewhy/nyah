@@ -1,16 +1,16 @@
 module teg.detail.parser;
 
-import teg.sequence : sequence;
+import teg.sequence : Sequence;
 import teg.stores;
 
-template whitespace_skipper() {
+template whitespaceSkipper() {
     // optionally skip whitespace depending on available template parameter
     static void skip_whitespace(S)(S s) {
         static if (SkipWs) s.skip_whitespace();
     }
 }
 
-template storing_parser() {
+template storingParser() {
     // like skip but creates the value to be stored if necessary
     static bool parse(S, O)(S s, ref O o) {
         static if (is(O : Object))
@@ -23,11 +23,11 @@ template storing_parser() {
 }
 
 template parser(T...) {
-    mixin whitespace_skipper;
-    mixin storing_parser;
+    mixin whitespaceSkipper;
+    mixin storingParser;
 
     static if (T.length > 1)
-        alias sequence!T subparser;
+        alias Sequence!T subparser;
     else
         alias T[0] subparser;
 }

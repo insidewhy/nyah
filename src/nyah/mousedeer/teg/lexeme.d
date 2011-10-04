@@ -11,7 +11,7 @@ private template collapseTextInRange(R, T...) {
     alias TypeTuple!(T, R) types;
 
     template add(U) {
-        static if (stores_char_or_range!U)
+        static if (storesCharOrRange!U)
             alias collapseTextInRange!(R.add!U, T) add;
         else
             alias collapseText!(T, R, U) add;
@@ -22,14 +22,14 @@ private template collapseText(T...) {
     alias T types;
 
     template add(U) {
-        static if (stores_char_or_range!U)
-            alias collapseTextInRange!(store_range!U, T) add;
+        static if (storesCharOrRange!U)
+            alias collapseTextInRange!(StoreRange!U, T) add;
         else
             alias collapseText!(T, U) add;
     }
 }
 
-class lexeme(T...) if (T.length > 1)
-    : sequence!(false, foldLeft2!(collapseText!(), T).types) {}
+class Lexeme(T...) if (T.length > 1)
+    : Sequence!(false, foldLeft2!(collapseText!(), T).types) {}
 
-class lexeme(T) : T {}
+class Lexeme(T) : T {}

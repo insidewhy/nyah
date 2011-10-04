@@ -9,13 +9,13 @@ import std.traits : Select;
 
 // this version of many accepts SkipWs/AtLeastOne as the first two arguments
 // and is used internally by all of the named versions
-class many(bool SkipWs, bool AtLeastOne, T...) {
+class Many(bool SkipWs, bool AtLeastOne, T...) {
     mixin parser!T;
 
     static if (SkipWs)
-        vector!(stores!subparser) value_;
+        Vector!(stores!subparser) value_;
     else
-        range value_;
+        Range value_;
 
     static bool skip(S)(S s) {
         if (AtLeastOne) {
@@ -65,16 +65,16 @@ class many(bool SkipWs, bool AtLeastOne, T...) {
     }
 }
 
-class many_range(T...) : many!(false, false, T) {}
-class many_list(T...)  : many!(true, false, T) {}
+class ManyRange(T...) : Many!(false, false, T) {}
+class ManyList(T...)  : Many!(true, false, T) {}
 
-// many_plus parsers return false if the subparser matches zero times.
-class many_plus_range(T...) : many!(false, true, T) {}
-class many_plus_list(T...)  : many!(true, true, T) {}
+// ManyPlus parsers return false if the subparser matches zero times.
+class ManyPlusRange(T...) : Many!(false, true, T) {}
+class ManyPlusList(T...)  : Many!(true, true, T) {}
 
-// many_range if subparser stores char, else many_list
-class many(T...) : Select!(stores_char!T, many_range!T, many_list!T) {}
+// ManyRange if subparser stores char, else ManyList
+class Many(T...) : Select!(storesChar!T, ManyRange!T, ManyList!T) {}
 
-// many_plus_range is subparser stores char, else many_plus_list
-class many_plus(T...)
-    : Select!(stores_char!T, many_plus_range!T, many_plus_list!T) {}
+// ManyPlusRange is subparser stores char, else ManyPlusList
+class ManyPlus(T...)
+    : Select!(storesChar!T, ManyPlusRange!T, ManyPlusList!T) {}
