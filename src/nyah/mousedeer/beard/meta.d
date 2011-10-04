@@ -9,6 +9,25 @@ template TL(T...) {
     template append(U...) {
         alias TL!(T, U) append;
     }
+
+    template contains(U) {
+        enum contains = indexOf!U != -1;
+    }
+
+    template indexOf(U) {
+        enum indexOf = staticIndexOf!(U, T);
+    }
+}
+
+template TSet(T...) {
+    mixin TL!T;
+
+    template append(U) {
+        static if (contains!U)
+            alias TSet!T append;
+        else
+            alias TSet!(T, U) append;
+    }
 }
 
 template contains(N, T...) {

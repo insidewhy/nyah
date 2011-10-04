@@ -9,6 +9,7 @@ auto nFailures = 0u;
 
 void parseTest(P, S)(string name, S s) {
     s.reset();
+    s.skip_whitespace();
     auto parser = new P();
     write(name, ": ");
     if (parser.parse(s))
@@ -25,16 +26,16 @@ void testParser() {
     auto s = new stream!whitespace("var friend = baby");
 
     alias char_not_from!"\n\t " non_whitespace;
-    alias many_plus!non_whitespace word1;
-    alias sequence!(char_!"var", word1) vardef1;
+    alias many_plus!non_whitespace word;
+    alias sequence!(char_!"var", word) vardef;
 
-    parseTest!(vardef1)("sequence", s);
+    parseTest!(vardef)("sequence", s);
 
     parseTest!(
-        sequence!(char_!"var", word1, char_!"=", word1))("sequence2", s);
+        sequence!(char_!"var", word, char_!"=", word))("sequence2", s);
 
     s.set("var v1\nvar v2");
-    parseTest!(many!vardef1)("many list", s);
+    parseTest!(many!vardef)("many list", s);
 
     alias lexeme!(char_range!"azAZ", many!(char_range!"azAZ09")) identifier1;
 
@@ -53,6 +54,36 @@ void testParser() {
         char_!"{", many!variable1, char_!"}"
     ))("joined 2", s);
 
+    ////////////////////////////////////////////////////////////////////////////
+    // here begin more useful definitions
+    alias lexeme!(
+        choice!(char_!"_",
+                char_range!"azAZ"),
+        many!(choice!(char_range!"azAZ09", char_!"_")))     identifier;
+
+    alias sequence!(char_!"var", identifier) variable;
+
+    ///////////////////////////////////////////////////////////////////////////
+    s.set(" var outer
+            function add(a, b ,c) {
+                var a1
+                var b1
+            }
+            function pump() {
+                var _t
+            }");
+
+    alias many_plus!(
+        choice!(
+            variable,
+            sequence!(
+                char_!"function", identifier,
+                char_!"(", joined!(char_!",", identifier), char_!")",
+                char_!"{", many!variable, char_!"}")))
+    jsparser1;
+
+    parseTest!(jsparser1)("joined 3", s);
+    println(typeid(stores!jsparser1));
 }
 
 class S {
@@ -82,7 +113,7 @@ void testVariant() {
 }
 
 int main() {
-    // testParser();
-    testVariant();
+    testParser();
+    // testVariant();
     return nFailures;
 }

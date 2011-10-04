@@ -5,6 +5,7 @@ import beard.io;
 import std.stdio : writeln;
 import std.c.string : memcpy;
 import std.typetuple : staticIndexOf;
+import std.traits : Unqual;
 
 private template maxSize(size_t _size) {
     enum size = _size;
@@ -77,7 +78,7 @@ struct variant(T...) {
         return forwarders[this.idx_](this, f);
     }
 
-    T as(T)() { return * cast(T*) &value_; }
+    ref T as(T)() { return * cast(T*) &value_; }
 
     bool empty() const { return idx_ >= T.length; }
 
@@ -93,4 +94,12 @@ struct variant(T...) {
     }
 
     uint idx_ = T.length;
+}
+
+template isVariant(T) {
+    // d won't allow enum isVariant = is(...);
+    static if (is(Unqual!T Unused : variant!U, U...))
+        enum isVariant = true;
+    else
+        enum isVariant = false;
 }

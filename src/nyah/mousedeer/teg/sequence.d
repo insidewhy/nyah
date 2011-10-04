@@ -95,20 +95,22 @@ class sequence(bool SkipWs, T...) {
         return true;
     }
 
-    static bool skip(S, O)(S s, ref O o) {
-        bool help(size_t pidx)() {
-            if (! subparsers[pidx].skip(s, o))
-                return false;
+    // this used to be a subfunction of skip but the compiler chokes for
+    // certain types
+    private static bool skip_help(size_t pidx, S, O)(S s, ref O o) {
+        if (! subparsers[pidx].skip(s, o))
+            return false;
 
-            static if (pidx < subparsers.length - 1) {
-                skip_whitespace(s);
-                return help!(pidx + 1);
-            }
-            else return true;
+        static if (pidx < subparsers.length - 1) {
+            skip_whitespace(s);
+            return skip_help!(pidx + 1)(s, o);
         }
+        else return true;
+    }
 
+    static bool skip(S, O)(S s, ref O o) {
         auto save = s.save();
-        if (! help!(0)) {
+        if (! skip_help!(0)(s, o)) {
             s.restore(save);
             return false;
         }

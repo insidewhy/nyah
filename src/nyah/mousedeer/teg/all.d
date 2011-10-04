@@ -12,3 +12,4 @@ public import teg.lexeme;
 public import teg.store_range;
 public import teg.many;
 public import teg.joined;
+public import teg.choice;
