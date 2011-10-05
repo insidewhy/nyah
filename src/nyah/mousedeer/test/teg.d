@@ -1,27 +1,12 @@
-module mousedeer.test;
+module mousedeer.test.basic;
 
+import mousedeer.test.common;
 import teg.all;
 import beard.io;
-import beard.variant;
-import std.stdio;
+import beard.meta;
 
-auto nFailures = 0u;
-
-void parseTest(P, S)(string name, S s) {
-    s.reset();
-    s.skip_whitespace();
-    auto parser = new P();
-    write(name, ": ");
-    if (parser.parse(s))
-        println(parser.value_);
-    else {
-        println("failed to store");
-        ++nFailures;
-    }
-}
-
-void testParser() {
-    alias Many!(CharFrom!"\n\t ") Whitespace;
+int main() {
+    alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
 
     auto s = new Stream!Whitespace("var friend = baby");
 
@@ -54,19 +39,25 @@ void testParser() {
         Char!"{", Many!Variable1, Char!"}"
     ))("joined 2", s);
 
-    ////////////////////////////////////////////////////////////////////////////
-    // here begin more useful definitions
+    // ////////////////////////////////////////////////////////////////////////////
+    // // here begin more useful definitions
     alias Lexeme!(
         Choice!(Char!"_",
                 CharRange!"azAZ"),
         Many!(Choice!(CharRange!"azAZ09", Char!"_")))     Identifier;
 
-    alias Sequence!(Char!"var", Identifier) Variable;
+    alias ManyPlus!(CharRange!"09") Number;
+
+    // not good enough yet
+    alias Number Expression1;
+
+    alias Sequence!(Char!"var", Identifier,
+                    Optional!(Char!"=", Expression1)) Variable;
 
     ///////////////////////////////////////////////////////////////////////////
     s.set(" var outer
             function add(a, b ,c) {
-                var a1
+                var a1 = 23
                 var b1
             }
             function pump() {
@@ -83,37 +74,6 @@ void testParser() {
     JsParser1;
 
     parseTest!(JsParser1)("joined 3", s);
-    println(typeid(stores!JsParser1));
-}
 
-class S {
-    string x, y;
-
-    this(string _x, string _y) { x = _x; y = _y; }
-
-    string toString() {
-        return "" ~ x ~ ", " ~ y;
-    }
-}
-
-void testVariant() {
-    alias Variant!(float, int, string, S) var1_t;
-    auto def = var1_t();
-    auto v1 = var1_t(123);
-    auto v2 = var1_t("booby");
-    auto v3 = var1_t(new S("11!", "2 friend"));
-
-    println(def);
-    println(v1);
-    println(v2);
-    println(v3);
-
-    // alias Variant!(void, float, int, string, S) var2_t;
-    // var2_t ov1;
-}
-
-int main() {
-    testParser();
-    // testVariant();
     return nFailures;
 }

@@ -1,18 +1,19 @@
-.PHONY: test clean default
+.PHONY: test clean
 
-O := .obj
-# compile_with_gdc := 1
-debug := 1
+# compile_with_gdc ?= 1
+debug ?= 1
+cwd ?= .
+O ?= ${cwd}/.obj
+subdirs ?= teg teg/detail beard
+libfiles ?= $(foreach d,$(addprefix ${cwd}/,${subdirs}),$(wildcard ${d}/*.d))
 
-subdirs := teg teg/detail beard
-libfiles := $(foreach d,${subdirs},$(wildcard ${d}/*.d))
+# too early for anything but testing so test is first
+test:
+	${MAKE} -C test
 
-# too early for anything but testing
-default: test
-# default: mousedeer
-
-test: ${O}/test
-	./$<
+mousedeer: main.d ${libfiles}
+	@mkdir -p ${O}
+	${dmd} ${comp_args} -od${O} -of$@ $^
 
 clean:
 	rm -rf ${O}
@@ -20,11 +21,3 @@ clean:
 dmd := $(if ${compile_with_gdc},gdmd,dmd)
 
 comp_args := $(if ${debug},-g -debug)
-
-mousedeer: main.d ${libfiles}
-	@mkdir -p ${O}
-	${dmd} ${comp_args} -od${O} -of$@ $^
-
-${O}/test: test.d ${libfiles}
-	@mkdir -p ${O}
-	${dmd} ${comp_args} -od${O} -of$@ $^

@@ -28,6 +28,12 @@ template TSet(T...) {
         else
             alias TSet!(T, U) append;
     }
+
+    private template add(alias U, V) { alias U.append!V add; }
+
+    template append(U...) if (U.length > 1) {
+        alias foldLeft!(add, TSet!T, U) append;
+    }
 }
 
 template contains(N, T...) {

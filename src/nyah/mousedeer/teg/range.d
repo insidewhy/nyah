@@ -2,7 +2,7 @@ module teg.range;
 
 import teg.stream;
 
-class Range {
+struct Range {
     void parsing(BasicStream src) {
         sourceStream_ = src;
         begin_ = src.idx();
@@ -13,6 +13,10 @@ class Range {
     // if i should still be using d
     void clear() { sourceStream_ = null; }
 
+    size_t length() @property const {
+        return sourceStream_ ? end_ - begin_ : 0u;
+    }
+
     string toString() {
         if (sourceStream_)
             return '"' ~ sourceStream_.sub(begin_, end_) ~ '"';
@@ -20,7 +24,6 @@ class Range {
             return "<unset>";
     }
 
-    this() {}
     this(BasicStream src) { parsing(src); }
 
     BasicStream  sourceStream_;

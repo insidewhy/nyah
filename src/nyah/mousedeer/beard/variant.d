@@ -2,7 +2,6 @@ module beard.variant;
 
 import beard.meta;
 import beard.io;
-import std.stdio : writeln;
 import std.c.string : memcpy;
 import std.typetuple : staticIndexOf;
 import std.traits : Unqual;
@@ -52,8 +51,7 @@ struct Variant(T...) {
         apply(variantPrint(stream, indent));
     }
 
-    // forward to a struct to give the mixin a scope to inject the static members
-    // into. this calls directly through a compile time constructed vtable.
+    // this calls directly through a compile time constructed vtable.
     auto apply(F)(ref F f) {
         alias typeof(F.opCall(T[0])) return_type;
 
@@ -80,7 +78,7 @@ struct Variant(T...) {
 
     ref T as(T)() { return * cast(T*) &value_; }
 
-    bool empty() const { return idx_ >= T.length; }
+    bool empty() @property const { return idx_ >= T.length; }
 
     ////////////////////////////////////////////////////////////////////////
     this(U)(U rhs) { this = rhs; }

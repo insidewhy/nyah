@@ -5,9 +5,6 @@ import teg.range;
 import teg.detail.parser;
 import teg.stores;
 
-import std.traits : Select;
-import std.stdio : writeln;
-
 // this version of joined accepts SkipWs/AtLeastOne as the first two arguments
 // and is used internally by all of the named versions
 class Joined(bool SkipWs, bool AtLeastOne, J, T...) {
