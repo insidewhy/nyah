@@ -6,7 +6,7 @@ class BasicStream {
     bool empty() const { return idx_ >= data_.length; }
     void reset() { idx_ = 0u; }
     char front() const { return data_[idx_]; }
-    size_t length() const { return data_.length - idx_; }
+    size_t length() @property const { return data_.length - idx_; }
     char opIndex(size_t idx) const { return data_[idx_ + idx]; }
     // for this offsets are absolute, not relative to idx_
     string sub(size_t beg, size_t end) { return data_[beg..end]; }
