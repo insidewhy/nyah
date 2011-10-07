@@ -5,7 +5,7 @@ import std.typecons;
 
 immutable INDENT_STR = "    ";
 
-private void print_indent(S)(S stream, int indent) {
+void print_indent(S)(S stream, int indent) {
     for (int i = 0; i < indent; ++i) stream.write(INDENT_STR);
 }
 
