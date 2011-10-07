@@ -10,7 +10,7 @@ import teg.stores;
 class Joined(bool SkipWs, bool AtLeastOne, J, T...) {
     mixin parser!T;
 
-    Vector!(stores!subparser) value_;
+    alias Vector!(stores!subparser) value_type;
 
     static bool skip(S)(S s) {
         if (! subparser.skip(s)) return ! AtLeastOne;

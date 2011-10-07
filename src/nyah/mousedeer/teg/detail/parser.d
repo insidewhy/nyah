@@ -16,8 +16,6 @@ template storingParser() {
         static if (is(O : Object)) o = new O;
         return skip(s, o);
     }
-
-    bool parse(S)(S s) { return parse(s, value_); }
 }
 
 template hasSubparser(T...) {

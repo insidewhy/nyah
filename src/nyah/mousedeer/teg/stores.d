@@ -5,7 +5,7 @@ import teg.range;
 import teg.node;
 
 template storesSomething(T) {
-    enum storesSomething = is(typeof(T.value_));
+    enum storesSomething = is(T.value_type);
 }
 
 template storesSomething(T...) if (T.length > 1) {
@@ -18,7 +18,7 @@ template stores(T) {
     else static if (isNode!T)
         alias T stores;
     static if (storesSomething!T)
-        alias typeof(T.value_) stores;
+        alias T.value_type stores;
     else
         alias void stores;
 }

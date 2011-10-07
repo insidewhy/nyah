@@ -76,8 +76,8 @@ class Sequence(bool SkipWs, T...) {
 
     alias foldLeft2!(makeIdxStorer!0u, T).types subparsers;
 
-    static if (! is(value_type : void))
-        value_type value_;
+    // static if (! is(value_type : void))
+    //     value_type value_;
 
     static bool skip(S)(S s) {
         if (! T[0].skip(s)) return false;

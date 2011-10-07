@@ -23,5 +23,5 @@ template storeOneChar() {
         else return false;
     }
 
-    char value_;
+    alias char value_type;
 }

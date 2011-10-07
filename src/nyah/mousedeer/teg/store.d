@@ -17,7 +17,7 @@ private template _StoreChar(T) {
         return false;
     }
 
-    char value_;
+    alias char value_type;
 }
 
 private template _StoreRange(T...) {
@@ -34,7 +34,7 @@ private template _StoreRange(T...) {
         return true;
     }
 
-    Range value_;
+    alias Range value_type;
 }
 
 // D only allows pulling attributes into the scope of a class from a pure

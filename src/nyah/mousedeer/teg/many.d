@@ -13,9 +13,9 @@ class Many(bool SkipWs, bool AtLeastOne, T...) {
     mixin parser!T;
 
     static if (SkipWs)
-        Vector!(stores!subparser) value_;
+        alias Vector!(stores!subparser) value_type;
     else
-        Range value_;
+        alias Range value_type;
 
     static bool skip(S)(S s) {
         if (AtLeastOne) {

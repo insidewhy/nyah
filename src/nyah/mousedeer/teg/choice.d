@@ -76,7 +76,7 @@ class Choice(T...) if (T.length > 1) {
         return false;
     }
 
-    choiceFold.value_type value_;
+    alias choiceFold.value_type value_type;
 }
 
 class Choice(T) : T {}

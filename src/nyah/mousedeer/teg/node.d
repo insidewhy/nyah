@@ -22,7 +22,8 @@ template makeNode(P...) {
         print('}');
     }
 
-    stores!subparser value_;
+    alias stores!subparser value_type;
+    value_type value_;
 }
 
 template isNode(T) {

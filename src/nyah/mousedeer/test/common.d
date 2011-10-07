@@ -10,9 +10,10 @@ void parseTest(P, S)(string name, S s) {
     s.reset();
     s.skip_whitespace();
     auto parser = new P();
+    stores!P value;
     write(name, ": ", typeid(stores!P), " => ");
-    if (parser.parse(s))
-        println(parser.value_);
+    if (parser.parse(s, value))
+        println(value);
     else {
         println("failed to store");
         ++nFailures;
