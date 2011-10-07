@@ -14,11 +14,11 @@ template node(P...) {
     }
 
     void printTo(S)(int indent, S stream) {
-        // print_indented(stream, indent, typeid(this).stringof);
-        print_indented(stream, indent, typeid(this).name, "{\n");
-        print_indent(stream, indent + 1);
-        print_indented(stream, indent + 1, value_, '\n');
-        print_indent(stream, indent);
+        stream.write(typeid(this).name, " {\n");
+        printIndent(stream, indent + 1);
+        printIndented(stream, indent + 1, value_);
+        stream.write('\n');
+        printIndent(stream, indent);
         print('}');
     }
 

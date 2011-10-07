@@ -5,22 +5,22 @@ import std.typecons;
 
 immutable INDENT_STR = "    ";
 
-void print_indent(S)(S stream, int indent) {
+void printIndent(S)(S stream, int indent) {
     for (int i = 0; i < indent; ++i) stream.write(INDENT_STR);
 }
 
 private void _print(S, H)(S stream, int indent, H h) {
     static if (isTuple!(H)) {
         stream.write("(\n");
-        print_indent(stream, indent + 1);
-        print_indented(stream, indent + 1, h[0]);
+        printIndent(stream, indent + 1);
+        printIndented(stream, indent + 1, h[0]);
         foreach(value; h[1..$]) {
             stream.write(",\n");
-            print_indent(stream, indent + 1);
-            print_indented(stream, indent + 1, value);
+            printIndent(stream, indent + 1);
+            printIndented(stream, indent + 1, value);
         }
         stream.writeln();
-        print_indent(stream, indent);
+        printIndent(stream, indent);
         stream.write(')');
     }
     else static if (is(H : string)) {
@@ -33,16 +33,16 @@ private void _print(S, H)(S stream, int indent, H h) {
         }
 
         stream.write("[\n");
-        print_indent(stream, indent + 1);
-        print_indented(stream, indent + 1, h[0]);
+        printIndent(stream, indent + 1);
+        printIndented(stream, indent + 1, h[0]);
         foreach(value; h[1..$]) {
             stream.write(",\n");
-            print_indent(stream, indent + 1);
-            print_indented(stream, indent + 1, value);
+            printIndent(stream, indent + 1);
+            printIndented(stream, indent + 1, value);
         }
 
         stream.writeln();
-        print_indent(stream, indent);
+        printIndent(stream, indent);
         stream.write(']');
     }
     else static if (__traits(hasMember, H, "printTo")) {
@@ -53,26 +53,26 @@ private void _print(S, H)(S stream, int indent, H h) {
     else stream.write(h);
 }
 
-private void print_tail(S, H, T...)(S stream, int indent, H h, T t) {
+private void printTail(S, H, T...)(S stream, int indent, H h, T t) {
     stream.write(' ');
     _print(stream, indent, h);
-    print_tail(stream, indent, t);
+    printTail(stream, indent, t);
 }
 
-private void print_tail(S)(S stream, int indent) {}
+private void printTail(S)(S stream, int indent) {}
 
-void print_indented(S, H, T...)(S stream, int indent, H h, T t) {
+void printIndented(S, H, T...)(S stream, int indent, H h, T t) {
     _print(stream, indent, h);
-    print_tail(stream, indent, t);
+    printTail(stream, indent, t);
 }
 
-void print_indented(H...)(int indent, H h) {
-    print_indented(stdout, h);
+void printIndented(H...)(int indent, H h) {
+    printIndented(stdout, h);
 }
 
 // todo: check if first argument is stream or not
 void print(T...)(T t) {
-    print_indented(stdout, 0, t);
+    printIndented(stdout, 0, t);
 }
 
 void println(T...)(T t) {

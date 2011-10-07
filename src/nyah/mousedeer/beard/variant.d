@@ -40,8 +40,8 @@ struct Variant(T...) {
 
     void printTo(S)(int indent, S stream) {
         struct variantPrint {
-            void opCall(T)(T t) { print_indented(stream_, indent_, t); }
-            void empty() { print_indented(stream_, indent_, "<empty>"); }
+            void opCall(T)(T t) { printIndented(stream_, indent_, t); }
+            void empty() { printIndented(stream_, indent_, "<empty>"); }
 
             this(S s, int indent) { stream_ = s; indent_ = indent; }
             S stream_;
