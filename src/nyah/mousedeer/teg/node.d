@@ -3,7 +3,7 @@ module teg.node;
 import teg.detail.parser : hasSubparser, storingParser;
 import beard.io;
 
-template node(P...) {
+template makeNode(P...) {
     alias void __IsNode;
 
     mixin hasSubparser!P;

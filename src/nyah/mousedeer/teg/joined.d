@@ -35,9 +35,9 @@ class Joined(bool SkipWs, bool AtLeastOne, J, T...) {
     }
 
     private static bool _skip(S, O)(S s, ref O o) {
-        subparser sub = new subparser();
-        if (! sub.parse(s)) return false;
-        o.push_back(sub.value_);
+        stores!subparser value;
+        if (! subparser.parse(s, value)) return false;
+        o.push_back(value);
 
         return true;
     }

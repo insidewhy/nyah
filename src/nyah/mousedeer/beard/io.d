@@ -10,7 +10,7 @@ void printIndent(S)(S stream, int indent) {
 }
 
 private void _print(S, H)(S stream, int indent, H h) {
-    static if (isTuple!(H)) {
+    static if (isTuple!H) {
         stream.write("(\n");
         printIndent(stream, indent + 1);
         printIndented(stream, indent + 1, h[0]);

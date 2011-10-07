@@ -6,7 +6,26 @@ import beard.io;
 import beard.meta;
 
 struct Id {
-    mixin node!(ManyPlus!(CharNotFrom!"\n\t "));
+    mixin makeNode!(ManyPlus!(CharNotFrom!"\n\t "));
+}
+
+alias ManyPlus!(CharRange!"09") Integer;
+
+// alias Integer Term;
+alias Choice!(
+    Integer,
+    Sequence!(Char!"(", Expression, Char!")")) Term;
+
+struct Multiplication {
+    mixin makeNode!(JoinedPlus!(Char!"*", Term));
+}
+
+struct Addition {
+    mixin makeNode!(JoinedPlus!(Char!"+", Multiplication));
+}
+
+class Expression {
+    mixin makeNode!(Addition);
 }
 
 int main() {
@@ -50,10 +69,8 @@ int main() {
                 CharRange!"azAZ"),
         Many!(Choice!(CharRange!"azAZ09", Char!"_")))     Identifier;
 
-    alias ManyPlus!(CharRange!"09") Number;
-
     // not good enough yet
-    alias Number Expression1;
+    alias Integer Expression1;
 
     alias Sequence!(Char!"var", Identifier,
                     Optional!(Char!"=", Expression1)) Variable;
@@ -85,6 +102,9 @@ int main() {
     // parseTest!(Id)("node 1", s);
     s.set("kitten friend yeah");
     parseTest!(ManyPlus!Id)("node 1", s);
+
+    s.set("3 + 1 * 2");
+    parseTest!(ManyPlus!Addition)("node 2", s);
 
     return nFailures;
 }
