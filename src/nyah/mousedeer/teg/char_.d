@@ -1,7 +1,15 @@
 module teg.char_;
 
+import teg.range : Range;
+import teg.store;
+
 class Char(string T) {
-    alias void store_t;
+    enum length = T.length;
+
+    static if (length > 1)
+        alias StoreRange!Char SkippedParser;
+    else
+        alias StoreChar!Char SkippedParser;
 
     static bool match(S)(S s) {
         if (s.length() < T.length) return false;

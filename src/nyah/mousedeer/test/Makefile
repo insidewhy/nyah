@@ -1,3 +1,4 @@
+.SECONDARY:
 .PHONY: default tbpeg teg variant force
 
 outpath := output

@@ -2,18 +2,20 @@ module teg.choice;
 
 import teg.detail.parser;
 import teg.stores;
-
 import beard.meta;
 import beard.variant;
+import std.typecons : staticMap;
 
 private template choiceParser(alias S, bool CanBeEmpty, P...) {
     static if (1 == S.types.length) {
         private alias S.types[0] first;
         static if (CanBeEmpty) {
-            static if (is(first == class) || __traits(hasMember, first, "length")
-                       || is(first == char)) // hack: see below
+            static if (is(first == class) || __traits(hasMember, first, "length"))
+                // if type can be null or type has a ".length" (assuming when
+                // it is 0 the object is empty) then just store it.
                 alias first          value_type;
             else
+                // otherwise put into variant to allow it to be nulled.
                 alias Variant!first  value_type;
         }
         else
@@ -42,7 +44,7 @@ private template choiceParser(alias S, bool CanBeEmpty, P...) {
         static if (! storesSomething!U)
             alias choiceParser!(S, true, P, parseAs!U) add;
         // static if (storesCharOrRange!U) {
-        //     // TODO: if char or range also in Variant then merge to range
+        //     // todo: if char or range also in Variant then merge to range
         //     alias choiceParser!(S, CanBeEmpty, P, U) add;
         // }
         // todo: collapse variants
@@ -54,8 +56,8 @@ private template choiceParser(alias S, bool CanBeEmpty, P...) {
 class Choice(T...) if (T.length > 1) {
     mixin storingParser;
 
-    // todo: force char/range skipping parsers to store in choice.. see hack
-    private alias foldLeft2!(choiceParser!(TSet!(), false), T)  choiceFold;
+    private alias foldLeft2!(choiceParser!(TSet!(), false),
+                             staticMap!(skips, T))           choiceFold;
 
     alias choiceFold.parsers    subparsers;
 

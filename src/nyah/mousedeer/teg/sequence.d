@@ -50,7 +50,7 @@ private template makeIdxStorer(size_t idx, T...) {
 
     template add(U) {
         static if (! storesSomething!U)
-            alias makeIdxStorer!(idx, types, skip_!U)                   add;
+            alias makeIdxStorer!(idx, types, Skip!U)                    add;
         else static if (isTuple!(stores!U)) {
             static if (idx == 0)
                 alias makeIdxStorer!(idx + (stores!U).length, types, U) add;

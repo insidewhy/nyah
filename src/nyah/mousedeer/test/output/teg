@@ -35,7 +35,8 @@ joined 2: std.typecons.Tuple!(Range,Range[],Range[]).Tuple[] => [
         []
     )
 ]
-joined 3: beard.variant.Variant!(Tuple!(Range,Range),Tuple!(Range,Range[],Tuple!(Range,Range)[])).Variant[] => [
+choice 1: char => v
+choice 2: beard.variant.Variant!(Tuple!(Range,Range),Tuple!(Range,Range[],Tuple!(Range,Range)[])).Variant[] => [
     (
         "outer",
         <unset>

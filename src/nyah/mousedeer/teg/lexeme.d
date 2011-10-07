@@ -3,7 +3,7 @@ module teg.lexeme;
 import teg.sequence;
 import beard.meta;
 
-import teg.store_range;
+import teg.store;
 import teg.stores;
 import std.typetuple;
 
@@ -23,7 +23,7 @@ private template collapseText(T...) {
 
     template add(U) {
         static if (storesCharOrRange!U)
-            alias collapseTextInRange!(StoreRange!U, T) add;
+            alias collapseTextInRange!(Store!U, T) add;
         else
             alias collapseText!(T, U) add;
     }

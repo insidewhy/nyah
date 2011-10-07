@@ -27,7 +27,7 @@ int main() {
     alias Sequence!(Char!"var", Identifier1) Variable1;
     parseTest!(ManyPlus!Variable1)("lexeme", s);
 
-    parseTest!(StoreRange!(Variable1))("store range", s);
+    parseTest!(Store!(Variable1))("store range", s);
 
     s.set("hey-baby - boy");
     parseTest!(JoinedPlusTight!(Char!"-", Identifier1))("joined", s);
@@ -64,6 +64,9 @@ int main() {
                 var _t
             }");
 
+    // Choice forces subparsers to store when possible.
+    parseTest!(Choice!(Char!"v", Char!"t"))("choice 1", s);
+
     alias ManyPlus!(
         Choice!(
             Variable,
@@ -73,7 +76,7 @@ int main() {
                 Char!"{", Many!Variable, Char!"}")))
     JsParser1;
 
-    parseTest!(JsParser1)("joined 3", s);
+    parseTest!(JsParser1)("choice 2", s);
 
     return nFailures;
 }

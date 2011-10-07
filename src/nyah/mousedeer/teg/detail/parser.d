@@ -22,12 +22,15 @@ template storingParser() {
     bool parse(S)(S s) { return parse(s, value_); }
 }
 
-template parser(T...) {
-    mixin whitespaceSkipper;
-    mixin storingParser;
-
+template hasSubparser(T...) {
     static if (T.length > 1)
         alias Sequence!T subparser;
     else
         alias T[0] subparser;
+}
+
+template parser(T...) {
+    mixin whitespaceSkipper;
+    mixin storingParser;
+    mixin hasSubparser!T;
 }

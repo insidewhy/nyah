@@ -27,11 +27,19 @@ template storesChar(T...) {
 }
 
 template storesRange(T...) {
-    enum storesChar = is(stores!(T) : Range);
+    enum storesRange = is(stores!(T) : Range);
 }
 
 template storesCharOrRange(T...) {
-    // d compiler bug:
-    // enum storesCharOrRange = storesRange!T || storesChar!T;
-    enum storesCharOrRange = is(stores!(T) : Range) || is(stores!(T) : char);
+    enum storesCharOrRange = storesRange!T || storesChar!T;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// like stores but looser as returns what type the parser skips over for
+// certain void storing parsers like Char.
+template skips(T) {
+    static if (__traits(hasMember, T, "SkippedParser"))
+        alias T.SkippedParser skips;
+    else
+        alias T skips;
 }
