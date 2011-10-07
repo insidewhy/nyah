@@ -55,9 +55,9 @@ class Many(bool SkipWs, bool AtLeastOne, T...) {
 
     private static bool _skip(S, O)(S s, ref O o) {
         static if (SkipWs) {
-            subparser sub = new subparser();
-            if (! sub.parse(s)) return false;
-            o.push_back(sub.value_);
+            stores!subparser value;
+            if (! subparser.parse(s, value)) return false;
+            o.push_back(value);
         }
         else if (! subparser.skip(s)) return false;
 

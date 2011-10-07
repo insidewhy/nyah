@@ -70,3 +70,8 @@ choice 2: beard.variant.Variant!(Tuple!(Range,Range),Tuple!(Range,Range[],Tuple!
         ]
     )
 ]
+node 1: mousedeer.test.basic.Id[] => [
+    Id("kitten"),
+    Id("friend"),
+    Id("yeah")
+]

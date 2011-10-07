@@ -2,6 +2,7 @@ module teg.stores;
 
 import teg.sequence;
 import teg.range;
+import teg.node;
 
 template storesSomething(T) {
     enum storesSomething = is(typeof(T.value_));
@@ -12,6 +13,8 @@ template storesSomething(T...) if (T.length > 1) {
 }
 
 template stores(T) {
+    static if (isNode!T)
+        alias T stores;
     static if (storesSomething!T)
         alias typeof(T.value_) stores;
     else

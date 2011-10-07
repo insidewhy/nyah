@@ -1,6 +1,5 @@
 module teg.char_;
 
-import teg.range : Range;
 import teg.store;
 
 class Char(string T) {

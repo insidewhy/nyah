@@ -16,6 +16,7 @@ force:
 ${outpath}/%: ${O}/% force
 	@mkdir -p ${outpath}
 	@./$< | tee $@.new
+	@$(if ${update},rm -f $@,true)
 	@if [ ! -f $@ ] ; then \
 		echo "new test $(subst ${outpath}/,,$@)"; \
 		mv $@.new $@; \

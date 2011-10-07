@@ -5,6 +5,10 @@ import teg.all;
 import beard.io;
 import beard.meta;
 
+struct Id {
+    mixin node!(ManyPlus!(CharNotFrom!"\n\t "));
+}
+
 int main() {
     alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
 
@@ -77,6 +81,10 @@ int main() {
     JsParser1;
 
     parseTest!(JsParser1)("choice 2", s);
+
+    // parseTest!(Id)("node 1", s);
+    s.set("kitten friend yeah");
+    parseTest!(ManyPlus!Id)("node 1", s);
 
     return nFailures;
 }

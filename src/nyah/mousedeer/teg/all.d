@@ -15,3 +15,4 @@ public import teg.joined;
 public import teg.choice;
 public import teg.optional;
 public import teg.empty_string;
+public import teg.node;

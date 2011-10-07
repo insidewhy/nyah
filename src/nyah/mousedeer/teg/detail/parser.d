@@ -13,9 +13,7 @@ template whitespaceSkipper() {
 template storingParser() {
     // like skip but creates the value to be stored if necessary
     static bool parse(S, O)(S s, ref O o) {
-        static if (is(O : Object))
-            o = new O;
-
+        static if (is(O : Object)) o = new O;
         return skip(s, o);
     }
 
