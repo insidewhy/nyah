@@ -14,7 +14,8 @@ alias ManyPlus!(CharRange!"09") Integer;
 // alias Integer Term;
 alias Choice!(
     Integer,
-    Sequence!(Char!"(", Expression, Char!")")) Term;
+    Sequence!(Char!"(", Node!Expression, Char!")"),
+    Id) Term;
 
 struct Multiplication {
     mixin makeNode!(JoinedPlus!(Char!"*", Term));
@@ -103,8 +104,8 @@ int main() {
     s.set("kitten friend yeah");
     parseTest!(ManyPlus!Id)("node 1", s);
 
-    s.set("3 + 1 * 2");
-    parseTest!(ManyPlus!Addition)("node 2", s);
+    // s.set("3 + 1 * 2");
+    // parseTest!(ManyPlus!Addition)("node 2", s);
 
     return nFailures;
 }

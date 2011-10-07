@@ -28,3 +28,13 @@ template makeNode(P...) {
 template isNode(T) {
     enum isNode = is(T.__IsNode);
 }
+
+// used for forward referencing a node
+class Node(alias T) {
+    mixin hasSubparser!T;
+    mixin storingParser;
+
+    static bool skip(S, O)(S s, ref O o) {
+        return subparser.skip(s, o);
+    }
+}

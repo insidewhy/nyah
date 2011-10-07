@@ -3,7 +3,7 @@ module teg.many;
 import teg.vector;
 import teg.range;
 import teg.detail.parser;
-import teg.stores;
+import teg.stores : stores, storesChar;
 
 import std.traits : Select;
 
