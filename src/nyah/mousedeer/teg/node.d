@@ -13,6 +13,8 @@ template makeNode(P...) {
         return subparser.skip(s, o.value_);
     }
 
+    static bool skip(S)(S s) { return subparser.skip(s); }
+
     void printTo(S)(int indent, S stream) {
         stream.write(typeid(this).name, " {\n");
         printIndent(stream, indent + 1);
@@ -34,6 +36,8 @@ template isNode(T) {
 class Node(alias T) {
     mixin hasSubparser!T;
     mixin storingParser;
+
+    static bool skip(S)(S s) { return subparser.skip(s); }
 
     static bool skip(S, O)(S s, ref O o) {
         return subparser.skip(s, o);
