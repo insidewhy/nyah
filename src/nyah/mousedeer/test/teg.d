@@ -18,7 +18,7 @@ struct Multiplication {
 // alias Integer Term;
 alias Choice!(
     Integer,
-    Sequence!(Char!"(", Expression, Char!")"),
+    Sequence!(Char!"(", Node!Expression, Char!")"),
     Id) Term;
 
 class Expression {

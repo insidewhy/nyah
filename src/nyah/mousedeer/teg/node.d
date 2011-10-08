@@ -33,7 +33,7 @@ template isNode(T) {
 }
 
 // used for forward referencing a node
-class Node(alias T) {
+class Node(T) {
     mixin hasSubparser!T;
     mixin storingParser;
 

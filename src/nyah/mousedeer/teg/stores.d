@@ -5,7 +5,10 @@ import teg.range;
 import teg.node;
 
 template storesSomething(T) {
-    enum storesSomething = is(T.value_type);
+    static if (is(T Unused : Node!U, U) || is(T.value_type))
+        enum storesSomething = true;
+    else
+        enum storesSomething = false;
 }
 
 template storesSomething(T...) if (T.length > 1) {
@@ -17,7 +20,7 @@ template stores(T) {
         alias U stores;
     else static if (isNode!T)
         alias T stores;
-    static if (storesSomething!T)
+    else static if (storesSomething!T)
         alias T.value_type stores;
     else
         alias void stores;
@@ -43,7 +46,7 @@ template storesCharOrRange(T...) {
 // like stores but looser as returns what type the parser skips over for
 // certain void storing parsers like Char.
 template skips(T) {
-    static if (__traits(hasMember, T, "SkippedParser"))
+    static if (! storesSomething!T && __traits(hasMember, T, "SkippedParser"))
         alias T.SkippedParser skips;
     else
         alias T skips;
