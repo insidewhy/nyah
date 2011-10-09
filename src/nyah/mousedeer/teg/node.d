@@ -10,7 +10,7 @@ template makeNode(P...) {
     mixin storingParser;
 
     static bool skip(S, O)(S s, ref O o) {
-        return subparser.skip(s, o.value_);
+        return subparser.parse(s, o.value_);
     }
 
     static bool skip(S)(S s) { return subparser.skip(s); }

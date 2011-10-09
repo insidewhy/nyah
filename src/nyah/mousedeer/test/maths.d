@@ -2,10 +2,14 @@ module mousedeer.test.maths;
 
 import mousedeer.test.common;
 
-// ordering of rules is important to D compiler, each class must come before
-// the one that references it, with the Node! reference last.
-// The Node! reference must be a class rather than a struct.
-class Addition {
+// Expression breaks the self-referential node chain.
+// Such types must be classes and must appear before referencing classes due
+// to how the D compiler works.
+class Expression {
+    mixin makeNode!(Addition);
+}
+
+struct Addition {
     mixin makeNode!(JoinedPlus!(Char!"+", Multiplication));
 }
 
@@ -15,17 +19,17 @@ struct Multiplication {
 
 alias ManyPlus!(CharRange!"09") Integer;
 
-// alias Integer Term;
 alias Choice!(
     Integer,
     Sequence!(Char!"(", Node!Expression, Char!")")) Term;
-
-alias Addition Expression; // ...
 
 int main() {
     alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
 
     auto s = new Stream!Whitespace("3 + 1 * (2 + 3 * 2) * 1");
+    // println("bum");
+    // println(typeid(Multiplication.value_type));
+
     parseTest!(ManyPlus!Expression)("node 2", s);
 
     return nFailures;
