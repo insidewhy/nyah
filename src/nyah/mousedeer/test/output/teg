@@ -81,8 +81,8 @@ node 1: mousedeer.test.basic.Id[] => [
         "yeah"
     }
 ]
-node 2: mousedeer.test.basic.Expression[] => [
-    mousedeer.test.basic.Expression {
+node 2: mousedeer.test.basic.Addition[] => [
+    mousedeer.test.basic.Addition {
         [
             mousedeer.test.basic.Multiplication {
                 [
@@ -92,7 +92,7 @@ node 2: mousedeer.test.basic.Expression[] => [
             mousedeer.test.basic.Multiplication {
                 [
                     "1",
-                    mousedeer.test.basic.Expression {
+                    mousedeer.test.basic.Addition {
                         [
                             mousedeer.test.basic.Multiplication {
                                 [

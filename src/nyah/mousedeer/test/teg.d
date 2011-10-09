@@ -12,18 +12,21 @@ struct Id {
 alias ManyPlus!(CharRange!"09") Integer;
 
 struct Multiplication {
+    alias void __IsNode; // ...
     mixin makeNode!(JoinedPlus!(Char!"*", Term));
 }
 
 // alias Integer Term;
 alias Choice!(
     Integer,
-    Sequence!(Char!"(", Node!Expression, Char!")"),
-    Id) Term;
+    Sequence!(Char!"(", Node!Expression, Char!")")) Term;
 
-class Expression {
-    mixin makeNode!(JoinedPlus!(Char!"+", Node!Multiplication));
+class Addition {
+    // see __IsNode.. gotta mark this as a self referencing node somehow
+    mixin makeNode!(JoinedPlus!(Char!"+", Multiplication));
 }
+
+alias Addition Expression; // turn into forward reference
 
 int main() {
     alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
