@@ -1,32 +1,20 @@
 node 2: mousedeer.test.maths.Addition[] => [
-    mousedeer.test.maths.Addition {
-        [
-            mousedeer.test.maths.Multiplication {
-                [
-                    "3"
+    mousedeer.test.maths.Addition: [
+        mousedeer.test.maths.Multiplication: [
+            "3"
+        ],
+        mousedeer.test.maths.Multiplication: [
+            "1",
+            mousedeer.test.maths.Addition: [
+                mousedeer.test.maths.Multiplication: [
+                    "2"
+                ],
+                mousedeer.test.maths.Multiplication: [
+                    "3",
+                    "2"
                 ]
-            },
-            mousedeer.test.maths.Multiplication {
-                [
-                    "1",
-                    mousedeer.test.maths.Addition {
-                        [
-                            mousedeer.test.maths.Multiplication {
-                                [
-                                    "2"
-                                ]
-                            },
-                            mousedeer.test.maths.Multiplication {
-                                [
-                                    "3",
-                                    "2"
-                                ]
-                            }
-                        ]
-                    },
-                    "1"
-                ]
-            }
+            ],
+            "1"
         ]
-    }
+    ]
 ]

@@ -71,13 +71,7 @@ choice 2: beard.variant.Variant!(Tuple!(Range,Range),Tuple!(Range,Range[],Tuple!
     )
 ]
 node 1: mousedeer.test.basic.Id[] => [
-    mousedeer.test.basic.Id {
-        "kitten"
-    },
-    mousedeer.test.basic.Id {
-        "friend"
-    },
-    mousedeer.test.basic.Id {
-        "yeah"
-    }
+    mousedeer.test.basic.Id: "kitten",
+    mousedeer.test.basic.Id: "friend",
+    mousedeer.test.basic.Id: "yeah"
 ]

@@ -16,12 +16,8 @@ template makeNode(P...) {
     static bool skip(S)(S s) { return subparser.skip(s); }
 
     void printTo(S)(int indent, S stream) {
-        stream.write(typeid(this).name, " {\n");
-        printIndent(stream, indent + 1);
-        printIndented(stream, indent + 1, value_);
-        stream.write('\n');
-        printIndent(stream, indent);
-        print('}');
+        stream.write(typeid(this).name, ": ");
+        printIndented(stream, indent, value_);
     }
 
     alias stores!subparser value_type;
