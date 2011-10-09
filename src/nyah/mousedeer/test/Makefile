@@ -1,6 +1,7 @@
 .SECONDARY:
 .PHONY: default tbpeg teg variant force
 
+update ?= ${u}
 outpath := output
 cwd ?= ..
 

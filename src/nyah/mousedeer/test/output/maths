@@ -1,15 +1,15 @@
-node 2: mousedeer.test.maths.Expression[] => [
-    mousedeer.test.maths.Expression: mousedeer.test.maths.Addition: [
-        mousedeer.test.maths.Multiplication: [
+node 2: mousedeer.test.maths.BasicExpression[] => [
+    BasicExpression: BasicAddition: [
+        BasicMultiplication: [
             "3"
         ],
-        mousedeer.test.maths.Multiplication: [
+        BasicMultiplication: [
             "1",
-            mousedeer.test.maths.Expression: mousedeer.test.maths.Addition: [
-                mousedeer.test.maths.Multiplication: [
+            BasicExpression: BasicAddition: [
+                BasicMultiplication: [
                     "2"
                 ],
-                mousedeer.test.maths.Multiplication: [
+                BasicMultiplication: [
                     "3",
                     "2"
                 ]

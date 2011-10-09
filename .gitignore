@@ -2,6 +2,7 @@ src/.obj
 src/Makefile
 src/nyah/mousedeer/mousedeer
 .obj
+.*.swp
 src/nyah/Makefile
 doc/website/*.html
 doc/website/*/*.html

@@ -2,6 +2,7 @@ module teg.node;
 
 import teg.detail.parser : hasSubparser, storingParser;
 import beard.io;
+import beard.meta : lastIndexOf;
 
 template makeNode(P...) {
     alias void __IsNode;
@@ -16,7 +17,8 @@ template makeNode(P...) {
     static bool skip(S)(S s) { return subparser.skip(s); }
 
     void printTo(S)(int indent, S stream) {
-        stream.write(typeid(this).name, ": ");
+        immutable name = typeid(this).name;
+        stream.write(name[(lastIndexOf(name, '.') + 1)..$], ": ");
         printIndented(stream, indent, value_);
     }
 

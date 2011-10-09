@@ -57,3 +57,12 @@ template foldLeft2(alias F, T...) {
 private template innerFold(alias T, U) {
     alias T.add!U innerFold;
 }
+
+//////////////////////////////////////////////////////////////////////////////
+ptrdiff_t lastIndexOf(H, N)(H h, N n) {
+    for (auto i = h.length; true; --i) {
+        if (h[i - 1] == n) return i - 1;
+        else if (! i) return -1;
+    }
+
+}

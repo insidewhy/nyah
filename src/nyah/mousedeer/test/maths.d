@@ -2,35 +2,33 @@ module mousedeer.test.maths;
 
 import mousedeer.test.common;
 
-// Expression breaks the self-referential node chain.
+// BasicExpression breaks the self-referential node chain.
 // Such types must be classes and must appear before referencing classes due
 // to how the D compiler works.
-class Expression {
-    mixin makeNode!(Addition);
+class BasicExpression {
+    mixin makeNode!(BasicAddition);
 }
 
-struct Addition {
-    mixin makeNode!(JoinedPlus!(Char!"+", Multiplication));
+struct BasicAddition {
+    mixin makeNode!(JoinedPlus!(Char!"+", BasicMultiplication));
 }
 
-struct Multiplication {
-    mixin makeNode!(JoinedPlus!(Char!"*", Term));
+struct BasicMultiplication {
+    mixin makeNode!(JoinedPlus!(Char!"*", BasicTerm));
 }
 
 alias ManyPlus!(CharRange!"09") Integer;
 
 alias Choice!(
     Integer,
-    Sequence!(Char!"(", Node!Expression, Char!")")) Term;
+    Sequence!(Char!"(", Node!BasicExpression, Char!")")) BasicTerm;
 
 int main() {
     alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
 
     auto s = new Stream!Whitespace("3 + 1 * (2 + 3 * 2) * 1");
-    // println("bum");
-    // println(typeid(Multiplication.value_type));
 
-    parseTest!(ManyPlus!Expression)("node 2", s);
+    parseTest!(ManyPlus!BasicExpression)("node 2", s);
 
     return nFailures;
 }
