@@ -4,6 +4,10 @@ import teg.stores;
 import beard.io;
 import std.stdio;
 
+public import teg.all;
+public import beard.io;
+public import beard.meta;
+
 auto nFailures = 0u;
 
 void parseTest(P, S)(string name, S s) {

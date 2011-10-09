@@ -81,35 +81,3 @@ node 1: mousedeer.test.basic.Id[] => [
         "yeah"
     }
 ]
-node 2: mousedeer.test.basic.Addition[] => [
-    mousedeer.test.basic.Addition {
-        [
-            mousedeer.test.basic.Multiplication {
-                [
-                    "3"
-                ]
-            },
-            mousedeer.test.basic.Multiplication {
-                [
-                    "1",
-                    mousedeer.test.basic.Addition {
-                        [
-                            mousedeer.test.basic.Multiplication {
-                                [
-                                    "2"
-                                ]
-                            },
-                            mousedeer.test.basic.Multiplication {
-                                [
-                                    "3",
-                                    "2"
-                                ]
-                            }
-                        ]
-                    },
-                    "1"
-                ]
-            }
-        ]
-    }
-]

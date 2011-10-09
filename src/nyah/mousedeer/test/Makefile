@@ -4,12 +4,13 @@
 outpath := output
 cwd ?= ..
 
-default: teg
+default: variant teg maths
 
 -include ../Makefile
 
 tbpeg: ${outpath}/tbpeg
 teg: ${outpath}/teg
+maths: ${outpath}/maths
 variant: ${outpath}/variant
 force:
 
