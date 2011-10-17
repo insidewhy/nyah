@@ -3,6 +3,7 @@ module teg.stores;
 import teg.sequence;
 import teg.range;
 import teg.node;
+import beard.variant : isVariant;
 
 template storesSomething(T) {
     static if (is(T Unused : Node!U, U) || is(T.value_type))
@@ -36,6 +37,10 @@ template storesChar(T...) {
 
 template storesRange(T...) {
     enum storesRange = is(stores!(T) : Range);
+}
+
+template storesVariant(T...) {
+    enum storesVariant = isVariant!(stores!T);
 }
 
 template storesCharOrRange(T...) {

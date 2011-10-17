@@ -6,6 +6,14 @@ struct Id {
     mixin makeNode!(ManyPlus!(CharNotFrom!"\n\t "));
 }
 
+struct Stars {
+    mixin makeNode!(ManyPlus!(CharFrom!"+*"));
+}
+
+struct Integer {
+    mixin makeNode!(ManyPlus!(CharRange!"09"));
+}
+
 int main() {
     alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
 
@@ -47,10 +55,10 @@ int main() {
                 CharRange!"azAZ"),
         Many!(Choice!(CharRange!"azAZ09", Char!"_")))     Identifier;
 
-    alias ManyPlus!(CharRange!"09") Integer;
+    alias ManyPlus!(CharRange!"09") Integer1;
 
     // not good enough yet
-    alias Integer Expression1;
+    alias Integer1 Expression1;
 
     alias Sequence!(Char!"var", Identifier,
                     Optional!(Char!"=", Expression1)) Variable;
@@ -78,6 +86,13 @@ int main() {
     JsParser1;
 
     parseTest!(JsParser1)("choice 2", s);
+
+    // collapsing variants together
+    s.set("C hey ***+ 123");
+    parseTest!(ManyPlus!(Choice!(
+        Choice!(Stars, CharRange!"CD"),
+        Choice!(Integer, Identifier),
+    )))("choice 3", s);
 
     // parseTest!(Id)("node 1", s);
     s.set("kitten friend yeah");

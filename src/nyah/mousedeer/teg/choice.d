@@ -32,6 +32,8 @@ private template choiceParser(alias S, bool CanBeEmpty, P...) {
         static bool skip(S, O)(S s, ref O o) {
             static if (! storesSomething!SP)
                 return SP.skip(s);
+            else static if (isVariant!SS)
+                return SP.skip(s, o);
             else static if (isVariant!O) {
                 o = SS.init;
                 return SP.skip(s, o.as!SS);
@@ -43,13 +45,17 @@ private template choiceParser(alias S, bool CanBeEmpty, P...) {
     template add(U) {
         static if (! storesSomething!U)
             alias choiceParser!(S, true, P, parseAs!U) add;
+        else static if (storesVariant!U)
+            alias choiceParser!(
+                S.append!((stores!U).types), CanBeEmpty, P, parseAs!U) add;
         // static if (storesCharOrRange!U) {
         //     // todo: if char or range also in Variant then merge to range
         //     alias choiceParser!(S, CanBeEmpty, P, U) add;
         // }
         // todo: collapse variants
-        else alias choiceParser!(
-            S.append!(stores!U), CanBeEmpty, P, parseAs!U) add;
+        else
+            alias choiceParser!(
+                S.append!(stores!U), CanBeEmpty, P, parseAs!U) add;
     }
 }
 
