@@ -10,18 +10,20 @@ class TreeJoined(NodeT, bool SkipWs, J, T...) {
 
     mixin parser!T;
 
+    // todo: sort this out
     static if (is(NodeT == void)) {
-        private alias Vector!(stores!subparser) value_type;
+        alias Vector!(stores!subparser) value_type;
     }
     else {
-        private alias subparser             joinedStore;
-        private alias subparser.value_type  singleStore;
-
-        alias Vector!joinedStore value_type;
+        alias NodeT value_type;
+        alias Vector!(stores!subparser) joined_type;
     }
 
     static bool skip(S, O)(S s, ref O o) {
-        return Joined!(SkipWs, true, J, T).skip(s, o);
+        static if (is(NodeT == void))
+            return Joined!(SkipWs, true, J, T).skip(s, o);
+        else
+            return Joined!(SkipWs, true, J, T).skip(s, o.value_);
     }
 
     static bool skip(S)(S s) {

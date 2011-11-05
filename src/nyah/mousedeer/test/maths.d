@@ -10,8 +10,8 @@ class BasicExpression {
 }
 
 struct BasicAddition {
-    mixin makeNode!(JoinedPlus!(Char!"+", BasicMultiplication));
-    // mixin makeNode!(TreeJoined!(Char!"+", BasicMultiplication));
+    // mixin makeNode!(JoinedPlus!(Char!"+", BasicMultiplication));
+    mixin makeNode!(TreeJoined!(Char!"+", BasicMultiplication));
 }
 
 struct BasicMultiplication {
