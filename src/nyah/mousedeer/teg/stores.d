@@ -32,11 +32,11 @@ template stores(T...) if (T.length > 1) {
 }
 
 template storesChar(T...) {
-    enum storesChar = is(stores!(T) : char);
+    enum storesChar = is(stores!T : char);
 }
 
 template storesRange(T...) {
-    enum storesRange = is(stores!(T) : Range);
+    enum storesRange = is(stores!T : Range);
 }
 
 template storesVariant(T...) {

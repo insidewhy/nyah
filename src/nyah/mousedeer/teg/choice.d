@@ -46,13 +46,13 @@ private template choiceParser(alias S, bool CanBeEmpty, P...) {
         static if (! storesSomething!U)
             alias choiceParser!(S, true, P, parseAs!U) add;
         else static if (storesVariant!U)
+            // collapse variant types into this
             alias choiceParser!(
                 S.append!((stores!U).types), CanBeEmpty, P, parseAs!U) add;
         // static if (storesCharOrRange!U) {
         //     // todo: if char or range also in Variant then merge to range
         //     alias choiceParser!(S, CanBeEmpty, P, U) add;
         // }
-        // todo: collapse variants
         else
             alias choiceParser!(
                 S.append!(stores!U), CanBeEmpty, P, parseAs!U) add;
