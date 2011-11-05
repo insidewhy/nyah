@@ -20,17 +20,33 @@ template makeNode(P...) {
     mixin storingParser;
     mixin printNode;
 
-    static bool skip(S, O)(S s, ref O o) {
-        return subparser.parse(s, o.value_);
-    }
-
-    static bool skip(S)(S s) { return subparser.skip(s); }
-
     // alias stores!subparser value_type;
     alias typeof(this) value_type;
     stores!subparser value_;
+
+    static bool skip(S, O)(S s, ref O o) {
+        return subparser.parse(s, o.value_);
+    }
+    static bool skip(S)(S s) { return subparser.skip(s); }
 }
 
+// Test if a parser is a pure (not tree) node type.
+template isNode(T) {
+    enum isNode = is(T.__IsNode);
+}
+
+////////////////////////////////////////////////////////////////////////////
+// used to break cyclic type chains for self-referential parsers
+class Node(T) {
+    mixin hasSubparser!T;
+    mixin storingParser;
+
+    static bool skip(S)(S s) { return subparser.skip(s); }
+    static bool skip(S, O)(S s, ref O o) { return subparser.skip(s, o); }
+}
+
+////////////////////////////////////////////////////////////////////////////
+// tree stuff
 private template makeTreeNode(T) {
     mixin storingParser;
     mixin printNode;
@@ -42,6 +58,7 @@ private template makeTreeNode(T) {
     static bool skip(S, O)(S s, ref O o) { return T.skip(s, o); }
 }
 
+// specialisations of makeNode for tree type parsers
 template makeNode(P : TreeJoined!(J, T), J, T...) {
     mixin makeTreeNode!(TreeJoined!(typeof(this), true, J, T));
 }
@@ -50,15 +67,3 @@ template makeNode(P : TreeJoinedTight!(J, T), J, T...) {
     mixin makeTreeNode!(TreeJoined!(typeof(this), false, J, T));
 }
 
-template isNode(T) {
-    enum isNode = is(T.__IsNode);
-}
-
-// used for forward referencing a node
-class Node(T) {
-    mixin hasSubparser!T;
-    mixin storingParser;
-
-    static bool skip(S)(S s) { return subparser.skip(s); }
-    static bool skip(S, O)(S s, ref O o) { return subparser.skip(s, o); }
-}
