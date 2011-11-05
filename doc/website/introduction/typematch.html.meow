@@ -13,7 +13,7 @@ head {
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 def funprint(a) {
     std.print("{ ")
-    ~(a) {
+    a ~ {
         // ? matches anything but void
         ?          ->  println("something: " + a)
         // void is matched when a is not supplied
@@ -37,25 +37,20 @@ funprint()
 funprint(14)
 funprint(vector[string] [ "joined", "fun", "kittens" ])
 
-// Variables from surrounding scope can be used in expressions.
-def prefix_print(prefix:string, a) ~(a) {
-    string -> println(prefix .. a)
-    ?      -> {}
-}
-
-prefix_print("friend-", "hello")
-prefix_print("friend-", 4)
-
-// def~ can be used to create a function that matches on all of its arguments.
-def~ merge_to_string(a, b) {
-    ?A, A  -> $"same: $a $b"
-    ...    -> $"mixed: $a $b"
+// ~ can match on multiple variables
+def merge_to_string(prefix, a, b) {
+    return prefix +
+        (a, b) ~ {
+            ?A, A  -> $"same: $a $b"
+            ...    -> $"mixed: $a $b"
+        }
 }
 
 // Match objects can handle multiple arities and return data.
-// => is a shorthand for "-> ="
-def~ string_desc(...a) {
-    ?      => "1"
+// ~ immediately after a function declaration matches on the types of the
+// arguments of the function.
+def string_desc(...a) ~ {
+    ?      => "1"        // => is a shorthand for "-> ="
     ?A, A  => "2 same"
     ?, ?   => "2 different"
     ...    => ">2 different"
@@ -66,23 +61,26 @@ prinln(string_desc(1, false)) // print "2 different"
 prinln(string_desc(1, 1, 1, 1)) // print ">2 same"
 // prinln(string_desc()) // no matches.. compiler error
 
-// Return types of matches and match functions can be specified.
-def~ simple_desc(...a):string {
+// Return types of matches can be deduced from the return type
+// of a preceeding function.
+def simple_desc(...a):string ~ {
     ?    => "single"
     ?, ? => 1  // error: type does not match return type.
 }
 
+// Or specified on an anonymous typematch as so:
 def voidstr(a):string {
-    return ~(a):string {
+    return ~:string {
         void => "void"
         ?    => "non-void"
     }
 }
 
-// Match objects can work as meta-functions that accept types rather than
-// actual variables using the ~[...] form. In this case the type is always
-// returned at compile time in place of the match.
-meta if[C, T, F] : ~[C] { true => T ; ? => F }
+// % can be used as a sort of compile-time equivalent of type-matching.
+// These expressions will be evaluated at compile time.
+meta if[C, T, F] : C % { true => T ; ? => F }
+
+b : if[false, bool, int]   // b has type "int"
 EOF
 
 %a(href=metafunc.html) previous | " | " | %a(href=index.html) up | " | " | %a(href=operators.html) next
