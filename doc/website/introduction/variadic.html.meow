@@ -12,7 +12,7 @@ head {
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
     // Inheritance.
-    class tuple[...T] : tuple_helper[T...] {
+    class tuple[...T] : tuple_helper[T] {
         // super always refers to first parent class (super[n] for nth)
         // This inherits all constructors from tuple_helper.
         using super.this
@@ -20,10 +20,15 @@ head {
 
     class tuple_helper[]
 
+    // The postfix ... is optional but will enforce expansion from a pack
+    // at compile time if present.
     class tuple_helper[H, ...T] : tuple_helper[T...] {
+
+        // ... can also be used as a variable specifier to denote a
+        // variadic argument pack.
         def this(h:H, ...u) {
             // Call parent class constructor.
-            super(u...)
+            super(u)   // could also use super(u...)
             element_ = h
         }
 
