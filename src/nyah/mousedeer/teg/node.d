@@ -1,5 +1,6 @@
 module teg.node;
 
+import teg.tree_joined;
 import teg.detail.parser : hasSubparser, storingParser;
 import beard.io;
 import beard.meta : lastIndexOf;
@@ -25,6 +26,10 @@ template makeNode(P...) {
     // alias stores!subparser value_type;
     alias typeof(this) value_type;
     stores!subparser value_;
+}
+
+template makeNode(P : TreeJoined!(J, T), J, T...) {
+    // todo:
 }
 
 template isNode(T) {

@@ -2,26 +2,23 @@ module teg.tree_joined;
 
 import teg.detail.parser;
 import teg.vector;
-import teg.node;
 import teg.joined;
 import teg.stores;
 
-private class TreeJoined(bool SkipWs, J, T...) {
+class TreeJoined(NodeT, bool SkipWs, J, T...) {
     alias void __IsTreeParser;
 
     mixin parser!T;
 
-    static if (isNode!subparser) {
-        private alias subparser             joinedStore;
-        private alias subparser.value_type  singleStore;
+    static if (is(NodeT == void)) {
+        private alias Vector!(stores!subparser) value_type;
     }
     else {
-        private alias stores!T singleStore;
-        // private alias stores!T singleStore;
-    }
+        private alias subparser             joinedStore;
+        private alias subparser.value_type  singleStore;
 
-    // incorrect from here
-    alias Vector!joinedStore value_type;
+        alias Vector!joinedStore value_type;
+    }
 
     static bool skip(S, O)(S s, ref O o) {
         return Joined!(SkipWs, true, J, T).skip(s, o);
@@ -32,5 +29,5 @@ private class TreeJoined(bool SkipWs, J, T...) {
     }
 }
 
-class TreeJoined(J, T...) : TreeJoined!(true, J, T) {}
-class TreeJoinedTight(J, T...) : TreeJoined!(false, J, T) {}
+class TreeJoined(J, T...) : TreeJoined!(void, true, J, T) {}
+class TreeJoinedTight(J, T...) : TreeJoined!(void, false, J, T) {}
