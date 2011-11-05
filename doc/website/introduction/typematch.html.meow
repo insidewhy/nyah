@@ -37,7 +37,7 @@ funprint()
 funprint(14)
 funprint(vector[string] [ "joined", "fun", "kittens" ])
 
-using std.io.print;
+import std.io : print;
 
 // ~ can match on multiple variables
 def prefix_print_merge(prefix, a, b) {
