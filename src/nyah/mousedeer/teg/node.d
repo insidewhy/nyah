@@ -31,17 +31,23 @@ template makeNode(P...) {
     stores!subparser value_;
 }
 
-template makeNode(P : TreeJoined!(J, T), J, T...) {
+private template makeTreeNode(T) {
     mixin storingParser;
     mixin printNode;
 
-    private alias TreeJoined!(typeof(this), true, J, T)  NodeJoin;
+    alias T.value_type value_type;
+    T.joined_type      value_;
 
-    alias NodeJoin.value_type value_type;
-    NodeJoin.joined_type      value_;
+    static bool skip(S)(S s) { return T.skip(s); }
+    static bool skip(S, O)(S s, ref O o) { return T.skip(s, o); }
+}
 
-    static bool skip(S)(S s) { return P.skip(s); }
-    static bool skip(S, O)(S s, ref O o) { return NodeJoin.skip(s, o); }
+template makeNode(P : TreeJoined!(J, T), J, T...) {
+    mixin makeTreeNode!(TreeJoined!(typeof(this), true, J, T));
+}
+
+template makeNode(P : TreeJoinedTight!(J, T), J, T...) {
+    mixin makeTreeNode!(TreeJoined!(typeof(this), false, J, T));
 }
 
 template isNode(T) {
