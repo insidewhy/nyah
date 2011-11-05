@@ -22,8 +22,9 @@ template makeNode(P...) {
         printIndented(stream, indent, value_);
     }
 
-    alias stores!subparser value_type;
-    value_type value_;
+    // alias stores!subparser value_type;
+    alias typeof(this) value_type;
+    stores!subparser value_;
 }
 
 template isNode(T) {

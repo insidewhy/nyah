@@ -6,11 +6,12 @@ import mousedeer.test.common;
 // Such types must be classes and must appear before referencing classes due
 // to how the D compiler works.
 class BasicExpression {
-    mixin makeNode!(BasicAddition);
+    mixin makeNode!BasicAddition;
 }
 
 struct BasicAddition {
     mixin makeNode!(JoinedPlus!(Char!"+", BasicMultiplication));
+    // mixin makeNode!(TreeJoined!(Char!"+", BasicMultiplication));
 }
 
 struct BasicMultiplication {

@@ -19,8 +19,6 @@ template storesSomething(T...) if (T.length > 1) {
 template stores(T) {
     static if (is(T Unused : Node!U, U))
         alias U stores;
-    else static if (isNode!T)
-        alias T stores;
     else static if (storesSomething!T)
         alias T.value_type stores;
     else
