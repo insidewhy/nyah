@@ -22,7 +22,11 @@ template makeNode(P...) {
 
     // alias stores!subparser value_type;
     alias typeof(this) value_type;
-    stores!subparser value_;
+
+    // nodes should always store but this static if allows the compiler
+    // to give better error messages in case of compile-time errors
+    static if (storesSomething!subparser)
+        stores!subparser value_;
 
     static bool skip(S, O)(S s, ref O o) {
         return subparser.parse(s, o.value_);
@@ -52,7 +56,7 @@ private template makeTreeNode(T) {
     mixin printNode;
 
     alias T.value_type value_type;
-    T.joined_type      value_;
+    T.TreeType         value_;
 
     static bool skip(S)(S s) { return T.skip(s); }
     static bool skip(S, O)(S s, ref O o) { return T.skip(s, o); }

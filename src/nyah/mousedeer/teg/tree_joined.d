@@ -1,23 +1,11 @@
 module teg.tree_joined;
 
-import teg.detail.parser;
-import teg.vector;
 import teg.joined;
 import teg.stores;
+import teg.detail.tree;
 
 class TreeJoined(NodeT, bool SkipWs, J, T...) {
-    alias void __IsTreeParser;
-
-    mixin parser!T;
-
-    // todo: sort this out
-    static if (is(NodeT == void)) {
-        alias Vector!(stores!subparser) value_type;
-    }
-    else {
-        alias NodeT value_type;
-        alias Vector!(stores!subparser) joined_type;
-    }
+    mixin TreeParser!(NodeT, T);
 
     static bool skip(S, O)(S s, ref O o) {
         static if (is(NodeT == void))
