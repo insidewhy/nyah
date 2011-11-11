@@ -9,20 +9,28 @@ public import beard.variant;
 template TreeParser(NodeT, T...) {
     mixin parser!T;
 
+  private:
     private alias stores!subparser  SubStores;
     alias Vector!SubStores          TreeType;
 
     // todo: sort this out
-    static if (is(NodeT == void))
-        alias Vector!SubStores value_type;
-    else
-        alias NodeT value_type;
-
-    static if (isVariant!SubStores) {
-        alias Variant!(value_type, TreeType, SubStores.types) cont_type;
+    static if (is(NodeT == void)) {
+        alias SubStores StoresType;
+        static auto ref getContainer(O)(ref O o) { return o; }
     }
     else {
-        alias Variant!(value_type, TreeType, SubStores) cont_type;
+        alias NodeT StoresType;
+        static auto ref getContainer(O)(ref O o) { return o.value_; }
+    }
+
+  public:
+    static if (isVariant!SubStores) {
+        static auto ref getSubvalue(O)(ref O o) { return o; }
+        alias Variant!(StoresType, TreeType, SubStores.types) value_type;
+    }
+    else {
+        static auto ref getSubvalue(O)(ref O o) { return o.as!SubStores; }
+        alias Variant!(StoresType, TreeType, SubStores) value_type;
     }
 
 }

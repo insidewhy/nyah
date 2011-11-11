@@ -17,21 +17,36 @@ class Joined(bool SkipWs, bool AtLeastOne, J, T...) {
 
         for (;;) {
             skip_whitespace(s);
-            if (s.empty() || ! J.skip(s)) return true;
+            if (s.empty()) return true;
+
+            auto save = s.save();
+            if (! J.skip(s)) return true;
             skip_whitespace(s);
-            if (s.empty() || ! subparser.skip(s)) return false;
+            if (s.empty() || ! subparser.skip(s)) {
+                s.restore(save);
+                return true;
+            }
+        }
+    }
+
+    static bool skipTail(S, O)(S s, ref O o) {
+        for (;;) {
+            skip_whitespace(s);
+            if (s.empty()) return true;
+
+            auto save = s.save();
+            if (! J.skip(s)) return true;
+            skip_whitespace(s);
+            if (s.empty() || ! _skip(s, o)) {
+                s.restore(save);
+                return true;
+            }
         };
     }
 
     static bool skip(S, O)(S s, ref O o) {
         if (! _skip(s, o)) return ! AtLeastOne;
-
-        for (;;) {
-            skip_whitespace(s);
-            if (s.empty() || ! J.skip(s)) return true;
-            skip_whitespace(s);
-            if (s.empty() || ! _skip(s, o)) return false;
-        };
+        return skipTail(s, o);
     }
 
     private static bool _skip(S, O)(S s, ref O o) {

@@ -13,6 +13,10 @@ private template maxSize(size_t _size) {
     }
 }
 
+class BadVariantCopy : Throwable {
+    this(string error) { super(error); }
+}
+
 // may store any of T or be empty.
 // I would prefer only allowing empty if void is in T and creating an object
 // of the first type when default initialising.
@@ -22,7 +26,7 @@ struct Variant(T...) {
     enum size =      foldLeft2!(maxSize!0u, T).size;
     enum n_types =   T.length;
 
-    void opAssign(U)(U rhs) {
+    void opAssign(U)(auto ref U rhs) {
         static if (contains!(U, T)) {
             // copying object references like this is okay
             static if (is(T == class) && is(T == shared))
@@ -34,6 +38,23 @@ struct Variant(T...) {
         else static if (is(U == Variant)) {
             this.value_ = rhs.value_;
             this.idx_ = rhs.idx_;
+        }
+        else static if (isVariant!U) {
+            struct copyVariant {
+                void opCall(T)(T t) {
+                    static if (contains!(T, types))
+                        *dest = t;
+                    else throw new BadVariantCopy(
+                        "cannot store type source variant holds");
+                }
+
+                void empty() { dest.reset(); }
+
+                this(Variant *v) { dest = v; }
+                Variant *dest;
+            }
+
+            rhs.apply(copyVariant(&this));
         }
         else static assert(false, "invalid variant type");
     }
@@ -80,6 +101,11 @@ struct Variant(T...) {
 
     bool empty() @property const { return idx_ >= T.length; }
 
+    void reset() {
+        // run destructor on existing class?
+        idx_ = n_types;
+    }
+
     ////////////////////////////////////////////////////////////////////////
     this(U)(U rhs) { this = rhs; }
 
@@ -91,7 +117,7 @@ struct Variant(T...) {
             void* p[size / (void*).sizeof];
     }
 
-    uint idx_ = T.length;
+    uint idx_ = n_types;
 }
 
 template isVariant(T) {

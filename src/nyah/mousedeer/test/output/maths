@@ -24,23 +24,17 @@ basic maths: mousedeer.test.maths.BasicExpression[] => [
 ]
 maths: mousedeer.test.maths.Expression[] => [
     Expression: Addition: [
-        Multiplication: [
-            "3"
-        ],
+        "3",
         Multiplication: [
             "1",
             Expression: Addition: [
-                Multiplication: [
-                    "2"
-                ],
+                "2",
                 Multiplication: [
                     "3",
                     "2"
                 ]
             ],
-            Expression: Multiplication: [
-                "1"
-            ]
+            Expression: "1"
         ]
     ]
 ]

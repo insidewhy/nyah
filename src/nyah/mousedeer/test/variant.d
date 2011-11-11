@@ -37,6 +37,14 @@ int main() {
     v4 = 1.2f;
     println(v4);
 
+    alias Variant!(float, int, string) src_t;
+    alias Variant!(float, int) dest_t;
+    auto src = src_t();
+    auto dest = dest_t();
+    src = 4;
+    dest = src;
+    println(dest);
+
     // alias Variant!(void, float, int, string, S) var2_t;
     // var2_t ov1;
     return nFailures;

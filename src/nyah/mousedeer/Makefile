@@ -1,6 +1,6 @@
 .PHONY: test clean
 
-# compile_with_gdc ?= 1
+# gdc ?= 1
 debug ?= 1
 cwd ?= .
 O ?= ${cwd}/.obj
@@ -18,6 +18,6 @@ mousedeer: main.d ${libfiles}
 clean:
 	rm -rf ${O}
 
-dmd := $(if ${compile_with_gdc},gdmd,dmd)
+dmd := $(if ${gdc},gdmd,dmd)
 
 comp_args := $(if ${debug},-g -debug)

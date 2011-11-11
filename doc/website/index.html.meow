@@ -43,7 +43,7 @@ head {
     %li { .completed completed | a(href=http://chilon.net/nyu)nyu parser generator | which implements the nyah grammar syntax and will be used to boostrap nyah. Note that the nyu language is a subset of the nyah language, and is already capable of bootstrapping itself. }
 }
 
-%h3 First compiler (written in C++0x) to be used for bootstrapping
+%h3 First compiler (written in D) to be used for bootstrapping
 %ul.status {
     %li { .inprogress in progress | mousedeer: full nyah language parser using parser generator. }
     %li { .yettostart yet to start | Code generator using LLVM. }
