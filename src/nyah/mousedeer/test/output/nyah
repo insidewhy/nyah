@@ -7,7 +7,10 @@ nyah: mousedeer.parser.nyah.Function[] => [
             Expression: AssigningOperator: joined [
                 "hello"
                 "*="
-                Number: "12"
+                RealNumber: (
+                    "12",
+                    "1"
+                )
             ]
         ]
     ),

@@ -9,16 +9,17 @@ alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
 class Expression { mixin makeNode!AssigningOperator; }
 alias Node!Expression ExpressionRef;
 
-//////////////////////////////////////////////////////////////////////////////
-// number
-alias ManyPlus!(CharRange!"09") Integer;
-alias Sequence!(Integer, Char!".", Integer) RealNumber;
-struct Number { mixin makeNode!(Choice!(Integer, RealNumber)); }
-
 alias Lexeme!(
     Choice!(Char!"_",
             CharRange!"azAZ"),
     Many!(Choice!(CharRange!"azAZ09", Char!"_")))     Identifier;
+
+//////////////////////////////////////////////////////////////////////////////
+// numbers
+alias ManyPlus!(CharRange!"09") _Integer;
+struct Integer { mixin makeNode!_Integer; }
+struct RealNumber { mixin makeNode!(_Integer, Char!".", _Integer); }
+alias Choice!(RealNumber, Integer) Number;
 
 //////////////////////////////////////////////////////////////////////////////
 // function
@@ -39,14 +40,14 @@ alias Choice!(
         Char!"{",
         Many!ExpressionRef,
         Char!"}"),
-    ExpressionRef)     FunctionBody;
+    ExpressionRef)     CodeBlock;
 
 class Function {
     mixin makeNode!(
         FunctionPrefix,
         Identifier,
         Optional!ArgumentsDefinition,
-        FunctionBody);
+        CodeBlock);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -67,7 +68,15 @@ class AssigningOperator {
     mixin makeNode!(TreeJoined!(AssigningOperators, OrOperator));
 }
 
-alias Data OrOperator; // ...
+class OrOperator {
+    mixin makeNode!(TreeJoined!(Char!"||", AndOperator));
+}
+
+class AndOperator {
+    mixin makeNode!(TreeJoined!(Char!"&&", HatOperator));
+}
+
+alias Data HatOperator; // ...
 
 alias Choice!(Identifier, Number) Data;
 
