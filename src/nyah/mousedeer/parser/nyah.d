@@ -6,6 +6,9 @@ import teg.all;
 // global
 alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
 
+class Expression { mixin makeNode!LowestOperator; }
+alias Node!Expression ExpressionRef;
+
 //////////////////////////////////////////////////////////////////////////////
 // number
 alias ManyPlus!(CharRange!"09") Integer;
@@ -24,15 +27,19 @@ alias Choice!(
     Char!"def!",
     Sequence!(Char!"override", Char!"def")) FunctionPrefix;
 
-// improve:
-alias Identifier ArgumentDefinition;
+alias Identifier ArgumentDefinition; // ...
 
 alias Sequence!(
     Char!"(",
     Joined!(Char!",", ArgumentDefinition),
     Char!")")                               ArgumentsDefinition;
 
-alias Sequence!(Char!"{", Char!"}")  FunctionBody;
+alias Choice!(
+    Sequence!(
+        Char!"{",
+        Many!ExpressionRef,
+        Char!"}"),
+    ExpressionRef)     FunctionBody;
 
 class Function {
     mixin makeNode!(
@@ -43,7 +50,11 @@ class Function {
 }
 
 //////////////////////////////////////////////////////////////////////////////
-// putting it together
-alias Function TopLevel;
+// expressions
+alias Identifier LowestOperator; // ...
+
+//////////////////////////////////////////////////////////////////////////////
+// top level
+alias Function TopLevel; // ...
 
 alias Many!TopLevel Grammar;

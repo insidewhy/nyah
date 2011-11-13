@@ -2,6 +2,7 @@ nyah: mousedeer.parser.nyah.Function[] => [
     Function: (
         "def",
         "hey",
+        [],
         []
     ),
     Function: (
@@ -10,6 +11,7 @@ nyah: mousedeer.parser.nyah.Function[] => [
         [
             "a",
             "b"
-        ]
+        ],
+        []
     )
 ]
