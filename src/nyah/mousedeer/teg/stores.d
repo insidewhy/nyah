@@ -6,7 +6,8 @@ import teg.node;
 import beard.variant : isVariant;
 
 template storesSomething(T) {
-    static if (is(T Unused : Node!U, U) || is(T.value_type))
+    static if (is(T Unused : Node!U, U) ||
+               (is(T.value_type) && ! is (T.value_type : void)))
         enum storesSomething = true;
     else
         enum storesSomething = false;

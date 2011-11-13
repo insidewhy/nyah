@@ -21,6 +21,8 @@ private template choiceParser(alias S, bool CanBeEmpty, P...) {
         else
             alias first          value_type;
     }
+    else static if (! S.types.length)
+        alias void               value_type;
     else
         alias Variant!(S.types)  value_type;
 
