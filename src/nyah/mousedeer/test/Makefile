@@ -1,11 +1,11 @@
 .SECONDARY:
-.PHONY: default tbpeg teg variant nyah force
+.PHONY: default tbpeg teg variant nyah choice joined force
 
 update ?= ${u}
 outpath := output
 cwd ?= ..
 
-default: variant teg maths nyah
+default: variant teg maths nyah choice joined
 
 -include ../Makefile
 
@@ -14,6 +14,8 @@ teg: ${outpath}/teg
 maths: ${outpath}/maths
 variant: ${outpath}/variant
 nyah: ${outpath}/nyah
+choice: ${outpath}/choice
+joined: ${outpath}/joined
 force:
 
 ${outpath}/%: ${O}/% force

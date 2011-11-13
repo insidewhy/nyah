@@ -3,7 +3,12 @@ nyah: mousedeer.parser.nyah.Function[] => [
         "def",
         "hey",
         [],
-        []
+        [
+            Expression: AssigningOperator: [
+                "hello",
+                "bum"
+            ]
+        ]
     ),
     Function: (
         "def",
@@ -12,6 +17,8 @@ nyah: mousedeer.parser.nyah.Function[] => [
             "a",
             "b"
         ],
-        []
+        [
+            Expression: "hello"
+        ]
     )
 ]

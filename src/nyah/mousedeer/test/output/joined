@@ -1,0 +1,28 @@
+joined: teg.range.Range[] => [
+    "hey",
+    "baby"
+]
+joined 2: std.typecons.Tuple!(Range,Range[],Range[]).Tuple[] => [
+    (
+        "add",
+        [
+            "a",
+            "b",
+            "c"
+        ],
+        [
+            "a1",
+            "b1"
+        ]
+    ),
+    (
+        "pump",
+        [],
+        []
+    )
+]
+join stores: teg.range.Range[] => [
+    "hey",
+    "baby",
+    "dog"
+]

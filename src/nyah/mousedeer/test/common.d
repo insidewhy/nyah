@@ -10,6 +10,10 @@ public import beard.meta;
 
 auto nFailures = 0u;
 
+alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
+alias Lexeme!(CharRange!"azAZ", Many!(CharRange!"azAZ09")) SimpleId;
+alias Sequence!(Char!"var", SimpleId) SimpleVariable;
+
 void parseTest(P, S)(string name, S s) {
     s.reset();
     s.skip_whitespace();

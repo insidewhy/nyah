@@ -5,9 +5,13 @@ import mousedeer.test.common;
 
 int main() {
     auto s = new Stream!Whitespace(`
-def hey {}
+def hey {
+    hello *= bum
+}
 
-def add(a, b) {}
+def add(a, b) {
+    hello
+}
 `);
     parseTest!Grammar("nyah", s);
     return nFailures;

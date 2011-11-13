@@ -6,7 +6,7 @@ import teg.all;
 // global
 alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
 
-class Expression { mixin makeNode!LowestOperator; }
+class Expression { mixin makeNode!AssigningOperator; }
 alias Node!Expression ExpressionRef;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,23 @@ class Function {
 
 //////////////////////////////////////////////////////////////////////////////
 // expressions
-alias Identifier LowestOperator; // ...
+alias Choice!(
+    Char!"+=",
+    Char!"-=",
+    Char!"*=",
+    Char!"/=",
+    Char!"%=",
+    Char!"<<=",
+    Char!">>=",
+    Char!"&=",
+    Char!"^=",
+    Char!"|=") AssigningOperators;
+
+class AssigningOperator {
+    mixin makeNode!(TreeJoined!(AssigningOperators, OrOperator));
+}
+
+alias Identifier OrOperator; // ...
 
 //////////////////////////////////////////////////////////////////////////////
 // top level

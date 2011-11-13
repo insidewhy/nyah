@@ -1,0 +1,46 @@
+choice 3: beard.variant.Variant!(Stars,char,Integer,Range).Variant[] => [
+    C,
+    "hey",
+    Stars: "***+",
+    Integer: "123"
+]
+node 1: mousedeer.test.choice.Id[] => [
+    Id: "kitten",
+    Id: "friend",
+    Id: "yeah"
+]
+choice 1: char => v
+choice 2: beard.variant.Variant!(Tuple!(Range,Range),Tuple!(Range,Range[],Tuple!(Range,Range)[])).Variant[] => [
+    (
+        "outer",
+        <unset>
+    ),
+    (
+        "add",
+        [
+            "a",
+            "b",
+            "c"
+        ],
+        [
+            (
+                "a1",
+                "23"
+            ),
+            (
+                "b1",
+                <unset>
+            )
+        ]
+    ),
+    (
+        "pump",
+        [],
+        [
+            (
+                "_t",
+                <unset>
+            )
+        ]
+    )
+]
