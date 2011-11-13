@@ -4,8 +4,9 @@ nyah: mousedeer.parser.nyah.Function[] => [
         "hey",
         [],
         [
-            Expression: AssigningOperator: [
-                "hello",
+            Expression: AssigningOperator: joined [
+                "hello"
+                "*="
                 "bum"
             ]
         ]

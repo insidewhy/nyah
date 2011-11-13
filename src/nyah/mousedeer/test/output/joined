@@ -21,8 +21,10 @@ joined 2: std.typecons.Tuple!(Range,Range[],Range[]).Tuple[] => [
         []
     )
 ]
-join stores: teg.range.Range[] => [
-    "hey",
-    "baby",
+join stores: teg.joined.Split!(Range,char).Split => joined [
+    "hey"
+    *
+    "baby"
+    +
     "dog"
 ]

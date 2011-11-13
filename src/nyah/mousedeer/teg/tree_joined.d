@@ -7,6 +7,9 @@ import teg.detail.tree;
 class TreeJoined(NodeT, bool SkipWs, J, T...) {
     mixin TreeParser!(NodeT, T);
 
+    private alias Joined!(SkipWs, true, J, T) JoinedT;
+    alias JoinedT.value_type                  TreeType;
+
     static bool skip(S, O)(S s, ref O o) {
         //////////////////////
         static if (! isVariant!SubStores)
@@ -20,7 +23,14 @@ class TreeJoined(NodeT, bool SkipWs, J, T...) {
         skip_whitespace(s);
         if (s.empty()) return true;
         auto save = s.save();
-        if (! J.skip(s))  return true;
+
+        static if (JoinedT.JoinStores) {
+            stores!J joinValue;
+            if (! J.parse(s, joinValue)) return true;
+        }
+        else
+            if (! J.skip(s))  return true;
+
         skip_whitespace(s);
 
         SubStores second;
@@ -31,15 +41,19 @@ class TreeJoined(NodeT, bool SkipWs, J, T...) {
 
         StoresType v;
         create(v);
-        getContainer(v).push_back(getSubvalue(o)).push_back(second);
+        JoinedT.getSplit(getContainer(v))
+            .push_back(getSubvalue(o)).push_back(second);
+
+        static if (JoinedT.JoinStores)
+            getContainer(v).join.push_back(joinValue);
         o = v;
 
-        Joined!(SkipWs, false, J, T).skipTail(s, getContainer(v));
+        JoinedT.skipTail(s, getContainer(v));
         return true;
     }
 
     static bool skip(S)(S s) {
-        return Joined!(SkipWs, true, J, T).skip(s);
+        return JoinedT.skip(s);
     }
 }
 
