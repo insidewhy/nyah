@@ -53,6 +53,7 @@ class Function {
 //////////////////////////////////////////////////////////////////////////////
 // expressions
 alias Choice!(
+    Char!"=",
     Char!"+=",
     Char!"-=",
     Char!"*=",
@@ -73,10 +74,22 @@ class OrOperator {
 }
 
 class AndOperator {
-    mixin makeNode!(TreeJoined!(Char!"&&", HatOperator));
+    mixin makeNode!(TreeJoined!(Char!"&&", BitwiseOrOperator));
 }
 
-alias Data HatOperator; // ...
+class BitwiseOrOperator {
+    mixin makeNode!(TreeJoined!(Char!"|", BitwiseXOrOperator));
+}
+
+class BitwiseXOrOperator {
+    mixin makeNode!(TreeJoined!(Char!"^", BitwiseAndOperator));
+}
+
+class BitwiseAndOperator {
+    mixin makeNode!(TreeJoined!(Char!"&", ComparisonOperator));
+}
+
+alias Data ComparisonOperator; // ...
 
 alias Choice!(Identifier, Number) Data;
 

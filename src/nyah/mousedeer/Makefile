@@ -1,7 +1,7 @@
 .PHONY: test clean
 
 # gdc ?= 1
-debug ?= 1
+# debug ?= 1
 cwd ?= .
 O ?= ${cwd}/.obj
 subdirs ?= teg teg/detail beard parser
@@ -20,4 +20,4 @@ clean:
 
 dmd := $(if ${gdc},gdmd,dmd)
 
-comp_args := $(if ${debug},-g -debug)
+comp_args := $(if ${debug},-g -debug,-release)
