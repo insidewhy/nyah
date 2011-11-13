@@ -6,7 +6,7 @@ import mousedeer.test.common;
 int main() {
     auto s = new Stream!Whitespace(`
 def hey {
-    hello *= bum
+    hello *= 12
 }
 
 def add(a, b) {

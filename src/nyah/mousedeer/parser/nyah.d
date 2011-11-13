@@ -13,7 +13,7 @@ alias Node!Expression ExpressionRef;
 // number
 alias ManyPlus!(CharRange!"09") Integer;
 alias Sequence!(Integer, Char!".", Integer) RealNumber;
-alias Choice!(Integer, RealNumber) Number;
+struct Number { mixin makeNode!(Choice!(Integer, RealNumber)); }
 
 alias Lexeme!(
     Choice!(Char!"_",
@@ -67,7 +67,9 @@ class AssigningOperator {
     mixin makeNode!(TreeJoined!(AssigningOperators, OrOperator));
 }
 
-alias Identifier OrOperator; // ...
+alias Data OrOperator; // ...
+
+alias Choice!(Identifier, Number) Data;
 
 //////////////////////////////////////////////////////////////////////////////
 // top level

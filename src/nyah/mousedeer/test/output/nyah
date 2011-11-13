@@ -7,7 +7,7 @@ nyah: mousedeer.parser.nyah.Function[] => [
             Expression: AssigningOperator: joined [
                 "hello"
                 "*="
-                "bum"
+                Number: "12"
             ]
         ]
     ),
