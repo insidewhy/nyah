@@ -1,11 +1,11 @@
 .SECONDARY:
-.PHONY: default tbpeg teg variant force
+.PHONY: default tbpeg teg variant nyah force
 
 update ?= ${u}
 outpath := output
 cwd ?= ..
 
-default: variant teg maths
+default: variant teg maths nyah
 
 -include ../Makefile
 
@@ -13,6 +13,7 @@ tbpeg: ${outpath}/tbpeg
 teg: ${outpath}/teg
 maths: ${outpath}/maths
 variant: ${outpath}/variant
+nyah: ${outpath}/nyah
 force:
 
 ${outpath}/%: ${O}/% force

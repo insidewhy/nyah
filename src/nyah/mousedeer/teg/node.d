@@ -2,7 +2,7 @@ module teg.node;
 
 import teg.tree_joined;
 import teg.detail.parser : hasSubparser, storingParser;
-import beard.io;
+import beard.io : printIndented;
 import beard.meta : lastIndexOf;
 
 template printNode() {

@@ -36,9 +36,9 @@ private template choiceParser(alias S, bool CanBeEmpty, P...) {
                 return SP.skip(s, o);
             else static if (isVariant!O) {
                 o = SS.init;
-                return SP.skip(s, o.as!SS);
+                return SP.parse(s, o.as!SS);
             }
-            else return SP.skip(s, o);
+            else return SP.parse(s, o);
         }
     }
 

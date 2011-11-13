@@ -72,12 +72,13 @@ class Sequence(bool SkipWs, T...) {
     private alias staticMap!(stores, T)  substores;
 
     private alias sequenceStorage!(
-        foldLeft!(flattenAppend, TL!(), substores).types) value_type;
+        foldLeft!(flattenAppend, TL!(), substores).types) _value_type;
+
+    static if (! is(_value_type : void))
+        alias _value_type value_type;
 
     alias foldLeft2!(makeIdxStorer!0u, T).types subparsers;
 
-    // static if (! is(value_type : void))
-    //     value_type value_;
 
     static bool skip(S)(S s) {
         if (! T[0].skip(s)) return false;

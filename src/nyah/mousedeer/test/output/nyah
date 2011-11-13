@@ -1,0 +1,15 @@
+nyah: mousedeer.parser.nyah.Function[] => [
+    Function: (
+        "def",
+        "hey",
+        []
+    ),
+    Function: (
+        "def",
+        "add",
+        [
+            "a",
+            "b"
+        ]
+    )
+]
