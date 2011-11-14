@@ -52,16 +52,16 @@ class Function {
         CodeBlock);
 }
 
-template JoinOp(J, T...) {
+template BinOp(J, T...) {
     alias TreeJoinedTight!(
         Lexeme!(Skip!(Many!NonBreakingSpace), J, Skip!(Many!WhitespaceChars)),
-        T) JoinOp;
+        T) BinOp;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // expressions
 class TupleOp {
-    mixin makeNode!(JoinOp!(Char!",", AssigningOp));
+    mixin makeNode!(BinOp!(Char!",", AssigningOp));
 }
 
 alias Choice!(
@@ -77,61 +77,43 @@ alias Choice!(
     Char!"^=",
     Char!"|=") AssigningOps;
 
-class AssigningOp {
-    mixin makeNode!(JoinOp!(AssigningOps, OrOp));
-}
+class AssigningOp { mixin makeNode!(BinOp!(AssigningOps, OrOp)); }
 
-class OrOp {
-    mixin makeNode!(JoinOp!(Char!"||", AndOp));
-}
+class OrOp { mixin makeNode!(BinOp!(Char!"||", AndOp)); }
 
-class AndOp {
-    mixin makeNode!(JoinOp!(Char!"&&", BitwiseOrOp));
-}
+class AndOp { mixin makeNode!(BinOp!(Char!"&&", BitwiseOrOp)); }
 
-class BitwiseOrOp {
-    mixin makeNode!(JoinOp!(Char!"|", BitwiseXOrOp));
-}
+class BitwiseOrOp { mixin makeNode!(BinOp!(Char!"|", BitwiseXOrOp)); }
 
-class BitwiseXOrOp {
-    mixin makeNode!(JoinOp!(Char!"^", BitwiseAndOp));
-}
+class BitwiseXOrOp { mixin makeNode!(BinOp!(Char!"^", BitwiseAndOp)); }
 
-class BitwiseAndOp {
-    mixin makeNode!(JoinOp!(Char!"&", EquivalenceOp));
-}
+class BitwiseAndOp { mixin makeNode!(BinOp!(Char!"&", EquivalenceOp)); }
 
 class EquivalenceOp {
     mixin makeNode!(
-        JoinOp!(Choice!(Char!"==", Char!"!="), InequalityOp));
+        BinOp!(Choice!(Char!"==", Char!"!="), InequalityOp));
 }
 
 class InequalityOp {
-    mixin makeNode!(JoinOp!(
-        Choice!(Char!"<=", Char!">=", Char!"<", Char!">"),
-        ShiftOp));
+    mixin makeNode!(BinOp!(
+        Choice!(Char!"<=", Char!">=", Char!"<", Char!">"), ShiftOp));
 }
 
 class ShiftOp {
-    mixin makeNode!(
-        JoinOp!(Choice!(Char!"<<", Char!">>"), AdditionOp));
+    mixin makeNode!(BinOp!(Choice!(Char!"<<", Char!">>"), AdditionOp));
 }
 
-class AdditionOp {
-    mixin makeNode!(JoinOp!(CharFrom!"+-", ScalingOp));
-}
+class AdditionOp { mixin makeNode!(BinOp!(CharFrom!"+-", ScalingOp)); }
 
-class ScalingOp {
-    mixin makeNode!(JoinOp!(CharFrom!"*/%", PointerToMemberOp));
-}
+class ScalingOp { mixin makeNode!(BinOp!(CharFrom!"*/%", PointerToMemberOp)); }
 
 class PointerToMemberOp {
-    mixin makeNode!(JoinOp!(Choice!(Char!".*", Char!"->*"), PrefixOp));
+    mixin makeNode!(BinOp!(Choice!(Char!".*", Char!"->*"), PrefixOp));
 }
 
 // class PrefixOp {
 //     mixin makeNode!(
-//         JoinOp!(Choice!(
+//         BinOp!(Choice!(
 //             Char!".*", Char!"->*"),
 //             PrefixOp));
 // }
