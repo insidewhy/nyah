@@ -1,4 +1,9 @@
-choice 3: beard.variant.Variant!(Stars,char,Integer,Range).Variant[] => [
+choice 3: beard.variant.Variant {
+    mousedeer.test.choice.Stars,
+    char,
+    mousedeer.test.choice.Integer,
+    teg.range.Range
+}[] => [
     C,
     "hey",
     Stars: "***+",
@@ -10,7 +15,20 @@ node 1: mousedeer.test.choice.Id[] => [
     Id: "yeah"
 ]
 choice 1: char => v
-choice 2: beard.variant.Variant!(Tuple!(Range,Range),Tuple!(Range,Range[],Tuple!(Range,Range)[])).Variant[] => [
+choice 2: beard.variant.Variant {
+    std.typecons.Tuple {
+        teg.range.Range,
+        teg.range.Range
+    },
+    std.typecons.Tuple {
+        teg.range.Range,
+        teg.range.Range[],
+        std.typecons.Tuple {
+            teg.range.Range,
+            teg.range.Range
+        }[]
+    }
+}[] => [
     (
         "outer",
         <unset>

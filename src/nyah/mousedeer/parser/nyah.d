@@ -5,7 +5,7 @@ import teg.all;
 //////////////////////////////////////////////////////////////////////////////
 // global
 alias CharFrom!"\n\t " WhitespaceChars;
-alias CharFrom!"\t " NonBreakingSpace;
+alias Skip!(Many!(CharFrom!"\t ")) NonBreakingSpace;
 alias ManyPlus!WhitespaceChars Whitespace;
 
 class Expression { mixin makeNode!TupleOp; }
@@ -28,7 +28,7 @@ alias Choice!(RealNumber, Integer) Number;
 alias Choice!(
     Char!"def",
     Char!"def!",
-    Sequence!(Char!"override", Char!"def")) FunctionPrefix;
+    Sequence!(Store!(Char!"override"), Char!"def")) FunctionPrefix;
 
 alias Identifier ArgumentDefinition; // ...
 
@@ -54,7 +54,7 @@ class Function {
 
 template BinOp(J, T...) {
     alias TreeJoinedTight!(
-        Lexeme!(Skip!(Many!NonBreakingSpace), J, Skip!(Many!WhitespaceChars)),
+        Lexeme!(NonBreakingSpace, J, Skip!(Many!WhitespaceChars)),
         T) BinOp;
 }
 
@@ -108,7 +108,11 @@ class AdditionOp { mixin makeNode!(BinOp!(CharFrom!"+-", ScalingOp)); }
 class ScalingOp { mixin makeNode!(BinOp!(CharFrom!"*/%", PointerToMemberOp)); }
 
 class PointerToMemberOp {
-    mixin makeNode!(BinOp!(Choice!(Char!".*", Char!"->*"), PrefixOp));
+    mixin makeNode!(BinOp!(Choice!(Char!".*", Char!"->*"), FunctionCall));
+}
+
+class FunctionCall {
+    mixin makeNode!(TreeJoinedTight!(NonBreakingSpace, PrefixOp));
 }
 
 // class PrefixOp {

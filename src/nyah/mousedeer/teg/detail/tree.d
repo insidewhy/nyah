@@ -6,30 +6,27 @@ public import teg.vector;
 public import beard.variant;
 
 // T... is the storing part of the parser
-template TreeParser(NodeT, T...) {
+template TreeParser(bool LongIsNode, _LongStores, T...) {
     mixin parser!T;
 
-  private:
-    private alias stores!subparser  SubStores;
-    alias Vector!SubStores          TreeType;
+    alias _LongStores LongStores;
 
-    static if (is(NodeT == void)) {
-        alias SubStores StoresType;
-        static auto ref getContainer(O)(ref O o) { return o; }
-    }
-    else {
-        alias NodeT StoresType;
-        static auto ref getContainer(O)(ref O o) { return o.value_; }
-    }
+  private:
+    private alias stores!subparser  ShortStores;
+
+    static if (LongIsNode)
+        static ref getContainer(O)(ref O o) { return o.value_; }
+    else
+        static ref getContainer(O)(ref O o) { return o; }
 
   public:
-    static if (isVariant!SubStores) {
+    static if (isVariant!ShortStores) {
         static auto ref getSubvalue(O)(ref O o) { return o; }
-        alias Variant!(StoresType, SubStores.types) value_type;
+        alias Variant!(LongStores, ShortStores.types) value_type;
     }
     else {
-        static auto ref getSubvalue(O)(ref O o) { return o.as!SubStores; }
-        alias Variant!(StoresType, SubStores) value_type;
+        static auto ref getSubvalue(O)(ref O o) { return o.as!ShortStores; }
+        alias Variant!(LongStores, ShortStores) value_type;
     }
 
 }

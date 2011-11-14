@@ -2,7 +2,11 @@ joined: teg.range.Range[] => [
     "hey",
     "baby"
 ]
-joined 2: std.typecons.Tuple!(Range,Range[],Range[]).Tuple[] => [
+joined 2: std.typecons.Tuple {
+    teg.range.Range,
+    teg.range.Range[],
+    teg.range.Range[]
+}[] => [
     (
         "add",
         [

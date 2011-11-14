@@ -1,5 +1,8 @@
 sequence: teg.range.Range => "friend"
-sequence2: std.typecons.Tuple!(Range,Range).Tuple => (
+sequence2: std.typecons.Tuple {
+    teg.range.Range,
+    teg.range.Range
+} => (
     "friend",
     "baby"
 )

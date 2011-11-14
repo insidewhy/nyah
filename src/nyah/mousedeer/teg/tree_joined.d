@@ -5,15 +5,18 @@ import teg.stores;
 import teg.detail.tree;
 
 class TreeJoined(NodeT, bool SkipWs, J, T...) {
-    mixin TreeParser!(NodeT, T);
-
     private alias Joined!(SkipWs, true, J, T) JoinedT;
-    alias JoinedT.value_type                  TreeType;
+    alias JoinedT.value_type                  ContainerType;
+
+    static if (is (NodeT: void))
+        mixin TreeParser!(false, ContainerType, T);
+    else
+        mixin TreeParser!(true, NodeT, T);
 
     static bool skip(S, O)(S s, ref O o) {
         //////////////////////
-        static if (! isVariant!SubStores)
-            o = SubStores.init;
+        static if (! isVariant!ShortStores)
+            o = ShortStores.init;
 
         if (! subparser.parse(s, getSubvalue(o))) {
             o.reset();
@@ -33,13 +36,13 @@ class TreeJoined(NodeT, bool SkipWs, J, T...) {
 
         skip_whitespace(s);
 
-        SubStores second;
+        ShortStores second;
         if (s.empty() || ! subparser.parse(s, second)) {
             s.restore(save);
             return true;
         }
 
-        StoresType v;
+        LongStores v;
         create(v);
         JoinedT.getSplit(getContainer(v))
             .push_back(getSubvalue(o)).push_back(second);

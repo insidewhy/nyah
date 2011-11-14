@@ -76,7 +76,7 @@ Default operator precedences:
         }
     }
     %tr {
-        %td 7
+        %td 21
         %td {
             %span x++
             %span x--
@@ -85,7 +85,7 @@ Default operator precedences:
         }
     }
     %tr {
-        %td 6
+        %td 10
         %td {
             %span ++x
             %span --x
@@ -99,28 +99,6 @@ Default operator precedences:
         }
     }
     %tr {
-        %td 5
-        %td {
-            %span *
-            %span /
-            %span "%"
-        }
-    }
-    %tr {
-        %td 3
-        %td {
-            %span x+y
-            %span x-y
-        }
-    }
-    %tr {
-        %td 1
-        %td {
-            %span &lt;&lt;
-            %span &gt;&gt;
-        }
-    }
-    %tr {
         %td 0
         %td {
             %span fn x
@@ -128,7 +106,29 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -1
+        %td -11
+        %td {
+            %span *
+            %span /
+            %span "%"
+        }
+    }
+    %tr {
+        %td -21
+        %td {
+            %span x+y
+            %span x-y
+        }
+    }
+    %tr {
+        %td -31
+        %td {
+            %span &lt;&lt;
+            %span &gt;&gt;
+        }
+    }
+    %tr {
+        %td -41
         %td {
             %span &lt;
             %span &lt;=
@@ -137,30 +137,30 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -3
+        %td -51
         %td {
             %span ==
             %span "!="
         }
     }
     %tr {
-        %td -5
+        %td -61
         %td %span x&amp;y
     }
     %tr {
-        %td -7
+        %td -71
         %td %span ^
     }
     %tr {
-        %td -9
+        %td -81
         %td %span &amp;&amp;
     }
     %tr {
-        %td -11
+        %td -91
         %td %span "||"
     }
     %tr {
-        %td -12
+        %td -100
         %td {
             %span +=
             %span -=
@@ -175,13 +175,13 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -13
+        %td -111
         %td {
             %span throw
         }
     }
     %tr {
-        %td -15
+        %td -121
         %td {
             %span ","
         }

@@ -2,6 +2,7 @@ module mousedeer.test.common;
 
 import teg.stores;
 import beard.io;
+import beard.metaio;
 import std.stdio;
 
 public import teg.all;
@@ -19,7 +20,10 @@ void parseTest(P, S)(string name, S s) {
     s.skip_whitespace();
     auto parser = new P();
     stores!P value;
-    write(name, ": ", typeid(stores!P), " => ");
+    write(name, ": ");
+    printType!(stores!P)();
+
+    write(" => ");
     if (parser.parse(s, value))
         println(value);
     else {

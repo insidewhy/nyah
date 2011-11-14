@@ -3,6 +3,7 @@ module teg.node;
 import teg.tree_joined;
 import teg.detail.parser : hasSubparser, storingParser;
 import beard.io : printIndented;
+import beard.metaio : printType;
 import beard.meta : lastIndexOf;
 
 template printNode() {
@@ -11,17 +12,23 @@ template printNode() {
         stream.write(name[(lastIndexOf(name, '.') + 1)..$], ": ");
         printIndented(stream, indent, value_);
     }
+
+    // todo: fix this shit
+    // static void printType(S)(S stream, int indent) {
+    //     stream.write(typeid(value_type).name, ": ");
+    //     beard.metaio.printType!(stores!subparser)(stream, indent);
+    // }
 }
 
 template makeNode(P...) {
     alias void __IsNode;
 
+    // alias stores!subparser value_type;
+    alias typeof(this) value_type;
+
     mixin hasSubparser!P;
     mixin storingParser;
     mixin printNode;
-
-    // alias stores!subparser value_type;
-    alias typeof(this) value_type;
 
     // nodes should always store but this static if allows the compiler
     // to give better error messages in case of compile-time errors
@@ -56,7 +63,7 @@ private template makeTreeNode(T) {
     mixin printNode;
 
     alias T.value_type value_type;
-    T.TreeType         value_;
+    T.ContainerType    value_;
 
     static bool skip(S)(S s) { return T.skip(s); }
     static bool skip(S, O)(S s, ref O o) { return T.skip(s, o); }

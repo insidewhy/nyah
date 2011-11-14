@@ -26,7 +26,7 @@ nyah: mousedeer.parser.nyah.Function[] => [
         ]
     ),
     Function: (
-        "def",
+        "override",
         "add",
         [
             "a",
@@ -38,10 +38,12 @@ nyah: mousedeer.parser.nyah.Function[] => [
                 +
                 "b"
             ],
-            Expression: "c",
-            Expression: Expression: TupleOp: [
-                Integer: "1",
-                Integer: "2"
+            Expression: FunctionCall: [
+                "c",
+                Expression: TupleOp: [
+                    Integer: "1",
+                    Integer: "2"
+                ]
             ],
             Expression: AdditionOp: joined [
                 ScalingOp: joined [
