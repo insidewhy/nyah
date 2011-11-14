@@ -106,11 +106,25 @@ class ShiftOp {
 }
 
 class AdditionOp {
-    mixin makeNode!(
-        TreeJoined!(Choice!(Char!"+", Char!"-"), ScalingOp));
+    mixin makeNode!(TreeJoined!(CharFrom!"+-", ScalingOp));
 }
 
-alias Data ScalingOp; // ...
+class ScalingOp {
+    mixin makeNode!(TreeJoined!(CharFrom!"*/%", PointerToMemberOp));
+}
+
+class PointerToMemberOp {
+    mixin makeNode!(TreeJoined!(Choice!(Char!".*", Char!"->*"), PrefixOp));
+}
+
+// class PrefixOp {
+//     mixin makeNode!(
+//         TreeJoined!(Choice!(
+//             Char!".*", Char!"->*"),
+//             PrefixOp));
+// }
+
+alias Data PrefixOp; // ...
 
 alias Choice!(Identifier, Number) Data;
 

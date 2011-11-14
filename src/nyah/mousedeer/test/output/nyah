@@ -7,13 +7,20 @@ nyah: mousedeer.parser.nyah.Function[] => [
             Expression: AssigningOp: joined [
                 "hello"
                 "*="
-                AdditionOp: joined [
-                    RealNumber: (
-                        "12",
-                        "1"
-                    )
-                    +
-                    "b"
+                AndOp: [
+                    AdditionOp: joined [
+                        RealNumber: (
+                            "12",
+                            "1"
+                        )
+                        +
+                        ScalingOp: joined [
+                            "b"
+                            *
+                            "a"
+                        ]
+                    ],
+                    "c"
                 ]
             ]
         ]
@@ -26,7 +33,11 @@ nyah: mousedeer.parser.nyah.Function[] => [
             "b"
         ],
         [
-            Expression: "hello"
+            Expression: AdditionOp: joined [
+                "a"
+                +
+                "b"
+            ]
         ]
     )
 ]
