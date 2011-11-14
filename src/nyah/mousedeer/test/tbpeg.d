@@ -13,7 +13,6 @@ alias ManyPlus!(Choice!(
 alias Char!"." AnyCharacter;
 
 int main() {
-
     auto s = new Stream!Whitespace(`
 Spacing         <- (\s / "//" ^ (!\n)* ^ \n)+
 AnyCharacter    <- '.'

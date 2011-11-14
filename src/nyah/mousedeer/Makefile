@@ -1,7 +1,7 @@
 .PHONY: test clean
 
 # gdc ?= 1
-# debug ?= 1
+debug ?= 1
 cwd ?= .
 O ?= ${cwd}/.obj
 subdirs ?= teg teg/detail beard parser

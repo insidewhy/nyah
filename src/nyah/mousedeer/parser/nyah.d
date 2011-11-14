@@ -6,7 +6,7 @@ import teg.all;
 // global
 alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
 
-class Expression { mixin makeNode!AssigningOperator; }
+class Expression { mixin makeNode!AssigningOp; }
 alias Node!Expression ExpressionRef;
 
 alias Lexeme!(
@@ -63,33 +63,54 @@ alias Choice!(
     Char!">>=",
     Char!"&=",
     Char!"^=",
-    Char!"|=") AssigningOperators;
+    Char!"|=") AssigningOps;
 
-class AssigningOperator {
-    mixin makeNode!(TreeJoined!(AssigningOperators, OrOperator));
+class AssigningOp {
+    mixin makeNode!(TreeJoined!(AssigningOps, OrOp));
 }
 
-class OrOperator {
-    mixin makeNode!(TreeJoined!(Char!"||", AndOperator));
+class OrOp {
+    mixin makeNode!(TreeJoined!(Char!"||", AndOp));
 }
 
-class AndOperator {
-    mixin makeNode!(TreeJoined!(Char!"&&", BitwiseOrOperator));
+class AndOp {
+    mixin makeNode!(TreeJoined!(Char!"&&", BitwiseOrOp));
 }
 
-class BitwiseOrOperator {
-    mixin makeNode!(TreeJoined!(Char!"|", BitwiseXOrOperator));
+class BitwiseOrOp {
+    mixin makeNode!(TreeJoined!(Char!"|", BitwiseXOrOp));
 }
 
-class BitwiseXOrOperator {
-    mixin makeNode!(TreeJoined!(Char!"^", BitwiseAndOperator));
+class BitwiseXOrOp {
+    mixin makeNode!(TreeJoined!(Char!"^", BitwiseAndOp));
 }
 
-class BitwiseAndOperator {
-    mixin makeNode!(TreeJoined!(Char!"&", ComparisonOperator));
+class BitwiseAndOp {
+    mixin makeNode!(TreeJoined!(Char!"&", EquivalenceOp));
 }
 
-alias Data ComparisonOperator; // ...
+class EquivalenceOp {
+    mixin makeNode!(
+        TreeJoined!(Choice!(Char!"==", Char!"!="), InequalityOp));
+}
+
+class InequalityOp {
+    mixin makeNode!(TreeJoined!(
+        Choice!(Char!"<=", Char!">=", Char!"<", Char!">"),
+        ShiftOp));
+}
+
+class ShiftOp {
+    mixin makeNode!(
+        TreeJoined!(Choice!(Char!"<<", Char!">>"), AdditionOp));
+}
+
+class AdditionOp {
+    mixin makeNode!(
+        TreeJoined!(Choice!(Char!"+", Char!"-"), ScalingOp));
+}
+
+alias Data ScalingOp; // ...
 
 alias Choice!(Identifier, Number) Data;
 
