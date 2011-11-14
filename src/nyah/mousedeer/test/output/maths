@@ -1,21 +1,21 @@
 basic maths: mousedeer.test.maths.BasicExpression[] => [
-    BasicExpression: BasicAddition: [
-        BasicMultiplication: [
+    [34mBasicExpression[0;m: [34mBasicAddition[0;m: [
+        [34mBasicMultiplication[0;m: [
             "3"
         ],
-        BasicMultiplication: [
+        [34mBasicMultiplication[0;m: [
             "1",
-            BasicExpression: BasicAddition: [
-                BasicMultiplication: [
+            [34mBasicExpression[0;m: [34mBasicAddition[0;m: [
+                [34mBasicMultiplication[0;m: [
                     "2"
                 ],
-                BasicMultiplication: [
+                [34mBasicMultiplication[0;m: [
                     "3",
                     "2"
                 ]
             ],
-            BasicExpression: BasicAddition: [
-                BasicMultiplication: [
+            [34mBasicExpression[0;m: [34mBasicAddition[0;m: [
+                [34mBasicMultiplication[0;m: [
                     "1"
                 ]
             ]
@@ -23,18 +23,18 @@ basic maths: mousedeer.test.maths.BasicExpression[] => [
     ]
 ]
 maths: mousedeer.test.maths.Expression[] => [
-    Expression: Addition: [
+    [34mExpression[0;m: [34mAddition[0;m: [
         "3",
-        Multiplication: [
+        [34mMultiplication[0;m: [
             "1",
-            Expression: Addition: [
+            [34mExpression[0;m: [34mAddition[0;m: [
                 "2",
-                Multiplication: [
+                [34mMultiplication[0;m: [
                     "3",
                     "2"
                 ]
             ],
-            Expression: "1"
+            [34mExpression[0;m: "1"
         ]
     ]
 ]

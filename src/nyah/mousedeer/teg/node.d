@@ -5,11 +5,13 @@ import teg.detail.parser : hasSubparser, storingParser;
 import beard.io : printIndented;
 import beard.metaio : printType;
 import beard.meta : lastIndexOf;
+import beard.termcolor : sRed, sNeutral, sBlue, sGreen;
 
 template printNode() {
     void printTo(S)(int indent, S stream) {
         immutable name = typeid(this).name;
-        stream.write(name[(lastIndexOf(name, '.') + 1)..$], ": ");
+        stream.write(sBlue, name[(lastIndexOf(name, '.') + 1)..$],
+                     sNeutral, ": ");
         printIndented(stream, indent, value_);
     }
 

@@ -1,20 +1,20 @@
 nyah: mousedeer.parser.nyah.Function[] => [
-    Function: (
+    [34mFunction[0;m: (
         "def",
         "hey",
         [],
         [
-            Expression: AssigningOp: joined [
+            [34mExpression[0;m: [34mAssigningOp[0;m: joined [
                 "hello"
                 "*="
-                AndOp: [
-                    AdditionOp: joined [
-                        RealNumber: (
+                [34mAndOp[0;m: [
+                    [34mAdditionOp[0;m: joined [
+                        [34mRealNumber[0;m: (
                             "12",
                             "1"
                         )
                         +
-                        ScalingOp: joined [
+                        [34mScalingOp[0;m: joined [
                             "b"
                             *
                             "a"
@@ -25,7 +25,7 @@ nyah: mousedeer.parser.nyah.Function[] => [
             ]
         ]
     ),
-    Function: (
+    [34mFunction[0;m: (
         "override",
         "add",
         [
@@ -33,20 +33,20 @@ nyah: mousedeer.parser.nyah.Function[] => [
             "b"
         ],
         [
-            Expression: AdditionOp: joined [
+            [34mExpression[0;m: [34mAdditionOp[0;m: joined [
                 "a"
                 +
                 "b"
             ],
-            Expression: FunctionCall: [
+            [34mExpression[0;m: [34mFunctionCall[0;m: [
                 "c",
-                Expression: TupleOp: [
-                    Integer: "1",
-                    Integer: "2"
+                [34mExpression[0;m: [34mTupleOp[0;m: [
+                    [34mInteger[0;m: "1",
+                    [34mInteger[0;m: "2"
                 ]
             ],
-            Expression: AdditionOp: joined [
-                ScalingOp: joined [
+            [34mExpression[0;m: [34mAdditionOp[0;m: joined [
+                [34mScalingOp[0;m: joined [
                     "x"
                     *
                     "y"

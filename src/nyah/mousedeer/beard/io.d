@@ -1,5 +1,6 @@
 module beard.io;
 
+import beard.termcolor;
 import std.stdio;
 import std.typecons;
 

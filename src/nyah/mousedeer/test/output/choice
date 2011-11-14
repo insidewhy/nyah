@@ -6,13 +6,13 @@ choice 3: beard.variant.Variant {
 }[] => [
     C,
     "hey",
-    Stars: "***+",
-    Integer: "123"
+    [34mStars[0;m: "***+",
+    [34mInteger[0;m: "123"
 ]
 node 1: mousedeer.test.choice.Id[] => [
-    Id: "kitten",
-    Id: "friend",
-    Id: "yeah"
+    [34mId[0;m: "kitten",
+    [34mId[0;m: "friend",
+    [34mId[0;m: "yeah"
 ]
 choice 1: char => v
 choice 2: beard.variant.Variant {
