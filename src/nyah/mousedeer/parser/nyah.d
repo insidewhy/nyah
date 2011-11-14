@@ -4,9 +4,11 @@ import teg.all;
 
 //////////////////////////////////////////////////////////////////////////////
 // global
-alias ManyPlus!(CharFrom!"\n\t ") Whitespace;
+alias CharFrom!"\n\t " WhitespaceChars;
+alias CharFrom!"\t " NonBreakingSpace;
+alias ManyPlus!WhitespaceChars Whitespace;
 
-class Expression { mixin makeNode!AssigningOp; }
+class Expression { mixin makeNode!TupleOp; }
 alias Node!Expression ExpressionRef;
 
 alias Lexeme!(
@@ -50,8 +52,18 @@ class Function {
         CodeBlock);
 }
 
+template JoinOp(J, T...) {
+    alias TreeJoinedTight!(
+        Lexeme!(Skip!(Many!NonBreakingSpace), J, Skip!(Many!WhitespaceChars)),
+        T) JoinOp;
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // expressions
+class TupleOp {
+    mixin makeNode!(JoinOp!(Char!",", AssigningOp));
+}
+
 alias Choice!(
     Char!"=",
     Char!"+=",
@@ -66,67 +78,70 @@ alias Choice!(
     Char!"|=") AssigningOps;
 
 class AssigningOp {
-    mixin makeNode!(TreeJoined!(AssigningOps, OrOp));
+    mixin makeNode!(JoinOp!(AssigningOps, OrOp));
 }
 
 class OrOp {
-    mixin makeNode!(TreeJoined!(Char!"||", AndOp));
+    mixin makeNode!(JoinOp!(Char!"||", AndOp));
 }
 
 class AndOp {
-    mixin makeNode!(TreeJoined!(Char!"&&", BitwiseOrOp));
+    mixin makeNode!(JoinOp!(Char!"&&", BitwiseOrOp));
 }
 
 class BitwiseOrOp {
-    mixin makeNode!(TreeJoined!(Char!"|", BitwiseXOrOp));
+    mixin makeNode!(JoinOp!(Char!"|", BitwiseXOrOp));
 }
 
 class BitwiseXOrOp {
-    mixin makeNode!(TreeJoined!(Char!"^", BitwiseAndOp));
+    mixin makeNode!(JoinOp!(Char!"^", BitwiseAndOp));
 }
 
 class BitwiseAndOp {
-    mixin makeNode!(TreeJoined!(Char!"&", EquivalenceOp));
+    mixin makeNode!(JoinOp!(Char!"&", EquivalenceOp));
 }
 
 class EquivalenceOp {
     mixin makeNode!(
-        TreeJoined!(Choice!(Char!"==", Char!"!="), InequalityOp));
+        JoinOp!(Choice!(Char!"==", Char!"!="), InequalityOp));
 }
 
 class InequalityOp {
-    mixin makeNode!(TreeJoined!(
+    mixin makeNode!(JoinOp!(
         Choice!(Char!"<=", Char!">=", Char!"<", Char!">"),
         ShiftOp));
 }
 
 class ShiftOp {
     mixin makeNode!(
-        TreeJoined!(Choice!(Char!"<<", Char!">>"), AdditionOp));
+        JoinOp!(Choice!(Char!"<<", Char!">>"), AdditionOp));
 }
 
 class AdditionOp {
-    mixin makeNode!(TreeJoined!(CharFrom!"+-", ScalingOp));
+    mixin makeNode!(JoinOp!(CharFrom!"+-", ScalingOp));
 }
 
 class ScalingOp {
-    mixin makeNode!(TreeJoined!(CharFrom!"*/%", PointerToMemberOp));
+    mixin makeNode!(JoinOp!(CharFrom!"*/%", PointerToMemberOp));
 }
 
 class PointerToMemberOp {
-    mixin makeNode!(TreeJoined!(Choice!(Char!".*", Char!"->*"), PrefixOp));
+    mixin makeNode!(JoinOp!(Choice!(Char!".*", Char!"->*"), PrefixOp));
 }
 
 // class PrefixOp {
 //     mixin makeNode!(
-//         TreeJoined!(Choice!(
+//         JoinOp!(Choice!(
 //             Char!".*", Char!"->*"),
 //             PrefixOp));
 // }
 
-alias Data PrefixOp; // ...
+alias Term PrefixOp; // ...
 
-alias Choice!(Identifier, Number) Data;
+alias Choice!(
+    Identifier,
+    Number,
+    Sequence!(Char!"(", ExpressionRef, Char!")")) Term;
 
 //////////////////////////////////////////////////////////////////////////////
 // top level

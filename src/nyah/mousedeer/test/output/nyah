@@ -37,6 +37,20 @@ nyah: mousedeer.parser.nyah.Function[] => [
                 "a"
                 +
                 "b"
+            ],
+            Expression: "c",
+            Expression: Expression: TupleOp: [
+                Integer: "1",
+                Integer: "2"
+            ],
+            Expression: AdditionOp: joined [
+                ScalingOp: joined [
+                    "x"
+                    *
+                    "y"
+                ]
+                +
+                "c"
             ]
         ]
     )

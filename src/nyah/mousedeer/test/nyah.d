@@ -11,6 +11,8 @@ def hey {
 
 def add(a, b) {
     a + b
+    c(1, 2)
+    x * y + c
 }
 `);
     parseTest!Grammar("nyah", s);

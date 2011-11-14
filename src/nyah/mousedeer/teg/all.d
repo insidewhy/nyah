@@ -5,6 +5,7 @@ public import teg.range;
 public import teg.store;
 public import teg.stores;
 public import teg.vector;
+public import teg.skip;
 public import teg.char_;
 public import teg.char_from;
 public import teg.char_range;
