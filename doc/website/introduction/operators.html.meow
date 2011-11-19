@@ -197,7 +197,7 @@ Default operator precedences:
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 class MyInt(value:int = 0) : int(value) {
     // increase priority of infix + to that of infix *
-    def 5 +(o:const int) = MyInt(super + o)
+    def -11 +(o:const int) = MyInt(super + o)
 }
 
 i2 := MyInt(2)
@@ -232,18 +232,18 @@ EOF
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 class MyInt(value:int = 0) : int(value) {
-    def 5 +(o:const int) = MyInt(super + o)
+    def -11 +(o:const int) = MyInt(super + o)
     def add(o:const int) = MyInt(super + o)
 }
 
 i2 := MyInt(2)
-bd := i2 + 6 + 7 // INVALID: In (i2 + 6) + 7, + has operator precedence 5
-                 //          In 6 + 7, + has operator precedence 3
+bd := i2 + 6 + 7 // INVALID: In (i2 + 6) + 7, + has operator precedence -11
+                 //          In 6 + 7, + has operator precedence -21
 
 bd := (i2 + 6) + 7 // Fine, used parentheses to resolve ambiguity.
 gd := i2 * 6 * 7
 // Fine, in all possible valid LHS * RHS pairs in the above expression, * has
-// a precedence of -3.
+// a precedence of -11.
 
 g2 := i2 add 6 add 7
 // Fine, (6 add 7) is invalid. i2 add 6 has a return type of MyInt which is a
