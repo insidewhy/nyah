@@ -1,9 +1,11 @@
 .SECONDARY:
-.PHONY: default tbpeg teg variant nyah choice joined force
+.PHONY: default tbpeg teg variant nyah choice joined force types llvm
 
 update ?= ${u}
 outpath := output
 cwd ?= ..
+
+ghc = ghc -odir ${O} -hidir ${O} -i../codegen -o
 
 default: variant teg maths nyah choice joined
 
@@ -16,6 +18,8 @@ variant: ${outpath}/variant
 nyah: ${outpath}/nyah
 choice: ${outpath}/choice
 joined: ${outpath}/joined
+types: ${outpath}/types
+llvm: ${outpath}/llvm
 force:
 
 ${outpath}/%: ${O}/% force
@@ -35,3 +39,9 @@ ${outpath}/%: ${O}/% force
 ${O}/%: %.d ${libfiles}
 	@mkdir -p ${O}
 	${dmd} -I../.. ${comp_args} -od${O} -of$@ common.d $^
+
+${O}/types: types.hs force
+	@${ghc} $@ $<
+
+${O}/llvm: llvm.hs force
+	@${ghc} $@ $<

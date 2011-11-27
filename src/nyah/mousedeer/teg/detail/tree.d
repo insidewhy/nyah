@@ -9,9 +9,8 @@ public import beard.variant;
 template TreeParser(bool LongIsNode, _LongStores, T...) {
     mixin parser!T;
 
-    alias _LongStores LongStores;
-
   private:
+    alias _LongStores               LongStores;
     private alias stores!subparser  ShortStores;
 
     static if (LongIsNode)
@@ -19,7 +18,6 @@ template TreeParser(bool LongIsNode, _LongStores, T...) {
     else
         static ref getContainer(O)(ref O o) { return o; }
 
-  public:
     static if (isVariant!ShortStores) {
         static auto ref getSubvalue(O)(ref O o) { return o; }
         alias Variant!(LongStores, ShortStores.types) value_type;

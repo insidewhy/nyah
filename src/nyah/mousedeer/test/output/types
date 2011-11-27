@@ -1,0 +1,3 @@
+class "Yah"
+primitive "Int": 4
+fromList [(class "Yah",4),(primitive "Int": 4,5)]
