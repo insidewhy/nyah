@@ -1,7 +1,6 @@
 import LLVM.Core
 import LLVM.ExecutionEngine
 import Data.Word
-import Data.MemoTrie
 
 -- bldGreet :: CodeGenModule (Function (IO ()))
 -- bldGreet = do
