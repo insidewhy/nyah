@@ -26,11 +26,11 @@ alias Choice!(RealNumber, Integer) Number;
 //////////////////////////////////////////////////////////////////////////////
 // function
 alias Choice!(
-    Char!"def",
     Char!"def!",
+    Char!"def",
     Sequence!(Store!(Char!"override"), Char!"def")) FunctionPrefix;
 
-alias Identifier ArgumentDefinition; // ...
+alias Identifier ArgumentDefinition; // todo
 
 alias Sequence!(
     Char!"(",
@@ -115,14 +115,14 @@ class FunctionCall {
     mixin makeNode!(TreeJoinedTight!(NonBreakingSpace, PrefixOp));
 }
 
+// meow todo
 // class PrefixOp {
 //     mixin makeNode!(
 //         BinOp!(Choice!(
 //             Char!".*", Char!"->*"),
 //             PrefixOp));
 // }
-
-alias Term PrefixOp; // ...
+alias Term PrefixOp;
 
 alias Choice!(
     Identifier,
@@ -131,6 +131,6 @@ alias Choice!(
 
 //////////////////////////////////////////////////////////////////////////////
 // top level
-alias Function TopLevel; // ...
+alias Function TopLevel; // todo
 
 alias Many!TopLevel Grammar;

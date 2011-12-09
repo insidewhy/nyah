@@ -1,0 +1,45 @@
+!html
+head {
+    %title learning 5 languages at the same time
+    link(rel=stylesheet, type=text/css, href=../css/global.css)
+    link(rel=stylesheet, type=text/css, href=../css/learning.css)
+}
+
+!body
+
+%h1 Chapter 1 - Welcome
+
+%p I'm going to teach you 5 programming languages at the same time.  I'm going to go fast.  Just because I'm going fast doesn't mean I'm leaving anything out so there'll be plenty of &ldquo;skip me&rdquo; links around.  It'll just help if you're smart or if you already know one of them, that way you can compare the others to (maybe) your (favourite) language!
+
+%h1 Chapter 2 - The languages are...
+
+%p Six including UK English which is the language this is written in.
+
+%p The languages I shall teach you are:
+
+%ul {
+    %li Ruby    - Ruby is a really interesting and cute dynamically typed language.
+    %li C++11   - C++ is very powerful object-oriented language that can make you lots of money.  C++11 is it's less annoying geeky older brother.
+    %li Haskell - It's one of the most powerful functional languages there is.
+    %li D 2.0 - A bit like C++11 but with a garbage collector, some powerful new features and syntactic shortcuts, and some rather arbitrary restrictions.
+    %li Scala - Neat syntax, pattern matching and functional features not too dissimilar from Haskell.
+}
+
+%h1 Chapter 3 - Vane attempts at reasoning my choice of languages
+
+%p %a(href='#chap5') Skip this unless you're a geek excited about a new potential to get offended...
+
+%p Scala and Java both run on the JVM (Java Virtual Machine) and Java is much more common so why Scala?  You might have to trust me on this but most people who learn scala well love it and start to fear java.  You too can be one of these people, living in fear of a more popular inferior technology!
+
+%h1 Chapter 4 - Dynamic VS Static typing
+
+%p %a(href='#chap5') Skip this if you know it?
+
+%p So what the hell is &ldquo;dynamic typing&rdquo; anyway?  Imagine you have two racks each filled with jars.  In one rack each jar can only store one type of thing that is written on the label, be it salt or bugs or special small kittens.  These jars are &ldquo;statically typed&rdquo; jars.  In another rack you can put whatever you want in any jar with the reckless abandon of a wild-child or hippie.  These are dynamically typed jars, but now you have lost the ability to be certain of what is any jar.  Better buy some good labels for those jars and not make any mistakes.  If I had been present at the birth of algorithms I would have called it hedonistic typing, because dynamic does sound terribly bourgeois doesn't it?
+
+%p So anyway the only dynamically typed language I'm teaching you is Ruby.  I don't have anything against this kind of typing, and I approve this message.
+
+%h1#chap5 Chapter 5 - Garbage collection
+
+%p %a(href='#chap6') Yeah I bet you already know this too don't you?
+

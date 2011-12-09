@@ -12,6 +12,7 @@ head {
     links:
     %a(href=http://github.com/tuxjay/nyah) source
     %a(href=introduction/index.html) introduction
+    %a(href=learning/index.html) learning
     // %a(href=cplusplus.html) nyah vs c++(0x)
     %a(href=#status) status
 }
