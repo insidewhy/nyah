@@ -20,9 +20,9 @@ head {
 %ul {
     %li Ruby    - Ruby is a really interesting and cute dynamically typed language.
     %li C++11   - C++ is very powerful object-oriented language that can make you lots of money.  C++11 is it's less annoying geeky older brother.
-    %li Haskell - It's one of the most powerful functional languages there is.
     %li D 2.0 - A bit like C++11 but with a garbage collector, some powerful new features and syntactic shortcuts, and some rather arbitrary restrictions.
     %li Scala - Neat syntax, pattern matching and functional features not too dissimilar from Haskell.
+    %li Haskell - This is a very powerful (&ldquo;functional&rdquo;) rather different to any of the others above.
 }
 
 %h1 Chapter 3 - Vane attempts at reasoning my choice of languages

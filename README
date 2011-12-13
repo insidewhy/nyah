@@ -3,14 +3,4 @@ To build:
     ./configure
     make
 
-This project needs gcc 4.4 minimum to compile. It has been tested with
-gcc 4.4.2, 4.4.3 and gcc 4.5. Lately it compiles slowly with any
-version of gcc below 4.5
-
-If you have checked nyah out from git, please fetch the library
-dependencies using:
-    git submodule update --init
-
-This project is organised like this:
-    doc/website/    - The nyah website
-    src/nyu/        - parser generator used by this project.
+This project a d 2.0 compiler and supports dmd and gdmd.
