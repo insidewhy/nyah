@@ -1,3 +1,0 @@
-[submodule "src/nyu"]
-	path = src/nyu
-	url = git://github.com/tuxjay/nyu.git

@@ -1,4 +1,4 @@
-.PHONY: test clean
+.PHONY: build test clean
 
 # gdc ?= 1
 debug ?= 1
@@ -7,16 +7,17 @@ O ?= ${cwd}/.obj
 subdirs ?= teg teg/detail beard parser
 libfiles ?= $(foreach d,$(addprefix ${cwd}/,${subdirs}),$(wildcard ${d}/*.d))
 
-# too early for anything but testing so test is first
-test:
-	${MAKE} -C test
+build: mousedeer
 
 mousedeer: main.d ${libfiles}
 	@mkdir -p ${O}
 	${dmd} ${comp_args} -I.. -od${O} -of$@ $^
 
+test:
+	${MAKE} -C test
+
 clean:
-	rm -rf ${O}
+	rm -rf ${O} mousedeer
 
 dmd := $(if ${gdc},gdmd,dmd)
 
