@@ -1,6 +1,6 @@
 module teg.detail.parser;
 
-import teg.sequence : Sequence;
+public import teg.sequence : Sequence;
 import teg.stores;
 
 template whitespaceSkipper() {

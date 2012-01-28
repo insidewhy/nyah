@@ -4,7 +4,7 @@ import teg.detail.parser;
 import teg.stores;
 import beard.meta;
 import beard.variant;
-import std.typecons : staticMap;
+import std.typetuple : staticMap;
 
 private template choiceParser(alias S, bool CanBeEmpty, P...) {
     static if (1 == S.types.length) {

@@ -1,11 +1,11 @@
 module teg.node;
 
 import teg.tree_joined;
-import teg.detail.parser : hasSubparser, storingParser;
-import beard.io : printIndented;
+public import teg.detail.parser : hasSubparser, storingParser;
+public import beard.io : printIndented;
 import beard.metaio : printType;
-import beard.meta : lastIndexOf;
-import beard.termcolor : sRed, sNeutral, sBlue, sGreen;
+public import beard.meta : lastIndexOf;
+public import beard.termcolor : sRed, sNeutral, sBlue, sGreen;
 
 template printNode() {
     void printTo(S)(int indent, S stream) {
@@ -64,7 +64,11 @@ private template makeTreeNode(T) {
     mixin storingParser;
     mixin printNode;
 
+    // informs teg of the actual storage type which can be either the
+    // node or the short match
     alias T.value_type value_type;
+
+    // pushes value_ into the mixing class
     T.ContainerType    value_;
 
     static bool skip(S)(S s) { return T.skip(s); }

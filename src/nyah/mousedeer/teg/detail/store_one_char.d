@@ -1,6 +1,6 @@
 module teg.detail.match_one_char;
 
-import teg.detail.parser : storingParser;
+public import teg.detail.parser : storingParser;
 
 template storeOneChar() {
     mixin storingParser;
