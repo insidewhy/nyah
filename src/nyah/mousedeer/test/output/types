@@ -1,3 +1,0 @@
-class "Yah"
-primitive "Int": 4
-fromList [(primitive "Int": 4,5),(class "Yah",4),(class "Yah",3)]
