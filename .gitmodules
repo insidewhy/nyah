@@ -1,0 +1,3 @@
+[submodule "src/nyah/mousedeer/teg"]
+	path = src/nyah/mousedeer/teg
+	url = git://github.com/nuisanceofcats/teg

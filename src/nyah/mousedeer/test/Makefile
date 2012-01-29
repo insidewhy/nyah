@@ -1,44 +1,18 @@
 .SECONDARY:
-.PHONY: default tbpeg teg variant nyah choice joined force types llvm
+.PHONY: default nyah types llvm
 
 update ?= ${u}
 outpath := output
 cwd ?= ..
+subdirs = teg teg/detail teg/beard parser
+comp_args := ../teg/test/common.d
 
-ghc = ghc -odir ${O} -hidir ${O} -i../codegen -o
+default: nyah
 
-default: variant teg maths nyah choice joined
+include ../teg/beard/Makefile
+include ../teg/beard/Makefile.test
 
--include ../Makefile
-
-tbpeg: ${outpath}/tbpeg
-teg: ${outpath}/teg
-maths: ${outpath}/maths
-variant: ${outpath}/variant
 nyah: ${outpath}/nyah
-choice: ${outpath}/choice
-joined: ${outpath}/joined
-types: ${outpath}/types
-llvm: ${outpath}/llvm
-force:
-
-${outpath}/%: ${O}/% force
-	@mkdir -p ${outpath}
-	@./$< | tee $@.new
-	@$(if ${update},rm -f $@,true)
-	@if [ ! -f $@ ] ; then \
-		echo "new test $(subst ${outpath}/,,$@)"; \
-		mv $@.new $@; \
-	elif diff $@ $@.new ; then \
-		echo "test $(subst ${outpath}/,,$@) passed"; \
-		rm $@.new; \
-	else \
-		echo "test $(subst ${outpath}/,,$@) failed"; \
-	fi
-
-${O}/%: %.d ${libfiles}
-	@mkdir -p ${O}
-	${dmd} -I../.. ${comp_args} -od${O} -of$@ common.d $^
 
 ${O}/types: types.hs force
 	@${ghc} $@ $<

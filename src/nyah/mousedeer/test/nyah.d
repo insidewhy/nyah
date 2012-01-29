@@ -1,7 +1,7 @@
 module mousedeer.test.nyah;
 
 import mousedeer.parser.nyah;
-import mousedeer.test.common;
+import teg.test.common;
 
 int main() {
     auto s = new Stream!Whitespace(`
