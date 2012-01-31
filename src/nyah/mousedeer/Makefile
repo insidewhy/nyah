@@ -1,6 +1,7 @@
 .PHONY: default build clean
 
-subdirs = . teg teg/detail teg/beard parser
+subdirs = . teg teg/detail teg/beard teg/beard/meta teg/beard/string_util \
+		    parser
 comp_args = -I. -Iteg
 
 default: build
