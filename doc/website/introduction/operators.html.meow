@@ -93,9 +93,6 @@ Default operator precedences:
             %span -x
             %span *x
             %span &amp;x
-            %span sizeof
-            %span new
-            %span delete
         }
     }
     %tr {

@@ -16,5 +16,7 @@ override   def add(a, b) {
 }
 `);
     parseTest!Grammar("nyah", s);
+
+    println(typeid(stores!(Lexeme!(Identifier, NonBreakingSpace, PrefixOp))));
     return nFailures;
 }

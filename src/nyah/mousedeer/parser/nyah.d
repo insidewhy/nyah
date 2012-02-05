@@ -77,6 +77,7 @@ alias Choice!(
     Char!"^=",
     Char!"|=") AssigningOps;
 
+// right to left
 class AssigningOp { mixin makeNode!(BinOp!(AssigningOps, OrOp)); }
 
 class OrOp { mixin makeNode!(BinOp!(Char!"||", AndOp)); }
@@ -108,21 +109,33 @@ class AdditionOp { mixin makeNode!(BinOp!(CharFrom!"+-", ScalingOp)); }
 class ScalingOp { mixin makeNode!(BinOp!(CharFrom!"*/%", PointerToMemberOp)); }
 
 class PointerToMemberOp {
-    mixin makeNode!(BinOp!(Choice!(Char!".*", Char!"->*"), FunctionCall));
+    mixin makeNode!(BinOp!(Choice!(Char!".*", Char!"->*"), FunctionCallOrPrefixOp));
 }
 
-class FunctionCall {
-    mixin makeNode!(TreeJoinedTight!(NonBreakingSpace, PrefixOp));
+alias Choice!(FunctionCall, PrefixOp) FunctionCallOrPrefixOp;
+
+class FunctionCall {  // right to left
+    mixin makeNode!(
+        Lexeme!(
+            // copied Identity .. nested lexeme problem debugging
+            Lexeme!(
+                // Choice!(Char!"_", CharRange!"azAZ"),
+                Many!(Choice!(CharRange!"azAZ09", Char!"_"))),
+            Term));
 }
 
-// meow todo
-// class PrefixOp {
-//     mixin makeNode!(
-//         BinOp!(Choice!(
-//             Char!".*", Char!"->*"),
-//             PrefixOp));
-// }
-alias Term PrefixOp;
+class PrefixOp {
+    mixin makeNode!(
+        TreeOptional!(Choice!(
+            Char!"++",
+            Char!"--"
+            // Char!"+",
+            // Char!"-",
+            // Char!"*",
+            // Char!"&"
+        )),
+        Term);
+}
 
 alias Choice!(
     Identifier,
