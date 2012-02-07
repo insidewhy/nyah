@@ -115,13 +115,8 @@ class PointerToMemberOp {
 alias Choice!(FunctionCall, PrefixOp) FunctionCallOrPrefixOp;
 
 class FunctionCall {  // right to left
-    mixin makeNode!(
-        Lexeme!(
-            // copied Identity .. nested lexeme problem debugging
-            Lexeme!(
-                // Choice!(Char!"_", CharRange!"azAZ"),
-                Many!(Choice!(CharRange!"azAZ09", Char!"_"))),
-            Term));
+    // todo: allow >1 Identifier
+    mixin makeNode!(Lexeme!(Identifier, NonBreakingSpace, Term));
 }
 
 class PrefixOp {
