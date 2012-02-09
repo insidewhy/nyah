@@ -109,28 +109,26 @@ class AdditionOp { mixin makeNode!(BinOp!(CharFrom!"+-", ScalingOp)); }
 class ScalingOp { mixin makeNode!(BinOp!(CharFrom!"*/%", PointerToMemberOp)); }
 
 class PointerToMemberOp {
-    mixin makeNode!(BinOp!(Choice!(Char!".*", Char!"->*"), FunctionCallOrPrefixOp));
-}
-
-alias Choice!(FunctionCall, PrefixOp) FunctionCallOrPrefixOp;
-
-class FunctionCall {  // right to left
-    // todo: allow >1 Identifier
-    mixin makeNode!(Lexeme!(Identifier, NonBreakingSpace, Term));
+    mixin makeNode!(BinOp!(Choice!(Char!".*", Char!"->*"), PrefixOp));
 }
 
 class PrefixOp {
     mixin makeNode!(
         TreeOptional!(Choice!(
             Char!"++",
-            Char!"--"
-            // Char!"+",
-            // Char!"-",
-            // Char!"*",
-            // Char!"&"
+            Char!"--",
+            Char!"+",
+            Char!"-",
+            Char!"*",
+            Lexeme!(Store!(Char!"&"), Not!(Char!"&"))
         )),
-        Term);
+        FunctionCall);
 }
+
+class FunctionCall {
+    mixin makeNode!(TreeJoinedTight!(NonBreakingSpace, Term));
+}
+
 
 alias Choice!(
     Identifier,

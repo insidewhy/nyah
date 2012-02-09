@@ -13,10 +13,9 @@ override   def add(a, b) {
     a + b
     c(1, 2)
     x * y + c
+    d 4 5
 }
 `);
     parseTest!Grammar("nyah", s);
-
-    println(typeid(stores!(Lexeme!(Identifier, NonBreakingSpace, PrefixOp))));
     return nFailures;
 }

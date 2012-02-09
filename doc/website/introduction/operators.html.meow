@@ -76,7 +76,14 @@ Default operator precedences:
         }
     }
     %tr {
-        %td 21
+        %td 0
+        %td {
+            %span fn x
+            %span x fn y
+        }
+    }
+    %tr {
+        %td -11
         %td {
             %span x++
             %span x--
@@ -85,7 +92,7 @@ Default operator precedences:
         }
     }
     %tr {
-        %td 10
+        %td -20
         %td {
             %span ++x
             %span --x
@@ -96,14 +103,7 @@ Default operator precedences:
         }
     }
     %tr {
-        %td 0
-        %td {
-            %span fn x
-            %span x fn y
-        }
-    }
-    %tr {
-        %td -11
+        %td -31
         %td {
             %span *
             %span /
@@ -111,21 +111,21 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -21
+        %td -41
         %td {
             %span x+y
             %span x-y
         }
     }
     %tr {
-        %td -31
+        %td -51
         %td {
             %span &lt;&lt;
             %span &gt;&gt;
         }
     }
     %tr {
-        %td -41
+        %td -61
         %td {
             %span &lt;
             %span &lt;=
@@ -134,30 +134,30 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -51
+        %td -71
         %td {
             %span ==
             %span "!="
         }
     }
     %tr {
-        %td -61
+        %td -81
         %td %span x&amp;y
     }
     %tr {
-        %td -71
+        %td -91
         %td %span ^
     }
     %tr {
-        %td -81
+        %td -101
         %td %span &amp;&amp;
     }
     %tr {
-        %td -91
+        %td -111
         %td %span "||"
     }
     %tr {
-        %td -100
+        %td -120
         %td {
             %span +=
             %span -=
@@ -172,13 +172,13 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -111
+        %td -131
         %td {
             %span throw
         }
     }
     %tr {
-        %td -121
+        %td -141
         %td {
             %span ","
         }
@@ -234,13 +234,13 @@ class MyInt(value:int = 0) : int(value) {
 }
 
 i2 := MyInt(2)
-bd := i2 + 6 + 7 // INVALID: In (i2 + 6) + 7, + has operator precedence -11
-                 //          In 6 + 7, + has operator precedence -21
+bd := i2 + 6 + 7 // INVALID: In (i2 + 6) + 7, + has operator precedence -31
+                 //          In 6 + 7, + has operator precedence -41
 
 bd := (i2 + 6) + 7 // Fine, used parentheses to resolve ambiguity.
 gd := i2 * 6 * 7
 // Fine, in all possible valid LHS * RHS pairs in the above expression, * has
-// a precedence of -11.
+// a precedence of -31.
 
 g2 := i2 add 6 add 7
 // Fine, (6 add 7) is invalid. i2 add 6 has a return type of MyInt which is a

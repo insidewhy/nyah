@@ -38,13 +38,13 @@ nyah: mousedeer.parser.nyah.Function[] => [
                 +
                 "b"
             ],
-            [34mExpression[0;m: [34mFunctionCall[0;m: (
+            [34mExpression[0;m: [34mFunctionCall[0;m: [
                 "c",
                 [34mExpression[0;m: [34mTupleOp[0;m: [
                     [34mInteger[0;m: "1",
                     [34mInteger[0;m: "2"
                 ]
-            ),
+            ],
             [34mExpression[0;m: [34mAdditionOp[0;m: joined [
                 [34mScalingOp[0;m: joined [
                     "x"
@@ -53,8 +53,12 @@ nyah: mousedeer.parser.nyah.Function[] => [
                 ]
                 +
                 "c"
+            ],
+            [34mExpression[0;m: [34mFunctionCall[0;m: [
+                "d",
+                [34mInteger[0;m: "4",
+                [34mInteger[0;m: "5"
             ]
         ]
     )
 ]
-std.typecons.Tuple!(Range,Variant!(PrefixOp,Range,RealNumber,Integer,Expression)).Tuple
