@@ -32,7 +32,7 @@ EOF
 
 %h2 Operator Precedence
 
-%p Standard operators (+, -, +=, == etc.) maintain the same precedence as C++. The precedence of any newly defined operator is equivalent to the precedence of the operator composed from the first symbol in the new operator's name. If the first symbol does not constitute a valid operator then the precedence is &ldquo;0&rdquo;. In the case of multiple operators in a row with the same precedence, odd precedences are evaluated left-to-right and even precedences are evaluated right-to-left.
+%p Standard operators (+, -, +=, == etc.) maintain the same precedence as C++. The precedence of any newly defined operator is equivalent to the precedence of the operator composed from the first symbol in the new operator's name. If the first symbol does not constitute a valid operator then the precedence is &ldquo;0&rdquo;. In the case of multiple operators in a row with the same precedence, even precedences are evaluated left-to-right and odd precedences are evaluated right-to-left.
 
 Examples of operators with equivalent precedence:
 %table {
@@ -83,7 +83,7 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -11
+        %td -10
         %td {
             %span x++
             %span x--
@@ -92,7 +92,7 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -20
+        %td -21
         %td {
             %span ++x
             %span --x
@@ -103,7 +103,7 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -31
+        %td -30
         %td {
             %span *
             %span /
@@ -111,21 +111,21 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -41
+        %td -40
         %td {
             %span x+y
             %span x-y
         }
     }
     %tr {
-        %td -51
+        %td -50
         %td {
             %span &lt;&lt;
             %span &gt;&gt;
         }
     }
     %tr {
-        %td -61
+        %td -60
         %td {
             %span &lt;
             %span &lt;=
@@ -134,30 +134,30 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -71
+        %td -70
         %td {
             %span ==
             %span "!="
         }
     }
     %tr {
-        %td -81
+        %td -80
         %td %span x&amp;y
     }
     %tr {
-        %td -91
+        %td -90
         %td %span ^
     }
     %tr {
-        %td -101
+        %td -100
         %td %span &amp;&amp;
     }
     %tr {
-        %td -111
+        %td -110
         %td %span "||"
     }
     %tr {
-        %td -120
+        %td -121
         %td {
             %span +=
             %span -=
@@ -172,13 +172,13 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -131
+        %td -130
         %td {
             %span throw
         }
     }
     %tr {
-        %td -141
+        %td -140
         %td {
             %span ","
         }
@@ -194,7 +194,7 @@ Default operator precedences:
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 class MyInt(value:int = 0) : int(value) {
     // increase priority of infix + to that of infix *
-    def -11 +(o:const int) = MyInt(super + o)
+    def -10 +(o:const int) = MyInt(super + o)
 }
 
 i2 := MyInt(2)
@@ -229,18 +229,18 @@ EOF
 
 %code(langdef=/usr/share/source-highlight/nyah.lang) <<EOF
 class MyInt(value:int = 0) : int(value) {
-    def -11 +(o:const int) = MyInt(super + o)
+    def -10 +(o:const int) = MyInt(super + o)
     def add(o:const int) = MyInt(super + o)
 }
 
 i2 := MyInt(2)
-bd := i2 + 6 + 7 // INVALID: In (i2 + 6) + 7, + has operator precedence -31
-                 //          In 6 + 7, + has operator precedence -41
+bd := i2 + 6 + 7 // INVALID: In (i2 + 6) + 7, + has operator precedence -30
+                 //          In 6 + 7, + has operator precedence -40
 
 bd := (i2 + 6) + 7 // Fine, used parentheses to resolve ambiguity.
 gd := i2 * 6 * 7
 // Fine, in all possible valid LHS * RHS pairs in the above expression, * has
-// a precedence of -31.
+// a precedence of -30.
 
 g2 := i2 add 6 add 7
 // Fine, (6 add 7) is invalid. i2 add 6 has a return type of MyInt which is a
