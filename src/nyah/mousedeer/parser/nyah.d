@@ -14,7 +14,7 @@ alias Node!Expression ExpressionRef;
 alias Lexeme!(
     Choice!(Char!"_",
             CharRange!"azAZ"),
-    Many!(Choice!(CharRange!"azAZ09", Char!"_")))     Identifier;
+    Many!(Choice!(CharRange!"azAZ09", Char!"_"))) Identifier;
 
 //////////////////////////////////////////////////////////////////////////////
 // numbers
@@ -22,6 +22,18 @@ alias ManyPlus!(CharRange!"09") _Integer;
 struct Integer { mixin makeNode!_Integer; }
 struct RealNumber { mixin makeNode!(_Integer, Char!".", _Integer); }
 alias Choice!(RealNumber, Integer) Number;
+
+//////////////////////////////////////////////////////////////////////////////
+// strings
+// todo
+
+//////////////////////////////////////////////////////////////////////////////
+// types
+// todo
+
+//////////////////////////////////////////////////////////////////////////////
+// meta
+// todo
 
 //////////////////////////////////////////////////////////////////////////////
 // function
@@ -122,13 +134,24 @@ class PrefixOp {
             Char!"*",
             Lexeme!(Store!(Char!"&"), Not!(Char!"&"))
         )),
-        FunctionCall);
+        Choice!(SuffixOp, MemberCallOp, FunctionCall));
+}
+
+class SuffixOp {
+    mixin makeNode!(
+        Lexeme!(Term, NonBreakingSpace, Choice!(Char!"++", Char!"--")));
+}
+
+class MemberCallOp {
+    mixin makeNode!(Lexeme!(Term,
+                            NonBreakingSpace,
+                            Choice!(Char!"->", Char!".")),
+                    JoinedTight!(NonBreakingSpace, Term));
 }
 
 class FunctionCall {
     mixin makeNode!(TreeJoinedTight!(NonBreakingSpace, Term));
 }
-
 
 alias Choice!(
     Identifier,
