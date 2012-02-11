@@ -52,7 +52,11 @@ alias Sequence!(
 alias Choice!(
     Sequence!(
         Char!"{",
-        Many!ExpressionRef,
+        // Many!ExpressionRef,
+        JoinedTight!(  // only allow ; and newlines between expressions
+            Skip!(ManyPlus!(
+                Lexeme!(NonBreakingSpace, CharFrom!("\n;"), NonBreakingSpace))),
+            ExpressionRef),
         Char!"}"),
     ExpressionRef)     CodeBlock;
 
@@ -129,9 +133,9 @@ class PrefixOp {
         TreeOptional!(Choice!(
             Char!"++",
             Char!"--",
-            Char!"+",
             Char!"-",
             Char!"*",
+            Lexeme!(Store!(Char!"+"), Not!(Char!"+")),
             Lexeme!(Store!(Char!"&"), Not!(Char!"&"))
         )),
         Choice!(SuffixOp, MemberCallOp, FunctionCall));

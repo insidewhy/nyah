@@ -67,17 +67,44 @@ nyah: mousedeer.parser.nyah.Function[] => [
                 "++",
                 "y"
             ),
+            [34mExpression[0;m: [34mAdditionOp[0;m: joined [
+                [34mSuffixOp[0;m: (
+                    "x",
+                    "++"
+                )
+                -
+                [34mPrefixOp[0;m: (
+                    "++",
+                    "y"
+                )
+            ],
             [34mExpression[0;m: [34mMemberCallOp[0;m: (
                 "m",
                 .,
                 [
-                    "baby",
+                    "double",
                     [34mExpression[0;m: [34mTupleOp[0;m: [
                         [34mInteger[0;m: "1",
                         [34mInteger[0;m: "2"
                     ]
                 ]
-            )
+            ),
+            [34mExpression[0;m: [34mMemberCallOp[0;m: (
+                "m",
+                .,
+                [
+                    "single",
+                    [34mInteger[0;m: "1"
+                ]
+            ),
+            [34mExpression[0;m: [34mAdditionOp[0;m: joined [
+                [34mInteger[0;m: "14"
+                +
+                [34mPrefixOp[0;m: (
+                    "++",
+                    "a"
+                )
+            ]
         ]
     )
 ]

@@ -17,8 +17,13 @@ override def add(a, b) {
 
     x++
     ++y
+    x++ - ++y
 
-    m.baby(1, 2)
+    m.double(1, 2)
+
+    m.single 1
+
+    14 + ++a
 }
 `);
     parseTest!Grammar("nyah", s);
