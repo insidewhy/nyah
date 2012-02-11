@@ -22,7 +22,14 @@ nyah: mousedeer.parser.nyah.Function[] => [
                     ],
                     "c"
                 ]
-            ]
+            ],
+            [34mExpression[0;m: [34mReturningOp[0;m: (
+                =,
+                [34mRealNumber[0;m: (
+                    "14",
+                    "4"
+                )
+            )
         ]
     ),
     [34mFunction[0;m: (
@@ -49,7 +56,7 @@ nyah: mousedeer.parser.nyah.Function[] => [
                 [34mScalingOp[0;m: joined [
                     "x"
                     *
-                    "y"
+                    [34mCharacter[0;m: y
                 ]
                 +
                 "c"
@@ -107,7 +114,7 @@ nyah: mousedeer.parser.nyah.Function[] => [
                 "double",
                 [34mExpression[0;m: [34mTupleOp[0;m: [
                     [34mInteger[0;m: "1",
-                    [34mInteger[0;m: "2"
+                    [34mCharacter[0;m: "\'"
                 ]
             ],
             [34mExpression[0;m: [34mAdditionOp[0;m: joined [
@@ -144,7 +151,14 @@ nyah: mousedeer.parser.nyah.Function[] => [
                     "f",
                     "g"
                 ]
-            ]
+            ],
+            [34mExpression[0;m: [34mReturningOp[0;m: (
+                =,
+                [34mFunctionCall[0;m: [
+                    "bum",
+                    [34mString[0;m: "willy \"stringboy\" williamson"
+                ]
+            )
         ]
     )
 ]

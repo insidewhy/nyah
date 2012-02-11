@@ -8,7 +8,7 @@ alias CharFrom!"\n\t " WhitespaceChars;
 alias Skip!(Many!(CharFrom!"\t ")) NonBreakingSpace;
 alias ManyPlus!WhitespaceChars Whitespace;
 
-class Expression { mixin makeNode!AssigningOp; }
+class Expression { mixin makeNode!ReturningOp; }
 alias Node!Expression ExpressionRef;
 
 alias Lexeme!(
@@ -25,6 +25,24 @@ alias Choice!(RealNumber, Integer) Number;
 
 //////////////////////////////////////////////////////////////////////////////
 // strings
+struct String {
+    mixin makeNode!(Lexeme!(
+        Char!"\"",
+        Many!(Choice!(
+            Lexeme!(Char!"\\", AnyChar),
+            NotChar!'\"')),
+        Char!"\""));
+}
+
+struct Character {
+    mixin makeNode!(Lexeme!(
+        Char!"'",
+        Choice!(
+            Lexeme!(Store!(Char!"\\"), AnyChar),
+            NotChar!'\"'),
+        Char!"'"));
+}
+
 // todo
 
 //////////////////////////////////////////////////////////////////////////////
@@ -88,6 +106,11 @@ alias Choice!(
     Char!"&=",
     Char!"^=",
     Char!"|=") AssigningOps;
+
+class ReturningOp {
+    mixin makeNode!(
+        TreeOptional!(Choice!(Char!"=", Char!"return")), AssigningOp);
+}
 
 // right to left
 class AssigningOp { mixin makeNode!(BinOp!(AssigningOps, TupleOp)); }
@@ -158,6 +181,8 @@ class FunctionCall {
 alias Choice!(
     Identifier,
     Number,
+    String,
+    Character,
     Sequence!(Char!"(", ExpressionRef, Char!")")) Term;
 
 //////////////////////////////////////////////////////////////////////////////
