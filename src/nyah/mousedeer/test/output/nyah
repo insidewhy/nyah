@@ -117,6 +117,33 @@ nyah: mousedeer.parser.nyah.Function[] => [
                     "++",
                     "a"
                 )
+            ],
+            [34mExpression[0;m: [34mAssigningOp[0;m: joined [
+                [34mTupleOp[0;m: [
+                    "a",
+                    "b"
+                ]
+                =
+                [34mTupleOp[0;m: [
+                    "c",
+                    "d"
+                ]
+            ],
+            [34mExpression[0;m: [34mAssigningOp[0;m: joined [
+                [34mTupleOp[0;m: [
+                    "a",
+                    [34mOrOp[0;m: [
+                        "b",
+                        "c"
+                    ],
+                    "d"
+                ]
+                =
+                [34mTupleOp[0;m: [
+                    "e",
+                    "f",
+                    "g"
+                ]
             ]
         ]
     )

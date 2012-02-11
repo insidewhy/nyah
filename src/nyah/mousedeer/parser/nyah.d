@@ -8,7 +8,7 @@ alias CharFrom!"\n\t " WhitespaceChars;
 alias Skip!(Many!(CharFrom!"\t ")) NonBreakingSpace;
 alias ManyPlus!WhitespaceChars Whitespace;
 
-class Expression { mixin makeNode!TupleOp; }
+class Expression { mixin makeNode!AssigningOp; }
 alias Node!Expression ExpressionRef;
 
 alias Lexeme!(
@@ -76,10 +76,6 @@ template BinOp(J, T...) {
 
 //////////////////////////////////////////////////////////////////////////////
 // expressions
-class TupleOp {
-    mixin makeNode!(BinOp!(Char!",", AssigningOp));
-}
-
 alias Choice!(
     Char!"=",
     Char!"+=",
@@ -94,7 +90,9 @@ alias Choice!(
     Char!"|=") AssigningOps;
 
 // right to left
-class AssigningOp { mixin makeNode!(BinOp!(AssigningOps, OrOp)); }
+class AssigningOp { mixin makeNode!(BinOp!(AssigningOps, TupleOp)); }
+
+class TupleOp { mixin makeNode!(BinOp!(Char!",", OrOp)); }
 
 class OrOp { mixin makeNode!(BinOp!(Char!"||", AndOp)); }
 

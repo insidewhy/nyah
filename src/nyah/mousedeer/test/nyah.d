@@ -25,6 +25,10 @@ override def add(a, b) {
     m double(1, 2)
 
     14 + ++a
+
+    a,b = c,d
+
+    a,b||c,d = e,f,g
 }
 `);
     parseTest!Grammar("nyah", s);

@@ -157,7 +157,13 @@ Default operator precedences:
         %td %span "||"
     }
     %tr {
-        %td -121
+        %td -120
+        %td {
+            %span ","
+        }
+    }
+    %tr {
+        %td -131
         %td {
             %span +=
             %span -=
@@ -172,15 +178,9 @@ Default operator precedences:
         }
     }
     %tr {
-        %td -130
-        %td {
-            %span throw
-        }
-    }
-    %tr {
         %td -140
         %td {
-            %span ","
+            %span throw
         }
     }
 }
