@@ -19,9 +19,10 @@ override def add(a, b) {
     ++y
     x++ - ++y
 
-    m.double(1, 2)
-
     m.single 1
+    m single 1
+    m.double(1, 2)
+    m double(1, 2)
 
     14 + ++a
 }

@@ -82,6 +82,19 @@ nyah: mousedeer.parser.nyah.Function[] => [
                 "m",
                 .,
                 [
+                    "single",
+                    [34mInteger[0;m: "1"
+                ]
+            ),
+            [34mExpression[0;m: [34mFunctionCall[0;m: [
+                "m",
+                "single",
+                [34mInteger[0;m: "1"
+            ],
+            [34mExpression[0;m: [34mMemberCallOp[0;m: (
+                "m",
+                .,
+                [
                     "double",
                     [34mExpression[0;m: [34mTupleOp[0;m: [
                         [34mInteger[0;m: "1",
@@ -89,14 +102,14 @@ nyah: mousedeer.parser.nyah.Function[] => [
                     ]
                 ]
             ),
-            [34mExpression[0;m: [34mMemberCallOp[0;m: (
+            [34mExpression[0;m: [34mFunctionCall[0;m: [
                 "m",
-                .,
-                [
-                    "single",
-                    [34mInteger[0;m: "1"
+                "double",
+                [34mExpression[0;m: [34mTupleOp[0;m: [
+                    [34mInteger[0;m: "1",
+                    [34mInteger[0;m: "2"
                 ]
-            ),
+            ],
             [34mExpression[0;m: [34mAdditionOp[0;m: joined [
                 [34mInteger[0;m: "14"
                 +
