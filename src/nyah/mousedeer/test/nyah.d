@@ -10,6 +10,8 @@ def hey {
     = 14.4
 }
 
+def famon = "conka"
+
 override def add(a, b) {
     a + b
     c(1, 2)
@@ -30,7 +32,7 @@ override def add(a, b) {
 
     a,b||c,d = e,f,g
 
-    = bum "willy \"stringboy\" williamson"
+    = famon "willy \"stringboy\" williamson"
 }
 `);
     parseTest!Grammar("nyah", s);
