@@ -67,17 +67,6 @@ alias Sequence!(
     Joined!(Char!",", ArgumentDefinition),
     Char!")")                               ArgumentsDefinition;
 
-alias Choice!(
-    Sequence!(
-        Char!"{",
-        // Many!ExpressionRef,
-        JoinedTight!(  // only allow ; and newlines between expressions
-            Skip!(ManyPlus!(
-                Lexeme!(NonBreakingSpace, CharFrom!("\n;"), NonBreakingSpace))),
-            ExpressionRef),
-        Char!"}"),
-    ExpressionRef)     CodeBlock;
-
 class Function {
     mixin makeNode!(
         FunctionPrefix,
@@ -85,6 +74,17 @@ class Function {
         Optional!ArgumentsDefinition,
         CodeBlock);
 }
+
+alias Choice!(
+    Sequence!(
+        Char!"{",
+        // Many!ExpressionRef,
+        JoinedTight!(  // only allow ; and newlines between expressions
+            Skip!(ManyPlus!(
+                Lexeme!(NonBreakingSpace, CharFrom!("\n;"), NonBreakingSpace))),
+            Choice!(Node!Function, ExpressionRef)),
+        Char!"}"),
+    ExpressionRef)     CodeBlock;
 
 template BinOp(J, T...) {
     alias TreeJoinedTight!(

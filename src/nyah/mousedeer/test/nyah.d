@@ -10,13 +10,13 @@ def hey {
     = 14.4
 }
 
-def famon = "conka"
-
 override def add(a, b) {
     a + b
     c(1, 2)
     x * 'y' + c
     d 4 5
+
+    def famon = a + "conka"
 
     x++
     ++y

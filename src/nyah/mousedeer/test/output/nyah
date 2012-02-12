@@ -33,15 +33,6 @@ nyah: mousedeer.parser.nyah.Function[] => [
         ]
     ),
     [34mFunction[0;m: (
-        "def",
-        "famon",
-        [],
-        [34mExpression[0;m: [34mReturningOp[0;m: (
-            =,
-            [34mString[0;m: "conka"
-        )
-    ),
-    [34mFunction[0;m: (
         "override",
         "add",
         [
@@ -75,6 +66,19 @@ nyah: mousedeer.parser.nyah.Function[] => [
                 [34mInteger[0;m: "4",
                 [34mInteger[0;m: "5"
             ],
+            [34mFunction[0;m: (
+                "def",
+                "famon",
+                [],
+                [34mExpression[0;m: [34mReturningOp[0;m: (
+                    =,
+                    [34mAdditionOp[0;m: joined [
+                        "a"
+                        +
+                        [34mString[0;m: "conka"
+                    ]
+                )
+            ),
             [34mExpression[0;m: [34mSuffixOp[0;m: (
                 "x",
                 "++"
