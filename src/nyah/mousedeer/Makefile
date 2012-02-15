@@ -9,9 +9,9 @@ default: build
 include teg/beard/Makefile
 
 # gdc ?= 1
-build: mousedeer
+build: ${O}/mousedeer
 
-mousedeer: main.d ${libfiles}
+${O}/mousedeer: main.d ${libfiles}
 	@mkdir -p ${O}
 	${dmd} ${comp_args} -I.. -od${O} -of$@ $^
 

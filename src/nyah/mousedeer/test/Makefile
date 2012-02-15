@@ -1,5 +1,5 @@
 .SECONDARY:
-.PHONY: default nyah types llvm
+.PHONY: default nyah types llvm force
 
 update ?= ${u}
 outpath := output
@@ -8,15 +8,25 @@ subdirs = teg teg/detail teg/beard teg/beard/meta teg/beard/string_util \
 		  parser
 comp_args := ../teg/test/common.d
 
-default: nyah
+default: misc
 
 include ../teg/beard/Makefile
-include ../teg/beard/Makefile.test
 
-nyah: ${outpath}/nyah
+misc: ${outpath}/misc
 
-${O}/types: types.hs force
-	@${ghc} $@ $<
+${outpath}/%: %.nyah force
+	@mkdir -p ${outpath}
+	@${O}/mousedeer -d ./$< > $@.new
+	@$(if ${update},rm -f $@,true)
+	@if [ ! -f $@ ] ; then \
+		echo "new test $(subst ${outpath}/,,$@)"; \
+		mv $@.new $@; \
+	elif diff $@ $@.new ; then \
+		echo "test $(subst ${outpath}/,,$@) passed"; \
+		rm $@.new; \
+		touch $@; \
+	else \
+		echo "test $(subst ${outpath}/,,$@) failed"; \
+	fi
 
-${O}/llvm: llvm.hs force
-	@${ghc} $@ $<
+force:

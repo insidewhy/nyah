@@ -1,14 +1,11 @@
-module mousedeer.test.nyah;
-
-import mousedeer.parser.nyah;
-import teg.test.common;
-
-int main() {
-    auto s = new Stream!Whitespace(`
+// you were a mask
 def hey {
     hello *= 12.1 + b * a && c
     = 14.4
 }
+
+/* you wanna be like that
+ * why you wanna be like that */
 
 override def add(a, b) {
     a + b
@@ -33,8 +30,4 @@ override def add(a, b) {
     a,b||c,d = e,f,g
 
     = famon "willy \"stringboy\" williamson"
-}
-`);
-    parseTest!Grammar("nyah", s);
-    return nFailures;
 }

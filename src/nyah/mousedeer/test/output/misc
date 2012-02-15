@@ -1,4 +1,4 @@
-nyah: mousedeer.parser.nyah.Function[] => [
+mousedeer.parser.nyah.Function[] => [
     [34mFunction[0;m: (
         "def",
         "hey",
