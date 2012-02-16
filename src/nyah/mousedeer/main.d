@@ -24,6 +24,8 @@ int main(string[] args) {
 
     optParser.parse(&args);
 
+    if (optParser.shownHelp) return 0;
+
     Grammar        parser;
     stores!Grammar ast;
     foreach(arg ; args[1..$]) {

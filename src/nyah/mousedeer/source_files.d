@@ -4,13 +4,12 @@ import teg.stream : FileStream;
 import mousedeer.parser.nyah;
 
 class SourceFiles {
-    alias FileStream!Whitespace     SourceFileStream;
-    alias SourceFileStream[string]  StreamMap;
+    alias FileStream!Whitespace SourceFileStream;
 
     SourceFileStream loadFile(string path) {
         return streams_[path] = new SourceFileStream(path);
     }
 
   private:
-    StreamMap  streams_;
+    SourceFileStream[string] streams_;
 }
