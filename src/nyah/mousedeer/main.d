@@ -1,8 +1,8 @@
 module mousedeer.main;
 
+import mousedeer.source_files : SourceFiles;
 import mousedeer.parser.nyah;
 
-import teg.stream : FileStream;
 import teg.stores : stores;
 
 import beard.io;
@@ -11,9 +11,7 @@ import beard.metaio : printType;
 import std.stdio;
 
 int main(string[] args) {
-    auto s = new FileStream!Whitespace();
-    Grammar        parser;
-    stores!Grammar ast;
+    auto sources = new SourceFiles;
 
     bool verbose = false;
     bool dumpAst = false;
@@ -26,8 +24,10 @@ int main(string[] args) {
 
     optParser.parse(&args);
 
+    Grammar        parser;
+    stores!Grammar ast;
     foreach(arg ; args[1..$]) {
-        s.open(arg);
+        auto s = sources.loadFile(arg);
         s.skip_whitespace();
 
         if (! parser.parse(s, ast)) {
