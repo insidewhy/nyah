@@ -1,20 +1,20 @@
 mousedeer.parser.nyah.Function[] => [
-    [34mFunction[0;m: (
+    Function: (
         "def",
         "hey",
         [],
         [
-            [34mExpression[0;m: [34mAssigningOp[0;m: joined [
+            Expression: AssigningOp: joined [
                 "hello"
                 "*="
-                [34mAndOp[0;m: [
-                    [34mAdditionOp[0;m: joined [
-                        [34mRealNumber[0;m: (
+                AndOp: [
+                    AdditionOp: joined [
+                        RealNumber: (
                             "12",
                             "1"
                         )
                         +
-                        [34mScalingOp[0;m: joined [
+                        ScalingOp: joined [
                             "b"
                             *
                             "a"
@@ -23,143 +23,143 @@ mousedeer.parser.nyah.Function[] => [
                     "c"
                 ]
             ],
-            [34mExpression[0;m: [34mReturningOp[0;m: (
+            Expression: ReturningOp: (
                 =,
-                [34mRealNumber[0;m: (
+                RealNumber: (
                     "14",
                     "4"
                 )
             ),
-            [34mExpression[0;m: [34mAdditionOp[0;m: joined [
+            Expression: AdditionOp: joined [
                 "a"
                 +
                 "b"
             ],
-            [34mExpression[0;m: [34mFunctionCall[0;m: [
+            Expression: FunctionCall: [
                 "c",
-                [34mExpression[0;m: [34mTupleOp[0;m: [
-                    [34mInteger[0;m: "1",
-                    [34mInteger[0;m: "2"
+                Expression: TupleOp: [
+                    Integer: "1",
+                    Integer: "2"
                 ]
             ],
-            [34mExpression[0;m: [34mAdditionOp[0;m: joined [
-                [34mScalingOp[0;m: joined [
+            Expression: AdditionOp: joined [
+                ScalingOp: joined [
                     "x"
                     *
-                    [34mCharacter[0;m: y
+                    Character: y
                 ]
                 +
                 "c"
             ],
-            [34mExpression[0;m: [34mFunctionCall[0;m: [
+            Expression: FunctionCall: [
                 "d",
-                [34mInteger[0;m: "4",
-                [34mInteger[0;m: "5"
+                Integer: "4",
+                Integer: "5"
             ],
-            [34mFunction[0;m: (
+            Function: (
                 "def",
                 "famon",
                 [],
-                [34mExpression[0;m: [34mReturningOp[0;m: (
+                Expression: ReturningOp: (
                     =,
-                    [34mAdditionOp[0;m: joined [
+                    AdditionOp: joined [
                         "a"
                         +
-                        [34mString[0;m: "conka"
+                        String: "conka"
                     ]
                 )
             ),
-            [34mExpression[0;m: [34mSuffixOp[0;m: (
+            Expression: SuffixOp: (
                 "x",
                 "++"
             ),
-            [34mExpression[0;m: [34mPrefixOp[0;m: (
+            Expression: PrefixOp: (
                 "++",
                 "y"
             ),
-            [34mExpression[0;m: [34mAdditionOp[0;m: joined [
-                [34mSuffixOp[0;m: (
+            Expression: AdditionOp: joined [
+                SuffixOp: (
                     "x",
                     "++"
                 )
                 -
-                [34mPrefixOp[0;m: (
+                PrefixOp: (
                     "++",
                     "y"
                 )
             ],
-            [34mExpression[0;m: [34mMemberCallOp[0;m: (
+            Expression: MemberCallOp: (
                 "m",
                 .,
                 [
                     "single",
-                    [34mInteger[0;m: "1"
+                    Integer: "1"
                 ]
             ),
-            [34mExpression[0;m: [34mFunctionCall[0;m: [
+            Expression: FunctionCall: [
                 "m",
                 "single",
-                [34mInteger[0;m: "1"
+                Integer: "1"
             ],
-            [34mExpression[0;m: [34mMemberCallOp[0;m: (
+            Expression: MemberCallOp: (
                 "m",
                 .,
                 [
                     "double",
-                    [34mExpression[0;m: [34mTupleOp[0;m: [
-                        [34mInteger[0;m: "1",
-                        [34mInteger[0;m: "2"
+                    Expression: TupleOp: [
+                        Integer: "1",
+                        Integer: "2"
                     ]
                 ]
             ),
-            [34mExpression[0;m: [34mFunctionCall[0;m: [
+            Expression: FunctionCall: [
                 "m",
                 "double",
-                [34mExpression[0;m: [34mTupleOp[0;m: [
-                    [34mInteger[0;m: "1",
-                    [34mCharacter[0;m: "\'"
+                Expression: TupleOp: [
+                    Integer: "1",
+                    Character: "\'"
                 ]
             ],
-            [34mExpression[0;m: [34mAdditionOp[0;m: joined [
-                [34mInteger[0;m: "14"
+            Expression: AdditionOp: joined [
+                Integer: "14"
                 +
-                [34mPrefixOp[0;m: (
+                PrefixOp: (
                     "++",
                     "a"
                 )
             ],
-            [34mExpression[0;m: [34mAssigningOp[0;m: joined [
-                [34mTupleOp[0;m: [
+            Expression: AssigningOp: joined [
+                TupleOp: [
                     "a",
                     "b"
                 ]
                 =
-                [34mTupleOp[0;m: [
+                TupleOp: [
                     "c",
                     "d"
                 ]
             ],
-            [34mExpression[0;m: [34mAssigningOp[0;m: joined [
-                [34mTupleOp[0;m: [
+            Expression: AssigningOp: joined [
+                TupleOp: [
                     "a",
-                    [34mOrOp[0;m: [
+                    OrOp: [
                         "b",
                         "c"
                     ],
                     "d"
                 ]
                 =
-                [34mTupleOp[0;m: [
+                TupleOp: [
                     "e",
                     "f",
                     "g"
                 ]
             ],
-            [34mExpression[0;m: [34mReturningOp[0;m: (
+            Expression: ReturningOp: (
                 =,
-                [34mFunctionCall[0;m: [
+                FunctionCall: [
                     "famon",
-                    [34mString[0;m: "willy \"stringboy\" williamson"
+                    String: "willy \"stringboy\" williamson"
                 ]
             )
         ]

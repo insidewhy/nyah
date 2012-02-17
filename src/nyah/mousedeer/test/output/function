@@ -1,17 +1,17 @@
 mousedeer.parser.nyah.Function[] => [
-    [34mFunction[0;m: (
+    Function: (
         "def",
         "empty",
         [],
         []
     ),
-    [34mFunction[0;m: (
+    Function: (
         "override",
         "add",
         [
             (
                 "a",
-                [34mType[0;m: (
+                Type: (
                     :,
                     "int",
                     []
@@ -19,33 +19,33 @@ mousedeer.parser.nyah.Function[] => [
             ),
             (
                 "b",
-                [34mType[0;m: (
+                Type: (
                     :,
                     "int",
                     []
                 )
             )
         ],
-        [34mExpression[0;m: [34mReturningOp[0;m: (
+        Expression: ReturningOp: (
             =,
-            [34mAdditionOp[0;m: joined [
+            AdditionOp: joined [
                 "a"
                 +
                 "b"
             ]
         )
     ),
-    [34mFunction[0;m: (
+    Function: (
         "def",
         "add",
         [
             (
                 "a",
-                [34mType[0;m: (
+                Type: (
                     :,
                     "vector",
                     [
-                        [34mType[0;m: (
+                        Type: (
                             <empty>,
                             "int",
                             []
@@ -55,7 +55,7 @@ mousedeer.parser.nyah.Function[] => [
             ),
             (
                 "b",
-                [34mType[0;m: (
+                Type: (
                     :,
                     "int",
                     []
@@ -63,7 +63,7 @@ mousedeer.parser.nyah.Function[] => [
             )
         ],
         [
-            [34mExpression[0;m: [34mAssigningOp[0;m: joined [
+            Expression: AssigningOp: joined [
                 "a"
                 "+="
                 "b"
