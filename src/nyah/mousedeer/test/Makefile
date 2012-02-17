@@ -1,5 +1,5 @@
 .SECONDARY:
-.PHONY: default nyah types llvm force
+.PHONY: default force misc function
 
 update ?= ${u}
 outpath := output
@@ -8,11 +8,12 @@ subdirs = teg teg/detail teg/beard teg/beard/meta teg/beard/string_util \
 		  parser
 comp_args := ../teg/test/common.d
 
-default: misc
+default: misc function
 
 include ../teg/beard/Makefile
 
 misc: ${outpath}/misc
+function: ${outpath}/function
 
 ${outpath}/%: %.nyah force
 	@mkdir -p ${outpath}

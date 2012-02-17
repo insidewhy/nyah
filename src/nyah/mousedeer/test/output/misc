@@ -29,17 +29,7 @@ mousedeer.parser.nyah.Function[] => [
                     "14",
                     "4"
                 )
-            )
-        ]
-    ),
-    [34mFunction[0;m: (
-        "override",
-        "add",
-        [
-            "a",
-            "b"
-        ],
-        [
+            ),
             [34mExpression[0;m: [34mAdditionOp[0;m: joined [
                 "a"
                 +

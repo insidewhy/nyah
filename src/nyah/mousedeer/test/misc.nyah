@@ -1,13 +1,12 @@
 // you were a mask
-def hey {
-    hello *= 12.1 + b * a && c
-    = 14.4
-}
 
 /* you wanna be like that
  * why you wanna be like that */
 
-override def add(a, b) {
+def hey {
+    hello *= 12.1 + b * a && c
+    = 14.4
+
     a + b
     c(1, 2)
     x * 'y' + c

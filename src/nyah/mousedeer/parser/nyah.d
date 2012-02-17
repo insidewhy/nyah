@@ -55,7 +55,11 @@ struct Character {
 
 //////////////////////////////////////////////////////////////////////////////
 // types
-// todo
+class Type {
+    // todo
+    mixin makeNode!(
+        Optional!(CharFrom!":?"), Identifier);
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // meta
@@ -68,7 +72,8 @@ alias Choice!(
     Char!"def",
     Sequence!(Store!(Char!"override"), Char!"def")) FunctionPrefix;
 
-alias Identifier ArgumentDefinition; // todo
+// todo, default arguments, "...", ptr/reference
+alias Sequence!(Identifier, Optional!Type) ArgumentDefinition;
 
 alias Sequence!(
     Char!"(",
@@ -86,8 +91,8 @@ class Function {
 alias Choice!(
     Sequence!(
         Char!"{",
-        // Many!ExpressionRef,
-        JoinedTight!(  // only allow ; and newlines between expressions
+        // stop two expressions being on same line without a joining semicolon
+        JoinedTight!(
             Skip!(ManyPlus!(
                 Lexeme!(NonBreakingSpace, CharFrom!("\n;"), NonBreakingSpace))),
             Choice!(Node!Function, ExpressionRef)),

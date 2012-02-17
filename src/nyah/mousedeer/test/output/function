@@ -1,0 +1,36 @@
+mousedeer.parser.nyah.Function[] => [
+    [34mFunction[0;m: (
+        "def",
+        "empty",
+        [],
+        []
+    ),
+    [34mFunction[0;m: (
+        "override",
+        "add",
+        [
+            (
+                "a",
+                [34mType[0;m: (
+                    :,
+                    "int"
+                )
+            ),
+            (
+                "b",
+                [34mType[0;m: (
+                    :,
+                    "int"
+                )
+            )
+        ],
+        [34mExpression[0;m: [34mReturningOp[0;m: (
+            =,
+            [34mAdditionOp[0;m: joined [
+                "a"
+                +
+                "b"
+            ]
+        )
+    )
+]
