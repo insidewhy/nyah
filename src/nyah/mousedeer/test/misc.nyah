@@ -1,11 +1,11 @@
 // you were a mask
 
-/* you wanna be like that
- * why you wanna be like that */
-
 def hey {
     hello *= 12.1 + b * a && c
     = 14.4
+
+    /* you wanna be like that
+     * why you wanna be like that */
 
     a + b
     c(1, 2)

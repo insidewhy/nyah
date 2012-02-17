@@ -5,16 +5,21 @@ import teg.all;
 //////////////////////////////////////////////////////////////////////////////
 // global
 alias CharFrom!"\n\t " WhitespaceChars;
-alias Skip!(Many!(CharFrom!"\t ")) NonBreakingSpace;
-alias ManyPlus!(Choice!(
-    WhitespaceChars,
+alias Choice!(
     Lexeme!(Char!"//", Many!(NotChar!'\n')), // slash slash comments
     // slash star until star slash
     Lexeme!(Char!"/*",
             Many!(Choice!(NotChar!'*',
                           Lexeme!(Char!"*", NotChar!'/'))),
             Char!"*/")
+) Comment;
+
+alias ManyPlus!(Choice!(
+    WhitespaceChars,
+    Comment
 )) Whitespace;
+
+alias Skip!(Many!(Choice!(CharFrom!"\t ", Comment))) NonBreakingSpace;
 
 class Expression { mixin makeNode!ReturningOp; }
 alias Node!Expression ExpressionRef;
