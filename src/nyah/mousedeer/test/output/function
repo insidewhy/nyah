@@ -13,14 +13,16 @@ mousedeer.parser.nyah.Function[] => [
                 "a",
                 [34mType[0;m: (
                     :,
-                    "int"
+                    "int",
+                    []
                 )
             ),
             (
                 "b",
                 [34mType[0;m: (
                     :,
-                    "int"
+                    "int",
+                    []
                 )
             )
         ],
@@ -32,5 +34,40 @@ mousedeer.parser.nyah.Function[] => [
                 "b"
             ]
         )
+    ),
+    [34mFunction[0;m: (
+        "def",
+        "add",
+        [
+            (
+                "a",
+                [34mType[0;m: (
+                    :,
+                    "vector",
+                    [
+                        [34mType[0;m: (
+                            <empty>,
+                            "int",
+                            []
+                        )
+                    ]
+                )
+            ),
+            (
+                "b",
+                [34mType[0;m: (
+                    :,
+                    "int",
+                    []
+                )
+            )
+        ],
+        [
+            [34mExpression[0;m: [34mAssigningOp[0;m: joined [
+                "a"
+                "+="
+                "b"
+            ]
+        ]
     )
 ]
