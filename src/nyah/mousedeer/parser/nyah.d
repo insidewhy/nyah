@@ -63,9 +63,10 @@ struct Character {
 class Type {
     // todo
     mixin makeNode!(
-        Optional!(CharFrom!":?"), Identifier,
+        Optional!(CharFrom!":?"),
+        Identifier,
         Choice!(
-            Char!"[", Many!(Node!Type), Char!"]",
+            Sequence!(Char!"[", JoinedPlus!(Char!",", Node!Type), Char!"]"),
             Node!Type,
             EmptyString));
 }
