@@ -1,4 +1,7 @@
-mousedeer.parser.nyah.Function[] => [
+beard.variant.Variant {
+    mousedeer.parser.nyah.Function,
+    mousedeer.parser.nyah.VariableDefinition
+}[] => [
     Function: (
         "def",
         "empty",
@@ -11,7 +14,7 @@ mousedeer.parser.nyah.Function[] => [
         [
             (
                 "a",
-                Type: (
+                TypeParameter: (
                     :,
                     [
                         "int"
@@ -20,7 +23,7 @@ mousedeer.parser.nyah.Function[] => [
             ),
             (
                 "b",
-                Type: (
+                TypeParameter: (
                     :,
                     [
                         "int"
@@ -43,7 +46,7 @@ mousedeer.parser.nyah.Function[] => [
         [
             (
                 "a",
-                Type: (
+                TypeParameter: (
                     :,
                     [
                         "const",
@@ -54,7 +57,7 @@ mousedeer.parser.nyah.Function[] => [
             ),
             (
                 "b",
-                Type: (
+                TypeParameter: (
                     :,
                     [
                         "int"
@@ -76,18 +79,18 @@ mousedeer.parser.nyah.Function[] => [
         [
             (
                 "p",
-                Type: (
+                TypeParameter: (
                     :,
                     [
                         "pair",
                         [
-                            Type: (
+                            TypeParameter: (
                                 <empty>,
                                 [
                                     "A"
                                 ]
                             ),
-                            Type: (
+                            TypeParameter: (
                                 <empty>,
                                 [
                                     "B"

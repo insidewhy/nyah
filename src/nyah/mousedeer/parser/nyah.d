@@ -5,6 +5,7 @@ import teg.all;
 //////////////////////////////////////////////////////////////////////////////
 // global
 alias CharFrom!"\n\t " WhitespaceChars;
+
 alias Choice!(
     Lexeme!(Char!"//", Many!(NotChar!'\n')), // slash slash comments
     // slash star until star slash
@@ -56,20 +57,19 @@ struct Character {
         Char!"'"));
 }
 
-// todo
+// todo interpolated strings, more string escape codes etc.
 
 //////////////////////////////////////////////////////////////////////////////
 // types
-class Type {
-    // todo
-    mixin makeNode!(Sequence!(
-        Optional!(CharFrom!":?"),
-        JoinedPlus!(
-            NonBreakingSpace,
-            Choice!(
-                Sequence!(Char!"[", Joined!(Char!",", Node!Type), Char!"]"),
-                Identifier))));
+class TypeParameter {
+    mixin makeNode!(Sequence!(Optional!(CharFrom!":?"), Type));
 }
+
+alias JoinedPlusTight!(
+    NonBreakingSpace,
+    Choice!(
+        Sequence!(Char!"[", Joined!(Char!",", Node!TypeParameter), Char!"]"),
+        Identifier))  Type;
 
 //////////////////////////////////////////////////////////////////////////////
 // meta
@@ -83,7 +83,7 @@ alias Choice!(
     Sequence!(Store!(Char!"override"), Char!"def")) FunctionPrefix;
 
 // todo, default arguments, "...", ptr/reference
-alias Sequence!(Identifier, Optional!Type) ArgumentDefinition;
+alias Sequence!(Identifier, Optional!TypeParameter) ArgumentDefinition;
 
 alias Sequence!(
     Char!"(",
@@ -105,7 +105,7 @@ alias Choice!(
         JoinedTight!(
             Skip!(ManyPlus!(
                 Lexeme!(NonBreakingSpace, CharFrom!("\n;"), NonBreakingSpace))),
-            Choice!(Node!Function, ExpressionRef)),
+            Choice!(Node!Function, Node!VariableDefinition, ExpressionRef)),
         Char!"}"),
     ExpressionRef)     CodeBlock;
 
@@ -208,8 +208,23 @@ alias Choice!(
     Character,
     Sequence!(Char!"(", ExpressionRef, Char!")")) Term;
 
+class VariableDefinition {
+    mixin makeNode!(Lexeme!(
+        Identifier,
+        NonBreakingSpace,
+        CharFrom!":?",
+        NonBreakingSpace,
+        Type,
+        Optional!(
+            Lexeme!(NonBreakingSpace, Char!"="),
+            ExpressionRef)));
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// classes
+
 //////////////////////////////////////////////////////////////////////////////
 // top level
-alias Function TopLevel; // todo
+alias Choice!(Function, VariableDefinition) TopLevel; // todo
 
 alias Many!TopLevel Grammar;

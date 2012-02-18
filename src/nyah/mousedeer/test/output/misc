@@ -1,4 +1,23 @@
-mousedeer.parser.nyah.Function[] => [
+beard.variant.Variant {
+    mousedeer.parser.nyah.Function,
+    mousedeer.parser.nyah.VariableDefinition
+}[] => [
+    VariableDefinition: (
+        "b",
+        :,
+        [
+            "int"
+        ],
+        null
+    ),
+    VariableDefinition: (
+        "c",
+        :,
+        [
+            "int"
+        ],
+        Expression: Integer: "4"
+    ),
     Function: (
         "def",
         "hey",
@@ -29,6 +48,14 @@ mousedeer.parser.nyah.Function[] => [
                     "14",
                     "4"
                 )
+            ),
+            VariableDefinition: (
+                "d",
+                :,
+                [
+                    "float"
+                ],
+                Expression: Integer: "15"
             ),
             Expression: AdditionOp: joined [
                 "a"

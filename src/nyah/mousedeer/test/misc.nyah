@@ -1,8 +1,14 @@
 // you were a mask
 
+b : int
+
+c:int = 4
+
 def hey {
     hello *= 12.1 + b * a && c
     = 14.4
+
+    d:float = 15
 
     /* you wanna be like that
      * why you wanna be like that */
