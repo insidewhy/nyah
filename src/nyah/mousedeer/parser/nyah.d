@@ -69,6 +69,8 @@ alias JoinedPlusTight!(
     NonBreakingSpace,
     Choice!(
         Sequence!(Char!"[", Joined!(Char!",", Node!TypeParameter), Char!"]"),
+        Lexeme!(Store!(Char!"const"),
+                Many!(Lexeme!(NonBreakingSpace, Node!TypeParameter))),
         Identifier))  Type;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -225,6 +227,6 @@ class VariableDefinition {
 
 //////////////////////////////////////////////////////////////////////////////
 // top level
-alias Choice!(Function, VariableDefinition) TopLevel; // todo
+alias Choice!(Function, VariableDefinition) TopLevel; // todo class etc.
 
 alias Many!TopLevel Grammar;

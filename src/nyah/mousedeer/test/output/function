@@ -49,9 +49,18 @@ beard.variant.Variant {
                 TypeParameter: (
                     :,
                     [
-                        "const",
-                        "vector",
-                        "int"
+                        (
+                            "const",
+                            [
+                                TypeParameter: (
+                                    <empty>,
+                                    [
+                                        "vector",
+                                        "int"
+                                    ]
+                                )
+                            ]
+                        )
                     ]
                 )
             ),
