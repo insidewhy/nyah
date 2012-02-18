@@ -6,6 +6,8 @@ def add(a:const vector int, b:int) {}
 
 def add(p:pair[A, B]) {}
 
-def add_gen(a:vector ?A, b:A) {}
+def vec1(a:vector ?A) {}
 
-def add_gen2(a:vector ?, b:A) {}
+def vec2(a:vector ?) {}
+
+def vec3(a:vector ...A) {}

@@ -72,7 +72,7 @@ alias JoinedPlusTight!(
         Sequence!(Char!"[", Joined!(Char!",", Node!TypeParameter), Char!"]"),
         Lexeme!(Store!(Char!"const"),
                 Many!(Lexeme!(NonBreakingSpace, Node!TypeParameter))),
-        Lexeme!(StoreChar!(Char!"?"),
+        Lexeme!(StoreRange!(Choice!(Char!"?", Char!"...")),
                 Optional!NonBreakingSpace,
                 Optional!Identifier),
         Identifier))  Type;

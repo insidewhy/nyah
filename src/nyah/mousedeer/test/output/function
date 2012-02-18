@@ -101,7 +101,7 @@ beard.variant.Variant {
     ),
     Function: (
         "def",
-        "add_gen",
+        "vec1",
         [
             (
                 "a",
@@ -110,18 +110,9 @@ beard.variant.Variant {
                     [
                         "vector",
                         (
-                            ?,
+                            "?",
                             "A"
                         )
-                    ]
-                )
-            ),
-            (
-                "b",
-                TypeParameter: (
-                    :,
-                    [
-                        "A"
                     ]
                 )
             )
@@ -130,7 +121,7 @@ beard.variant.Variant {
     ),
     Function: (
         "def",
-        "add_gen2",
+        "vec2",
         [
             (
                 "a",
@@ -139,18 +130,29 @@ beard.variant.Variant {
                     [
                         "vector",
                         (
-                            ?,
+                            "?",
                             ""
                         )
                     ]
                 )
-            ),
+            )
+        ],
+        []
+    ),
+    Function: (
+        "def",
+        "vec3",
+        [
             (
-                "b",
+                "a",
                 TypeParameter: (
                     :,
                     [
-                        "A"
+                        "vector",
+                        (
+                            "...",
+                            "A"
+                        )
                     ]
                 )
             )
