@@ -52,7 +52,7 @@ struct Character {
     mixin makeNode!(Lexeme!(
         Char!"'",
         Choice!(
-            Lexeme!(Store!(Char!"\\"), AnyChar),
+            Lexeme!(StoreChar!(Char!"\\"), AnyChar),
             NotChar!'\"'),
         Char!"'"));
 }
@@ -62,7 +62,8 @@ struct Character {
 //////////////////////////////////////////////////////////////////////////////
 // types
 class TypeParameter {
-    mixin makeNode!(Sequence!(Optional!(CharFrom!":?"), Type));
+    mixin makeNode!(
+        Lexeme!(Optional!(StoreChar!(Char!":"), NonBreakingSpace), Type));
 }
 
 alias JoinedPlusTight!(
@@ -71,6 +72,9 @@ alias JoinedPlusTight!(
         Sequence!(Char!"[", Joined!(Char!",", Node!TypeParameter), Char!"]"),
         Lexeme!(Store!(Char!"const"),
                 Many!(Lexeme!(NonBreakingSpace, Node!TypeParameter))),
+        Lexeme!(StoreChar!(Char!"?"),
+                Optional!NonBreakingSpace,
+                Optional!Identifier),
         Identifier))  Type;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -181,8 +185,8 @@ class PrefixOp {
             Char!"--",
             Char!"-",
             Char!"*",
-            Lexeme!(Store!(Char!"+"), Not!(Char!"+")),
-            Lexeme!(Store!(Char!"&"), Not!(Char!"&"))
+            Lexeme!(StoreChar!(Char!"+"), Not!(Char!"+")),
+            Lexeme!(StoreChar!(Char!"&"), Not!(Char!"&"))
         )),
         Choice!(SuffixOp, MemberCallOp, FunctionCall));
 }

@@ -31,14 +31,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        Expression: ReturningOp: (
-            =,
-            AdditionOp: joined [
-                "a"
-                +
-                "b"
-            ]
-        )
+        []
     ),
     Function: (
         "def",
@@ -74,13 +67,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        [
-            Expression: AssigningOp: joined [
-                "a"
-                "+="
-                "b"
-            ]
-        ]
+        []
     ),
     Function: (
         "def",
@@ -110,25 +97,64 @@ beard.variant.Variant {
                 )
             )
         ],
-        Expression: ReturningOp: (
-            =,
-            AdditionOp: joined [
-                MemberCallOp: (
-                    "a",
-                    .,
+        []
+    ),
+    Function: (
+        "def",
+        "add_gen",
+        [
+            (
+                "a",
+                TypeParameter: (
+                    :,
                     [
-                        "first"
+                        "vector",
+                        (
+                            ?,
+                            "A"
+                        )
                     ]
                 )
-                +
-                MemberCallOp: (
-                    "a",
-                    .,
+            ),
+            (
+                "b",
+                TypeParameter: (
+                    :,
                     [
-                        "second"
+                        "A"
                     ]
                 )
-            ]
-        )
+            )
+        ],
+        []
+    ),
+    Function: (
+        "def",
+        "add_gen2",
+        [
+            (
+                "a",
+                TypeParameter: (
+                    :,
+                    [
+                        "vector",
+                        (
+                            ?,
+                            ""
+                        )
+                    ]
+                )
+            ),
+            (
+                "b",
+                TypeParameter: (
+                    :,
+                    [
+                        "A"
+                    ]
+                )
+            )
+        ],
+        []
     )
 ]

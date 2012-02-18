@@ -1,7 +1,11 @@
 def empty {}
 
-override def add(a:int, b:int) = a + b
+override def add(a:int, b:int) {}
 
-def add(a:const vector int, b:int) { a += b }
+def add(a:const vector int, b:int) {}
 
-def add(p:pair[A, B]) = a.first + a.second
+def add(p:pair[A, B]) {}
+
+def add_gen(a:vector ?A, b:A) {}
+
+def add_gen2(a:vector ?, b:A) {}
