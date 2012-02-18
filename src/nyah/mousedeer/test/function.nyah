@@ -2,6 +2,6 @@ def empty {}
 
 override def add(a:int, b:int) = a + b
 
-def add(a:vector int, b:int) { a += b }
+def add(a:const vector int, b:int) { a += b }
 
 def add(p:pair[A, B]) = a.first + a.second

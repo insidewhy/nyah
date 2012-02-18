@@ -13,16 +13,18 @@ mousedeer.parser.nyah.Function[] => [
                 "a",
                 Type: (
                     :,
-                    "int",
-                    <empty>
+                    [
+                        "int"
+                    ]
                 )
             ),
             (
                 "b",
                 Type: (
                     :,
-                    "int",
-                    <empty>
+                    [
+                        "int"
+                    ]
                 )
             )
         ],
@@ -43,20 +45,20 @@ mousedeer.parser.nyah.Function[] => [
                 "a",
                 Type: (
                     :,
-                    "vector",
-                    Type: (
-                        <empty>,
-                        "int",
-                        <empty>
-                    )
+                    [
+                        "const",
+                        "vector",
+                        "int"
+                    ]
                 )
             ),
             (
                 "b",
                 Type: (
                     :,
-                    "int",
-                    <empty>
+                    [
+                        "int"
+                    ]
                 )
             )
         ],
@@ -76,18 +78,22 @@ mousedeer.parser.nyah.Function[] => [
                 "p",
                 Type: (
                     :,
-                    "pair",
                     [
-                        Type: (
-                            <empty>,
-                            "A",
-                            <empty>
-                        ),
-                        Type: (
-                            <empty>,
-                            "B",
-                            <empty>
-                        )
+                        "pair",
+                        [
+                            Type: (
+                                <empty>,
+                                [
+                                    "A"
+                                ]
+                            ),
+                            Type: (
+                                <empty>,
+                                [
+                                    "B"
+                                ]
+                            )
+                        ]
                     ]
                 )
             )
