@@ -42,18 +42,9 @@ beard.variant.Variant {
                 TypeParameter: (
                     :,
                     [
-                        (
-                            "const",
-                            [
-                                TypeParameter: (
-                                    <empty>,
-                                    [
-                                        "vector",
-                                        "int"
-                                    ]
-                                )
-                            ]
-                        )
+                        "const",
+                        "vector",
+                        "int"
                     ]
                 )
             ),
@@ -80,18 +71,42 @@ beard.variant.Variant {
                     [
                         "pair",
                         [
+                            TypeParameter: [
+                                "A"
+                            ],
+                            TypeParameter: [
+                                "B"
+                            ]
+                        ]
+                    ]
+                )
+            )
+        ],
+        []
+    ),
+    Function: (
+        "def",
+        "add",
+        [
+            (
+                "p",
+                TypeParameter: (
+                    :,
+                    [
+                        "pair",
+                        [
                             TypeParameter: (
-                                <empty>,
+                                :,
                                 [
-                                    "A"
+                                    "bool"
                                 ]
                             ),
-                            TypeParameter: (
-                                <empty>,
-                                [
+                            TypeParameter: [
+                                (
+                                    "?",
                                     "B"
-                                ]
-                            )
+                                )
+                            ]
                         ]
                     ]
                 )
@@ -155,6 +170,30 @@ beard.variant.Variant {
                         )
                     ]
                 )
+            )
+        ],
+        []
+    ),
+    Function: (
+        "def",
+        "vec4",
+        [
+            (
+                "a",
+                TypeParameter: [
+                    (
+                        "?",
+                        "T"
+                    ),
+                    [
+                        TypeParameter: (
+                            :,
+                            [
+                                "bool"
+                            ]
+                        )
+                    ]
+                ]
             )
         ],
         []

@@ -62,18 +62,19 @@ struct Character {
 //////////////////////////////////////////////////////////////////////////////
 // types
 class TypeParameter {
-    mixin makeNode!(
-        Lexeme!(Optional!(StoreChar!(Char!":"), NonBreakingSpace), Type));
+    mixin makeNode!(Choice!(
+        Lexeme!(
+            StoreChar!(Char!":"), NonBreakingSpace, Type),
+        Type
+    ));
 }
 
 alias JoinedPlusTight!(
     NonBreakingSpace,
     Choice!(
         Sequence!(Char!"[", Joined!(Char!",", Node!TypeParameter), Char!"]"),
-        Lexeme!(Store!(Char!"const"),
-                Many!(Lexeme!(NonBreakingSpace, Node!TypeParameter))),
         Lexeme!(StoreRange!(Choice!(Char!"?", Char!"...")),
-                Optional!NonBreakingSpace,
+                NonBreakingSpace,
                 Optional!Identifier),
         Identifier))  Type;
 

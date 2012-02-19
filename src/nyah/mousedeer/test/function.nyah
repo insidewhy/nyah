@@ -6,8 +6,12 @@ def add(a:const vector int, b:int) {}
 
 def add(p:pair[A, B]) {}
 
+def add(p:pair[:bool, ?B]) {}
+
 def vec1(a:vector ?A) {}
 
 def vec2(a:vector ?) {}
 
 def vec3(a:vector ...A) {}
+
+def vec4(a ?T[:bool]) {}
