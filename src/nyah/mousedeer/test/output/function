@@ -14,20 +14,16 @@ beard.variant.Variant {
         [
             (
                 "a",
-                TypeParameter: (
-                    :,
-                    [
-                        "int"
-                    ]
+                Type: (
+                    ":",
+                    "int"
                 )
             ),
             (
                 "b",
-                TypeParameter: (
-                    :,
-                    [
-                        "int"
-                    ]
+                Type: (
+                    ":",
+                    "int"
                 )
             )
         ],
@@ -39,21 +35,41 @@ beard.variant.Variant {
         [
             (
                 "a",
-                TypeParameter: (
-                    :,
-                    [
-                        "const",
+                Type: (
+                    (
+                        ":",
+                        "const"
+                    ),
+                    Type: (
                         "vector",
-                        "int"
-                    ]
+                        Type: "int"
+                    )
                 )
             ),
             (
                 "b",
-                TypeParameter: (
-                    :,
-                    [
-                        "int"
+                Type: (
+                    ":",
+                    "int"
+                )
+            )
+        ],
+        []
+    ),
+    Function: (
+        "def",
+        "add",
+        [
+            (
+                "p",
+                Type: (
+                    (
+                        ":",
+                        "pair"
+                    ),
+                    Type: [
+                        Type: "A",
+                        Type: "B"
                     ]
                 )
             )
@@ -66,48 +82,20 @@ beard.variant.Variant {
         [
             (
                 "p",
-                TypeParameter: (
-                    :,
-                    [
-                        "pair",
-                        [
-                            TypeParameter: [
-                                "A"
-                            ],
-                            TypeParameter: [
-                                "B"
-                            ]
-                        ]
-                    ]
-                )
-            )
-        ],
-        []
-    ),
-    Function: (
-        "def",
-        "add",
-        [
-            (
-                "p",
-                TypeParameter: (
-                    :,
-                    [
-                        "pair",
-                        [
-                            TypeParameter: (
-                                :,
-                                [
-                                    "bool"
-                                ]
-                            ),
-                            TypeParameter: [
-                                (
-                                    "?",
-                                    "B"
-                                )
-                            ]
-                        ]
+                Type: (
+                    (
+                        ":",
+                        "pair"
+                    ),
+                    Type: [
+                        Type: (
+                            ":",
+                            "bool"
+                        ),
+                        Type: (
+                            "?",
+                            "B"
+                        )
                     ]
                 )
             )
@@ -120,15 +108,15 @@ beard.variant.Variant {
         [
             (
                 "a",
-                TypeParameter: (
-                    :,
-                    [
-                        "vector",
-                        (
-                            "?",
-                            "A"
-                        )
-                    ]
+                Type: (
+                    (
+                        ":",
+                        "vector"
+                    ),
+                    Type: (
+                        "?",
+                        "A"
+                    )
                 )
             )
         ],
@@ -140,15 +128,15 @@ beard.variant.Variant {
         [
             (
                 "a",
-                TypeParameter: (
-                    :,
-                    [
-                        "vector",
-                        (
-                            "?",
-                            ""
-                        )
-                    ]
+                Type: (
+                    (
+                        ":",
+                        "vector"
+                    ),
+                    Type: (
+                        "?",
+                        ""
+                    )
                 )
             )
         ],
@@ -160,15 +148,15 @@ beard.variant.Variant {
         [
             (
                 "a",
-                TypeParameter: (
-                    :,
-                    [
-                        "vector",
-                        (
-                            "...",
-                            "A"
-                        )
-                    ]
+                Type: (
+                    (
+                        ":",
+                        "vector"
+                    ),
+                    Type: (
+                        "...",
+                        "A"
+                    )
                 )
             )
         ],
@@ -180,20 +168,18 @@ beard.variant.Variant {
         [
             (
                 "a",
-                TypeParameter: [
+                Type: (
                     (
                         "?",
                         "T"
                     ),
-                    [
-                        TypeParameter: (
-                            :,
-                            [
-                                "bool"
-                            ]
+                    Type: [
+                        Type: (
+                            ":",
+                            "bool"
                         )
                     ]
-                ]
+                )
             )
         ],
         []

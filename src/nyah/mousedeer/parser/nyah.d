@@ -61,22 +61,19 @@ struct Character {
 
 //////////////////////////////////////////////////////////////////////////////
 // types
-class TypeParameter {
-    mixin makeNode!(Choice!(
-        Lexeme!(
-            StoreChar!(Char!":"), NonBreakingSpace, Type),
-        Type
-    ));
-}
+alias Choice!(
+    Lexeme!(StoreRange!(Choice!(Char!":", Char!"?", Char!"...")),
+            NonBreakingSpace,
+            Optional!Identifier),
+    Sequence!(Char!"[", Joined!(Char!",", Node!Type), Char!"]"),
+    Identifier) TypeElement;
 
-alias JoinedPlusTight!(
-    NonBreakingSpace,
-    Choice!(
-        Sequence!(Char!"[", Joined!(Char!",", Node!TypeParameter), Char!"]"),
-        Lexeme!(StoreRange!(Choice!(Char!"?", Char!"...")),
-                NonBreakingSpace,
-                Optional!Identifier),
-        Identifier))  Type;
+class Type {
+    mixin makeNode!(
+        Choice!(
+            Lexeme!(TypeElement, NonBreakingSpace, Node!Type),
+            TypeElement));
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // meta
@@ -90,7 +87,7 @@ alias Choice!(
     Sequence!(Store!(Char!"override"), Char!"def")) FunctionPrefix;
 
 // todo, default arguments, "...", ptr/reference
-alias Sequence!(Identifier, Optional!TypeParameter) ArgumentDefinition;
+alias Sequence!(Identifier, Optional!Type) ArgumentDefinition;
 
 alias Sequence!(
     Char!"(",
@@ -105,6 +102,8 @@ class Function {
         CodeBlock);
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// expressions
 alias Choice!(
     Sequence!(
         Char!"{",
@@ -122,8 +121,11 @@ template BinOp(J, T...) {
         T) BinOp;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// expressions
+class ReturningOp {
+    mixin makeNode!(
+        TreeOptional!(Choice!(Char!"=", Char!"return")), AssigningOp);
+}
+
 alias Choice!(
     Char!"=",
     Char!"+=",
@@ -136,11 +138,6 @@ alias Choice!(
     Char!"&=",
     Char!"^=",
     Char!"|=") AssigningOps;
-
-class ReturningOp {
-    mixin makeNode!(
-        TreeOptional!(Choice!(Char!"=", Char!"return")), AssigningOp);
-}
 
 // right to left
 class AssigningOp { mixin makeNode!(BinOp!(AssigningOps, TupleOp)); }
@@ -155,7 +152,10 @@ class BitwiseOrOp { mixin makeNode!(BinOp!(Char!"|", BitwiseXOrOp)); }
 
 class BitwiseXOrOp { mixin makeNode!(BinOp!(Char!"^", BitwiseAndOp)); }
 
-class BitwiseAndOp { mixin makeNode!(BinOp!(Char!"&", EquivalenceOp)); }
+class BitwiseAndOp {
+    mixin makeNode!(
+        BinOp!(Lexeme!(StoreChar!(Char!"&"), Not!(Char!"&")), EquivalenceOp));
+}
 
 class EquivalenceOp {
     mixin makeNode!(
@@ -186,8 +186,8 @@ class PrefixOp {
             Char!"--",
             Char!"-",
             Char!"*",
-            Lexeme!(StoreChar!(Char!"+"), Not!(Char!"+")),
-            Lexeme!(StoreChar!(Char!"&"), Not!(Char!"&"))
+            Char!"+",
+            Char!"&"
         )),
         Choice!(SuffixOp, MemberCallOp, FunctionCall));
 }
@@ -219,8 +219,7 @@ class VariableDefinition {
     mixin makeNode!(Lexeme!(
         Identifier,
         NonBreakingSpace,
-        CharFrom!":?",
-        NonBreakingSpace,
+        Try!(Lexeme!(CharFrom!":?")),
         Type,
         Optional!(
             Lexeme!(NonBreakingSpace, Char!"="),

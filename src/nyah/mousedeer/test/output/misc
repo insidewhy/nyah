@@ -4,18 +4,18 @@ beard.variant.Variant {
 }[] => [
     VariableDefinition: (
         "b",
-        :,
-        [
+        Type: (
+            ":",
             "int"
-        ],
+        ),
         null
     ),
     VariableDefinition: (
         "c",
-        :,
-        [
+        Type: (
+            ":",
             "int"
-        ],
+        ),
         Expression: Integer: "4"
     ),
     Function: (
@@ -51,10 +51,10 @@ beard.variant.Variant {
             ),
             VariableDefinition: (
                 "d",
-                :,
-                [
+                Type: (
+                    ":",
                     "float"
-                ],
+                ),
                 Expression: Integer: "15"
             ),
             Expression: AdditionOp: joined [
