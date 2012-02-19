@@ -62,9 +62,15 @@ struct Character {
 //////////////////////////////////////////////////////////////////////////////
 // types
 alias Choice!(
-    Lexeme!(StoreRange!(Choice!(Char!":", Char!"?", Char!"...")),
-            NonBreakingSpace,
-            Optional!Identifier),
+    Lexeme!(
+        StoreRange!(Choice!(Char!"?", Char!"...")),
+        EmptyString, // to split lexeme storage type
+        Optional!Identifier),
+    Lexeme!(
+        // range rather than char so this stores the same as above
+        StoreRange!(Char!":"),
+        NonBreakingSpace,
+        Identifier),
     Sequence!(Char!"[", Joined!(Char!",", Node!Type), Char!"]"),
     Identifier) TypeElement;
 
