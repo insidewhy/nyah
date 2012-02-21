@@ -15,3 +15,5 @@ def vec2(a:vector ?) {}
 def vec3(a:vector ...A) {}
 
 def vec4(a ?T[:bool]) {}
+
+def vec5(a ?T :bool) {}

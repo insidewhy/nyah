@@ -61,6 +61,14 @@ struct Character {
 
 //////////////////////////////////////////////////////////////////////////////
 // types
+class Type {
+    mixin makeNode!(Choice!(Node!ParametricType, TypeMatch));
+}
+
+struct ParametricType {
+    mixin makeNode!(Lexeme!(TypeMatch, NonBreakingSpace, Node!Type));
+}
+
 alias Choice!(
     Lexeme!(
         StoreRange!(Choice!(Char!"?", Char!"...")),
@@ -72,14 +80,7 @@ alias Choice!(
         NonBreakingSpace,
         Identifier),
     Sequence!(Char!"[", Joined!(Char!",", Node!Type), Char!"]"),
-    Identifier) TypeElement;
-
-class Type {
-    mixin makeNode!(
-        Choice!(
-            Lexeme!(TypeElement, NonBreakingSpace, Node!Type),
-            TypeElement));
-}
+    Identifier) TypeMatch;
 
 //////////////////////////////////////////////////////////////////////////////
 // meta

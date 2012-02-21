@@ -35,12 +35,12 @@ beard.variant.Variant {
         [
             (
                 "a",
-                Type: (
+                Type: ParametricType: (
                     (
                         ":",
                         "const"
                     ),
-                    Type: (
+                    Type: ParametricType: (
                         "vector",
                         Type: "int"
                     )
@@ -62,7 +62,7 @@ beard.variant.Variant {
         [
             (
                 "p",
-                Type: (
+                Type: ParametricType: (
                     (
                         ":",
                         "pair"
@@ -82,7 +82,7 @@ beard.variant.Variant {
         [
             (
                 "p",
-                Type: (
+                Type: ParametricType: (
                     (
                         ":",
                         "pair"
@@ -108,7 +108,7 @@ beard.variant.Variant {
         [
             (
                 "a",
-                Type: (
+                Type: ParametricType: (
                     (
                         ":",
                         "vector"
@@ -128,7 +128,7 @@ beard.variant.Variant {
         [
             (
                 "a",
-                Type: (
+                Type: ParametricType: (
                     (
                         ":",
                         "vector"
@@ -148,7 +148,7 @@ beard.variant.Variant {
         [
             (
                 "a",
-                Type: (
+                Type: ParametricType: (
                     (
                         ":",
                         "vector"
@@ -168,7 +168,7 @@ beard.variant.Variant {
         [
             (
                 "a",
-                Type: (
+                Type: ParametricType: (
                     (
                         "?",
                         "T"
@@ -179,6 +179,26 @@ beard.variant.Variant {
                             "bool"
                         )
                     ]
+                )
+            )
+        ],
+        []
+    ),
+    Function: (
+        "def",
+        "vec5",
+        [
+            (
+                "a",
+                Type: ParametricType: (
+                    (
+                        "?",
+                        "T"
+                    ),
+                    Type: (
+                        ":",
+                        "bool"
+                    )
                 )
             )
         ],
