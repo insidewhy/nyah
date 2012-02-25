@@ -22,6 +22,7 @@ beard.variant.Variant {
         "def",
         "hey",
         [],
+        [],
         [
             Expression: AssigningOp: joined [
                 "hello"
@@ -86,6 +87,7 @@ beard.variant.Variant {
             Function: (
                 "def",
                 "famon",
+                [],
                 [],
                 Expression: ReturningOp: (
                     =,
