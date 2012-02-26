@@ -1,22 +1,27 @@
 beard.variant.Variant {
     mousedeer.parser.nyah.Function,
-    mousedeer.parser.nyah.VariableDefinition
+    mousedeer.parser.nyah.VariableDefinition,
+    mousedeer.parser.nyah.Class
 }[] => [
     VariableDefinition: (
         "b",
-        Type: (
-            ":",
-            "int"
-        ),
-        null
+        (
+            Type: (
+                ":",
+                "int"
+            ),
+            null
+        )
     ),
     VariableDefinition: (
         "c",
-        Type: (
-            ":",
-            "int"
-        ),
-        Expression: Integer: "4"
+        (
+            Type: (
+                ":",
+                "int"
+            ),
+            Expression: Integer: "4"
+        )
     ),
     Function: (
         "def",
@@ -52,11 +57,17 @@ beard.variant.Variant {
             ),
             VariableDefinition: (
                 "d",
-                Type: (
-                    ":",
-                    "float"
-                ),
-                Expression: Integer: "15"
+                (
+                    Type: (
+                        ":",
+                        "float"
+                    ),
+                    Expression: Integer: "15"
+                )
+            ),
+            VariableDefinition: (
+                "e",
+                Expression: "d"
             ),
             Expression: AdditionOp: joined [
                 "a"

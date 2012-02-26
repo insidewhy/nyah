@@ -9,6 +9,7 @@ def hey {
     = 14.4
 
     d:float = 15
+    e:=d
 
     /* you wanna be like that
      * why you wanna be like that */

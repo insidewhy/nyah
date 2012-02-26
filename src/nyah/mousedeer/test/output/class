@@ -1,0 +1,30 @@
+beard.variant.Variant {
+    mousedeer.parser.nyah.Function,
+    mousedeer.parser.nyah.VariableDefinition,
+    mousedeer.parser.nyah.Class
+}[] => [
+    Class: (
+        "Bool",
+        [
+            Type: "T"
+        ],
+        [
+            (
+                "val",
+                Type: ParametricType: (
+                    (
+                        ":",
+                        "const"
+                    ),
+                    Type: "bool"
+                )
+            )
+        ],
+        [
+            VariableDefinition: (
+                "value",
+                Expression: "val"
+            )
+        ]
+    )
+]

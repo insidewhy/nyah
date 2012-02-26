@@ -1,6 +1,7 @@
 beard.variant.Variant {
     mousedeer.parser.nyah.Function,
-    mousedeer.parser.nyah.VariableDefinition
+    mousedeer.parser.nyah.VariableDefinition,
+    mousedeer.parser.nyah.Class
 }[] => [
     Function: (
         "def",

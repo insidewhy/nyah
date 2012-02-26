@@ -1,0 +1,3 @@
+class Bool[T](val:const bool) {
+    value := val
+}

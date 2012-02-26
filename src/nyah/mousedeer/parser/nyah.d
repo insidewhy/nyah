@@ -114,6 +114,17 @@ class Function {
 }
 
 //////////////////////////////////////////////////////////////////////////////
+// classes
+class Class {
+    mixin makeNode!(
+        Char!"class",
+        Identifier,
+        Optional!TemplateParametersDefinition,
+        Optional!ArgumentsDefinition,
+        Optional!CodeBlock);
+}
+
+//////////////////////////////////////////////////////////////////////////////
 // expressions
 alias Choice!(
     Sequence!(
@@ -122,7 +133,9 @@ alias Choice!(
         JoinedTight!(
             Skip!(ManyPlus!(
                 Lexeme!(NonBreakingSpace, CharFrom!("\n;"), NonBreakingSpace))),
-            Choice!(Node!Function, Node!VariableDefinition, ExpressionRef)),
+            Choice!(Node!Function,
+                    Node!VariableDefinition,
+                    ExpressionRef)),
         Char!"}"),
     ExpressionRef)     CodeBlock;
 
@@ -230,18 +243,21 @@ class VariableDefinition {
     mixin makeNode!(Lexeme!(
         Identifier,
         NonBreakingSpace,
-        Try!(Lexeme!(CharFrom!":?")),
-        Type,
-        Optional!(
-            Lexeme!(NonBreakingSpace, Char!"="),
-            ExpressionRef)));
+        Choice!(
+            Sequence!(
+                Try!(CharFrom!":?"),
+                Type,
+                Optional!(
+                    Lexeme!(NonBreakingSpace, Char!"="),
+                    ExpressionRef)),
+            Sequence!(
+                Char!":",
+                Lexeme!(NonBreakingSpace, Char!"="),
+                ExpressionRef))));
 }
 
 //////////////////////////////////////////////////////////////////////////////
-// classes
-
-//////////////////////////////////////////////////////////////////////////////
 // top level
-alias Choice!(Function, VariableDefinition) TopLevel; // todo class etc.
+alias Choice!(Function, VariableDefinition, Class) TopLevel; // todo: more shit
 
 alias Many!TopLevel Grammar;
