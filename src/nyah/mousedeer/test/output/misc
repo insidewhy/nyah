@@ -28,7 +28,7 @@ beard.variant.Variant {
         "hey",
         [],
         [],
-        [
+        CodeBlock: [
             Expression: AssigningOp: joined [
                 "hello"
                 "*="
@@ -100,7 +100,7 @@ beard.variant.Variant {
                 "famon",
                 [],
                 [],
-                Expression: ReturningOp: (
+                CodeBlock: Expression: ReturningOp: (
                     =,
                     AdditionOp: joined [
                         "a"

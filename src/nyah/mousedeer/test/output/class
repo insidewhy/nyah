@@ -20,7 +20,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        [
+        CodeBlock: [
             VariableDefinition: (
                 "value",
                 Expression: "val"

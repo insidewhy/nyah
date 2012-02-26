@@ -110,7 +110,7 @@ class Function {
         Identifier,
         Optional!TemplateParametersDefinition,
         Optional!ArgumentsDefinition,
-        CodeBlock);
+        Node!CodeBlock);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -121,23 +121,26 @@ class Class {
         Identifier,
         Optional!TemplateParametersDefinition,
         Optional!ArgumentsDefinition,
-        Optional!CodeBlock);
+        Optional!(Node!CodeBlock));
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // expressions
-alias Choice!(
-    Sequence!(
-        Char!"{",
-        // stop two expressions being on same line without a joining semicolon
-        JoinedTight!(
-            Skip!(ManyPlus!(
-                Lexeme!(NonBreakingSpace, CharFrom!("\n;"), NonBreakingSpace))),
-            Choice!(Node!Function,
-                    Node!VariableDefinition,
-                    ExpressionRef)),
-        Char!"}"),
-    ExpressionRef)     CodeBlock;
+class CodeBlock {
+   mixin makeNode!(Choice!(
+       Sequence!(
+           Char!"{",
+           // stop two expressions being on same line without a joining semicolon
+           JoinedTight!(
+               Skip!(ManyPlus!(
+                   Lexeme!(NonBreakingSpace, CharFrom!("\n;"), NonBreakingSpace))),
+               Choice!(Node!Function,
+                       Node!Class,
+                       Node!VariableDefinition,
+                       ExpressionRef)),
+           Char!"}"),
+       ExpressionRef));
+}
 
 template BinOp(J, T...) {
     alias TreeJoinedTight!(

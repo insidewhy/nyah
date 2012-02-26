@@ -8,7 +8,7 @@ beard.variant.Variant {
         "empty",
         [],
         [],
-        []
+        CodeBlock: []
     ),
     Function: (
         "override",
@@ -30,7 +30,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        []
+        CodeBlock: []
     ),
     Function: (
         "def",
@@ -58,7 +58,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        []
+        CodeBlock: []
     ),
     Function: (
         "def",
@@ -79,7 +79,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        []
+        CodeBlock: []
     ),
     Function: (
         "def",
@@ -106,7 +106,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        []
+        CodeBlock: []
     ),
     Function: (
         "def",
@@ -127,7 +127,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        []
+        CodeBlock: []
     ),
     Function: (
         "def",
@@ -148,7 +148,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        []
+        CodeBlock: []
     ),
     Function: (
         "def",
@@ -169,7 +169,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        []
+        CodeBlock: []
     ),
     Function: (
         "def",
@@ -192,7 +192,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        []
+        CodeBlock: []
     ),
     Function: (
         "def",
@@ -213,7 +213,7 @@ beard.variant.Variant {
                 )
             )
         ],
-        []
+        CodeBlock: []
     ),
     Function: (
         "def",
@@ -226,6 +226,6 @@ beard.variant.Variant {
             )
         ],
         [],
-        []
+        CodeBlock: []
     )
 ]
