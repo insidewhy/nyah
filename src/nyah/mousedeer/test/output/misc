@@ -169,18 +169,18 @@ beard.variant.Variant {
                 )
             ],
             Expression: AssigningOp: joined [
-                TupleOp: [
+                Expression: TupleOp: [
                     "a",
                     "b"
                 ]
                 =
-                TupleOp: [
+                Expression: TupleOp: [
                     "c",
                     "d"
                 ]
             ],
             Expression: AssigningOp: joined [
-                TupleOp: [
+                Expression: TupleOp: [
                     "a",
                     OrOp: [
                         "b",
@@ -189,10 +189,21 @@ beard.variant.Variant {
                     "d"
                 ]
                 =
-                TupleOp: [
+                Expression: TupleOp: [
                     "e",
                     "f",
                     "g"
+                ]
+            ],
+            Expression: FunctionCall: [
+                "f",
+                Expression: TupleOp: [
+                    "a",
+                    AssigningOp: joined [
+                        "b"
+                        =
+                        "c"
+                    ]
                 ]
             ],
             Expression: ReturningOp: (

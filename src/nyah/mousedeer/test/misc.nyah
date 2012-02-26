@@ -31,9 +31,11 @@ def hey {
 
     14 + ++a
 
-    a,b = c,d
+    (a,b) = (c,d)
 
-    a,b||c,d = e,f,g
+    (a,b||c,d) = (e,f,g)
+
+    f(a, b = c)
 
     = famon "willy \"stringboy\" williamson"
 }

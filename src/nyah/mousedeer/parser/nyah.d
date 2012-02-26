@@ -150,8 +150,10 @@ template BinOp(J, T...) {
 
 class ReturningOp {
     mixin makeNode!(
-        TreeOptional!(Choice!(Char!"=", Char!"return")), AssigningOp);
+        TreeOptional!(Choice!(Char!"=", Char!"return")), TupleOp);
 }
+
+class TupleOp { mixin makeNode!(BinOp!(Char!",", AssigningOp)); }
 
 alias Choice!(
     Char!"=",
@@ -167,9 +169,7 @@ alias Choice!(
     Char!"|=") AssigningOps;
 
 // right to left
-class AssigningOp { mixin makeNode!(BinOp!(AssigningOps, TupleOp)); }
-
-class TupleOp { mixin makeNode!(BinOp!(Char!",", OrOp)); }
+class AssigningOp { mixin makeNode!(BinOp!(AssigningOps, OrOp)); }
 
 class OrOp { mixin makeNode!(BinOp!(Char!"||", AndOp)); }
 
