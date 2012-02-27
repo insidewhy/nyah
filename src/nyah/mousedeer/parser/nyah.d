@@ -98,7 +98,7 @@ alias Sequence!(Identifier, Optional!Type) ArgumentDefinition;
 
 alias Sequence!(
     Char!"(",
-    Joined!(Char!",", ArgumentDefinition),
+    Joined!(Char!",", ArgumentDefinition, Optional!(Char!"=", ExpressionRef)),
     Char!")")                                       ArgumentsDefinition;
 
 alias Sequence!(
