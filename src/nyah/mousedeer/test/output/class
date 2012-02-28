@@ -10,6 +10,7 @@ beard.variant.Variant {
         ],
         [
             (
+                "public",
                 "val",
                 Type: ParametricType: (
                     (

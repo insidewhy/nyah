@@ -99,7 +99,8 @@ alias Sequence!(Identifier, Optional!Type) ArgumentDefinition;
 alias Sequence!(
     Char!"(",
     Joined!(Char!",", ArgumentDefinition, Optional!(Char!"=", ExpressionRef)),
-    Char!")")                                       ArgumentsDefinition;
+    Char!")"
+) ArgumentsDefinition;
 
 alias Sequence!(
     Char!"[", Joined!(Char!",", Type), Char!"]")    TemplateParametersDefinition;
@@ -115,12 +116,23 @@ class Function {
 
 //////////////////////////////////////////////////////////////////////////////
 // classes
+alias Sequence!(
+    Char!"(",
+    Joined!(
+        Char!",",
+        Choice!(Char!"public", Char!"private", Char!"protected", EmptyString),
+        ArgumentDefinition,
+        Optional!(Char!"=", ExpressionRef)
+   ),
+   Char!")"
+)  ConstructorArgumentsDefinition;
+
 class Class {
     mixin makeNode!(
         Char!"class",
         Identifier,
         Optional!TemplateParametersDefinition,
-        Optional!ArgumentsDefinition,
+        Optional!ConstructorArgumentsDefinition,
         Optional!(Node!CodeBlock));
 }
 

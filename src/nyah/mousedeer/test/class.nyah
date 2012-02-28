@@ -1,3 +1,3 @@
-class Bool[T](val:const bool) {
+class Bool[T](public val:const bool) {
     value := val
 }

@@ -32,7 +32,7 @@ int main(string[] args) {
         auto s = sources.loadFile(arg);
         s.skip_whitespace();
 
-        if (! parser.parse(s, ast)) {
+        if (! parser.parse(s, ast) || ! s.empty) {
             print("failure parsing: " ~ arg);
             return 1;
         }
