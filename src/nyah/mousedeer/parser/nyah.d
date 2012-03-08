@@ -61,12 +61,13 @@ struct Character {
 
 //////////////////////////////////////////////////////////////////////////////
 // types
-class Type {
-    mixin makeNode!(Choice!(Node!ParametricType, TypeMatch));
+class ParametricType {
+    mixin makeNode!(Lexeme!(
+        TypeMatch, NonBreakingSpace, Choice!(Node!ParametricType, TypeMatch)));
 }
 
-struct ParametricType {
-    mixin makeNode!(Lexeme!(TypeMatch, NonBreakingSpace, Node!Type));
+struct Type {
+    mixin makeNode!(Choice!(Node!ParametricType, TypeMatch));
 }
 
 alias Choice!(

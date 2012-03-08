@@ -17,7 +17,7 @@ beard.variant.Variant {
                         ":",
                         "const"
                     ),
-                    Type: "bool"
+                    "bool"
                 ),
                 null
             )

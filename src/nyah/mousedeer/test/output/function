@@ -46,9 +46,9 @@ beard.variant.Variant {
                         ":",
                         "const"
                     ),
-                    Type: ParametricType: (
+                    ParametricType: (
                         "vector",
-                        Type: "int"
+                        "int"
                     )
                 ),
                 null
@@ -76,7 +76,7 @@ beard.variant.Variant {
                         ":",
                         "pair"
                     ),
-                    Type: [
+                    [
                         Type: "A",
                         Type: "B"
                     ]
@@ -98,7 +98,7 @@ beard.variant.Variant {
                         ":",
                         "pair"
                     ),
-                    Type: [
+                    [
                         Type: (
                             ":",
                             "bool"
@@ -126,7 +126,7 @@ beard.variant.Variant {
                         ":",
                         "vector"
                     ),
-                    Type: (
+                    (
                         "?",
                         "A"
                     )
@@ -148,7 +148,7 @@ beard.variant.Variant {
                         ":",
                         "vector"
                     ),
-                    Type: (
+                    (
                         "?",
                         ""
                     )
@@ -170,7 +170,7 @@ beard.variant.Variant {
                         ":",
                         "vector"
                     ),
-                    Type: (
+                    (
                         "...",
                         "A"
                     )
@@ -192,7 +192,7 @@ beard.variant.Variant {
                         "?",
                         "T"
                     ),
-                    Type: [
+                    [
                         Type: (
                             ":",
                             "bool"
@@ -216,7 +216,7 @@ beard.variant.Variant {
                         "?",
                         "T"
                     ),
-                    Type: (
+                    (
                         ":",
                         "bool"
                     )
