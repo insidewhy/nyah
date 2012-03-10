@@ -19,3 +19,5 @@ def vec4(a ?T[:bool]) {}
 def vec5(a ?T :bool) {}
 
 def tpar[H, ...T]() {}
+
+def puu[H = vector int]() {}

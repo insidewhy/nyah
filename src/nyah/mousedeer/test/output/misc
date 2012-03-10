@@ -6,7 +6,7 @@ beard.variant.Variant {
     VariableDefinition: (
         "b",
         (
-            Type: (
+            TypeMatch: (
                 ":",
                 "int"
             ),
@@ -16,7 +16,7 @@ beard.variant.Variant {
     VariableDefinition: (
         "c",
         (
-            Type: (
+            TypeMatch: (
                 ":",
                 "int"
             ),
@@ -58,7 +58,7 @@ beard.variant.Variant {
             VariableDefinition: (
                 "d",
                 (
-                    Type: (
+                    TypeMatch: (
                         ":",
                         "float"
                     ),

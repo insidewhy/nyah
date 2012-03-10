@@ -6,13 +6,16 @@ beard.variant.Variant {
     Class: (
         "Bool",
         [
-            Type: "T"
+            (
+                TypeMatch: "T",
+                null
+            )
         ],
         [
             (
                 "public",
                 "val",
-                Type: ParametricType: (
+                TypeMatch: ParametricTypeMatch: (
                     (
                         ":",
                         "const"
@@ -22,7 +25,7 @@ beard.variant.Variant {
                 null
             )
         ],
-        CodeBlock: [
+        ClassBlock: [
             VariableDefinition: (
                 "value",
                 Expression: "val"

@@ -63,11 +63,32 @@ struct Character {
 // types
 class ParametricType {
     mixin makeNode!(Lexeme!(
-        TypeMatch, NonBreakingSpace, Choice!(Node!ParametricType, TypeMatch)));
+        TypeTerm,
+        NonBreakingSpace,
+        Choice!(Node!ParametricType, TypeTerm)));
 }
 
-struct Type {
-    mixin makeNode!(Choice!(Node!ParametricType, TypeMatch));
+class Type {
+    // todo: also handle char/string/number literal types.
+    mixin makeNode!(Choice!(Node!ParametricType, TypeTerm));
+}
+
+alias Choice!(
+    Sequence!(Char!"[", Joined!(Char!",", Node!Type), Char!"]"),
+    Identifier
+) TypeTerm;
+
+//////////////////////////////////////////////////////////////////////////////
+// type matching e.g. template parameters
+class ParametricTypeMatch {
+    mixin makeNode!(Lexeme!(
+        TypeMatchTerm,
+        NonBreakingSpace,
+        Choice!(Node!ParametricTypeMatch, TypeMatchTerm)));
+}
+
+struct TypeMatch {
+    mixin makeNode!(Choice!(Node!ParametricTypeMatch, TypeMatchTerm));
 }
 
 alias Choice!(
@@ -80,8 +101,9 @@ alias Choice!(
         StoreRange!(Char!":"),
         NonBreakingSpace,
         Identifier),
-    Sequence!(Char!"[", Joined!(Char!",", Node!Type), Char!"]"),
-    Identifier) TypeMatch;
+    Sequence!(Char!"[", Joined!(Char!",", Node!TypeMatch), Char!"]"),
+    Identifier
+) TypeMatchTerm;
 
 //////////////////////////////////////////////////////////////////////////////
 // meta
@@ -95,7 +117,7 @@ alias Choice!(
     Sequence!(Store!(Char!"override"), Char!"def")) FunctionPrefix;
 
 // todo, default arguments, "...", ptr/reference
-alias Sequence!(Identifier, Optional!Type) ArgumentDefinition;
+alias Sequence!(Identifier, Optional!TypeMatch) ArgumentDefinition;
 
 alias Sequence!(
     Char!"(",
@@ -103,8 +125,12 @@ alias Sequence!(
     Char!")"
 ) ArgumentsDefinition;
 
+// TODO: support default arguments
 alias Sequence!(
-    Char!"[", Joined!(Char!",", Type), Char!"]")    TemplateParametersDefinition;
+    Char!"[",
+    Joined!(Char!",", TypeMatch, Optional!(Char!"=", Type)),
+    Char!"]"
+) TemplateParametersDefinition;
 
 class Function {
     mixin makeNode!(
@@ -113,6 +139,22 @@ class Function {
         Optional!TemplateParametersDefinition,
         Optional!ArgumentsDefinition,
         Node!CodeBlock);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// blocky helper
+template BlockLike(T) {
+    alias Choice!(
+       Sequence!(
+           Char!"{",
+           // stop two expressions being on same line without a joining semicolon
+           JoinedTight!(
+               Skip!(ManyPlus!(
+                   Lexeme!(NonBreakingSpace, CharFrom!("\n;"), NonBreakingSpace))),
+               T),
+           Char!"}"),
+       ExpressionRef
+    ) BlockLike;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -128,31 +170,31 @@ alias Sequence!(
    Char!")"
 )  ConstructorArgumentsDefinition;
 
+class ClassBlock {
+    // TODO: private, public, protected, transient
+    mixin makeNode!(BlockLike!(Choice!(
+        Node!Function,
+        Node!Class,
+        Node!VariableDefinition,
+        ExpressionRef)));
+}
+
 class Class {
     mixin makeNode!(
         Char!"class",
         Identifier,
         Optional!TemplateParametersDefinition,
         Optional!ConstructorArgumentsDefinition,
-        Optional!(Node!CodeBlock));
+        Optional!(Node!ClassBlock));
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // expressions
 class CodeBlock {
-   mixin makeNode!(Choice!(
-       Sequence!(
-           Char!"{",
-           // stop two expressions being on same line without a joining semicolon
-           JoinedTight!(
-               Skip!(ManyPlus!(
-                   Lexeme!(NonBreakingSpace, CharFrom!("\n;"), NonBreakingSpace))),
-               Choice!(Node!Function,
-                       Node!Class,
-                       Node!VariableDefinition,
-                       ExpressionRef)),
-           Char!"}"),
-       ExpressionRef));
+    mixin makeNode!(BlockLike!(Choice!(Node!Function,
+        Node!Class,
+        Node!VariableDefinition,
+        ExpressionRef)));
 }
 
 template BinOp(J, T...) {
@@ -262,7 +304,7 @@ class VariableDefinition {
         Choice!(
             Sequence!(
                 Try!(CharFrom!":?"),
-                Type,
+                TypeMatch,
                 Optional!(
                     Lexeme!(NonBreakingSpace, Char!"="),
                     ExpressionRef)),
