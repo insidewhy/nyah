@@ -1,3 +1,6 @@
 [submodule "src/nyah/mousedeer/teg"]
 	path = src/nyah/mousedeer/teg
 	url = git://github.com/nuisanceofcats/teg
+[submodule "src/nyah/bustin"]
+	path = src/nyah/bustin
+	url = git@github.com:nuisanceofcats/bustin.git

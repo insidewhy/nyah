@@ -125,7 +125,6 @@ alias Sequence!(
     Char!")"
 ) ArgumentsDefinition;
 
-// TODO: support default arguments
 alias Sequence!(
     Char!"[",
     Joined!(Char!",", TypeMatch, Optional!(Char!"=", Type)),
@@ -171,7 +170,7 @@ alias Sequence!(
 )  ConstructorArgumentsDefinition;
 
 class ClassBlock {
-    // TODO: private, public, protected, transient
+    // todo: private, public, protected, transient
     mixin makeNode!(BlockLike!(Choice!(
         Node!Function,
         Node!Class,
