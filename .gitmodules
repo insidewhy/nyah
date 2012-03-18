@@ -3,4 +3,4 @@
 	url = git://github.com/nuisanceofcats/teg
 [submodule "src/nyah/mousedeer/bustin"]
 	path = src/nyah/mousedeer/bustin
-	url = git@github.com:nuisanceofcats/bustin.git
+	url = git://github.com/nuisanceofcats/bustin.git
