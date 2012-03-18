@@ -1,8 +1,10 @@
 .PHONY: default build clean
 
+include bustin/mk/flags.mk
+
 subdirs = . teg teg/detail teg/beard teg/beard/meta teg/beard/string_util \
-		    parser
-comp_args = -I. -Iteg -debug
+		    parser bustin/capi
+comp_args = -I. -Iteg -debug ${llvm_link}
 
 default: build
 
