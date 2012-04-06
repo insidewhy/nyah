@@ -1,9 +1,8 @@
 module mousedeer.main;
 
 import mousedeer.source_files : SourceFiles;
+import mousedeer.code_generator : CodeGenerator;
 import mousedeer.parser.nyah;
-
-import teg.stores : stores;
 
 import beard.io;
 import beard.metaio : printType;
@@ -26,24 +25,21 @@ int main(string[] args) {
 
     if (optParser.shownHelp) return 0;
 
-    Grammar        parser;
-    stores!Grammar ast;
+    Grammar parser;
+    auto gen = new CodeGenerator;
     foreach(arg ; args[1..$]) {
-        auto s = sources.loadFile(arg);
-        s.skip_whitespace();
-
-        if (! parser.parse(s, ast) || ! s.empty) {
+        auto source = sources.loadFile(arg);
+        if (! source.parse(parser)) {
             print("failure parsing: " ~ arg);
             return 1;
         }
+
+        if (dumpAst)
+            source.dumpAst();
     }
 
-    if (dumpAst) {
-        printType!(stores!Grammar)();
-        print(" => ");
-        println(ast);
-    }
+    gen.createBytecodeFiles(sources);
+    gen.linkBytecodeFiles();
 
-    // parse arguments
     return 0;
 }

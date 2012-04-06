@@ -1,15 +1,11 @@
 module mousedeer.source_files;
-
-import teg.stream : FileStream;
-import mousedeer.parser.nyah;
+import mousedeer.source_file : SourceFile;
 
 class SourceFiles {
-    alias FileStream!Whitespace SourceFileStream;
-
-    SourceFileStream loadFile(string path) {
-        return streams_[path] = new SourceFileStream(path);
+    SourceFile loadFile(string path) {
+        return sources_[path] = new SourceFile(path);
     }
 
   private:
-    SourceFileStream[string] streams_;
+    SourceFile[string] sources_;
 }

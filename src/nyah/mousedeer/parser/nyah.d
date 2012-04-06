@@ -318,3 +318,5 @@ class VariableDefinition {
 alias Choice!(Function, VariableDefinition, Class) TopLevel; // todo: more shit
 
 alias Many!TopLevel Grammar;
+
+alias stores!Grammar Ast;
