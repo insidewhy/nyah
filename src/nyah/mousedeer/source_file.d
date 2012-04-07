@@ -7,28 +7,29 @@ import beard.metaio : printType;
 import beard.io : print, println;
 
 class SourceFile {
-    alias FileStream!Whitespace Stream;
+  alias FileStream!Whitespace Stream;
 
-    this(string path) {
-        stream_ = new Stream(path);
-    }
+  this(string path) {
+    stream_ = new Stream(path);
+  }
 
-    void dumpAst() {
-        printType!Ast();
-        print(" => ");
-        println(ast);
-    }
+  void dumpAst() {
+    printType!Ast();
+    print(" => ");
+    println(ast);
+  }
 
-    bool parse(ref Grammar parser) {
-        stream_.skip_whitespace();
+  bool parse(ref Grammar parser) {
+    stream_.skip_whitespace();
 
-        if (! parser.parse(stream_, ast) || ! stream_.empty)
-            return false;
+    if (! parser.parse(stream_, ast) || ! stream_.empty)
+      return false;
 
-        return true;
-    }
+    return true;
+  }
 
-    Ast    ast;
+  Ast    ast;
   private:
-    Stream stream_;
+  Stream stream_;
 }
+// vim:ts=2 sw=2:

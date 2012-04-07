@@ -30,7 +30,7 @@ int main(string[] args) {
     foreach(arg ; args[1..$]) {
         auto source = sources.loadFile(arg);
         if (! source.parse(parser)) {
-            print("failure parsing: " ~ arg);
+            println("failure parsing: " ~ arg);
             return 1;
         }
 
