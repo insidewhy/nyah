@@ -29,7 +29,7 @@ class SourceFile {
   }
 
   Ast    ast;
-  private:
+ private:
   Stream stream_;
 }
 // vim:ts=2 sw=2:

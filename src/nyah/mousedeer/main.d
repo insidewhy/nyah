@@ -2,6 +2,7 @@ module mousedeer.main;
 
 import mousedeer.source_files : SourceFiles;
 import mousedeer.code_generator : CodeGenerator;
+import mousedeer.global_symbol_table : GlobalSymbolTable;
 import mousedeer.parser.nyah;
 
 import beard.io;
@@ -25,8 +26,9 @@ int main(string[] args) {
 
     if (optParser.shownHelp) return 0;
 
+    auto symbols = new GlobalSymbolTable;
     Grammar parser;
-    auto gen = new CodeGenerator;
+    auto gen = new CodeGenerator(symbols);
     foreach(arg ; args[1..$]) {
         auto source = sources.loadFile(arg);
         if (! source.parse(parser)) {
@@ -36,6 +38,8 @@ int main(string[] args) {
 
         if (dumpAst)
             source.dumpAst();
+
+        symbols(source.ast);
     }
 
     gen.createBytecodeFiles(sources);
