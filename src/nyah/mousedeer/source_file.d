@@ -17,6 +17,7 @@ class SourceFile {
   }
 
   void dumpAst() {
+    print("ast ");
     printType!Ast();
     print(" => ");
     println(ast);

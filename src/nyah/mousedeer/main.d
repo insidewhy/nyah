@@ -14,17 +14,33 @@ int main(string[] args) {
     auto sources = new SourceFiles;
 
     bool verbose = false;
-    bool dumpAst = false;
+    string dump;
 
     auto optParser = new beard.cmdline.Parser;
     optParser.banner("usage: mousedeer [options] {source files}")
-             ("d,dump", &dumpAst, "dump ast after parsing")
+             ("d,dump", &dump, "dump information (a = ast, s = symbol table)")
              ("v", &verbose, "increase verbosity")
         ;
 
     optParser.parse(&args);
 
     if (optParser.shownHelp) return 0;
+
+    auto dumpAst = false;
+    auto dumpSymbolTable = false;
+    foreach (char c; dump) {
+      switch (c) {
+          case 'a':
+            dumpAst = true;
+            break;
+          case 's':
+            dumpSymbolTable = true;
+            break;
+          default:
+            println("unknown dump request `" ~ c ~ "'");
+            return 1;
+      }
+    }
 
     auto symbols = new GlobalSymbolTable;
     Grammar parser;
@@ -37,13 +53,15 @@ int main(string[] args) {
         }
 
         if (dumpAst)
-            source.dumpAst();
+            source.dumpAst;
 
-        symbols(source.module_, source.ast);
+        symbols.import_(source.module_, source.ast);
     }
 
+    if (dumpSymbolTable) symbols.dump;
+
     gen.createBytecodeFiles(sources);
-    gen.linkBytecodeFiles();
+    gen.linkBytecodeFiles;
 
     return 0;
 }
