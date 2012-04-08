@@ -39,7 +39,7 @@ int main(string[] args) {
         if (dumpAst)
             source.dumpAst();
 
-        symbols(source.ast);
+        symbols(source.module_, source.ast);
     }
 
     gen.createBytecodeFiles(sources);

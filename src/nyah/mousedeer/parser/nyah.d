@@ -1,5 +1,7 @@
 module mousedeer.parser.nyah;
 
+import mousedeer.object_module : ObjectModule;
+import beard.variant : Variant;
 import teg.all;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -131,7 +133,21 @@ alias Sequence!(
     Char!"]"
 ) TemplateParametersDefinition;
 
-class Function {
+//////////////////////////////////////////////////////////////////////////////
+// shared by all globals
+class Global {
+    alias Variant!(Function, VariableDefinition, Class) Ptr;
+    void setObjectModule(ObjectModule mod) { object_module_ = mod; }
+
+    Ptr          parent_;
+    Ptr[string]  symbols_; // children of this
+    ObjectModule object_module_;
+    // todo: add protection level
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// function global
+class Function : Global {
     mixin makeNode!(
         FunctionPrefix,
         Identifier,
@@ -178,7 +194,7 @@ class ClassBlock {
         ExpressionRef)));
 }
 
-class Class {
+class Class : Global {
     mixin makeNode!(
         Char!"class",
         Identifier,
@@ -296,7 +312,7 @@ alias Choice!(
     Character,
     Sequence!(Char!"(", ExpressionRef, Char!")")) Term;
 
-class VariableDefinition {
+class VariableDefinition : Global {
     mixin makeNode!(Lexeme!(
         Identifier,
         NonBreakingSpace,

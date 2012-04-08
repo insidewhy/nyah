@@ -1,6 +1,8 @@
 module mousedeer.source_file;
 
 import mousedeer.parser.nyah;
+import mousedeer.object_module : ObjectModule;
+
 import teg.stream : FileStream;
 
 import beard.metaio : printType;
@@ -11,6 +13,7 @@ class SourceFile {
 
   this(string path) {
     stream_ = new Stream(path);
+    module_ = new ObjectModule;
   }
 
   void dumpAst() {
@@ -28,8 +31,9 @@ class SourceFile {
     return true;
   }
 
-  Ast    ast;
+  Ast          ast;
+  ObjectModule module_;
  private:
-  Stream stream_;
+  Stream       stream_;
 }
 // vim:ts=2 sw=2:
