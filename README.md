@@ -1,9 +1,8 @@
 # nyah
 
-## technology
+## nyah uses
 
-nyah uses:
- * [llvm](http://llvm.org) - llvm for code generation, optimisation + linking.
+ * [llvm](http://llvm.org) - code generation, optimisation + linking.
  * [bustin](https://github.com/nuisanceofcats/bustin) - d llvm wrapper.
  * [teg](https://github.com/nuisanceofcats/teg) - peg based parser metaprogramming library.
  * [beard](https://github.com/nuisanceofcats/beard) - d utility library.
@@ -22,13 +21,13 @@ and may still work.
 
 dmd 2.057 does not work due to a critical compiler bug.
 
-## Testing
+## testing
     make test
 
-## More Information
+## more information
     http://chilon.net/nyah
 
-## Status
+## status
     Parsing and AST reading finished. D LLVM wrapper ready for use. Code generation in process.
 
 ## TODO
