@@ -1,7 +1,8 @@
 ast beard.variant.Variant {
     mousedeer.parser.nyah.Function,
     mousedeer.parser.nyah.VariableDefinition,
-    mousedeer.parser.nyah.Class
+    mousedeer.parser.nyah.Class,
+    mousedeer.parser.nyah.Module
 }[] => [
     Function: (
         "def",

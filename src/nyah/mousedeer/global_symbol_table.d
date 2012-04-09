@@ -1,7 +1,7 @@
 module mousedeer.global_symbol_table;
 
 import mousedeer.parser.nyah
-  : Ast, Function, VariableDefinition, Class, Global, GlobalNamespace;
+  : Ast, Function, VariableDefinition, Class, Global, GlobalNamespace, Module;
 import mousedeer.object_module : ObjectModule;
 import mousedeer.io.symbol_table : SymbolTablePrinter;
 
@@ -21,21 +21,32 @@ private struct SymbolTableBuilder {
   }
 
   void opCall(T)(T v) {
-    static if (is(T : Global)) {
+    static if (is(T : Module)) {
+      // re-use existing module if the current module was never used
+      if (! namespace_.symbols_.length)
+        objModule_ = new ObjectModule;
+
+      parent_.reset;
+      initGlobal(v);
+      foreach(id; v.ids()) {
+        // TODO: ensure each component exists in the symbol table and add
+        //       the last one
+      }
+      return;
+    }
+    else static if (is(T : Global)) {
       initGlobal(v);
       namespace_.symbols_[v.id] = v;
     }
+
     static if (is(T : Class)) {
       auto namespaceBak = namespace_;
       auto parentBak    = parent_;
       namespace_ = v;
       parent_ = v;
 
-      // TODO: build children
-      foreach (node ; v.block.value_) {
+      foreach (node ; v.block.value_)
         node.apply(this);
-        // TODO: fill in symbols_ + table and object module for each global in ast
-      }
 
       namespace_ = namespaceBak;
       parent_ = parentBak;

@@ -1,7 +1,7 @@
 module mousedeer.io.symbol_table;
 
 import mousedeer.parser.nyah
-  : Function, VariableDefinition, Class, GlobalNamespace;
+  : Function, VariableDefinition, Class, GlobalNamespace, Module;
 
 import beard.io : println, print;
 
@@ -13,6 +13,10 @@ struct SymbolTablePrinter {
   }
   void opCall(VariableDefinition v) {
     println("variable definition");
+  }
+  void opCall(Module m) {
+    println("module");
+    children(m);
   }
   void opCall(Class c) {
     print("class");

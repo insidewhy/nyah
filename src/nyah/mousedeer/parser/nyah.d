@@ -136,7 +136,7 @@ alias Sequence!(
 //////////////////////////////////////////////////////////////////////////////
 // shared by all globals
 class Global {
-    alias Variant!(Function, VariableDefinition, Class) Ptr;
+    alias Variant!(Function, VariableDefinition, Class, Module) Ptr;
     void setObjectModule(ObjectModule mod) { object_module_ = mod; }
 
     Ptr          parent_;
@@ -341,9 +341,18 @@ class VariableDefinition : Global {
     string id() { return value_[0].toString; }
 }
 
+class Module : GlobalNamespace {
+    mixin makeNode!(
+        Char!"module",
+        JoinedPlusTight!(Char!".", Identifier),
+        Many!(Choice!(Function, VariableDefinition, Class)));
+
+    Range[] ids() { return value_[0]; }
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // top level
-alias Choice!(Function, VariableDefinition, Class) TopLevel; // todo: more shit
+alias Choice!(Function, VariableDefinition, Class, Module) TopLevel; // todo: more shit
 
 alias Many!TopLevel Grammar;
 

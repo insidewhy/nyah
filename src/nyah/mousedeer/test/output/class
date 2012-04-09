@@ -1,34 +1,43 @@
 ast beard.variant.Variant {
     mousedeer.parser.nyah.Function,
     mousedeer.parser.nyah.VariableDefinition,
-    mousedeer.parser.nyah.Class
+    mousedeer.parser.nyah.Class,
+    mousedeer.parser.nyah.Module
 }[] => [
-    Class: (
-        "Bool",
+    Module: (
         [
-            (
-                TypeMatch: "T",
-                null
-            )
+            "hello",
+            "mod"
         ],
         [
-            (
-                "public",
-                "val",
-                TypeMatch: ParametricTypeMatch: (
+            Class: (
+                "Bool",
+                [
                     (
-                        ":",
-                        "const"
-                    ),
-                    "bool"
-                ),
-                null
-            )
-        ],
-        ClassBlock: [
-            VariableDefinition: (
-                "value",
-                Expression: "val"
+                        TypeMatch: "T",
+                        null
+                    )
+                ],
+                [
+                    (
+                        "public",
+                        "val",
+                        TypeMatch: ParametricTypeMatch: (
+                            (
+                                ":",
+                                "const"
+                            ),
+                            "bool"
+                        ),
+                        null
+                    )
+                ],
+                ClassBlock: [
+                    VariableDefinition: (
+                        "value",
+                        Expression: "val"
+                    )
+                ]
             )
         ]
     )
