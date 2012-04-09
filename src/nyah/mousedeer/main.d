@@ -69,7 +69,7 @@ int main(string[] args) {
         if (dumpAst)
             source.dumpAst;
 
-        symbols.import_(source.module_, source.ast);
+        symbols.import_(source.ast);
     }
 
     if (dumpSymbolTable) symbols.dump;

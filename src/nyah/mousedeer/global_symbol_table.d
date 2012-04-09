@@ -9,25 +9,33 @@ import beard.variant : Variant;
 import beard.io : println, print;
 
 private struct SymbolTableBuilder {
-  Global current;
-  ObjectModule currentModule_;
+  // current namespace and output module
+  GlobalNamespace  namespace_;
+  ObjectModule     objModule_;
 
   // call on every global the first time it is seen
   private void initGlobal(Global g) {
-    g.setObjectModule(currentModule_);
+    g.setObjectModule(objModule_);
   }
 
-  void opCall(Function v) { initGlobal(v); }
-  void opCall(VariableDefinition v) { initGlobal(v); }
+  void opCall(Function v) {
+    initGlobal(v);
+    namespace_.symbols_[v.id] = v;
+  }
+  void opCall(VariableDefinition v) {
+    initGlobal(v);
+    namespace_.symbols_[v.id] = v;
+  }
   void opCall(Class v) {
     initGlobal(v);
+    namespace_.symbols_[v.id] = v;
     // TODO: build children
   }
 
   void empty() { assert(false, "cannot be empty"); }
 
-  void import_(ObjectModule module_, Ast ast) {
-    currentModule_ = module_;
+  void import_(Ast ast) {
+    objModule_ = new ObjectModule;
     foreach (node ; ast) {
       node.apply(this);
       // TODO: fill in symbols_ + table and object module for each global in ast
@@ -37,10 +45,10 @@ private struct SymbolTableBuilder {
 
 class GlobalSymbolTable : GlobalNamespace {
   // import code from ast of single object module into global symbol table
-  void import_(ObjectModule module_, Ast ast) {
+  void import_(Ast ast) {
     SymbolTableBuilder builder;
-    builder.current = this;
-    builder.import_(module_, ast);
+    builder.namespace_ = this;
+    builder.import_(ast);
   }
 
   void dump() {
