@@ -140,9 +140,13 @@ class Global {
     void setObjectModule(ObjectModule mod) { object_module_ = mod; }
 
     Ptr          parent_;
-    Ptr[string]  symbols_; // children of this
     ObjectModule object_module_;
     // todo: add protection level
+}
+
+// A global in which other globals live inside of its namespace
+class GlobalNamespace : Global {
+    Ptr[string]  symbols_; // children of this
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -154,6 +158,8 @@ class Function : Global {
         Optional!TemplateParametersDefinition,
         Optional!ArgumentsDefinition,
         Node!CodeBlock);
+
+    string id() { return value_[1].toString; }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -194,13 +200,15 @@ class ClassBlock {
         ExpressionRef)));
 }
 
-class Class : Global {
+class Class : GlobalNamespace {
     mixin makeNode!(
         Char!"class",
         Identifier,
         Optional!TemplateParametersDefinition,
         Optional!ConstructorArgumentsDefinition,
         Optional!(Node!ClassBlock));
+
+    string id() { return value_[0].toString; }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -327,6 +335,8 @@ class VariableDefinition : Global {
                 Char!":",
                 Lexeme!(NonBreakingSpace, Char!"="),
                 ExpressionRef))));
+
+    string id() { return value_[0].toString; }
 }
 
 //////////////////////////////////////////////////////////////////////////////
