@@ -13,10 +13,12 @@ import std.stdio;
 // configuration:
 private bool verbose = false;
 private string dump;
+private string[] includes;
 
 void dumpConfig() {
     println("verbose:", verbose);
     println("dump:", dump);
+    println("includes:", includes);
 }
 
 int main(string[] args) {
@@ -24,8 +26,11 @@ int main(string[] args) {
 
     auto optParser = new beard.cmdline.Parser;
     optParser.banner("usage: mousedeer [options] {source files}")
-             ("d,dump", &dump, "dump information (a = ast, s = symbol table)")
-             ("v", &verbose, "increase verbosity")
+        ("I,include", &includes,
+         "add include path, can be used multiple times")
+        ("d,dump", &dump,
+         "dump information (a = ast, s = symbol table, c = config)")
+        ("v", &verbose, "increase verbosity")
         ;
 
     optParser.parse(&args);
@@ -44,6 +49,7 @@ int main(string[] args) {
               break;
           case 'c':
               dumpConfig();
+              println("positional parameters:", args);
               break;
           default:
               println("unknown dump request `" ~ c ~ "'");
