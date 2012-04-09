@@ -1,5 +1,13 @@
 # nyah
 
+## technology
+
+nyah uses:
+ * [llvm](http://llvm.org) - llvm for code generation, optimisation + linking.
+ * [bustin](https://github.com/nuisanceofcats/bustin) - d llvm wrapper.
+ * [teg](https://github.com/nuisanceofcats/teg) - peg based parser metaprogramming library.
+ * [beard](https://github.com/nuisanceofcats/beard) - d utility library.
+
 ## fetching
     totoro@localhost ~% git clone git://github.com/nuisanceofcats/nyah.git
     totoro@localhost ~% cd nyah
@@ -20,7 +28,12 @@ dmd 2.057 does not work due to a critical compiler bug.
 ## More Information
     http://chilon.net/nyah
 
+## Status
+    Parsing and AST reading finished. D LLVM wrapper ready for use. Code generation in process.
+
 ## TODO
- * modle parse/ast
- * code generation
+ * module parse/ast
+ * code generation + improve llvm wrapper
  * TBPEG syntax
+ * metaprogramming
+ * rewrite mousedeer in nyah
