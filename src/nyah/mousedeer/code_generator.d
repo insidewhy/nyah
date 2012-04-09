@@ -21,7 +21,7 @@ class CodeGenerator {
     // todo: compile asts to bytecode files one by one
   }
 
-  void linkBytecodeFiles() {
+  void linkBytecodeFiles(string outputPath) {
     // todo: ...
   }
 }

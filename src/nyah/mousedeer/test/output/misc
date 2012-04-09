@@ -100,14 +100,16 @@ ast beard.variant.Variant {
                 "famon",
                 [],
                 [],
-                CodeBlock: Expression: ReturningOp: (
-                    =,
-                    AdditionOp: joined [
-                        "a"
-                        +
-                        String: "conka"
-                    ]
-                )
+                CodeBlock: [
+                    Expression: ReturningOp: (
+                        =,
+                        AdditionOp: joined [
+                            "a"
+                            +
+                            String: "conka"
+                        ]
+                    )
+                ]
             ),
             Expression: SuffixOp: (
                 "x",

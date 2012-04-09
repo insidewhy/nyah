@@ -30,7 +30,7 @@ struct SymbolTablePrinter {
     ++indent_;
     foreach(k, v; val.symbols_) {
       printIndent();
-      print(k, " : ");
+      print(k ~ ": ");
       v.apply(this);
     }
     --indent_;

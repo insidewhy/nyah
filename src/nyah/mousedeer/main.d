@@ -14,11 +14,13 @@ import std.stdio;
 private bool verbose = false;
 private string dump;
 private string[] includes;
+private string outputPath;
 
 void dumpConfig() {
     println("verbose:", verbose);
     println("dump:", dump);
     println("includes:", includes);
+    println("output path:", outputPath);
 }
 
 int main(string[] args) {
@@ -30,12 +32,16 @@ int main(string[] args) {
          "add include path, can be used multiple times")
         ("d,dump", &dump,
          "dump information (a = ast, s = symbol table, c = config)")
-        ("v", &verbose, "increase verbosity")
+        ("o,output", &outputPath, "output file")
+        ("v,verbose", &verbose, "increase verbosity")
         ;
 
     optParser.parse(&args);
 
     if (optParser.shownHelp) return 0;
+
+    // TODO: base name on top-most module instead?
+    if (! outputPath.length) outputPath = "a.out";
 
     auto dumpAst = false;
     auto dumpSymbolTable = false;
@@ -58,24 +64,23 @@ int main(string[] args) {
     }
 
     auto symbols = new GlobalSymbolTable;
-    Grammar parser; auto gen = new CodeGenerator(symbols);
+    Grammar parser;
     foreach(arg ; args[1..$]) {
         auto source = sources.loadFile(arg);
         if (! source.parse(parser)) {
-            println("failure parsing: " ~ arg);
+            println("failure parsing:", arg);
             return 1;
         }
 
-        if (dumpAst)
-            source.dumpAst;
-
+        if (dumpAst) source.dumpAst;
         symbols.import_(source.ast);
     }
 
     if (dumpSymbolTable) symbols.dump;
 
+    auto gen = new CodeGenerator(symbols);
     gen.createBytecodeFiles(sources);
-    gen.linkBytecodeFiles;
+    gen.linkBytecodeFiles(outputPath);
 
     return 0;
 }

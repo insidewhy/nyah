@@ -10,26 +10,36 @@ import beard.io : println, print;
 
 private struct SymbolTableBuilder {
   // current namespace and output module
+  Global.Ptr       parent_;
   GlobalNamespace  namespace_;
   ObjectModule     objModule_;
 
   // call on every global the first time it is seen
   private void initGlobal(Global g) {
+    g.parent_ = parent_;
     g.setObjectModule(objModule_);
   }
 
-  void opCall(Function v) {
-    initGlobal(v);
-    namespace_.symbols_[v.id] = v;
-  }
-  void opCall(VariableDefinition v) {
-    initGlobal(v);
-    namespace_.symbols_[v.id] = v;
-  }
-  void opCall(Class v) {
-    initGlobal(v);
-    namespace_.symbols_[v.id] = v;
-    // TODO: build children
+  void opCall(T)(T v) {
+    static if (is(T : Global)) {
+      initGlobal(v);
+      namespace_.symbols_[v.id] = v;
+    }
+    static if (is(T : Class)) {
+      auto namespaceBak = namespace_;
+      auto parentBak    = parent_;
+      namespace_ = v;
+      parent_ = v;
+
+      // TODO: build children
+      foreach (node ; v.block.value_) {
+        node.apply(this);
+        // TODO: fill in symbols_ + table and object module for each global in ast
+      }
+
+      namespace_ = namespaceBak;
+      parent_ = parentBak;
+    }
   }
 
   void empty() { assert(false, "cannot be empty"); }

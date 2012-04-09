@@ -174,7 +174,8 @@ template BlockLike(T) {
                    Lexeme!(NonBreakingSpace, CharFrom!("\n;"), NonBreakingSpace))),
                T),
            Char!"}"),
-       ExpressionRef
+       JoinedTight!(Lexeme!(NonBreakingSpace, Char!(";"), NonBreakingSpace),
+                    T)
     ) BlockLike;
 }
 
@@ -209,6 +210,7 @@ class Class : GlobalNamespace {
         Optional!(Node!ClassBlock));
 
     string id() { return value_[0].toString; }
+    auto block() { return value_[3]; }
 }
 
 //////////////////////////////////////////////////////////////////////////////
