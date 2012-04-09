@@ -3,7 +3,7 @@
 include bustin/mk/flags.mk
 
 subdirs = . teg teg/detail teg/beard teg/beard/meta teg/beard/string_util \
-		    parser bustin/capi bustin
+		    parser bustin/capi bustin io
 comp_args = -I. -Iteg -debug ${llvm_link}
 
 default: build
