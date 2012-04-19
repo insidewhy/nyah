@@ -5,7 +5,7 @@
  * [llvm](http://llvm.org) - code generation, optimisation + linking.
  * [bustin](https://github.com/nuisanceofcats/bustin) - d llvm wrapper.
  * [teg](https://github.com/nuisanceofcats/teg) - peg based parser metaprogramming library.
- * [beard](https://github.com/nuisanceofcats/beard) - d utility library.
+ * [d-beard](https://github.com/nuisanceofcats/d-beard) - d utility library.
 
 ## fetching
     totoro@localhost ~% git clone git://github.com/nuisanceofcats/nyah.git
@@ -28,10 +28,10 @@ dmd 2.057 does not work due to a critical compiler bug.
     http://chilon.net/nyah
 
 ## status
-    Parsing and AST reading finished. D LLVM wrapper ready for use. Code generation in process.
+
+Parsing and AST reading finished. D LLVM wrapper ready for use. Code generation in process.
 
 ## TODO
- * module parse/ast
  * code generation + improve llvm wrapper
  * TBPEG syntax
  * metaprogramming
