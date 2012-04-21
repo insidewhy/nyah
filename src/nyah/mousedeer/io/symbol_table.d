@@ -51,4 +51,4 @@ struct SymbolTablePrinter {
 
   int indent_ = 0;
 }
-
+// vim:ts=2 sw=2:

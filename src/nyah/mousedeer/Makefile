@@ -13,7 +13,7 @@ include teg/beard/Makefile
 # gdc ?= 1
 build: ${O}/mousedeer
 
-${O}/mousedeer: main.d source_files.d code_generator.d \
+${O}/mousedeer: main.d code_generator.d project.d \
 				global_symbol_table.d object_module.d ${libfiles}
 	${MAKE} -C bustin
 	@mkdir -p ${O}
