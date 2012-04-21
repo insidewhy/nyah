@@ -262,3 +262,14 @@ ast beard.variant.Variant {
         CodeBlock: []
     )
 ]
+global {
+  "vec4": function
+  "puu": function
+  "vec3": function
+  "vec2": function
+  "empty": function
+  "add": function
+  "vec1": function
+  "vec5": function
+  "tpar": function
+}

@@ -5,8 +5,25 @@ import mousedeer.parser.nyah
 import mousedeer.object_module : ObjectModule;
 import mousedeer.io.symbol_table : SymbolTablePrinter;
 
+import teg.range : Range;
+
 import beard.variant : Variant;
 import beard.io : println, print;
+
+class ExceptionWithLocation : Exception {
+  this(Range loc, string msg) {
+    loc_ = loc;
+    super(msg);
+  }
+
+  // todo: override toString to give location better
+
+  private Range loc_;
+}
+
+class SymbolRedefinition : ExceptionWithLocation {
+  this(Range loc, string msg) { super(loc, msg); }
+}
 
 private struct SymbolTableBuilder {
   // current namespace and output module
@@ -26,12 +43,28 @@ private struct SymbolTableBuilder {
       if (! namespace_.symbols_.length)
         objModule_ = new ObjectModule;
 
+      auto namespaceBak = namespace_;
+
       parent_.reset;
       initGlobal(v);
       foreach(id; v.ids()) {
-        // TODO: ensure each component exists in the symbol table and add
-        //       the last one
+        auto idStr = id.toString;
+        auto ptr = idStr in namespace_.symbols_;
+        if (ptr) {
+          if (! ptr.isType!Module) {
+            throw new SymbolRedefinition(id, "redefined as module");
+          }
+          namespace_ = ptr.as!Module;
+        }
+        else {
+          auto newNamespace = new Module;
+          namespace_.symbols_[idStr] = newNamespace;
+          namespace_ = newNamespace;
+        }
       }
+
+      foreach (node ; v.members)
+        node.apply(this);
       return;
     }
     else static if (is(T : Global)) {

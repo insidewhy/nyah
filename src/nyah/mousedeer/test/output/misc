@@ -219,3 +219,8 @@ ast beard.variant.Variant {
         ]
     )
 ]
+global {
+  "hey": function
+  "c": variable definition
+  "b": variable definition
+}

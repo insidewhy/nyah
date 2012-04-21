@@ -42,3 +42,12 @@ ast beard.variant.Variant {
         ]
     )
 ]
+global {
+  "hello": module {
+    "mod": module {
+      "Bool": class {
+        "value": variable definition
+      }
+    }
+  }
+}

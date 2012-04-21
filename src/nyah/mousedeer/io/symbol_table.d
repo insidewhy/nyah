@@ -15,7 +15,7 @@ struct SymbolTablePrinter {
     println("variable definition");
   }
   void opCall(Module m) {
-    println("module");
+    print("module");
     children(m);
   }
   void opCall(Class c) {

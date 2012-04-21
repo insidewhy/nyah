@@ -348,6 +348,7 @@ class Module : GlobalNamespace {
         Many!(Choice!(Function, VariableDefinition, Class)));
 
     Range[] ids() { return value_[0]; }
+    auto members() { return value_[1]; }
 }
 
 //////////////////////////////////////////////////////////////////////////////
