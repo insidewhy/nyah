@@ -3,3 +3,7 @@ module hello.mod
 class Bool[T](public val:const bool) {
     value := val
 }
+
+module another.subfriend
+
+friend := 1

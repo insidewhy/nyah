@@ -65,6 +65,8 @@ private struct SymbolTableBuilder {
 
       foreach (node ; v.members)
         node.apply(this);
+
+      namespace_ = namespaceBak;
       return;
     }
     else static if (is(T : Global)) {

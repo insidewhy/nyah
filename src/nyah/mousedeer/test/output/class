@@ -40,9 +40,26 @@ ast beard.variant.Variant {
                 ]
             )
         ]
+    ),
+    Module: (
+        [
+            "another",
+            "subfriend"
+        ],
+        [
+            VariableDefinition: (
+                "friend",
+                Expression: Integer: "1"
+            )
+        ]
     )
 ]
 global {
+  "another": module {
+    "subfriend": module {
+      "friend": variable definition
+    }
+  }
   "hello": module {
     "mod": module {
       "Bool": class {
