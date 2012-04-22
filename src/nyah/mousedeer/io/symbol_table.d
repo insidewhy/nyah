@@ -12,9 +12,14 @@ struct SymbolTablePrinter {
 
   private void printModule(Module v) {
     print("module ");
-    print(v.ids()[0].str);
-    foreach (id ; v.ids()[1..$])
-      print("." ~ id.str);
+    if (v.isGlobal) {
+      print("global");
+    }
+    else {
+      print(v.ids()[0].str);
+      foreach (id ; v.ids()[1..$])
+        print("." ~ id.str);
+    }
   }
 
   private void printGlobal(Global v) {

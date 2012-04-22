@@ -115,11 +115,12 @@ private struct SymbolTableBuilder {
   }
 }
 
-class GlobalSymbolTable : GlobalNamespace {
+class GlobalSymbolTable : Module {
   // import code from ast of single object module into global symbol table
   void import_(Ast ast) {
     SymbolTableBuilder builder;
     builder.namespace_ = this;
+    builder.parent_ = cast(Module)this;
     builder.import_(ast);
   }
 
