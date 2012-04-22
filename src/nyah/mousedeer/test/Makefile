@@ -18,7 +18,7 @@ class: ${outpath}/class
 
 ${outpath}/%: %.nyah force
 	@mkdir -p ${outpath}
-	@${O}/mousedeer -das ./$< > $@.new
+	@${O}/mousedeer -v -das ./$< > $@.new
 	@$(if ${update},rm -f $@,true)
 	@if [ ! -f $@ ] ; then \
 		echo "new test $(subst ${outpath}/,,$@)"; \

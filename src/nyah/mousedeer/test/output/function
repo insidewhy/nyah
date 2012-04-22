@@ -263,13 +263,13 @@ ast beard.variant.Variant {
     )
 ]
 global {
-  vec4: function
-  puu: function
-  empty: function
-  add: function
-  vec1: function
-  vec5: function
-  tpar: function
-  vec2: function
-  vec3: function
+  vec4: function - parent [empty]
+  puu: function - parent [empty]
+  empty: function - parent [empty]
+  add: function - parent [empty]
+  vec1: function - parent [empty]
+  vec5: function - parent [empty]
+  tpar: function - parent [empty]
+  vec2: function - parent [empty]
+  vec3: function - parent [empty]
 }

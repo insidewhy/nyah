@@ -55,16 +55,16 @@ ast beard.variant.Variant {
     )
 ]
 global {
-  hello: module {
-    mod: module {
-      Bool: class {
-        value: variable definition
+  hello: module - parent [empty] {
+    mod: module - parent [module hello] {
+      Bool: class - parent [module hello.mod] {
+        value: variable definition - parent [class Bool]
       }
     }
   }
-  another: module {
-    subfriend: module {
-      friend: variable definition
+  another: module - parent [empty] {
+    subfriend: module - parent [module another] {
+      friend: variable definition - parent [module another.subfriend]
     }
   }
 }

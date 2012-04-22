@@ -220,7 +220,7 @@ ast beard.variant.Variant {
     )
 ]
 global {
-  hey: function
-  b: variable definition
-  c: variable definition
+  hey: function - parent [empty]
+  b: variable definition - parent [empty]
+  c: variable definition - parent [empty]
 }
