@@ -7,9 +7,6 @@ import mousedeer.io.symbol_table : SymbolTablePrinter;
 
 import teg.range : Range;
 
-import beard.variant : Variant;
-import beard.io : println, print;
-
 class ExceptionWithLocation : Exception {
   this(Range loc, string msg) {
     loc_ = loc;
@@ -27,16 +24,21 @@ class SymbolRedefinition : ExceptionWithLocation {
 
 private struct SymbolTableBuilder {
   // current namespace and output module
-  Global.Ptr       parent_;
-  GlobalNamespace  namespace_;
-  ObjectModule     objModule_;
+ private:
+  GlobalNamespace     namespace_;
+
+  // TODO: look into extracting common base classes from variants
+  private Global.Ptr  parent_; // same object above but in variant form
+                               // rather than base class reference
+  ObjectModule        objModule_;
 
   // call on every global the first time it is seen
-  private void initGlobal(Global g) {
+  void initGlobal(Global g) {
     g.parent_ = parent_;
     g.setObjectModule(objModule_);
   }
 
+ public:
   void opCall(T)(T v) {
     static if (is(T : Module)) {
       // re-use existing module if the current module was never used
@@ -44,10 +46,12 @@ private struct SymbolTableBuilder {
         objModule_ = new ObjectModule;
 
       auto namespaceBak = namespace_;
+      auto parentBak = parent_;
 
-      parent_.reset;
-      initGlobal(v);
-      foreach(id; v.ids()) {
+      v.setObjectModule(objModule_);
+
+      for (auto i = 0; i < v.ids.length; ++i) {
+        auto id = v.ids[i];
         auto idStr = id.toString;
         auto ptr = idStr in namespace_.symbols_;
         if (ptr) {
@@ -55,18 +59,30 @@ private struct SymbolTableBuilder {
             throw new SymbolRedefinition(id, "redefined as module");
           }
           namespace_ = ptr.as!Module;
+          // TODO: update id location to current part of module?
+        }
+        else if (i == v.ids.length - 1) {
+          // first time module is seen
+          namespace_.symbols_[idStr] = v;
+          namespace_ = v;
         }
         else {
+          // empty module created to be parent of current module
           auto newNamespace = new Module;
+          newNamespace.ids = v.ids[0..(i+1)];
           namespace_.symbols_[idStr] = newNamespace;
           namespace_ = newNamespace;
         }
+
+        namespace_.parent_ = parent_;
+        parent_ = cast(Module)namespace_;
       }
 
       foreach (node ; v.members)
         node.apply(this);
 
       namespace_ = namespaceBak;
+      parent_    = parentBak;
       return;
     }
     else static if (is(T : Global)) {
@@ -90,12 +106,12 @@ private struct SymbolTableBuilder {
 
   void empty() { assert(false, "cannot be empty"); }
 
+  // Import an AST into the symbol table. This also sets the parents and
+  // object module references within all global ast nodes.
   void import_(Ast ast) {
     objModule_ = new ObjectModule;
-    foreach (node ; ast) {
+    foreach (node ; ast)
       node.apply(this);
-      // TODO: fill in symbols_ + table and object module for each global in ast
-    }
   }
 }
 

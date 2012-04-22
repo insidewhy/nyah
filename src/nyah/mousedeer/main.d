@@ -5,7 +5,6 @@ import mousedeer.options : Options;
 import mousedeer.project : Project, ImportException;
 
 import beard.io : println;
-import beard.metaio : printType;
 import beard.cmdline : CmdLineParser = Parser;
 
 import std.stdio;

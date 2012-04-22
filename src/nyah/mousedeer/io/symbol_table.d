@@ -1,26 +1,37 @@
 module mousedeer.io.symbol_table;
 
 import mousedeer.parser.nyah
-  : Function, VariableDefinition, Class, GlobalNamespace, Module;
+  : Function, VariableDefinition, Class, GlobalNamespace, Module, Global;
 
 import beard.io : println, print;
+import std.stdio : writeln;
 
 struct SymbolTablePrinter {
   enum TAB_SIZE = 2;
 
-  void opCall(Function f) {
-    println("function");
+  private void printGlobal(Global v) {
+    // TODO: probably just some stuff for testing here
+  }
+
+  void opCall(Function v) {
+    print("function");
+    printGlobal(v);
+    writeln();
   }
   void opCall(VariableDefinition v) {
-    println("variable definition");
+    print("variable definition");
+    printGlobal(v);
+    writeln();
   }
-  void opCall(Module m) {
+  void opCall(Module v) {
     print("module");
-    children(m);
+    printGlobal(v);
+    children(v);
   }
-  void opCall(Class c) {
+  void opCall(Class v) {
     print("class");
-    children(c);
+    printGlobal(v);
+    children(v);
   }
 
   private void printIndent() {

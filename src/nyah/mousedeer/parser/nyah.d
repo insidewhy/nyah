@@ -347,8 +347,8 @@ class Module : GlobalNamespace {
         JoinedPlusTight!(Char!".", Identifier),
         Many!(Choice!(Function, VariableDefinition, Class)));
 
-    Range[] ids() { return value_[0]; }
-    auto members() { return value_[1]; }
+    ref Range[] ids() { return value_[0]; }
+    auto ref members() { return value_[1]; }
 }
 
 //////////////////////////////////////////////////////////////////////////////
