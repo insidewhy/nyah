@@ -23,29 +23,24 @@ class SymbolRedefinition : ExceptionWithLocation {
 }
 
 private struct SymbolTableBuilder {
-  // current namespace and output module
  private:
-  GlobalNamespace     namespace_;
-
-  // TODO: look into extracting common base classes from variants
-  private Global.Ptr  parent_; // same object above but in variant form
-                               // rather than base class reference
-  ObjectModule        objModule_;
+  Global.NamespacePtr parent_; // parent of current global objects
+  ObjectModule        objModule_; // current object module
 
   // call on every global the first time it is seen
   void initGlobal(Global g) {
-    g.parent_ = parent_;
+    g.parent = parent_;
     g.setObjectModule(objModule_);
   }
 
  public:
   void opCall(T)(T v) {
+    GlobalNamespace namespace = parent_.base!GlobalNamespace;
     static if (is(T : Module)) {
       // re-use existing module if the current module was never used
-      if (! namespace_.symbols_.length)
+      if (! namespace.symbols_.length)
         objModule_ = new ObjectModule;
 
-      auto namespaceBak = namespace_;
       auto parentBak = parent_;
 
       v.setObjectModule(objModule_);
@@ -53,53 +48,50 @@ private struct SymbolTableBuilder {
       for (auto i = 0; i < v.ids.length; ++i) {
         auto id = v.ids[i];
         auto idStr = id.str;
-        auto ptr = idStr in namespace_.symbols_;
+        auto ptr = idStr in namespace.symbols_;
         if (ptr) {
           if (! ptr.isType!Module) {
             throw new SymbolRedefinition(id, "redefined as module");
           }
-          namespace_ = ptr.as!Module;
-          // TODO: update id location to current part of module?
+          namespace = ptr.as!Module;
+          // TODO: append members if module?
         }
         else if (i == v.ids.length - 1) {
           // first time module is seen
-          namespace_.symbols_[idStr] = v;
-          namespace_ = v;
+          namespace.symbols_[idStr] = v;
+          namespace = v;
         }
         else {
           // empty module created to be parent of current module
           auto newNamespace = new Module;
           newNamespace.ids = v.ids[0..(i+1)];
-          namespace_.symbols_[idStr] = newNamespace;
-          namespace_ = newNamespace;
+          namespace.symbols_[idStr] = newNamespace;
+          namespace = newNamespace;
         }
 
-        namespace_.parent_ = parent_;
-        parent_ = cast(Module)namespace_;
+        namespace.parent = parent_;
+        parent_ = cast(Module)namespace;
       }
 
       foreach (node ; v.members)
         node.apply(this);
 
-      namespace_ = namespaceBak;
       parent_    = parentBak;
       return;
     }
     else static if (is(T : Global)) {
       initGlobal(v);
-      namespace_.symbols_[v.id] = v;
+      namespace.symbols_[v.id] = v;
     }
 
     static if (is(T : Class)) {
-      auto namespaceBak = namespace_;
       auto parentBak    = parent_;
-      namespace_ = v;
+      namespace = v;
       parent_ = v;
 
       foreach (node ; v.block.value_)
         node.apply(this);
 
-      namespace_ = namespaceBak;
       parent_ = parentBak;
     }
   }
@@ -119,7 +111,6 @@ class GlobalSymbolTable : Module {
   // import code from ast of single object module into global symbol table
   void import_(Ast ast) {
     SymbolTableBuilder builder;
-    builder.namespace_ = this;
     builder.parent_ = cast(Module)this;
     builder.import_(ast);
   }

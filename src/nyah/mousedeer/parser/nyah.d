@@ -137,10 +137,11 @@ alias Sequence!(
 // shared by all globals
 class Global {
     alias Variant!(Function, VariableDefinition, Class, Module) Ptr;
-    void setObjectModule(ObjectModule mod) { object_module_ = mod; }
+    alias Variant!(Class, Module) NamespacePtr;
+    void setObjectModule(ObjectModule mod) { object_module = mod; }
 
-    Ptr          parent_;
-    ObjectModule object_module_;
+    NamespacePtr parent;
+    ObjectModule object_module;
     // todo: add protection level
 }
 

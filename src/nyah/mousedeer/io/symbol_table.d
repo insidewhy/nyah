@@ -25,10 +25,9 @@ struct SymbolTablePrinter {
   private void printGlobal(Global v) {
     if (! verbose) return;
     print(" - parent [");
-    v.parent_.apply(
+    v.parent.apply(
         (Class v) { print("class", v.id); },
         &printModule,
-        (VariableDefinition v) { assert(false, "variable definition for parent"); },
         (Function v) { print("func", v.id); },
         () { print("empty"); });
     print("]");
@@ -81,6 +80,6 @@ struct SymbolTablePrinter {
 
   void empty() { assert(false, "cannot be empty"); }
 
-  int indent_ = 0;
+  private int indent_ = 0;
 }
 // vim:ts=2 sw=2:
