@@ -8,9 +8,25 @@ import std.stdio : writeln;
 
 struct SymbolTablePrinter {
   enum TAB_SIZE = 2;
+  bool verbose;
+
+  private void printModule(Module v) {
+    print("module ");
+    print(v.ids()[0].str);
+    foreach (id ; v.ids()[1..$])
+      print("." ~ id.str);
+  }
 
   private void printGlobal(Global v) {
-    // TODO: probably just some stuff for testing here
+    if (! verbose) return;
+    print(" - parent [");
+    v.parent_.apply(
+        (Class v) { print("class", v.id); },
+        &printModule,
+        (VariableDefinition v) { assert(false, "variable definition for parent"); },
+        (Function v) { print("func", v.id); },
+        () { print("empty"); });
+    print("]");
   }
 
   void opCall(Function v) {

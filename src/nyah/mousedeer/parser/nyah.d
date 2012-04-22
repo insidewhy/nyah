@@ -159,7 +159,7 @@ class Function : Global {
         Optional!ArgumentsDefinition,
         Node!CodeBlock);
 
-    string id() { return value_[1].toString; }
+    string id() { return value_[1].str; }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ class Class : GlobalNamespace {
         Optional!ConstructorArgumentsDefinition,
         Optional!(Node!ClassBlock));
 
-    string id() { return value_[0].toString; }
+    string id() { return value_[0].str; }
     auto block() { return value_[3]; }
 }
 
@@ -338,7 +338,7 @@ class VariableDefinition : Global {
                 Lexeme!(NonBreakingSpace, Char!"="),
                 ExpressionRef))));
 
-    string id() { return value_[0].toString; }
+    string id() { return value_[0].str; }
 }
 
 class Module : GlobalNamespace {

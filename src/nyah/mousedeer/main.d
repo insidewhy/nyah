@@ -67,7 +67,7 @@ private int _main(string[] args) {
   gen.linkBytecodeFiles;
 
   if (dumpAst) project.dumpAsts;
-  if (dumpSymbolTable) project.symbols.dump;
+  if (dumpSymbolTable) project.symbols.dump(verbose);
 
   return 0;
 }

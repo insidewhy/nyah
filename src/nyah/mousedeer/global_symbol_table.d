@@ -52,7 +52,7 @@ private struct SymbolTableBuilder {
 
       for (auto i = 0; i < v.ids.length; ++i) {
         auto id = v.ids[i];
-        auto idStr = id.toString;
+        auto idStr = id.str;
         auto ptr = idStr in namespace_.symbols_;
         if (ptr) {
           if (! ptr.isType!Module) {
@@ -123,8 +123,9 @@ class GlobalSymbolTable : GlobalNamespace {
     builder.import_(ast);
   }
 
-  void dump() {
+  void dump(bool verbose = false) {
     SymbolTablePrinter p;
+    p.verbose = verbose;
     p.dump(this);
   }
 };
