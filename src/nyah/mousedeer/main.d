@@ -1,26 +1,23 @@
 module mousedeer.main;
 
 import mousedeer.code_generator : CodeGenerator;
-import mousedeer.options : Options;
 import mousedeer.project : Project, ImportException;
 
 import beard.io : println;
-import beard.cmdline : CmdLineParser = Parser;
+import beard.cmdline : CmdLineParser = Parser, UnknownCommandLineArgument;
 
 import std.stdio;
+import std.file : attrIsFile, getAttributes;
 
-// configuration:
-private bool verbose = false;
-private string dump;
-
-private void dumpConfig(Options options) {
-  println("verbose:", verbose);
-  println("dump:", dump);
-  println("includes:", options.includes);
-  println("output path:", options.outputPath);
+class SourceFileNotFound : Exception {
+  this(string err) { super(err); }
 }
 
+// configuration:
 private int _main(string[] args) {
+  bool verbose = false;
+  string dump;
+
   auto project = new Project;
 
   auto optParser = new CmdLineParser;
@@ -50,7 +47,9 @@ private int _main(string[] args) {
         dumpSymbolTable = true;
         break;
       case 'c':
-        dumpConfig(project.options);
+        println("verbose:", verbose);
+        println("dump:", dump);
+        project.options.dump;
         println("positional parameters:", args);
         break;
       default:
@@ -59,8 +58,12 @@ private int _main(string[] args) {
     }
   }
 
-  foreach(arg ; args[1..$])
+  foreach(arg ; args[1..$]) {
+    if (! attrIsFile(getAttributes(arg)))
+      throw new SourceFileNotFound(arg);
+
     project.importFile(arg);
+  }
 
   auto gen = new CodeGenerator(project);
   gen.createBytecodeFiles;
@@ -78,6 +81,12 @@ int main(string[] args) {
   }
   catch (ImportException e) {
     println(e.msg);
+  }
+  catch (UnknownCommandLineArgument e) {
+    println("unknown command line argument:", e.msg);
+  }
+  catch (SourceFileNotFound e) {
+    println("source file not found:", e.msg);
   }
   return 1;
 }

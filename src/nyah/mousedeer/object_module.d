@@ -10,5 +10,6 @@ module mousedeer.object_module;
 // modules. A single file containing multiple modules will contain an object
 // module for each source module.
 class ObjectModule {
+  string path;
 }
 // vim:ts=2 sw=2:

@@ -26,7 +26,7 @@ class Project {
 
   // load file object but perform no further processing.
   SourceFile loadFile(string path) {
-    return sources_[path] = new SourceFile(path);
+    return sources_[path] = new SourceFile(path, options.root);
   }
 
   // load file and import it into the symbol table.
