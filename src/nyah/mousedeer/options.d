@@ -45,8 +45,8 @@ class Options {
   void addOpts(CmdLineParser optParser) {
     optParser
       ("I,include", &includes, "add include path, can be used multiple times")
-      ("o,output", &outputPath, "output file")
-      ("b,bytecode", &bytecodePath, "root path to store bytecode to")
+      ("o,output", &outputPath, "output library/executable path")
+      ("b,bytecode", &bytecodePath, "root path at which to store byte code")
       ("r,root", &root, "root of source files (defaults to cwd)")
       ;
   }

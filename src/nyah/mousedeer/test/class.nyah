@@ -1,3 +1,7 @@
+class GlobalClass {
+    value := ""
+}
+
 module hello.mod
 
 class Bool[T](public val:const bool) {

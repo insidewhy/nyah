@@ -36,7 +36,7 @@ class Project {
       if (! source.parse(parser_))
           throw new ImportException("failure parsing: " ~ path);
 
-      symbols.import_(source.ast);
+      symbols.import_(source);
   }
 
   void dumpAsts() {

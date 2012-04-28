@@ -1,9 +1,10 @@
 module mousedeer.global_symbol_table;
 
 import mousedeer.parser.nyah
-  : Ast, Function, VariableDefinition, Class, Global, GlobalNamespace, Module;
+  : Function, VariableDefinition, Class, Global, GlobalNamespace, Module;
 import mousedeer.object_module : ObjectModule;
 import mousedeer.io.symbol_table : SymbolTablePrinter;
+import mousedeer.source_file : SourceFile;
 
 import teg.range : Range;
 
@@ -27,14 +28,13 @@ private struct SymbolTableBuilder {
   Global.NamespacePtr parent_; // parent of current global objects
   ObjectModule        objModule_; // current object module
 
-  // call on every global the first time it is seen
-  void initGlobal(Global g) {
-    g.parent = parent_;
-    g.setObjectModule(objModule_);
+  void childOfGlobal(T)(auto ref T v) {
+    // TODO: create new object module if namespace is empty
+    opCall(v);
   }
 
  public:
-  void opCall(T)(T v) {
+  void opCall(T)(auto ref T v) {
     GlobalNamespace namespace = parent_.base!GlobalNamespace;
     static if (is(T : Module)) {
       // re-use existing module if the current module was never used
@@ -80,7 +80,8 @@ private struct SymbolTableBuilder {
       return;
     }
     else static if (is(T : Global)) {
-      initGlobal(v);
+      v.parent = parent_;
+      v.setObjectModule(objModule_);
       namespace.symbols_[v.id] = v;
     }
 
@@ -100,19 +101,23 @@ private struct SymbolTableBuilder {
 
   // Import an AST into the symbol table. This also sets the parents and
   // object module references within all global ast nodes.
-  void import_(Ast ast) {
+  void import_(SourceFile file) {
     objModule_ = new ObjectModule;
-    foreach (node ; ast)
-      node.apply(this);
+    foreach (node ; file.ast)
+      node.apply(
+          (Class v) { childOfGlobal(v); },
+          (VariableDefinition v) { childOfGlobal(v); },
+          (Function v) { childOfGlobal(v); },
+          this); // intercept global non-modules specially
   }
 }
 
 class GlobalSymbolTable : Module {
   // import code from ast of single object module into global symbol table
-  void import_(Ast ast) {
+  void import_(SourceFile file) {
     SymbolTableBuilder builder;
     builder.parent_ = cast(Module)this;
-    builder.import_(ast);
+    builder.import_(file);
   }
 
   void dump(bool verbose = false) {

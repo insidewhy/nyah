@@ -4,6 +4,17 @@ ast beard.variant.Variant {
     mousedeer.parser.nyah.Class,
     mousedeer.parser.nyah.Module
 }[] => [
+    Class: (
+        "GlobalClass",
+        [],
+        [],
+        ClassBlock: [
+            VariableDefinition: (
+                "value",
+                Expression: String: ""
+            )
+        ]
+    ),
     Module: (
         [
             "hello",
@@ -55,6 +66,9 @@ ast beard.variant.Variant {
     )
 ]
 global {
+  GlobalClass: class - parent [module global] {
+    value: variable definition - parent [class GlobalClass]
+  }
   hello: module - parent [module global] {
     mod: module - parent [module hello] {
       Bool: class - parent [module hello.mod] {
