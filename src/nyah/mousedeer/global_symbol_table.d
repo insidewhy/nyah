@@ -23,13 +23,23 @@ class SymbolRedefinition : ExceptionWithLocation {
   this(Range loc, string msg) { super(loc, msg); }
 }
 
+// Builds global symbol table from parsed AST. The algorithms used rely on
+// the source files being processed one after the other. The symbol table
+// builder acts as the target of variant apply methods called on each AST
+// in term, implementing a generic visitor pattern.
 private struct SymbolTableBuilder {
  private:
-  Global.NamespacePtr parent_; // parent of current global objects
-  ObjectModule        objModule_; // current object module
+  Global.NamespacePtr parent_;     // parent of current global objects
+  ObjectModule        objModule_;  // current object module
+  SourceFile          sourceFile_; // current source file
+  // set if the current source file has global module contents
+  bool                sourceHasGlobal_;
 
   void childOfGlobal(T)(auto ref T v) {
-    // TODO: create new object module if namespace is empty
+    if (! sourceHasGlobal_) {
+      objModule_ = new ObjectModule(sourceFile_.pathFromRoot ~ "/global.bc");
+      sourceHasGlobal_ = true;
+    }
     opCall(v);
   }
 
@@ -37,13 +47,14 @@ private struct SymbolTableBuilder {
   void opCall(T)(auto ref T v) {
     GlobalNamespace namespace = parent_.base!GlobalNamespace;
     static if (is(T : Module)) {
-      // re-use existing module if the current module was never used
-      if (! namespace.symbols_.length)
-        objModule_ = new ObjectModule;
+      auto bcPath = "/" ~ v.ids()[0].str;
+      foreach (id ; v.ids()[1..$]) bcPath ~= "." ~ id.str;
+      bcPath ~= ".bc";
+
+      objModule_ = new ObjectModule(sourceFile_.pathFromRoot ~ bcPath);
+      v.setObjectModule(objModule_);
 
       auto parentBak = parent_;
-
-      v.setObjectModule(objModule_);
 
       for (auto i = 0; i < v.ids.length; ++i) {
         auto id = v.ids[i];
@@ -102,7 +113,9 @@ private struct SymbolTableBuilder {
   // Import an AST into the symbol table. This also sets the parents and
   // object module references within all global ast nodes.
   void import_(SourceFile file) {
-    objModule_ = new ObjectModule;
+    sourceFile_      = file;
+    sourceHasGlobal_ = false;
+
     foreach (node ; file.ast)
       node.apply(
           (Class v) { childOfGlobal(v); },

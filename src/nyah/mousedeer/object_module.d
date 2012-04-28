@@ -10,6 +10,9 @@ module mousedeer.object_module;
 // modules. A single file containing multiple modules will contain an object
 // module for each source module.
 class ObjectModule {
+  this(string path_) { path = path_; }
+
+  // path to bytecode file (relative to configured bytecode output path)
   string path;
 }
 // vim:ts=2 sw=2:

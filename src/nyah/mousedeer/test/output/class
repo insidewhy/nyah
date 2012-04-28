@@ -66,19 +66,19 @@ ast beard.variant.Variant {
     )
 ]
 global {
-  GlobalClass: class - parent [module global] {
-    value: variable definition - parent [class GlobalClass]
+  GlobalClass: class { parent: module(global), bytecode: 'class.nyah/global.bc' } {
+    value: variable { parent: class (GlobalClass), bytecode: 'class.nyah/global.bc' }
   }
-  hello: module - parent [module global] {
-    mod: module - parent [module hello] {
-      Bool: class - parent [module hello.mod] {
-        value: variable definition - parent [class Bool]
+  hello: module { parent: module(global), package: true } {
+    mod: module { parent: module(hello), bytecode: 'class.nyah/hello.mod.bc' } {
+      Bool: class { parent: module(hello.mod), bytecode: 'class.nyah/hello.mod.bc' } {
+        value: variable { parent: class (Bool), bytecode: 'class.nyah/hello.mod.bc' }
       }
     }
   }
-  another: module - parent [module global] {
-    subfriend: module - parent [module another] {
-      friend: variable definition - parent [module another.subfriend]
+  another: module { parent: module(global), package: true } {
+    subfriend: module { parent: module(another), bytecode: 'class.nyah/another.subfriend.bc' } {
+      friend: variable { parent: module(another.subfriend), bytecode: 'class.nyah/another.subfriend.bc' }
     }
   }
 }

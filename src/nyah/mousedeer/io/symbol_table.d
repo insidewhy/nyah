@@ -11,7 +11,7 @@ struct SymbolTablePrinter {
   bool verbose;
 
   private void printModule(Module v) {
-    print("module ");
+    print("module(");
     if (v.isGlobal) {
       print("global");
     }
@@ -20,17 +20,30 @@ struct SymbolTablePrinter {
       foreach (id ; v.ids()[1..$])
         print("." ~ id.str);
     }
+    print(")");
   }
 
   private void printGlobal(Global v) {
     if (! verbose) return;
-    print(" - parent [");
+    print(" { parent: ");
     v.parent.apply(
-        (Class v) { print("class", v.id); },
+        (Class v) { print("class (" ~ v.id ~ ")"); },
         &printModule,
-        (Function v) { print("func", v.id); },
-        () { print("empty"); });
-    print("]");
+        (Function v) { print("func (" ~ v.id ~ ")"); },
+        () { assert(false, "unreachable"); });
+    print(", ");
+
+    // not sure...
+    if (v.object_module) {
+      print("bytecode: '");
+      print(v.object_module.path);
+      print("'");
+    }
+    else {
+      // a package is a module that only contains modules
+      print("package: true");
+    }
+    print(" }");
   }
 
   void opCall(Function v) {
@@ -39,7 +52,7 @@ struct SymbolTablePrinter {
     writeln();
   }
   void opCall(VariableDefinition v) {
-    print("variable definition");
+    print("variable");
     printGlobal(v);
     writeln();
   }
