@@ -10,8 +10,13 @@ module mousedeer.object_module;
 // modules. A single file containing multiple modules will contain an object
 // module for each source module.
 class ObjectModule {
-  this(string path_) { path = path_; }
+  this(string path_) {
+    static uint lastId = 0;
+    path = path_;
+    id   = ++lastId;
+  }
 
+  uint   id;
   // path to bytecode file (relative to configured bytecode output path)
   string path;
 }

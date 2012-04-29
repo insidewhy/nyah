@@ -34,9 +34,9 @@ struct SymbolTablePrinter {
     print(", ");
 
     // not sure...
-    if (v.object_module) {
+    if (v.objectModule) {
       print("bytecode: '");
-      print(v.object_module.path);
+      print(v.objectModule.path);
       print("'");
     }
     else {
