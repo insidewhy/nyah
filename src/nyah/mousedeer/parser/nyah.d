@@ -140,6 +140,8 @@ class Global {
     alias Variant!(Class, Module) NamespacePtr;
     void setObjectModule(ObjectModule mod) { objectModule = mod; }
 
+    ref Range id() { assert(false, "pure virtual method"); }
+
     NamespacePtr parent;
     ObjectModule objectModule;
     // todo: add protection level
@@ -160,7 +162,7 @@ class Function : Global {
         Optional!ArgumentsDefinition,
         Node!CodeBlock);
 
-    string id() { return value_[1].str; }
+    ref Range id() { return value_[1]; }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -210,7 +212,7 @@ class Class : GlobalNamespace {
         Optional!ConstructorArgumentsDefinition,
         Optional!(Node!ClassBlock));
 
-    string id() { return value_[0].str; }
+    ref Range id() { return value_[0]; }
     auto block() { return value_[3]; }
 }
 
@@ -339,7 +341,7 @@ class VariableDefinition : Global {
                 Lexeme!(NonBreakingSpace, Char!"="),
                 ExpressionRef))));
 
-    string id() { return value_[0].str; }
+    ref Range id() { return value_[0]; }
 }
 
 class Module : GlobalNamespace {
@@ -350,6 +352,7 @@ class Module : GlobalNamespace {
 
     bool isGlobal() { return ids.length == 0; }
 
+    ref Range id() { return value_[0][value_[0].length - 1]; }
     ref Range[] ids() { return value_[0]; }
     auto ref members() { return value_[1]; }
 }

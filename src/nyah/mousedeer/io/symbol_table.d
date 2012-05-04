@@ -10,7 +10,7 @@ struct SymbolTablePrinter {
   enum TAB_SIZE = 2;
   bool verbose;
 
-  private void printModule(Module v) {
+  static private void printModule(Module v) {
     print("module(");
     if (v.isGlobal) {
       print("global");
@@ -27,9 +27,9 @@ struct SymbolTablePrinter {
     if (! verbose) return;
     print(" { parent: ");
     v.parent.apply(
-        (Class v) { print("class (" ~ v.id ~ ")"); },
+        (Class v) { print("class (" ~ v.id.str ~ ")"); },
         &printModule,
-        (Function v) { print("func (" ~ v.id ~ ")"); },
+        (Function v) { print("func (" ~ v.id.str ~ ")"); },
         () { assert(false, "unreachable"); });
     print(", ");
 
