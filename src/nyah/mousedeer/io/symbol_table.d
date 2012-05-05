@@ -2,6 +2,7 @@ module mousedeer.io.symbol_table;
 
 import mousedeer.parser.nyah
   : Function, VariableDefinition, Class, GlobalNamespace, Module, Global;
+import mousedeer.function_overloads : FunctionOverloads;
 
 import beard.io : println, print;
 import std.stdio : writeln;
@@ -65,6 +66,9 @@ struct SymbolTablePrinter {
     print("class");
     printGlobal(v);
     children(v);
+  }
+  void opCall(FunctionOverloads v) {
+    // TODO: print overloads table
   }
 
   private void printIndent() {

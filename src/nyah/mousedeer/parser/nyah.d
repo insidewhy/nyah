@@ -1,6 +1,8 @@
 module mousedeer.parser.nyah;
 
 import mousedeer.object_module : ObjectModule;
+import mousedeer.identifiable : Identifiable;
+import mousedeer.function_overloads : FunctionOverloads;
 import beard.variant : Variant;
 import teg.all;
 
@@ -135,12 +137,11 @@ alias Sequence!(
 
 //////////////////////////////////////////////////////////////////////////////
 // shared by all globals
-class Global {
-    alias Variant!(Function, VariableDefinition, Class, Module) Ptr;
+abstract class Global : Identifiable {
+    alias Variant!(
+        Function, VariableDefinition, Class, Module, FunctionOverloads) Ptr;
     alias Variant!(Class, Module) NamespacePtr;
     void setObjectModule(ObjectModule mod) { objectModule = mod; }
-
-    ref Range id() { assert(false, "pure virtual method"); }
 
     NamespacePtr parent;
     ObjectModule objectModule;
@@ -148,7 +149,7 @@ class Global {
 }
 
 // A global in which other globals live inside of its namespace
-class GlobalNamespace : Global {
+abstract class GlobalNamespace : Global {
     Ptr[string]  symbols_; // children of this
 }
 

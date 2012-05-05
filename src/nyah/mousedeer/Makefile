@@ -14,7 +14,9 @@ include teg/beard/Makefile
 build: ${O}/mousedeer
 
 ${O}/mousedeer: main.d code_generator.d project.d \
-				global_symbol_table.d object_module.d ${libfiles}
+				global_symbol_table.d object_module.d \
+				function_overloads.d identifiable.d \
+				${libfiles}
 	${MAKE} -C bustin
 	@mkdir -p ${O}
 	${dmd} ${comp_args} -I.. -od${O} -of$@ $^

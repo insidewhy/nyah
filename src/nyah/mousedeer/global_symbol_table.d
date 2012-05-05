@@ -2,6 +2,7 @@ module mousedeer.global_symbol_table;
 
 import mousedeer.parser.nyah
   : Function, VariableDefinition, Class, Global, GlobalNamespace, Module;
+import mousedeer.identifiable : Identifiable;
 import mousedeer.object_module : ObjectModule;
 import mousedeer.io.symbol_table : SymbolTablePrinter;
 import mousedeer.source_file : SourceFile;
@@ -60,30 +61,30 @@ private struct SymbolTableBuilder {
       static if (is(T : Function)) {
         if (! ptr.isType!Function)
           throw new SymbolRedefinition(
-            id, ptr.base!Global.id, "redefined as function");
+            id, ptr.base!Identifiable.id, "redefined as function");
 
         // TODO: add to overload lookup table
       }
       else static if (is(T : VariableDefinition)) {
         if (! ptr.isType!VariableDefinition)
           throw new SymbolRedefinition(
-            id, ptr.base!Global.id, "redefined as variable definition");
+            id, ptr.base!Identifiable.id, "redefined as variable definition");
         else
           throw new SymbolRedefinition(
-            id, ptr.base!Global.id, "duplicate variable definition");
+            id, ptr.base!Identifiable.id, "duplicate variable definition");
       }
       else static if (is(T : Class)) {
         if (! ptr.isType!Class)
           throw new SymbolRedefinition(
-            id, ptr.base!Global.id, "redefined as class");
+            id, ptr.base!Identifiable.id, "redefined as class");
         else
           throw new SymbolRedefinition(
-            id, ptr.base!Global.id, "duplicate class");
+            id, ptr.base!Identifiable.id, "duplicate class");
       }
       else static if (is(T : Module)) {
         if (! ptr.isType!Module)
           throw new SymbolRedefinition(
-            id, ptr.base!Global.id, "redefined as module");
+            id, ptr.base!Identifiable.id, "redefined as module");
         else
           return; // allow modules to be defined in multiple places
       }
@@ -110,7 +111,7 @@ private struct SymbolTableBuilder {
         if (ptr) {
           if (! ptr.isType!Module) {
             throw new SymbolRedefinition(
-              id, ptr.base!Global.id, "redefined as module");
+              id, ptr.base!Identifiable.id, "redefined as module");
           }
           namespace = ptr.as!Module;
           // TODO: append members if module?
