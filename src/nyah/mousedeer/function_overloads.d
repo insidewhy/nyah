@@ -1,13 +1,28 @@
 module mousedeer.function_overloads;
 
+import mousedeer.parser.nyah : Function;
 import mousedeer.identifiable : Identifiable;
 import teg.range : Range;
+import beard.vector : pushBack;
 
-// Represent overloaded functions with the same name.
+// Represent a group of overloaded functions with the same name at the
+// same scope.
 class FunctionOverloads : Identifiable {
-    this(Range id) { id_ = id; }
+  // construct with any function
+  this(Function fun) { addFunction(fun); }
 
-    ref Range id() { return id_; }
+  // cache in functions list, the tree is built later by buildLookupTree.
+  void addFunction(Function fun) { pushBack(functions, fun); }
 
-    Range id_;
+  // build lookup tree. Call after all types are known.
+  void buildLookupTree() {
+    // TODO:
+  }
+
+  ref Range id() { return functions[0].id; }
+
+  // all function overloaded on a symbol.
+  Function[] functions;
 }
+
+// vim:ts=2 sw=2:

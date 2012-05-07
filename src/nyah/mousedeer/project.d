@@ -6,10 +6,6 @@ import mousedeer.source_file : SourceFile;
 import mousedeer.options : Options;
 import mousedeer.parser.nyah;
 
-class ImportException : Exception {
-  this(string err) { super(err); }
-}
-
 // Represents either an executable or a library. Holds the source file
 // objects, symbol tables and compilation options relating to it.
 class Project {
@@ -29,14 +25,11 @@ class Project {
     return sources_[path] = new SourceFile(path, options.root);
   }
 
-  // load file and import it into the symbol table.
+  // load file contents, parse them and import AST into symbol table.
   void importFile(string path) {
-      auto source = loadFile(path);
-      // TODO: improve error message
-      if (! source.parse(parser_))
-          throw new ImportException("failure parsing: " ~ path);
-
-      symbols.import_(source);
+    auto source = loadFile(path);
+    source.parse(parser_);
+    symbols.import_(source);
   }
 
   void dumpAsts() {

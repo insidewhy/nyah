@@ -1,7 +1,8 @@
 module mousedeer.main;
 
 import mousedeer.code_generator : CodeGenerator;
-import mousedeer.project : Project, ImportException;
+import mousedeer.project : Project;
+import mousedeer.source_file : UnexpectedContent, ParsingFailure;
 
 import beard.io : println;
 import beard.cmdline : CmdLineParser = Parser, UnknownCommandLineArgument;
@@ -79,7 +80,10 @@ int main(string[] args) {
   try {
     return _main(args);
   }
-  catch (ImportException e) {
+  catch (ParsingFailure e) {
+    println(e.msg);
+  }
+  catch (UnexpectedContent e) {
     println(e.msg);
   }
   catch (UnknownCommandLineArgument e) {

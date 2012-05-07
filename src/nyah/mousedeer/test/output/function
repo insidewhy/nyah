@@ -266,7 +266,7 @@ global {
   vec4: function { parent: module(global), bytecode: 'function.nyah/global.bc' }
   puu: function { parent: module(global), bytecode: 'function.nyah/global.bc' }
   empty: function { parent: module(global), bytecode: 'function.nyah/global.bc' }
-  add: function { parent: module(global), bytecode: 'function.nyah/global.bc' }
+  add: functions { parent: module(global), bytecode: 'function.nyah/global.bc' }
   vec1: function { parent: module(global), bytecode: 'function.nyah/global.bc' }
   vec5: function { parent: module(global), bytecode: 'function.nyah/global.bc' }
   tpar: function { parent: module(global), bytecode: 'function.nyah/global.bc' }

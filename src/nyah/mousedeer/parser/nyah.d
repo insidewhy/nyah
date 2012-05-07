@@ -138,8 +138,6 @@ alias Sequence!(
 //////////////////////////////////////////////////////////////////////////////
 // shared by all globals
 abstract class Global : Identifiable {
-    alias Variant!(
-        Function, VariableDefinition, Class, Module, FunctionOverloads) Ptr;
     alias Variant!(Class, Module) NamespacePtr;
     void setObjectModule(ObjectModule mod) { objectModule = mod; }
 
@@ -150,6 +148,8 @@ abstract class Global : Identifiable {
 
 // A global in which other globals live inside of its namespace
 abstract class GlobalNamespace : Global {
+    alias Variant!(
+        Function, VariableDefinition, Class, Module, FunctionOverloads) Ptr;
     Ptr[string]  symbols_; // children of this
 }
 

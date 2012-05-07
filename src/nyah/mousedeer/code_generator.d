@@ -13,7 +13,6 @@ class CodeGenerator {
   this(Project project) { project_ = project; }
 
   void opCall(Ast ast) {
-    // todo:
   }
 
   void createBytecodeFiles() {

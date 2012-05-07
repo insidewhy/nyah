@@ -7,6 +7,13 @@ import teg.stream : FileStream;
 import beard.metaio : printType;
 import beard.io : print, println;
 
+class ParsingFailure : Exception {
+  this(string err) { super(err); }
+}
+class UnexpectedContent : Exception {
+  this(string err) { super(err); }
+}
+
 class SourceFile {
   alias FileStream!Whitespace Stream;
 
@@ -30,8 +37,9 @@ class SourceFile {
         // TODO:
       }
     }
-
-    // TODO: calculate pathFromRoot_ using path and root
+    else {
+      // TODO: calculate offset
+    }
   }
 
   void dumpAst() {
@@ -41,13 +49,15 @@ class SourceFile {
     println(ast);
   }
 
-  bool parse(ref Grammar parser) {
+  // parse stream for source file, throw exception on error.
+  void parse(ref Grammar parser) {
     stream_.skip_whitespace();
 
-    if (! parser.parse(stream_, ast) || ! stream_.empty)
-      return false;
+    if (! parser.parse(stream_, ast))
+      throw new ParsingFailure("failure parsing: " ~ path);
 
-    return true;
+    if (! stream_.empty)
+      throw new UnexpectedContent("unexpected content: " ~ path);
   }
 
   string path() { return stream_.path; }

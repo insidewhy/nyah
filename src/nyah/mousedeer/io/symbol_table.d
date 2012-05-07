@@ -68,6 +68,9 @@ struct SymbolTablePrinter {
     children(v);
   }
   void opCall(FunctionOverloads v) {
+    print("functions");
+    printGlobal(v.functions[0]);
+    writeln();
     // TODO: print overloads table
   }
 

@@ -2,6 +2,7 @@ module mousedeer.global_symbol_table;
 
 import mousedeer.parser.nyah
   : Function, VariableDefinition, Class, Global, GlobalNamespace, Module;
+import mousedeer.function_overloads : FunctionOverloads;
 import mousedeer.identifiable : Identifiable;
 import mousedeer.object_module : ObjectModule;
 import mousedeer.io.symbol_table : SymbolTablePrinter;
@@ -59,11 +60,21 @@ private struct SymbolTableBuilder {
     auto ptr = idStr in namespace.symbols_;
     if (ptr) {
       static if (is(T : Function)) {
-        if (! ptr.isType!Function)
+        if (ptr.isType!Function) {
+          auto overloads = new FunctionOverloads(ptr.as!Function);
+          namespace.symbols_[idStr] = overloads;
+          overloads.addFunction(v);
+        }
+        else if (ptr.isType!FunctionOverloads)
+          ptr.as!FunctionOverloads.addFunction(v);
+        else
           throw new SymbolRedefinition(
             id, ptr.base!Identifiable.id, "redefined as function");
 
-        // TODO: add to overload lookup table
+        // TODO: store in vector for coming back after symbol table build
+        //       in order to build function lookup trees after all types are
+        //       known.
+        return;
       }
       else static if (is(T : VariableDefinition)) {
         if (! ptr.isType!VariableDefinition)
