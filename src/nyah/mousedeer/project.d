@@ -1,7 +1,8 @@
 module mousedeer.project;
 
 import mousedeer.code_generator : CodeGenerator;
-import mousedeer.global_symbol_table : GlobalSymbolTable;
+import mousedeer.global_symbol_table : GlobalSymbolTable, SymbolTableBuilder;
+import mousedeer.io.symbol_table : SymbolTablePrinter;
 import mousedeer.source_file : SourceFile;
 import mousedeer.options : Options;
 import mousedeer.parser.nyah;
@@ -11,6 +12,7 @@ import mousedeer.parser.nyah;
 class Project {
   private SourceFile[string] sources_;
   private Grammar            parser_;
+  private SymbolTableBuilder builder_;
 
   Options                    options;
   GlobalSymbolTable          symbols;
@@ -29,8 +31,11 @@ class Project {
   void importFile(string path) {
     auto source = loadFile(path);
     source.parse(parser_);
-    symbols.import_(source);
+    builder_.import_(symbols, source);
   }
+
+  // run after all files have been imported. See doc for target method.
+  void buildOverloadTables() { builder_.buildOverloadTables(); }
 
   void dumpAsts() {
     foreach (source ; sources_) source.dumpAst;

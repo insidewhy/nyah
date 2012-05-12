@@ -5,10 +5,11 @@ import mousedeer.parser.nyah
 import mousedeer.function_overloads : FunctionOverloads;
 import mousedeer.identifiable : Identifiable;
 import mousedeer.object_module : ObjectModule;
-import mousedeer.io.symbol_table : SymbolTablePrinter;
 import mousedeer.source_file : SourceFile;
 
 import teg.range : Range;
+
+import beard.vector : pushBack;
 
 class ExceptionWithLocation : Exception {
   this(Range loc, string msg) {
@@ -35,13 +36,18 @@ class SymbolRedefinition : ExceptionWithLocation {
 // the source files being processed one after the other. The symbol table
 // builder acts as the target of variant apply methods called on each AST
 // in term, implementing a generic visitor pattern.
-private struct SymbolTableBuilder {
+struct SymbolTableBuilder {
  private:
   Global.NamespacePtr parent_;     // parent of current global objects
   ObjectModule        objModule_;  // current object module
   SourceFile          sourceFile_; // current source file
   // set if the current source file has global module contents
   bool                sourceHasGlobal_;
+
+  // While building the symbol table the builder keeps a list of all
+  // the function overloads it meets for processing in a pass after
+  // the symbol table is built.
+  FunctionOverloads[] overloads_;
 
   void childOfGlobal(T)(auto ref T v) {
     if (! sourceHasGlobal_) {
@@ -62,6 +68,7 @@ private struct SymbolTableBuilder {
       static if (is(T : Function)) {
         if (ptr.isType!Function) {
           auto overloads = new FunctionOverloads(ptr.as!Function);
+          pushBack(overloads_, overloads);
           namespace.symbols_[idStr] = overloads;
           overloads.addFunction(v);
         }
@@ -71,9 +78,6 @@ private struct SymbolTableBuilder {
           throw new SymbolRedefinition(
             id, ptr.base!Identifiable.id, "redefined as function");
 
-        // TODO: store in vector for coming back after symbol table build
-        //       in order to build function lookup trees after all types are
-        //       known.
         return;
       }
       else static if (is(T : VariableDefinition)) {
@@ -170,9 +174,10 @@ private struct SymbolTableBuilder {
 
   void empty() { assert(false, "cannot be empty"); }
 
-  // Import an AST into the symbol table. This also sets the parents and
-  // object module references within all global ast nodes.
-  void import_(SourceFile file) {
+  // Import an AST from file into the symbol table of module_. This also
+  // sets the parents and object module references within all global ast nodes.
+  void import_(Module module_, SourceFile file) {
+    parent_          = module_;
     sourceFile_      = file;
     sourceHasGlobal_ = false;
 
@@ -183,20 +188,16 @@ private struct SymbolTableBuilder {
           (Function v) { childOfGlobal(v); },
           this); // intercept global non-modules specially
   }
+
+  // This must be called after importing all source files in order to build
+  // the function overload tables. This process will need access to all global
+  // symbols in order to build overloads reliant on metaprogramming.
+  void buildOverloadTables() {
+    foreach(FunctionOverloads overloads; overloads_) {
+      // TODO: build table for overload
+    }
+  }
 }
 
-class GlobalSymbolTable : Module {
-  // import code from ast of single object module into global symbol table
-  void import_(SourceFile file) {
-    SymbolTableBuilder builder;
-    builder.parent_ = cast(Module)this;
-    builder.import_(file);
-  }
-
-  void dump(bool verbose = false) {
-    SymbolTablePrinter p;
-    p.verbose = verbose;
-    p.dump(this);
-  }
-};
+class GlobalSymbolTable : Module {};
 // vim:ts=2 sw=2:

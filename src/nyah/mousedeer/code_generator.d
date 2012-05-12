@@ -2,7 +2,6 @@ module mousedeer.code_generator;
 
 import bustin.core;
 import mousedeer.parser.nyah : Ast;
-import mousedeer.global_symbol_table : GlobalSymbolTable;
 import mousedeer.project : Project;
 
 // Generates one bytecode file per object module. See documentation for
@@ -16,6 +15,8 @@ class CodeGenerator {
   }
 
   void createBytecodeFiles() {
+    project_.buildOverloadTables;
+    // TODO:
   }
 
   void linkBytecodeFiles() {

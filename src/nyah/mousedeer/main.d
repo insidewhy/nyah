@@ -3,6 +3,7 @@ module mousedeer.main;
 import mousedeer.code_generator : CodeGenerator;
 import mousedeer.project : Project;
 import mousedeer.source_file : UnexpectedContent, ParsingFailure;
+import mousedeer.io.symbol_table : SymbolTablePrinter;
 
 import beard.io : println;
 import beard.cmdline : CmdLineParser = Parser, UnknownCommandLineArgument;
@@ -71,7 +72,11 @@ private int _main(string[] args) {
   gen.linkBytecodeFiles;
 
   if (dumpAst) project.dumpAsts;
-  if (dumpSymbolTable) project.symbols.dump(verbose);
+  if (dumpSymbolTable) {
+    SymbolTablePrinter p;
+    p.verbose = verbose;
+    p.dump(project.symbols);
+  }
 
   return 0;
 }
