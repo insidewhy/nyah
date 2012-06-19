@@ -193,9 +193,8 @@ struct SymbolTableBuilder {
   // the function overload tables. This process will need access to all global
   // symbols in order to build overloads reliant on metaprogramming.
   void buildOverloadTables() {
-    foreach(FunctionOverloads overloads; overloads_) {
-      // TODO: build table for overload
-    }
+    foreach(FunctionOverloads overloads; overloads_)
+      overloads.buildLookupTree;
   }
 }
 
